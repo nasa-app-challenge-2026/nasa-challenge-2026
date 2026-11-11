@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: apps/api } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run mypy
+      - run: uv run pytest -q # offline: uses the versioned NASA snapshot
+      - name: App starts
+        run: FIELDSHIFT_CLIMATE_SOURCE=snapshot_only uv run python -c "from fieldshift.api.app import create_app; create_app()"
+      - name: Frontend fixtures match the API
+        run: uv run python ../../scripts/export_api_fixtures.py && git diff --exit-code ../web/src/api/__fixtures__
+
+  web:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: apps/web } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: apps/web/package-lock.json }
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
