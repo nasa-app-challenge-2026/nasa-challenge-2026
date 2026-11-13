@@ -1,0 +1,29 @@
+{
+  "rotation": [
+    {
+      "crop": "soya",
+      "years": 1,
+      "cover": null
+    },
+    {
+      "crop": "ble",
+      "years": 1,
+      "cover": "trefle"
+    },
+    {
+      "crop": "mais",
+      "years": 1,
+      "cover": "seigle"
+    },
+    {
+      "crop": "patate",
+      "years": 1,
+      "cover": null
+    }
+  ],
+  "reasons": [
+    "Une légumineuse avant les cultures gourmandes en azote.",
+    "Aucune culture ne revient avant son délai de retour.",
+    "Une couverture d’hiver quand le sol resterait nu."
+  ]
+}

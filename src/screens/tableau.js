@@ -1,0 +1,201 @@
+/**
+ * 6 · Tableau de bord de la ferme. Owner: Ali.
+ * Widgets per section, isometric farm, year slider, farm mix with the
+ * "Décaler mes sections" helper (structure only, computed in src/lib/rotation.js).
+ */
+import { html, plural, fmt } from '../lib/html.js';
+import { CROPS } from '../data/crops.js';
+import { bestOffsets, buildCalendar, cycleLength, farmMix, toSlots } from '../lib/rotation.js';
+import { appHeader, pageTitle } from '../ui/layout.js';
+import { icon, ICONS } from '../ui/icons.js';
+import { isoFarm } from '../ui/isoFarm.js';
+import { fieldStrip } from '../ui/textures.js';
+import { errorBox } from '../ui/widgets.js';
+
+function widget(state, s, yi, plan) {
+  const L = cycleLength(s.rotation);
+  const pos = (yi + (s.offset ?? 0)) % L;
+  const slots = toSlots(s.rotation);
+  const crop = slots[pos]?.crop;
+  const sel = state.ui.selectedSection === s.id;
+  const score = plan?.scores
+    ? Math.round(
+        (plan.scores.eau + plan.scores.sol + plan.scores.resilience + plan.scores.revenu) / 4,
+      )
+    : null;
+  return html`<article class="widget ${sel ? 'is-selected' : ''}">
+    <button
+      type="button"
+      class="widget__hit"
+      data-action="select-section"
+      data-id="${s.id}"
+      aria-pressed="${String(sel)}"
+      aria-label="Section ${s.id}"
+    ></button>
+    <div class="row-between">
+      <span class="row gap-sm"
+        ><span class="section-badge ${sel ? 'is-dark' : ''}">${s.id}</span
+        ><span class="stack-0"
+          ><strong>Section ${s.id}</strong
+          ><span class="muted small">${s.areaHa} ha · cycle de ${L} ans</span></span
+        ></span
+      ><span class="widget__score" title="Score moyen">${score ?? '…'}</span>
+    </div>
+    ${fieldStrip(crop, 44)}
+    <div class="cycle-chips">
+      ${slots.map((x, i) => html`<span class="cycle-chip ${i === pos ? 'is-current' : ''}" style="background: ${CROPS[x.crop]?.color || '#E5E9E0'}">${CROPS[x.crop]?.name ?? '—'}</span>`)}
+    </div>
+    <div class="row-between small">
+      <span class="muted">Année ${pos + 1} sur ${L} du cycle</span
+      ><strong>${CROPS[crop]?.name ?? '—'}</strong>
+    </div>
+    <div class="bar"><div class="bar__fill is-blue" style="width: ${score ?? 0}%"></div></div>
+  </article>`;
+}
+
+export default {
+  title: 'Tableau de bord',
+  rota: 'tableau',
+  render(state, _params, app) {
+    const { farm } = state;
+    const sections = farm.sections;
+    const yi = Math.min(state.ui.yearIndex, farm.farm.horizonYears - 1);
+    const year = farm.farm.startYear + yi;
+    const mix = farmMix(farm.farm, sections);
+    const thisYear = mix[yi];
+    const bad = mix.filter((y) => !y.balanced).length;
+    const best = bestOffsets(farm.farm, sections);
+    const canShift = best.imbalanced < bad;
+    const shifted = sections.some((s) => s.offset);
+    const sel = sections.find((s) => s.id === state.ui.selectedSection) ?? sections[0];
+    const cropOf = (id) => {
+      const s = sections.find((x) => x.id === id);
+      return buildCalendar(s.rotation, {
+        offset: s.offset,
+        startYear: farm.farm.startYear,
+        horizonYears: farm.farm.horizonYears,
+      })[yi]?.crop;
+    };
+    const total = sections.reduce((a, s) => a + s.areaHa, 0);
+    const planFarm = state.plan.data?.farm;
+
+    return html`${appHeader(state, 'tableau')}
+      <main class="page stack-lg" id="main">
+        ${pageTitle(
+          `Ma ferme · ${total} ha · ${plural(sections.length, 'section', 'sections')}`,
+          `${farm.farm.name} · ${farm.farm.location?.label ?? ''}`,
+          html`<div class="row-wrap gap-sm">
+            <span class="chip"
+              >${icon(ICONS.calendar, { size: 16 })}Analyse sur ${farm.farm.horizonYears} ans ·
+              ${farm.farm.startYear} à ${farm.farm.startYear + farm.farm.horizonYears - 1}</span
+            >
+            ${planFarm ? html`<span class="chip chip--strong">Score de la ferme ${planFarm.score} · ${fmt(planFarm.revenuePerYear)} $ par an</span>` : ''}
+            <a class="chip chip--link" href="#/tracer">+ Ajouter une section</a>
+          </div>`,
+        )}
+        ${state.plan.status === 'error' ? errorBox(state.plan.error) : ''}
+        <div class="row-wrap align-stretch gap-lg">
+          <section class="grow-1 stack-md" aria-label="Sections">
+            <div class="grid grid--widgets">
+              ${sections.map((s) => widget(state, s, yi, app.sectionPlan(s.id)))}
+            </div>
+            <div class="card stack-sm">
+              <strong>Sur toute la ferme en ${year}</strong>
+              <div class="mix-bar">
+                ${Object.entries(thisYear.areaByCrop).map(([c, ha]) => html`<span style="flex: ${ha} 1 0; background: ${CROPS[c].color}">${ha} ha</span>`)}
+              </div>
+              <div class="row-wrap gap-sm small muted">
+                ${Object.entries(thisYear.areaByCrop).map(([c, ha]) => html`<span class="row gap-xs"><span class="dot" style="background: ${CROPS[c].color}"></span>${CROPS[c].name} · ${ha} ha</span>`)}
+              </div>
+              <div class="row-between wrap divider-top">
+                <div class="stack-0">
+                  ${
+                    thisYear.balanced
+                      ? html`<strong class="text-good"
+                          >✓ Une culture différente par section cette année</strong
+                        >`
+                      : html`<strong class="text-warn"
+                          >⚠
+                          ${thisYear.duplicates.map((c) => `${thisYear.sectionsByCrop[c]} sections en ${CROPS[c].name.toLowerCase()}`).join(', ')}
+                          cette année</strong
+                        >`
+                  }
+                  <span class="muted small"
+                    >Sur ${farm.farm.horizonYears} ans :
+                    ${plural(bad, 'année déséquilibrée', 'années déséquilibrées')}</span
+                  >
+                </div>
+                <div class="row-wrap gap-sm">
+                  ${shifted ? html`<button type="button" class="btn btn--secondary btn--sm" data-action="unshift">Annuler le décalage</button>` : ''}
+                  ${
+                    canShift
+                      ? html`<button
+                          type="button"
+                          class="btn btn--dark btn--sm"
+                          data-action="shift"
+                        >
+                          Décaler mes sections
+                        </button>`
+                      : html`<span class="pill pill--info pill--lg"
+                          >✓ Sections décalées au mieux</span
+                        >`
+                  }
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="card grow-1 stack-sm" aria-label="Vue 3D de la ferme">
+            <div class="row-between">
+              <h2 class="h2">Ma ferme en 3D</h2>
+              <span class="muted small">Texture = culture de l’année</span>
+            </div>
+            <div class="iso-wrap">${isoFarm({ sections, cropOf, selectedId: sel.id })}</div>
+            <div class="card card--tint row-between wrap">
+              <div class="stack-0">
+                <strong>Section ${sel.id} · ${sel.areaHa} ha</strong
+                ><span class="muted small"
+                  >${sel.rotation.map((e) => `${CROPS[e.crop]?.name ?? '—'}${e.years > 1 ? ` (${e.years} ans)` : ''}`).join(' → ')}</span
+                >
+              </div>
+              <div class="row-wrap gap-sm">
+                <a class="btn btn--secondary btn--sm" href="#/section/${sel.id}/rotation"
+                  >Modifier la rotation</a
+                ><a class="btn btn--primary btn--sm" href="#/section/${sel.id}/champ"
+                  >Ouvrir la section →</a
+                >
+              </div>
+            </div>
+          </section>
+        </div>
+        <section class="card stack-sm" aria-label="Curseur des années">
+          <div class="row-between wrap">
+            <label for="year" class="strong">Curseur des années</label
+            ><span class="h2 text-brand"
+              >${year} · année ${yi + 1} sur ${farm.farm.horizonYears}</span
+            >
+          </div>
+          <input
+            id="year"
+            class="range"
+            type="range"
+            min="0"
+            max="${farm.farm.horizonYears - 1}"
+            value="${yi}"
+            data-change="set-year"
+          />
+          <div class="year-ticks">
+            ${mix.map((y, i) => html`<button type="button" class="year-tick ${i === yi ? 'is-on' : ''} ${y.balanced ? '' : 'is-warn'}" data-action="pick-year" data-i="${i}" aria-label="${y.year}${y.balanced ? '' : ', année déséquilibrée'}">${y.year}${y.balanced ? '' : ' ⚠'}</button>`)}
+          </div>
+        </section>
+      </main>`;
+  },
+  actions: {
+    'set-year': (app, el) => app.update((s) => (s.ui.yearIndex = Number(el.value))),
+    'pick-year': (app, el) => app.update((s) => (s.ui.yearIndex = Number(el.dataset.i))),
+    shift: (app) => {
+      const { offsets } = bestOffsets(app.state.farm.farm, app.state.farm.sections);
+      app.updateFarm((farm) => farm.sections.forEach((s) => (s.offset = offsets[s.id] ?? 0)));
+    },
+    unshift: (app) => app.updateFarm((farm) => farm.sections.forEach((s) => (s.offset = 0))),
+  },
+};

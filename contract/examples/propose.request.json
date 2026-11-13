@@ -1,0 +1,211 @@
+{
+  "farm": {
+    "version": "1.0",
+    "farm": {
+      "id": "demo",
+      "name": "Ferme du rang Saint-Pierre",
+      "type": "grandes-cultures",
+      "location": {
+        "lat": 45.63,
+        "lon": -72.95,
+        "label": "Saint-Hyacinthe, QC"
+      },
+      "startYear": 2027,
+      "horizonYears": 12,
+      "priorities": [
+        "revenu",
+        "resilience",
+        "sol",
+        "eau",
+        "travail"
+      ],
+      "sensors": false
+    },
+    "options": {
+      "stressYears": 1
+    },
+    "sections": [
+      {
+        "id": "A",
+        "areaHa": 12,
+        "offset": 0,
+        "note": "côté route",
+        "polygon": [
+          [
+            45.632,
+            -72.952
+          ],
+          [
+            45.632,
+            -72.948
+          ],
+          [
+            45.629,
+            -72.948
+          ],
+          [
+            45.629,
+            -72.952
+          ]
+        ],
+        "rotation": [
+          {
+            "crop": "soya",
+            "years": 1,
+            "cover": null
+          },
+          {
+            "crop": "ble",
+            "years": 1,
+            "cover": "trefle"
+          },
+          {
+            "crop": "mais",
+            "years": 1,
+            "cover": "seigle"
+          },
+          {
+            "crop": "patate",
+            "years": 1,
+            "cover": null
+          }
+        ]
+      },
+      {
+        "id": "B",
+        "areaHa": 8,
+        "offset": 0,
+        "note": "sol plus sableux",
+        "polygon": [
+          [
+            45.632,
+            -72.948
+          ],
+          [
+            45.632,
+            -72.944
+          ],
+          [
+            45.63,
+            -72.944
+          ],
+          [
+            45.63,
+            -72.948
+          ]
+        ],
+        "rotation": [
+          {
+            "crop": "mais",
+            "years": 1,
+            "cover": null
+          },
+          {
+            "crop": "soya",
+            "years": 1,
+            "cover": null
+          },
+          {
+            "crop": "ble",
+            "years": 1,
+            "cover": null
+          }
+        ]
+      },
+      {
+        "id": "C",
+        "areaHa": 10,
+        "offset": 0,
+        "note": "près du ruisseau",
+        "polygon": [
+          [
+            45.629,
+            -72.952
+          ],
+          [
+            45.629,
+            -72.948
+          ],
+          [
+            45.626,
+            -72.948
+          ],
+          [
+            45.626,
+            -72.952
+          ]
+        ],
+        "rotation": [
+          {
+            "crop": "ble",
+            "years": 1,
+            "cover": null
+          },
+          {
+            "crop": "mais",
+            "years": 1,
+            "cover": null
+          },
+          {
+            "crop": "soya",
+            "years": 1,
+            "cover": null
+          },
+          {
+            "crop": "patate",
+            "years": 1,
+            "cover": null
+          }
+        ]
+      },
+      {
+        "id": "D",
+        "areaHa": 6,
+        "offset": 0,
+        "note": "derrière la grange",
+        "polygon": [
+          [
+            45.63,
+            -72.948
+          ],
+          [
+            45.63,
+            -72.944
+          ],
+          [
+            45.626,
+            -72.944
+          ],
+          [
+            45.626,
+            -72.948
+          ]
+        ],
+        "rotation": [
+          {
+            "crop": "patate",
+            "years": 1,
+            "cover": null
+          },
+          {
+            "crop": "soya",
+            "years": 1,
+            "cover": null
+          },
+          {
+            "crop": "ble",
+            "years": 1,
+            "cover": null
+          },
+          {
+            "crop": "mais",
+            "years": 1,
+            "cover": null
+          }
+        ]
+      }
+    ]
+  },
+  "sectionId": "A",
+  "cycleYears": 4
+}
