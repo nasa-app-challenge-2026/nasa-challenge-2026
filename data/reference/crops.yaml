@@ -1,0 +1,278 @@
+# Catalogue des cultures et de leurs exigences climatiques DOCUMENTÉES.
+#
+# Règles :
+# - une valeur sans source n'entre pas dans ce fichier ; une exigence inconnue reste absente ;
+# - confidence: documented  -> valeur lue dans la source citée ;
+#   confidence: provisional -> hypothèse de l'équipe, affichée comme telle, à valider ;
+# - les cultures pérennes ligneuses (érablière, verger, sapinière) ne sont pas des étapes de
+#   rotation (category: perennial_woody est refusé dans une rotation).
+crops:
+  - id: oat
+    name_fr: Avoine
+    name_en: Oat
+    scientific_name: Avena sativa
+    category: annual
+    botanical_families: [Poaceae]
+    fixes_nitrogen: false
+    season_model: cool_season
+    heat_requirement:
+      unit: gdd_base0
+      minimum: 1483
+      maximum: 1738
+      basis:
+        source_ids: [msu_mt200103]
+        confidence: documented
+        note_fr: >-
+          Maturité complète (stade 8.9), du semis, base 0 °C ; essais à Scott (Saskatchewan),
+          1993-1997.
+    frost_tolerance:
+      damage_threshold_c: -6.0
+      inclusive: false
+      basis:
+        source_ids: [manitoba_spring_frost]
+        confidence: documented
+        note_fr: >-
+          Les céréales de printemps tolèrent jusqu'à -6 °C : le point de croissance reste sous le
+          sol jusqu'au stade 5 feuilles.
+    water_need:
+      minimum_mm: 450
+      maximum_mm: 650
+      basis:
+        source_ids: [fao_irrigation_water_needs]
+        confidence: documented
+        note_fr: Valeur indicative FAO pour orge, avoine et blé, toute la période de croissance.
+    context_indicator_ids: [gdd_base0, growing_season_length_days]
+    not_modelled_fr:
+      - Verse, maladies et qualité du grain liées à l'humidité à la récolte.
+
+  - id: barley
+    name_fr: Orge
+    name_en: Barley
+    scientific_name: Hordeum vulgare
+    category: annual
+    botanical_families: [Poaceae]
+    fixes_nitrogen: false
+    season_model: cool_season
+    heat_requirement:
+      unit: gdd_base0
+      minimum: 1269
+      maximum: 1522
+      basis:
+        source_ids: [msu_mt200103]
+        confidence: documented
+        note_fr: >-
+          Maturité complète (stade 8.9), du semis, base 0 °C ; essais à Swift Current
+          (Saskatchewan), 1996-1998.
+    frost_tolerance:
+      damage_threshold_c: -6.0
+      inclusive: false
+      basis:
+        source_ids: [manitoba_spring_frost]
+        confidence: documented
+        note_fr: Les céréales de printemps tolèrent jusqu'à -6 °C.
+    water_need:
+      minimum_mm: 450
+      maximum_mm: 650
+      basis:
+        source_ids: [fao_irrigation_water_needs]
+        confidence: documented
+        note_fr: Valeur indicative FAO pour orge, avoine et blé, toute la période de croissance.
+    context_indicator_ids: [gdd_base0, growing_season_length_days]
+    not_modelled_fr:
+      - Verse, maladies et qualité du grain liées à l'humidité à la récolte.
+
+  - id: spring_wheat
+    name_fr: Blé de printemps
+    name_en: Spring wheat (hard red)
+    scientific_name: Triticum aestivum
+    category: annual
+    botanical_families: [Poaceae]
+    fixes_nitrogen: false
+    season_model: cool_season
+    heat_requirement:
+      unit: gdd_base0
+      minimum: 1538
+      maximum: 1665
+      basis:
+        source_ids: [msu_mt200103]
+        confidence: documented
+        note_fr: >-
+          Blé roux, maturité complète (stade 8.9), du semis, base 0 °C ; essais à Scott et Swift
+          Current (Saskatchewan), 1993-1998.
+    frost_tolerance:
+      damage_threshold_c: -6.0
+      inclusive: false
+      basis:
+        source_ids: [manitoba_spring_frost]
+        confidence: documented
+        note_fr: Les céréales de printemps tolèrent jusqu'à -6 °C.
+    water_need:
+      minimum_mm: 450
+      maximum_mm: 650
+      basis:
+        source_ids: [fao_irrigation_water_needs]
+        confidence: documented
+        note_fr: Valeur indicative FAO pour orge, avoine et blé, toute la période de croissance.
+    context_indicator_ids: [gdd_base0, growing_season_length_days]
+    not_modelled_fr:
+      - Fusariose et qualité boulangère liées à l'humidité à la floraison et à la récolte.
+
+  - id: field_pea
+    name_fr: Pois sec
+    name_en: Field pea
+    scientific_name: Pisum sativum
+    category: annual
+    botanical_families: [Fabaceae]
+    fixes_nitrogen: true
+    season_model: cool_season
+    heat_requirement:
+      unit: gdd_base0
+      minimum: 1527
+      maximum: 1686
+      basis:
+        source_ids: [msu_mt200103]
+        confidence: documented
+        note_fr: >-
+          Maturité complète (stade 8.9), du semis, base 0 °C ; essais à Scott et Swift Current
+          (Saskatchewan), 1993-1998.
+    frost_tolerance:
+      damage_threshold_c: -6.0
+      inclusive: false
+      basis:
+        source_ids: [manitoba_spring_frost]
+        confidence: provisional
+        note_fr: >-
+          La source décrit le pois comme rarement perdu au gel printanier (deux points de
+          croissance), sans seuil chiffré. Le seuil des céréales (-6 °C) est repris par analogie.
+    water_need:
+      minimum_mm: 350
+      maximum_mm: 500
+      basis:
+        source_ids: [fao_irrigation_water_needs]
+        confidence: documented
+        note_fr: Valeur indicative FAO pour le pois, toute la période de croissance.
+    context_indicator_ids: [gdd_base0]
+    not_modelled_fr:
+      - Maladies racinaires et retour trop fréquent des légumineuses annuelles.
+
+  - id: soybean_early
+    name_fr: Soya (variétés les plus hâtives)
+    name_en: Soybean (earliest maturity)
+    scientific_name: Glycine max
+    category: annual
+    botanical_families: [Fabaceae]
+    fixes_nitrogen: true
+    season_model: warm_season
+    heat_requirement:
+      unit: crop_heat_units
+      minimum: 2300
+      maximum: 2550
+      basis:
+        source_ids: [guide_soya_2024, rgcq_soya_2021]
+        confidence: documented
+        note_fr: >-
+          2 300 UTM : cultivars les plus hâtifs offerts au Québec ; 2 550 UTM : limite de la
+          classe « hâtifs » du RGCQ. Vérifier la cote de la variété choisie.
+    frost_tolerance:
+      damage_threshold_c: -2.0
+      inclusive: true
+      basis:
+        source_ids: [manitoba_spring_frost, bourgeois_2012]
+        confidence: provisional
+        note_fr: >-
+          Le soya ne tolère -2,8 °C que quelques heures et seulement jusqu'au stade VC ; le seuil
+          prudent de -2 °C (fin du cumul des UTM au Québec) est retenu par l'équipe.
+    water_need:
+      minimum_mm: 450
+      maximum_mm: 700
+      basis:
+        source_ids: [fao_irrigation_water_needs]
+        confidence: documented
+        note_fr: Valeur indicative FAO pour le soya, toute la période de croissance.
+    context_indicator_ids: [crop_heat_units, last_spring_frost_doy, first_fall_killing_frost_doy]
+    not_modelled_fr:
+      - Température du sol au semis et inoculation.
+
+  - id: grain_corn
+    name_fr: Maïs-grain
+    name_en: Grain corn
+    scientific_name: Zea mays
+    category: annual
+    botanical_families: [Poaceae]
+    fixes_nitrogen: false
+    season_model: warm_season
+    heat_requirement:
+      unit: crop_heat_units
+      minimum: 2300
+      maximum: 2500
+      basis:
+        source_ids: [plouffe_2011]
+        confidence: documented
+        note_fr: >-
+          « La production de maïs-grain nécessite entre 2 300 et 2 500 UTM, ou davantage selon
+          les hybrides. »
+    frost_tolerance:
+      damage_threshold_c: -2.0
+      inclusive: true
+      basis:
+        source_ids: [manitoba_spring_frost]
+        confidence: documented
+        note_fr: Blessures possibles si l'air descend à -2 °C ou moins pendant plus de quelques heures.
+    water_need:
+      minimum_mm: 500
+      maximum_mm: 800
+      basis:
+        source_ids: [fao_irrigation_water_needs]
+        confidence: documented
+        note_fr: Valeur indicative FAO pour le maïs, toute la période de croissance.
+    context_indicator_ids: [crop_heat_units, first_fall_killing_frost_doy]
+    not_modelled_fr:
+      - Séchage du grain et coûts associés.
+
+  - id: hay_mixed
+    name_fr: Foin (mélange non précisé)
+    name_en: Hay (unspecified mixture)
+    scientific_name: Mélange de graminées fourragères, composition non précisée
+    category: perennial_forage
+    botanical_families: [Poaceae]
+    fixes_nitrogen: null
+    season_model: perennial
+    context_indicator_ids: [haymaking_days_june_july, wet_days_june_july]
+    not_modelled_fr:
+      - Survie à l'hiver (froid, glace, couvert de neige).
+      - Météo de fenaison (indicateur de contexte, sans seuil de réussite documenté).
+
+  - id: clover_timothy_hay
+    name_fr: Prairie fléole–trèfle rouge
+    name_en: Timothy–red clover hay
+    scientific_name: Phleum pratense et Trifolium pratense
+    category: perennial_forage
+    botanical_families: [Poaceae, Fabaceae]
+    fixes_nitrogen: true
+    season_model: perennial
+    context_indicator_ids: [haymaking_days_june_july, wet_days_june_july]
+    not_modelled_fr:
+      - Survie à l'hiver (froid, glace, couvert de neige).
+      - Persistance du trèfle rouge dans la prairie.
+      - Météo de fenaison (indicateur de contexte, sans seuil de réussite documenté).
+
+  - id: alfalfa_hay
+    name_fr: Luzerne (foin)
+    name_en: Alfalfa hay
+    scientific_name: Medicago sativa
+    category: perennial_forage
+    botanical_families: [Fabaceae]
+    fixes_nitrogen: true
+    season_model: perennial
+    water_need:
+      minimum_mm: 800
+      maximum_mm: 1600
+      basis:
+        source_ids: [fao_irrigation_water_needs]
+        confidence: documented
+        note_fr: Valeur indicative FAO pour la luzerne, toute la période de croissance.
+    context_indicator_ids: [haymaking_days_june_july, climatic_water_balance_growing_season_mm]
+    not_modelled_fr:
+      - Survie à l'hiver (froid, glace, couvert de neige).
+      - Exigences de sol (drainage, pH) non évaluées.
+      - Météo de fenaison (indicateur de contexte, sans seuil de réussite documenté).

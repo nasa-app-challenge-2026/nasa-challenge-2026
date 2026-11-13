@@ -1,0 +1,181 @@
+# Bibliographie de l'application. Chaque identifiant est cité par une formule, un seuil ou une
+# explication. Ne jamais ajouter une référence qui n'a pas été lue : indiquer la date de
+# consultation et les conditions d'utilisation vérifiées.
+sources:
+  - id: nasa_power
+    citation: >-
+      NASA Langley Research Center, Prediction Of Worldwide Energy Resources (POWER) Project.
+      POWER Daily API (temporal/daily/point), version 2.10.3.
+    url: https://power.larc.nasa.gov/docs/services/api/temporal/daily/
+    accessed: 2026-11-10
+    terms_fr: >-
+      Données de missions NASA sous licence Creative Commons Zero (CC0), sans restriction
+      d'usage (NASA Earthdata). Le projet POWER demande de citer la source, la version et la date
+      de consultation (power.larc.nasa.gov/docs/referencing).
+    used_for_fr: Températures quotidiennes (T2M, T2M_MAX, T2M_MIN) et précipitations (PRECTOTCORR).
+
+  - id: nasa_earthdata_data_use
+    citation: NASA Earthdata. Data Use and Citation Guidance. Mis à jour le 6 novembre 2026.
+    url: https://www.earthdata.nasa.gov/engage/open-data-services-software-policies/data-use-guidance
+    accessed: 2026-11-10
+    terms_fr: Page d'information publique de la NASA.
+    used_for_fr: Licence CC0 des données NASA et obligation morale de citation.
+
+  - id: bourgeois_2012
+    citation: >-
+      Bourgeois, G. (2012). Mise à jour des unités thermiques maïs (UTM) au Québec. Colloque en
+      agroclimatologie, CRAAQ. Collaborateurs : R. Audet, L. Bélanger, I. Duchesne, P. Filion,
+      B. Leclerc, G. Tremblay.
+    url: https://www.agrireseau.net/grandescultures/documents/Bourgeois_Gaetan.pdf
+    accessed: 2026-11-10
+    terms_fr: Document public diffusé sur Agri-Réseau ; cité, non redistribué.
+    used_for_fr: >-
+      Formule des UTM (Laurence et al., 2002), début du cumul (moyenne mobile de 5 jours de
+      12,8 °C après la date médiane du dernier gel) et fin du cumul (minimum de -2 °C ou moins).
+
+  - id: omafra_93_119
+    citation: >-
+      Brown, D. M. et Bootsma, A. (1993, révisé 1997). Crop Heat Units for Corn and Other
+      Warm-Season Crops in Ontario. OMAFRA Factsheet 93-119, Agdex 111/31. Lu dans une copie
+      imprimée en 2006 de la page omafra.gov.on.ca/english/crops/facts/93-119.htm.
+    url: https://www.sojafoerderring.de/wp-content/uploads/2014/02/Berechnung-CHU-Uni-Guelph-Ontario.pdf
+    accessed: 2026-11-10
+    terms_fr: © Imprimeur de la Reine pour l'Ontario ; copie hébergée par un tiers ; cité, non redistribué.
+    used_for_fr: >-
+      Courbes de développement diurne et nocturne des UTM, cote atteinte une année sur deux et
+      ajustements par niveau de risque (1 année sur 5, etc.).
+
+  - id: omafra_fieldcropnews_2025
+    citation: >-
+      Field Crop News Team (2025, 25 février). Using Growing Degree Days and Crop Heat Units.
+      Field Crop News, ministère de l'Agriculture de l'Ontario (OMAFA).
+    url: https://fieldcropnews.com/2025/02/using-growing-degree-days-and-crop-heat-units/
+    accessed: 2026-11-10
+    terms_fr: Page d'information publique ; citée, non redistribuée.
+    used_for_fr: Méthode standard des degrés-jours, base 0 °C pour les céréales, base 5 °C pour la luzerne et le canola.
+
+  - id: aafc_agroclimate
+    citation: >-
+      Agriculture et Agroalimentaire Canada (2021). Données agroclimatiques – Spécifications de
+      contenu informationnel produites conformément à la norme ISO 19131, révision A.
+    url: https://agriculture.canada.ca/atlas/data_donnees/agClimate/supportdocument_documentdesupport/fr/Donnees_agroclimat_-_SPC.pdf
+    accessed: 2026-11-10
+    terms_fr: Licence du gouvernement ouvert du Canada.
+    used_for_fr: >-
+      Fenêtre d'accumulation du 1er avril au 31 octobre, degrés-jours (bases 0, 5, 10 °C),
+      formule des unités thermiques de croissance.
+
+  - id: etccdi_indices
+    citation: >-
+      ETCCDI, Expert Team on Climate Change Detection and Indices (CCl/WCRP/JCOMM). Climate
+      Change Indices: Definitions of the 27 core indices.
+    url: http://etccdi.pacificclimate.org/list_27_indices.shtml
+    accessed: 2026-11-10
+    terms_fr: Définitions publiques ; citées.
+    used_for_fr: Jours de gel (FD), saison de croissance (GSL), jour humide (≥ 1 mm), CDD, R20mm, Rx1day.
+
+  - id: plouffe_2011
+    citation: >-
+      Plouffe, D., Bourgeois, G., Audet, R. et Lepage, M.-P. (2011). Indices agroclimatiques
+      pour faciliter la prise de décision en agriculture. Colloque en agroclimatologie, CRAAQ.
+    url: https://www.agrireseau.net/argeneral/documents/Plouffe_D.pdf
+    accessed: 2026-11-10
+    terms_fr: Document public diffusé sur Agri-Réseau ; cité, non redistribué.
+    used_for_fr: >-
+      Définitions du dernier gel printanier, du premier gel automnal, de la saison sans gel et de
+      la saison de croissance (au-dessus de 5 °C) ; besoin du maïs-grain de 2 300 à 2 500 UTM.
+
+  - id: audet_2012
+    citation: >-
+      Audet, R. (2012). L'Atlas agroclimatique du Québec. Colloque en agroclimatologie, CRAAQ.
+    url: https://www.agrireseau.net/agroenvironnement/documents/Audet_Rene.pdf
+    accessed: 2026-11-10
+    terms_fr: Document public diffusé sur Agri-Réseau ; cité, non redistribué.
+    used_for_fr: >-
+      Choix des indices, périodes de référence de 30 ans, centiles 20 et 80, tests de tendance de
+      Mann-Kendall et de Sen, indice précipitations moins évapotranspiration.
+
+  - id: fao56
+    citation: >-
+      Allen, R. G., Pereira, L. S., Raes, D. et Smith, M. (1998). Crop evapotranspiration –
+      Guidelines for computing crop water requirements. FAO Irrigation and Drainage Paper 56.
+    url: https://www.fao.org/4/x0490e/x0490e07.htm
+    accessed: 2026-11-10
+    terms_fr: © FAO ; formules citées, document non redistribué.
+    used_for_fr: Rayonnement extraterrestre (équations 21 à 25) et évapotranspiration de référence de Hargreaves (équation 52).
+
+  - id: fao_irrigation_water_needs
+    citation: >-
+      Brouwer, C. et Heibloem, M. (1986). Irrigation Water Management: Irrigation Water Needs.
+      Training manual no. 3, FAO, chapitre 2, tableau 5.
+    url: https://www.fao.org/4/s2022e/s2022e02.htm
+    accessed: 2026-11-10
+    terms_fr: © FAO 1986, tous droits réservés ; valeurs citées, document non redistribué.
+    used_for_fr: Besoins en eau saisonniers indicatifs des cultures (mm par période de croissance).
+
+  - id: msu_mt200103
+    citation: >-
+      Miller, P., Lanier, W. et Brandt, S. (2001). Using Growing Degree Days to Predict Plant
+      Stages. MontGuide MT200103AG, Montana State University Extension Service, tableau 1.
+    url: https://landresources.montana.edu/soilfertility/documents/PDF/pub/GDDPlantStagesMT200103AG.pdf
+    accessed: 2026-11-10
+    terms_fr: >-
+      © 2001 MSU Extension Service. Reproduction autorisée à des fins éducatives sans but
+      lucratif avec mention de la source ; valeurs citées.
+    used_for_fr: >-
+      Degrés-jours (base 0 °C) du semis à la maturité de l'avoine, de l'orge, du blé et du pois,
+      mesurés en Saskatchewan (plages couvrant 95 % des observations).
+
+  - id: manitoba_spring_frost
+    citation: Gouvernement du Manitoba, Agriculture. Spring Frost Damage.
+    url: https://www.gov.mb.ca/agriculture/crops/crop-management/spring-frost-damage-bulletin.html
+    accessed: 2026-11-10
+    terms_fr: Page d'information publique ; citée, non redistribuée.
+    used_for_fr: >-
+      Tolérance au gel printanier : céréales de printemps jusqu'à -6 °C, soya jusqu'à -2,8 °C
+      quelques heures (jusqu'au stade VC), maïs blessé à -2 °C ou moins, pois rarement perdu.
+
+  - id: cqpf_hay_guide_2002
+    citation: >-
+      Savoie, P. (éd.) et al. (2002). Guide sur la production de foin de commerce. Conseil
+      québécois des plantes fourragères (CQPF), chapitre III.
+    url: https://www.agrireseau.net/grandescultures/documents/guide%20foin%20corr.pdf
+    accessed: 2026-11-10
+    terms_fr: Document public diffusé sur Agri-Réseau ; cité, non redistribué.
+    used_for_fr: >-
+      Le foin hâtif demande une prévision d'au moins trois jours consécutifs sans pluie ;
+      périodes optimales de première coupe en juin.
+
+  - id: quebec_forages
+    citation: >-
+      Gouvernement du Québec (mis à jour le 17 avril 2026). Culture des plantes fourragères au
+      Québec.
+    url: https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/agriculture/industrie-agricole-au-quebec/productions-agricoles/culture-plantes-fourrageres
+    accessed: 2026-11-10
+    terms_fr: Page d'information publique ; citée, non redistribuée.
+    used_for_fr: >-
+      Bénéfices des plantes fourragères pérennes (matière organique, structure, couverture du
+      sol, érosion) et des légumineuses (fixation d'azote) ; espèces cultivées au Québec.
+
+  - id: fao_conservation_agriculture
+    citation: FAO. What is Conservation Agriculture?
+    url: https://www.fao.org/conservation-agriculture/overview/what-is-conservation-agriculture/en/
+    accessed: 2026-11-10
+    terms_fr: © FAO ; cité, non redistribué.
+    used_for_fr: Couverture permanente du sol, perturbation minimale et diversification des espèces.
+
+  - id: guide_soya_2024
+    citation: Le Bulletin des agriculteurs (2023). Guide soya 2024.
+    url: https://www.lebulletin.com/wp-content/uploads/2023/10/guide-soya-2024.pdf
+    accessed: 2026-11-10
+    terms_fr: Publication commerciale ; valeur citée, document non redistribué.
+    used_for_fr: Cultivars de soya les plus hâtifs offerts au Québec, cotés à 2 300 UTM.
+
+  - id: rgcq_soya_2021
+    citation: >-
+      Réseau des grandes cultures du Québec (RGCQ) (2021). Soya – Résultats 2021, cultivars
+      hâtifs (moins de 2 550 UTM).
+    url: https://rgcq.ca/wp-content/fichiers-rgcq/documents-oleo/Publications%20-%20Ol%C3%A9o/Publication2-3ansSoyaRGCQ2022.pdf
+    accessed: 2026-11-10
+    terms_fr: Résultats d'essais publics ; valeur citée, document non redistribué.
+    used_for_fr: Limite supérieure de la classe des soyas hâtifs (2 550 UTM).

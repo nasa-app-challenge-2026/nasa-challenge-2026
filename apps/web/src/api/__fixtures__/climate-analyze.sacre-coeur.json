@@ -1,0 +1,7015 @@
+{
+ "location": {
+  "latitude": 48.23,
+  "longitude": -69.8
+ },
+ "period": {
+  "first_year": 1981,
+  "last_year": 2025,
+  "years_analysed": 45
+ },
+ "provenance": {
+  "provider": "NASA POWER (Prediction Of Worldwide Energy Resources), NASA Langley Research Center",
+  "product": "POWER Daily API, données quotidiennes ponctuelles, communauté Agroclimatologie (AG)",
+  "api_version": "v2.10.3",
+  "upstream_sources": [
+   "MERRA2",
+   "POWER"
+  ],
+  "parameters": [
+   {
+    "code": "T2M",
+    "name": "Temperature at 2 Meters",
+    "unit": "°C",
+    "definition": "The average air (dry bulb) temperature at 2 meters above the surface of the earth."
+   },
+   {
+    "code": "T2M_MAX",
+    "name": "Temperature at 2 Meters Maximum",
+    "unit": "°C",
+    "definition": "The maximum hourly air (dry bulb) temperature at 2 meters above the surface of the earth in the period of interest."
+   },
+   {
+    "code": "T2M_MIN",
+    "name": "Temperature at 2 Meters Minimum",
+    "unit": "°C",
+    "definition": "The minimum hourly air (dry bulb) temperature at 2 meters above the surface of the earth in the period of interest."
+   },
+   {
+    "code": "PRECTOTCORR",
+    "name": "Precipitation Corrected",
+    "unit": "mm/jour",
+    "definition": "The average MERRA-2 bias corrected total precipitation at the surface of the earth."
+   }
+  ],
+  "period_start": "1981-01-01",
+  "period_end": "2025-12-31",
+  "retrieved_at": "2026-11-10T23:23:17.538000Z",
+  "origin": "verified_snapshot",
+  "nature": "reanalysis_estimate",
+  "time_standard": "LST",
+  "spatial_resolution": "0,5° de latitude × 0,625° de longitude (grille MERRA-2)",
+  "grid_cell": {
+   "cell_id": "lat+048.000_lon-0070.000",
+   "center": {
+    "latitude": 48.0,
+    "longitude": -70.0
+   },
+   "latitude_min": 47.75,
+   "latitude_max": 48.25,
+   "longitude_min": -70.3125,
+   "longitude_max": -69.6875
+  },
+  "grid_cell_elevation_m": 244.82,
+  "request_url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR&community=AG&latitude=48.0000&longitude=-70.0000&start=19810101&end=20251231&format=JSON&time-standard=LST",
+  "content_sha256": "a276ce46e03f359b1e623ef7540a02fb4ea5a2a1938058050bcfdedff7707efa",
+  "citation": "The data was obtained from the National Aeronautics and Space Administration (NASA) Langley Research Center (LaRC) Prediction Of Worldwide Energy Resources (POWER) project funded through the NASA Earth Science Division. The data was obtained from the POWER Project's Daily API v2.10.3 on 2026/11/10.",
+  "license": "Données de missions NASA : Creative Commons Zero (CC0), sans restriction d'usage. La NASA demande de citer les jeux de données utilisés (NASA Earthdata, Data Use and Citation Guidance)."
+ },
+ "quality": {
+  "level": "complete",
+  "first_year_requested": 1981,
+  "last_year_requested": 2025,
+  "years_analysed": [
+   1981,
+   1982,
+   1983,
+   1984,
+   1985,
+   1986,
+   1987,
+   1988,
+   1989,
+   1990,
+   1991,
+   1992,
+   1993,
+   1994,
+   1995,
+   1996,
+   1997,
+   1998,
+   1999,
+   2000,
+   2001,
+   2002,
+   2003,
+   2004,
+   2005,
+   2006,
+   2007,
+   2008,
+   2009,
+   2010,
+   2011,
+   2012,
+   2013,
+   2014,
+   2015,
+   2016,
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ],
+  "years_excluded": [],
+  "warnings": [
+   {
+    "code": "coarse_grid_cell",
+    "message_fr": "Les valeurs représentent une cellule d'environ 56 km × 47 km (moyenne de la cellule), pas une mesure prise sur la ferme. Altitude, pente, proximité de l'eau et fonds de vallée peuvent rendre la ferme plus froide ou plus chaude que la cellule."
+   },
+   {
+    "code": "near_cell_boundary",
+    "message_fr": "La ferme est à moins de 0,05° du bord de la cellule : une cellule voisine pourrait la représenter aussi bien, avec des valeurs différentes."
+   },
+   {
+    "code": "approximate_location",
+    "message_fr": "Position approximative (par exemple le centre de la municipalité) : la cellule retenue pourrait ne pas être celle de la ferme."
+   }
+  ]
+ },
+ "indicators": [
+  {
+   "id": "t_mean_annual_c",
+   "group": "temperature",
+   "kind": "quantity",
+   "label_fr": "Température moyenne de l'année",
+   "unit": "°C",
+   "definition_fr": "Moyenne sur l'année de la température moyenne quotidienne à 2 m.",
+   "source_ids": [
+    "nasa_power"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 2.658986301369863
+    },
+    {
+     "year": 1982,
+     "value": 0.8529315068493151
+    },
+    {
+     "year": 1983,
+     "value": 1.7963013698630137
+    },
+    {
+     "year": 1984,
+     "value": 1.411967213114754
+    },
+    {
+     "year": 1985,
+     "value": 0.9087945205479452
+    },
+    {
+     "year": 1986,
+     "value": 0.9566027397260275
+    },
+    {
+     "year": 1987,
+     "value": 2.1933972602739726
+    },
+    {
+     "year": 1988,
+     "value": 1.7311748633879782
+    },
+    {
+     "year": 1989,
+     "value": 1.093890410958904
+    },
+    {
+     "year": 1990,
+     "value": 2.3975068493150684
+    },
+    {
+     "year": 1991,
+     "value": 2.049671232876712
+    },
+    {
+     "year": 1992,
+     "value": 1.083224043715847
+    },
+    {
+     "year": 1993,
+     "value": 1.4945479452054795
+    },
+    {
+     "year": 1994,
+     "value": 1.830904109589041
+    },
+    {
+     "year": 1995,
+     "value": 2.3573698630136986
+    },
+    {
+     "year": 1996,
+     "value": 2.290928961748634
+    },
+    {
+     "year": 1997,
+     "value": 1.5281369863013698
+    },
+    {
+     "year": 1998,
+     "value": 3.5587123287671236
+    },
+    {
+     "year": 1999,
+     "value": 3.412246575342466
+    },
+    {
+     "year": 2000,
+     "value": 1.923606557377049
+    },
+    {
+     "year": 2001,
+     "value": 3.3830410958904107
+    },
+    {
+     "year": 2002,
+     "value": 2.1675616438356164
+    },
+    {
+     "year": 2003,
+     "value": 1.7788219178082192
+    },
+    {
+     "year": 2004,
+     "value": 0.9996721311475409
+    },
+    {
+     "year": 2005,
+     "value": 3.294082191780822
+    },
+    {
+     "year": 2006,
+     "value": 3.757287671232877
+    },
+    {
+     "year": 2007,
+     "value": 2.6086575342465754
+    },
+    {
+     "year": 2008,
+     "value": 2.7526775956284153
+    },
+    {
+     "year": 2009,
+     "value": 2.7017260273972603
+    },
+    {
+     "year": 2010,
+     "value": 4.476849315068493
+    },
+    {
+     "year": 2011,
+     "value": 3.4850958904109586
+    },
+    {
+     "year": 2012,
+     "value": 4.151939890710382
+    },
+    {
+     "year": 2013,
+     "value": 3.088575342465753
+    },
+    {
+     "year": 2014,
+     "value": 2.8104109589041095
+    },
+    {
+     "year": 2015,
+     "value": 2.582986301369863
+    },
+    {
+     "year": 2016,
+     "value": 2.9662568306010932
+    },
+    {
+     "year": 2017,
+     "value": 2.6172602739726027
+    },
+    {
+     "year": 2018,
+     "value": 2.528
+    },
+    {
+     "year": 2019,
+     "value": 1.9975616438356165
+    },
+    {
+     "year": 2020,
+     "value": 3.345464480874317
+    },
+    {
+     "year": 2021,
+     "value": 4.72958904109589
+    },
+    {
+     "year": 2022,
+     "value": 3.429397260273973
+    },
+    {
+     "year": 2023,
+     "value": 4.57654794520548
+    },
+    {
+     "year": 2024,
+     "value": 5.422732240437159
+    },
+    {
+     "year": 2025,
+     "value": 3.7685205479452053
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 2.5989248313662867,
+    "median": 2.582986301369863,
+    "p20": 1.6905672879706568,
+    "p80": 3.44053698630137,
+    "minimum": 0.8529315068493151,
+    "maximum": 5.422732240437159,
+    "standard_deviation": 1.0961507130524537,
+    "trend": {
+     "slope_per_decade": 0.5815355824652928,
+     "p_value": 1.0534732366451749e-06,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "t_mean_growing_season_c",
+   "group": "temperature",
+   "kind": "quantity",
+   "label_fr": "Température moyenne, avril à octobre",
+   "unit": "°C",
+   "definition_fr": "Moyenne de la température moyenne quotidienne à 2 m du 1er avril au 31 octobre.",
+   "source_ids": [
+    "nasa_power",
+    "aafc_agroclimate"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 10.10967289719626
+    },
+    {
+     "year": 1982,
+     "value": 9.362990654205607
+    },
+    {
+     "year": 1983,
+     "value": 10.252757009345794
+    },
+    {
+     "year": 1984,
+     "value": 9.823130841121495
+    },
+    {
+     "year": 1985,
+     "value": 9.646214953271027
+    },
+    {
+     "year": 1986,
+     "value": 9.19588785046729
+    },
+    {
+     "year": 1987,
+     "value": 10.707429906542055
+    },
+    {
+     "year": 1988,
+     "value": 10.268644859813083
+    },
+    {
+     "year": 1989,
+     "value": 10.74126168224299
+    },
+    {
+     "year": 1990,
+     "value": 10.810607476635512
+    },
+    {
+     "year": 1991,
+     "value": 10.634859813084113
+    },
+    {
+     "year": 1992,
+     "value": 9.635
+    },
+    {
+     "year": 1993,
+     "value": 10.648551401869158
+    },
+    {
+     "year": 1994,
+     "value": 10.635093457943924
+    },
+    {
+     "year": 1995,
+     "value": 11.134906542056074
+    },
+    {
+     "year": 1996,
+     "value": 10.3796261682243
+    },
+    {
+     "year": 1997,
+     "value": 10.257149532710281
+    },
+    {
+     "year": 1998,
+     "value": 11.760607476635514
+    },
+    {
+     "year": 1999,
+     "value": 11.679532710280375
+    },
+    {
+     "year": 2000,
+     "value": 9.92892523364486
+    },
+    {
+     "year": 2001,
+     "value": 11.566682242990654
+    },
+    {
+     "year": 2002,
+     "value": 10.445093457943925
+    },
+    {
+     "year": 2003,
+     "value": 10.671915887850467
+    },
+    {
+     "year": 2004,
+     "value": 9.822056074766355
+    },
+    {
+     "year": 2005,
+     "value": 11.45196261682243
+    },
+    {
+     "year": 2006,
+     "value": 11.099252336448597
+    },
+    {
+     "year": 2007,
+     "value": 11.10981308411215
+    },
+    {
+     "year": 2008,
+     "value": 10.948504672897196
+    },
+    {
+     "year": 2009,
+     "value": 10.506121495327102
+    },
+    {
+     "year": 2010,
+     "value": 11.809065420560747
+    },
+    {
+     "year": 2011,
+     "value": 11.1353738317757
+    },
+    {
+     "year": 2012,
+     "value": 11.94233644859813
+    },
+    {
+     "year": 2013,
+     "value": 11.13640186915888
+    },
+    {
+     "year": 2014,
+     "value": 11.488785046728971
+    },
+    {
+     "year": 2015,
+     "value": 11.143925233644861
+    },
+    {
+     "year": 2016,
+     "value": 10.971401869158878
+    },
+    {
+     "year": 2017,
+     "value": 11.475046728971963
+    },
+    {
+     "year": 2018,
+     "value": 10.606168224299065
+    },
+    {
+     "year": 2019,
+     "value": 10.38836448598131
+    },
+    {
+     "year": 2020,
+     "value": 10.821214953271028
+    },
+    {
+     "year": 2021,
+     "value": 12.63752336448598
+    },
+    {
+     "year": 2022,
+     "value": 12.106822429906543
+    },
+    {
+     "year": 2023,
+     "value": 12.632242990654207
+    },
+    {
+     "year": 2024,
+     "value": 13.126542056074767
+    },
+    {
+     "year": 2025,
+     "value": 12.081542056074765
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 10.905266874350986,
+    "median": 10.810607476635512,
+    "p20": 10.256271028037384,
+    "p80": 11.589252336448599,
+    "minimum": 9.19588785046729,
+    "maximum": 13.126542056074767,
+    "standard_deviation": 0.8654470221862932,
+    "trend": {
+     "slope_per_decade": 0.46775104260878286,
+     "p_value": 1.4163952273271718e-06,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "t_max_mean_growing_season_c",
+   "group": "temperature",
+   "kind": "quantity",
+   "label_fr": "Maximum quotidien moyen, avril à octobre",
+   "unit": "°C",
+   "definition_fr": "Moyenne des températures maximales quotidiennes du 1er avril au 31 octobre.",
+   "source_ids": [
+    "nasa_power",
+    "aafc_agroclimate"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 14.31747663551402
+    },
+    {
+     "year": 1982,
+     "value": 13.77088785046729
+    },
+    {
+     "year": 1983,
+     "value": 14.380420560747663
+    },
+    {
+     "year": 1984,
+     "value": 13.933364485981308
+    },
+    {
+     "year": 1985,
+     "value": 14.05747663551402
+    },
+    {
+     "year": 1986,
+     "value": 13.471028037383178
+    },
+    {
+     "year": 1987,
+     "value": 15.239158878504671
+    },
+    {
+     "year": 1988,
+     "value": 14.586915887850466
+    },
+    {
+     "year": 1989,
+     "value": 15.244626168224299
+    },
+    {
+     "year": 1990,
+     "value": 15.404626168224299
+    },
+    {
+     "year": 1991,
+     "value": 15.030467289719626
+    },
+    {
+     "year": 1992,
+     "value": 14.051401869158878
+    },
+    {
+     "year": 1993,
+     "value": 15.024392523364485
+    },
+    {
+     "year": 1994,
+     "value": 15.189953271028038
+    },
+    {
+     "year": 1995,
+     "value": 15.947803738317758
+    },
+    {
+     "year": 1996,
+     "value": 14.699392523364486
+    },
+    {
+     "year": 1997,
+     "value": 14.696822429906542
+    },
+    {
+     "year": 1998,
+     "value": 16.067196261682245
+    },
+    {
+     "year": 1999,
+     "value": 16.015467289719627
+    },
+    {
+     "year": 2000,
+     "value": 13.874766355140187
+    },
+    {
+     "year": 2001,
+     "value": 15.924345794392524
+    },
+    {
+     "year": 2002,
+     "value": 14.762990654205609
+    },
+    {
+     "year": 2003,
+     "value": 15.008691588785048
+    },
+    {
+     "year": 2004,
+     "value": 13.768598130841122
+    },
+    {
+     "year": 2005,
+     "value": 15.44892523364486
+    },
+    {
+     "year": 2006,
+     "value": 15.226401869158877
+    },
+    {
+     "year": 2007,
+     "value": 15.316915887850469
+    },
+    {
+     "year": 2008,
+     "value": 14.807196261682241
+    },
+    {
+     "year": 2009,
+     "value": 14.445934579439252
+    },
+    {
+     "year": 2010,
+     "value": 15.82285046728972
+    },
+    {
+     "year": 2011,
+     "value": 14.946028037383178
+    },
+    {
+     "year": 2012,
+     "value": 16.070467289719627
+    },
+    {
+     "year": 2013,
+     "value": 15.353177570093457
+    },
+    {
+     "year": 2014,
+     "value": 15.586168224299065
+    },
+    {
+     "year": 2015,
+     "value": 15.300233644859814
+    },
+    {
+     "year": 2016,
+     "value": 15.07822429906542
+    },
+    {
+     "year": 2017,
+     "value": 15.486308411214955
+    },
+    {
+     "year": 2018,
+     "value": 14.905186915887851
+    },
+    {
+     "year": 2019,
+     "value": 14.410841121495327
+    },
+    {
+     "year": 2020,
+     "value": 14.98392523364486
+    },
+    {
+     "year": 2021,
+     "value": 17.242383177570094
+    },
+    {
+     "year": 2022,
+     "value": 16.739532710280375
+    },
+    {
+     "year": 2023,
+     "value": 17.02981308411215
+    },
+    {
+     "year": 2024,
+     "value": 17.80677570093458
+    },
+    {
+     "year": 2025,
+     "value": 16.738177570093455
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 15.182527518172378,
+    "median": 15.07822429906542,
+    "p20": 14.404757009345794,
+    "p80": 15.92903738317757,
+    "minimum": 13.471028037383178,
+    "maximum": 17.80677570093458,
+    "standard_deviation": 0.9464799577909296,
+    "trend": {
+     "slope_per_decade": 0.4145638629283487,
+     "p_value": 0.0001792272344829371,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "t_min_mean_growing_season_c",
+   "group": "temperature",
+   "kind": "quantity",
+   "label_fr": "Minimum quotidien moyen, avril à octobre",
+   "unit": "°C",
+   "definition_fr": "Moyenne des températures minimales quotidiennes du 1er avril au 31 octobre.",
+   "source_ids": [
+    "nasa_power",
+    "aafc_agroclimate"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 5.7367757009345794
+    },
+    {
+     "year": 1982,
+     "value": 4.701495327102804
+    },
+    {
+     "year": 1983,
+     "value": 6.132383177570093
+    },
+    {
+     "year": 1984,
+     "value": 5.41196261682243
+    },
+    {
+     "year": 1985,
+     "value": 5.073504672897196
+    },
+    {
+     "year": 1986,
+     "value": 4.819018691588785
+    },
+    {
+     "year": 1987,
+     "value": 6.062289719626168
+    },
+    {
+     "year": 1988,
+     "value": 5.898785046728972
+    },
+    {
+     "year": 1989,
+     "value": 6.218457943925234
+    },
+    {
+     "year": 1990,
+     "value": 6.025841121495327
+    },
+    {
+     "year": 1991,
+     "value": 5.922056074766354
+    },
+    {
+     "year": 1992,
+     "value": 4.977289719626168
+    },
+    {
+     "year": 1993,
+     "value": 6.235420560747663
+    },
+    {
+     "year": 1994,
+     "value": 6.137056074766355
+    },
+    {
+     "year": 1995,
+     "value": 6.185560747663551
+    },
+    {
+     "year": 1996,
+     "value": 5.968598130841121
+    },
+    {
+     "year": 1997,
+     "value": 5.804906542056075
+    },
+    {
+     "year": 1998,
+     "value": 7.379205607476636
+    },
+    {
+     "year": 1999,
+     "value": 7.182242990654205
+    },
+    {
+     "year": 2000,
+     "value": 5.764392523364486
+    },
+    {
+     "year": 2001,
+     "value": 7.0625700934579445
+    },
+    {
+     "year": 2002,
+     "value": 6.008598130841121
+    },
+    {
+     "year": 2003,
+     "value": 6.240654205607477
+    },
+    {
+     "year": 2004,
+     "value": 5.68214953271028
+    },
+    {
+     "year": 2005,
+     "value": 7.457710280373832
+    },
+    {
+     "year": 2006,
+     "value": 6.917383177570093
+    },
+    {
+     "year": 2007,
+     "value": 6.8023364485981315
+    },
+    {
+     "year": 2008,
+     "value": 7.085607476635514
+    },
+    {
+     "year": 2009,
+     "value": 6.562056074766355
+    },
+    {
+     "year": 2010,
+     "value": 7.823971962616822
+    },
+    {
+     "year": 2011,
+     "value": 7.244719626168224
+    },
+    {
+     "year": 2012,
+     "value": 7.734158878504672
+    },
+    {
+     "year": 2013,
+     "value": 6.772570093457944
+    },
+    {
+     "year": 2014,
+     "value": 7.2811214953271035
+    },
+    {
+     "year": 2015,
+     "value": 6.90285046728972
+    },
+    {
+     "year": 2016,
+     "value": 6.786915887850467
+    },
+    {
+     "year": 2017,
+     "value": 7.354392523364486
+    },
+    {
+     "year": 2018,
+     "value": 6.111635514018692
+    },
+    {
+     "year": 2019,
+     "value": 6.282990654205607
+    },
+    {
+     "year": 2020,
+     "value": 6.4417289719626165
+    },
+    {
+     "year": 2021,
+     "value": 8.098598130841122
+    },
+    {
+     "year": 2022,
+     "value": 7.379485981308411
+    },
+    {
+     "year": 2023,
+     "value": 8.273831775700934
+    },
+    {
+     "year": 2024,
+     "value": 8.45981308411215
+    },
+    {
+     "year": 2025,
+     "value": 7.35481308411215
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 6.527997923156802,
+    "median": 6.282990654205607,
+    "p20": 5.8800093457943925,
+    "p80": 7.354476635514018,
+    "minimum": 4.701495327102804,
+    "maximum": 8.45981308411215,
+    "standard_deviation": 0.8929194314539125,
+    "trend": {
+     "slope_per_decade": 0.5113910855499646,
+     "p_value": 1.495556392061559e-07,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "t_max_absolute_c",
+   "group": "temperature",
+   "kind": "quantity",
+   "label_fr": "Température la plus élevée de l'année",
+   "unit": "°C",
+   "definition_fr": "Plus haute température maximale quotidienne de l'année.",
+   "source_ids": [
+    "nasa_power"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 26.19
+    },
+    {
+     "year": 1982,
+     "value": 27.07
+    },
+    {
+     "year": 1983,
+     "value": 28.72
+    },
+    {
+     "year": 1984,
+     "value": 27.53
+    },
+    {
+     "year": 1985,
+     "value": 26.0
+    },
+    {
+     "year": 1986,
+     "value": 25.7
+    },
+    {
+     "year": 1987,
+     "value": 29.31
+    },
+    {
+     "year": 1988,
+     "value": 29.01
+    },
+    {
+     "year": 1989,
+     "value": 28.43
+    },
+    {
+     "year": 1990,
+     "value": 31.39
+    },
+    {
+     "year": 1991,
+     "value": 29.2
+    },
+    {
+     "year": 1992,
+     "value": 26.64
+    },
+    {
+     "year": 1993,
+     "value": 28.68
+    },
+    {
+     "year": 1994,
+     "value": 30.03
+    },
+    {
+     "year": 1995,
+     "value": 30.5
+    },
+    {
+     "year": 1996,
+     "value": 28.29
+    },
+    {
+     "year": 1997,
+     "value": 29.82
+    },
+    {
+     "year": 1998,
+     "value": 29.3
+    },
+    {
+     "year": 1999,
+     "value": 30.16
+    },
+    {
+     "year": 2000,
+     "value": 25.05
+    },
+    {
+     "year": 2001,
+     "value": 29.2
+    },
+    {
+     "year": 2002,
+     "value": 29.85
+    },
+    {
+     "year": 2003,
+     "value": 29.12
+    },
+    {
+     "year": 2004,
+     "value": 25.04
+    },
+    {
+     "year": 2005,
+     "value": 27.97
+    },
+    {
+     "year": 2006,
+     "value": 26.69
+    },
+    {
+     "year": 2007,
+     "value": 27.77
+    },
+    {
+     "year": 2008,
+     "value": 25.49
+    },
+    {
+     "year": 2009,
+     "value": 26.62
+    },
+    {
+     "year": 2010,
+     "value": 30.12
+    },
+    {
+     "year": 2011,
+     "value": 25.72
+    },
+    {
+     "year": 2012,
+     "value": 28.31
+    },
+    {
+     "year": 2013,
+     "value": 27.11
+    },
+    {
+     "year": 2014,
+     "value": 28.4
+    },
+    {
+     "year": 2015,
+     "value": 27.77
+    },
+    {
+     "year": 2016,
+     "value": 26.74
+    },
+    {
+     "year": 2017,
+     "value": 27.94
+    },
+    {
+     "year": 2018,
+     "value": 29.25
+    },
+    {
+     "year": 2019,
+     "value": 27.1
+    },
+    {
+     "year": 2020,
+     "value": 29.65
+    },
+    {
+     "year": 2021,
+     "value": 29.52
+    },
+    {
+     "year": 2022,
+     "value": 27.32
+    },
+    {
+     "year": 2023,
+     "value": 30.6
+    },
+    {
+     "year": 2024,
+     "value": 30.24
+    },
+    {
+     "year": 2025,
+     "value": 31.76
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 28.273777777777777,
+    "median": 28.4,
+    "p20": 26.68,
+    "p80": 29.826,
+    "minimum": 25.04,
+    "maximum": 31.76,
+    "standard_deviation": 1.6918698254218143,
+    "trend": {
+     "slope_per_decade": 0.22733333333333333,
+     "p_value": 0.29518795898724504,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "t_min_absolute_c",
+   "group": "temperature",
+   "kind": "quantity",
+   "label_fr": "Température la plus basse de l'année",
+   "unit": "°C",
+   "definition_fr": "Plus basse température minimale quotidienne de l'année.",
+   "source_ids": [
+    "nasa_power"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": -36.52
+    },
+    {
+     "year": 1982,
+     "value": -37.85
+    },
+    {
+     "year": 1983,
+     "value": -34.42
+    },
+    {
+     "year": 1984,
+     "value": -33.68
+    },
+    {
+     "year": 1985,
+     "value": -35.28
+    },
+    {
+     "year": 1986,
+     "value": -35.46
+    },
+    {
+     "year": 1987,
+     "value": -29.54
+    },
+    {
+     "year": 1988,
+     "value": -33.88
+    },
+    {
+     "year": 1989,
+     "value": -32.66
+    },
+    {
+     "year": 1990,
+     "value": -32.83
+    },
+    {
+     "year": 1991,
+     "value": -34.11
+    },
+    {
+     "year": 1992,
+     "value": -33.66
+    },
+    {
+     "year": 1993,
+     "value": -36.41
+    },
+    {
+     "year": 1994,
+     "value": -37.79
+    },
+    {
+     "year": 1995,
+     "value": -33.51
+    },
+    {
+     "year": 1996,
+     "value": -33.41
+    },
+    {
+     "year": 1997,
+     "value": -34.57
+    },
+    {
+     "year": 1998,
+     "value": -29.96
+    },
+    {
+     "year": 1999,
+     "value": -34.84
+    },
+    {
+     "year": 2000,
+     "value": -29.29
+    },
+    {
+     "year": 2001,
+     "value": -29.73
+    },
+    {
+     "year": 2002,
+     "value": -28.76
+    },
+    {
+     "year": 2003,
+     "value": -34.88
+    },
+    {
+     "year": 2004,
+     "value": -35.39
+    },
+    {
+     "year": 2005,
+     "value": -27.48
+    },
+    {
+     "year": 2006,
+     "value": -23.22
+    },
+    {
+     "year": 2007,
+     "value": -28.17
+    },
+    {
+     "year": 2008,
+     "value": -27.77
+    },
+    {
+     "year": 2009,
+     "value": -30.48
+    },
+    {
+     "year": 2010,
+     "value": -26.82
+    },
+    {
+     "year": 2011,
+     "value": -27.64
+    },
+    {
+     "year": 2012,
+     "value": -26.59
+    },
+    {
+     "year": 2013,
+     "value": -30.04
+    },
+    {
+     "year": 2014,
+     "value": -36.01
+    },
+    {
+     "year": 2015,
+     "value": -32.85
+    },
+    {
+     "year": 2016,
+     "value": -30.23
+    },
+    {
+     "year": 2017,
+     "value": -30.66
+    },
+    {
+     "year": 2018,
+     "value": -28.69
+    },
+    {
+     "year": 2019,
+     "value": -30.26
+    },
+    {
+     "year": 2020,
+     "value": -29.21
+    },
+    {
+     "year": 2021,
+     "value": -22.2
+    },
+    {
+     "year": 2022,
+     "value": -29.61
+    },
+    {
+     "year": 2023,
+     "value": -33.06
+    },
+    {
+     "year": 2024,
+     "value": -22.1
+    },
+    {
+     "year": 2025,
+     "value": -26.49
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": -31.28911111111111,
+    "median": -30.66,
+    "p20": -34.848000000000006,
+    "p80": -28.09,
+    "minimum": -37.85,
+    "maximum": -22.1,
+    "standard_deviation": 3.904924425060247,
+    "trend": {
+     "slope_per_decade": 1.957045454545454,
+     "p_value": 2.7093370714270648e-05,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "frost_days",
+   "group": "frost",
+   "kind": "quantity",
+   "label_fr": "Jours de gel dans l'année",
+   "unit": "jours",
+   "definition_fr": "Nombre de jours de l'année où la température minimale est inférieure à 0 °C (indice FD de l'ETCCDI).",
+   "source_ids": [
+    "etccdi_indices"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 195.0
+    },
+    {
+     "year": 1982,
+     "value": 197.0
+    },
+    {
+     "year": 1983,
+     "value": 193.0
+    },
+    {
+     "year": 1984,
+     "value": 194.0
+    },
+    {
+     "year": 1985,
+     "value": 201.0
+    },
+    {
+     "year": 1986,
+     "value": 199.0
+    },
+    {
+     "year": 1987,
+     "value": 195.0
+    },
+    {
+     "year": 1988,
+     "value": 198.0
+    },
+    {
+     "year": 1989,
+     "value": 190.0
+    },
+    {
+     "year": 1990,
+     "value": 198.0
+    },
+    {
+     "year": 1991,
+     "value": 198.0
+    },
+    {
+     "year": 1992,
+     "value": 201.0
+    },
+    {
+     "year": 1993,
+     "value": 194.0
+    },
+    {
+     "year": 1994,
+     "value": 187.0
+    },
+    {
+     "year": 1995,
+     "value": 188.0
+    },
+    {
+     "year": 1996,
+     "value": 194.0
+    },
+    {
+     "year": 1997,
+     "value": 194.0
+    },
+    {
+     "year": 1998,
+     "value": 176.0
+    },
+    {
+     "year": 1999,
+     "value": 193.0
+    },
+    {
+     "year": 2000,
+     "value": 188.0
+    },
+    {
+     "year": 2001,
+     "value": 177.0
+    },
+    {
+     "year": 2002,
+     "value": 207.0
+    },
+    {
+     "year": 2003,
+     "value": 188.0
+    },
+    {
+     "year": 2004,
+     "value": 197.0
+    },
+    {
+     "year": 2005,
+     "value": 174.0
+    },
+    {
+     "year": 2006,
+     "value": 177.0
+    },
+    {
+     "year": 2007,
+     "value": 180.0
+    },
+    {
+     "year": 2008,
+     "value": 170.0
+    },
+    {
+     "year": 2009,
+     "value": 181.0
+    },
+    {
+     "year": 2010,
+     "value": 171.0
+    },
+    {
+     "year": 2011,
+     "value": 173.0
+    },
+    {
+     "year": 2012,
+     "value": 170.0
+    },
+    {
+     "year": 2013,
+     "value": 176.0
+    },
+    {
+     "year": 2014,
+     "value": 176.0
+    },
+    {
+     "year": 2015,
+     "value": 175.0
+    },
+    {
+     "year": 2016,
+     "value": 181.0
+    },
+    {
+     "year": 2017,
+     "value": 175.0
+    },
+    {
+     "year": 2018,
+     "value": 196.0
+    },
+    {
+     "year": 2019,
+     "value": 183.0
+    },
+    {
+     "year": 2020,
+     "value": 195.0
+    },
+    {
+     "year": 2021,
+     "value": 166.0
+    },
+    {
+     "year": 2022,
+     "value": 173.0
+    },
+    {
+     "year": 2023,
+     "value": 171.0
+    },
+    {
+     "year": 2024,
+     "value": 168.0
+    },
+    {
+     "year": 2025,
+     "value": 169.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 185.37777777777777,
+    "median": 188.0,
+    "p20": 173.8,
+    "p80": 196.2,
+    "minimum": 166.0,
+    "maximum": 207.0,
+    "standard_deviation": 11.253224503598737,
+    "trend": {
+     "slope_per_decade": -6.407624633431085,
+     "p_value": 4.2925524690318184e-07,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "last_spring_frost_doy",
+   "group": "frost",
+   "kind": "day_of_year",
+   "label_fr": "Dernier gel du printemps",
+   "unit": "jour de l'année",
+   "definition_fr": "Dernier jour avant le 15 juillet où la température minimale est inférieure à 0 °C.",
+   "source_ids": [
+    "plouffe_2011",
+    "bourgeois_2012"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 140.0
+    },
+    {
+     "year": 1982,
+     "value": 143.0
+    },
+    {
+     "year": 1983,
+     "value": 138.0
+    },
+    {
+     "year": 1984,
+     "value": 139.0
+    },
+    {
+     "year": 1985,
+     "value": 149.0
+    },
+    {
+     "year": 1986,
+     "value": 133.0
+    },
+    {
+     "year": 1987,
+     "value": 143.0
+    },
+    {
+     "year": 1988,
+     "value": 136.0
+    },
+    {
+     "year": 1989,
+     "value": 124.0
+    },
+    {
+     "year": 1990,
+     "value": 151.0
+    },
+    {
+     "year": 1991,
+     "value": 143.0
+    },
+    {
+     "year": 1992,
+     "value": 146.0
+    },
+    {
+     "year": 1993,
+     "value": 134.0
+    },
+    {
+     "year": 1994,
+     "value": 146.0
+    },
+    {
+     "year": 1995,
+     "value": 128.0
+    },
+    {
+     "year": 1996,
+     "value": 147.0
+    },
+    {
+     "year": 1997,
+     "value": 139.0
+    },
+    {
+     "year": 1998,
+     "value": 118.0
+    },
+    {
+     "year": 1999,
+     "value": 134.0
+    },
+    {
+     "year": 2000,
+     "value": 141.0
+    },
+    {
+     "year": 2001,
+     "value": 134.0
+    },
+    {
+     "year": 2002,
+     "value": 145.0
+    },
+    {
+     "year": 2003,
+     "value": 142.0
+    },
+    {
+     "year": 2004,
+     "value": 143.0
+    },
+    {
+     "year": 2005,
+     "value": 134.0
+    },
+    {
+     "year": 2006,
+     "value": 128.0
+    },
+    {
+     "year": 2007,
+     "value": 136.0
+    },
+    {
+     "year": 2008,
+     "value": 123.0
+    },
+    {
+     "year": 2009,
+     "value": 146.0
+    },
+    {
+     "year": 2010,
+     "value": 133.0
+    },
+    {
+     "year": 2011,
+     "value": 120.0
+    },
+    {
+     "year": 2012,
+     "value": 127.0
+    },
+    {
+     "year": 2013,
+     "value": 134.0
+    },
+    {
+     "year": 2014,
+     "value": 133.0
+    },
+    {
+     "year": 2015,
+     "value": 116.0
+    },
+    {
+     "year": 2016,
+     "value": 130.0
+    },
+    {
+     "year": 2017,
+     "value": 124.0
+    },
+    {
+     "year": 2018,
+     "value": 138.0
+    },
+    {
+     "year": 2019,
+     "value": 133.0
+    },
+    {
+     "year": 2020,
+     "value": 140.0
+    },
+    {
+     "year": 2021,
+     "value": 149.0
+    },
+    {
+     "year": 2022,
+     "value": 128.0
+    },
+    {
+     "year": 2023,
+     "value": 142.0
+    },
+    {
+     "year": 2024,
+     "value": 122.0
+    },
+    {
+     "year": 2025,
+     "value": 125.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 135.48888888888888,
+    "median": 136.0,
+    "p20": 127.8,
+    "p80": 143.0,
+    "minimum": 116.0,
+    "maximum": 151.0,
+    "standard_deviation": 8.848407822182153,
+    "trend": {
+     "slope_per_decade": -2.8062500000000004,
+     "p_value": 0.009638778825675987,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "first_fall_frost_doy",
+   "group": "frost",
+   "kind": "day_of_year",
+   "label_fr": "Premier gel de l'automne",
+   "unit": "jour de l'année",
+   "definition_fr": "Premier jour à partir du 15 juillet où la température minimale est inférieure à 0 °C.",
+   "source_ids": [
+    "plouffe_2011"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 283.0
+    },
+    {
+     "year": 1982,
+     "value": 280.0
+    },
+    {
+     "year": 1983,
+     "value": 289.0
+    },
+    {
+     "year": 1984,
+     "value": 278.0
+    },
+    {
+     "year": 1985,
+     "value": 284.0
+    },
+    {
+     "year": 1986,
+     "value": 278.0
+    },
+    {
+     "year": 1987,
+     "value": 284.0
+    },
+    {
+     "year": 1988,
+     "value": 278.0
+    },
+    {
+     "year": 1989,
+     "value": 282.0
+    },
+    {
+     "year": 1990,
+     "value": 292.0
+    },
+    {
+     "year": 1991,
+     "value": 273.0
+    },
+    {
+     "year": 1992,
+     "value": 275.0
+    },
+    {
+     "year": 1993,
+     "value": 273.0
+    },
+    {
+     "year": 1994,
+     "value": 284.0
+    },
+    {
+     "year": 1995,
+     "value": 293.0
+    },
+    {
+     "year": 1996,
+     "value": 278.0
+    },
+    {
+     "year": 1997,
+     "value": 295.0
+    },
+    {
+     "year": 1998,
+     "value": 298.0
+    },
+    {
+     "year": 1999,
+     "value": 280.0
+    },
+    {
+     "year": 2000,
+     "value": 272.0
+    },
+    {
+     "year": 2001,
+     "value": 301.0
+    },
+    {
+     "year": 2002,
+     "value": 281.0
+    },
+    {
+     "year": 2003,
+     "value": 291.0
+    },
+    {
+     "year": 2004,
+     "value": 279.0
+    },
+    {
+     "year": 2005,
+     "value": 300.0
+    },
+    {
+     "year": 2006,
+     "value": 284.0
+    },
+    {
+     "year": 2007,
+     "value": 301.0
+    },
+    {
+     "year": 2008,
+     "value": 292.0
+    },
+    {
+     "year": 2009,
+     "value": 287.0
+    },
+    {
+     "year": 2010,
+     "value": 292.0
+    },
+    {
+     "year": 2011,
+     "value": 279.0
+    },
+    {
+     "year": 2012,
+     "value": 287.0
+    },
+    {
+     "year": 2013,
+     "value": 297.0
+    },
+    {
+     "year": 2014,
+     "value": 294.0
+    },
+    {
+     "year": 2015,
+     "value": 283.0
+    },
+    {
+     "year": 2016,
+     "value": 299.0
+    },
+    {
+     "year": 2017,
+     "value": 290.0
+    },
+    {
+     "year": 2018,
+     "value": 267.0
+    },
+    {
+     "year": 2019,
+     "value": 305.0
+    },
+    {
+     "year": 2020,
+     "value": 285.0
+    },
+    {
+     "year": 2021,
+     "value": 302.0
+    },
+    {
+     "year": 2022,
+     "value": 301.0
+    },
+    {
+     "year": 2023,
+     "value": 302.0
+    },
+    {
+     "year": 2024,
+     "value": 291.0
+    },
+    {
+     "year": 2025,
+     "value": 283.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 287.15555555555557,
+    "median": 285.0,
+    "p20": 278.8,
+    "p80": 297.2,
+    "minimum": 267.0,
+    "maximum": 305.0,
+    "standard_deviation": 9.456227943190681,
+    "trend": {
+     "slope_per_decade": 3.333333333333333,
+     "p_value": 0.0032871172851707264,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "first_fall_killing_frost_doy",
+   "group": "frost",
+   "kind": "day_of_year",
+   "label_fr": "Premier gel meurtrier de l'automne",
+   "unit": "jour de l'année",
+   "definition_fr": "Premier jour à partir du 15 juillet où la température minimale atteint -2 °C ou moins. C'est la fin du cumul des unités thermiques maïs au Québec.",
+   "source_ids": [
+    "bourgeois_2012"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 297.0
+    },
+    {
+     "year": 1982,
+     "value": 283.0
+    },
+    {
+     "year": 1983,
+     "value": 293.0
+    },
+    {
+     "year": 1984,
+     "value": 279.0
+    },
+    {
+     "year": 1985,
+     "value": 294.0
+    },
+    {
+     "year": 1986,
+     "value": 283.0
+    },
+    {
+     "year": 1987,
+     "value": 284.0
+    },
+    {
+     "year": 1988,
+     "value": 289.0
+    },
+    {
+     "year": 1989,
+     "value": 290.0
+    },
+    {
+     "year": 1990,
+     "value": 293.0
+    },
+    {
+     "year": 1991,
+     "value": 293.0
+    },
+    {
+     "year": 1992,
+     "value": 303.0
+    },
+    {
+     "year": 1993,
+     "value": 283.0
+    },
+    {
+     "year": 1994,
+     "value": 308.0
+    },
+    {
+     "year": 1995,
+     "value": 303.0
+    },
+    {
+     "year": 1996,
+     "value": 285.0
+    },
+    {
+     "year": 1997,
+     "value": 295.0
+    },
+    {
+     "year": 1998,
+     "value": 299.0
+    },
+    {
+     "year": 1999,
+     "value": 291.0
+    },
+    {
+     "year": 2000,
+     "value": 302.0
+    },
+    {
+     "year": 2001,
+     "value": 304.0
+    },
+    {
+     "year": 2002,
+     "value": 292.0
+    },
+    {
+     "year": 2003,
+     "value": 306.0
+    },
+    {
+     "year": 2004,
+     "value": 294.0
+    },
+    {
+     "year": 2005,
+     "value": 308.0
+    },
+    {
+     "year": 2006,
+     "value": 300.0
+    },
+    {
+     "year": 2007,
+     "value": 302.0
+    },
+    {
+     "year": 2008,
+     "value": 296.0
+    },
+    {
+     "year": 2009,
+     "value": 288.0
+    },
+    {
+     "year": 2010,
+     "value": 303.0
+    },
+    {
+     "year": 2011,
+     "value": 304.0
+    },
+    {
+     "year": 2012,
+     "value": 309.0
+    },
+    {
+     "year": 2013,
+     "value": 302.0
+    },
+    {
+     "year": 2014,
+     "value": 306.0
+    },
+    {
+     "year": 2015,
+     "value": 291.0
+    },
+    {
+     "year": 2016,
+     "value": 300.0
+    },
+    {
+     "year": 2017,
+     "value": 308.0
+    },
+    {
+     "year": 2018,
+     "value": 291.0
+    },
+    {
+     "year": 2019,
+     "value": 306.0
+    },
+    {
+     "year": 2020,
+     "value": 299.0
+    },
+    {
+     "year": 2021,
+     "value": 307.0
+    },
+    {
+     "year": 2022,
+     "value": 313.0
+    },
+    {
+     "year": 2023,
+     "value": 304.0
+    },
+    {
+     "year": 2024,
+     "value": 302.0
+    },
+    {
+     "year": 2025,
+     "value": 311.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 297.6222222222222,
+    "median": 299.0,
+    "p20": 290.8,
+    "p80": 306.0,
+    "minimum": 279.0,
+    "maximum": 313.0,
+    "standard_deviation": 8.548655225989613,
+    "trend": {
+     "slope_per_decade": 4.285714285714286,
+     "p_value": 2.4029046155726874e-05,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "frost_free_season_days",
+   "group": "frost",
+   "kind": "quantity",
+   "label_fr": "Saison sans gel",
+   "unit": "jours",
+   "definition_fr": "Nombre de jours entre le dernier gel du printemps et le premier gel de l'automne (seuil : minimum inférieur à 0 °C).",
+   "source_ids": [
+    "plouffe_2011"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 142.0
+    },
+    {
+     "year": 1982,
+     "value": 136.0
+    },
+    {
+     "year": 1983,
+     "value": 150.0
+    },
+    {
+     "year": 1984,
+     "value": 138.0
+    },
+    {
+     "year": 1985,
+     "value": 134.0
+    },
+    {
+     "year": 1986,
+     "value": 144.0
+    },
+    {
+     "year": 1987,
+     "value": 140.0
+    },
+    {
+     "year": 1988,
+     "value": 141.0
+    },
+    {
+     "year": 1989,
+     "value": 157.0
+    },
+    {
+     "year": 1990,
+     "value": 140.0
+    },
+    {
+     "year": 1991,
+     "value": 129.0
+    },
+    {
+     "year": 1992,
+     "value": 128.0
+    },
+    {
+     "year": 1993,
+     "value": 138.0
+    },
+    {
+     "year": 1994,
+     "value": 137.0
+    },
+    {
+     "year": 1995,
+     "value": 164.0
+    },
+    {
+     "year": 1996,
+     "value": 130.0
+    },
+    {
+     "year": 1997,
+     "value": 155.0
+    },
+    {
+     "year": 1998,
+     "value": 179.0
+    },
+    {
+     "year": 1999,
+     "value": 145.0
+    },
+    {
+     "year": 2000,
+     "value": 130.0
+    },
+    {
+     "year": 2001,
+     "value": 166.0
+    },
+    {
+     "year": 2002,
+     "value": 135.0
+    },
+    {
+     "year": 2003,
+     "value": 148.0
+    },
+    {
+     "year": 2004,
+     "value": 135.0
+    },
+    {
+     "year": 2005,
+     "value": 165.0
+    },
+    {
+     "year": 2006,
+     "value": 155.0
+    },
+    {
+     "year": 2007,
+     "value": 164.0
+    },
+    {
+     "year": 2008,
+     "value": 168.0
+    },
+    {
+     "year": 2009,
+     "value": 140.0
+    },
+    {
+     "year": 2010,
+     "value": 158.0
+    },
+    {
+     "year": 2011,
+     "value": 158.0
+    },
+    {
+     "year": 2012,
+     "value": 159.0
+    },
+    {
+     "year": 2013,
+     "value": 162.0
+    },
+    {
+     "year": 2014,
+     "value": 160.0
+    },
+    {
+     "year": 2015,
+     "value": 166.0
+    },
+    {
+     "year": 2016,
+     "value": 168.0
+    },
+    {
+     "year": 2017,
+     "value": 165.0
+    },
+    {
+     "year": 2018,
+     "value": 128.0
+    },
+    {
+     "year": 2019,
+     "value": 171.0
+    },
+    {
+     "year": 2020,
+     "value": 144.0
+    },
+    {
+     "year": 2021,
+     "value": 152.0
+    },
+    {
+     "year": 2022,
+     "value": 172.0
+    },
+    {
+     "year": 2023,
+     "value": 159.0
+    },
+    {
+     "year": 2024,
+     "value": 168.0
+    },
+    {
+     "year": 2025,
+     "value": 157.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 150.66666666666666,
+    "median": 152.0,
+    "p20": 136.8,
+    "p80": 165.0,
+    "minimum": 128.0,
+    "maximum": 179.0,
+    "standard_deviation": 14.041209191360819,
+    "trend": {
+     "slope_per_decade": 5.885416666666668,
+     "p_value": 0.0005090654288857355,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "growing_season_length_days",
+   "group": "season",
+   "kind": "quantity",
+   "label_fr": "Saison de croissance",
+   "unit": "jours",
+   "definition_fr": "Du premier épisode d'au moins 6 jours à plus de 5 °C de moyenne jusqu'au premier épisode, après le 1er juillet, de 6 jours à moins de 5 °C (indice GSL de l'ETCCDI).",
+   "source_ids": [
+    "etccdi_indices",
+    "plouffe_2011"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 139.0
+    },
+    {
+     "year": 1982,
+     "value": 170.0
+    },
+    {
+     "year": 1983,
+     "value": 176.0
+    },
+    {
+     "year": 1984,
+     "value": 162.0
+    },
+    {
+     "year": 1985,
+     "value": 166.0
+    },
+    {
+     "year": 1986,
+     "value": 178.0
+    },
+    {
+     "year": 1987,
+     "value": 189.0
+    },
+    {
+     "year": 1988,
+     "value": 153.0
+    },
+    {
+     "year": 1989,
+     "value": 162.0
+    },
+    {
+     "year": 1990,
+     "value": 165.0
+    },
+    {
+     "year": 1991,
+     "value": 161.0
+    },
+    {
+     "year": 1992,
+     "value": 152.0
+    },
+    {
+     "year": 1993,
+     "value": 162.0
+    },
+    {
+     "year": 1994,
+     "value": 181.0
+    },
+    {
+     "year": 1995,
+     "value": 174.0
+    },
+    {
+     "year": 1996,
+     "value": 152.0
+    },
+    {
+     "year": 1997,
+     "value": 154.0
+    },
+    {
+     "year": 1998,
+     "value": 199.0
+    },
+    {
+     "year": 1999,
+     "value": 171.0
+    },
+    {
+     "year": 2000,
+     "value": 147.0
+    },
+    {
+     "year": 2001,
+     "value": 179.0
+    },
+    {
+     "year": 2002,
+     "value": 141.0
+    },
+    {
+     "year": 2003,
+     "value": 156.0
+    },
+    {
+     "year": 2004,
+     "value": 157.0
+    },
+    {
+     "year": 2005,
+     "value": 168.0
+    },
+    {
+     "year": 2006,
+     "value": 174.0
+    },
+    {
+     "year": 2007,
+     "value": 174.0
+    },
+    {
+     "year": 2008,
+     "value": 167.0
+    },
+    {
+     "year": 2009,
+     "value": 158.0
+    },
+    {
+     "year": 2010,
+     "value": 182.0
+    },
+    {
+     "year": 2011,
+     "value": 161.0
+    },
+    {
+     "year": 2012,
+     "value": 163.0
+    },
+    {
+     "year": 2013,
+     "value": 178.0
+    },
+    {
+     "year": 2014,
+     "value": 167.0
+    },
+    {
+     "year": 2015,
+     "value": 171.0
+    },
+    {
+     "year": 2016,
+     "value": 166.0
+    },
+    {
+     "year": 2017,
+     "value": 186.0
+    },
+    {
+     "year": 2018,
+     "value": 173.0
+    },
+    {
+     "year": 2019,
+     "value": 168.0
+    },
+    {
+     "year": 2020,
+     "value": 164.0
+    },
+    {
+     "year": 2021,
+     "value": 177.0
+    },
+    {
+     "year": 2022,
+     "value": 187.0
+    },
+    {
+     "year": 2023,
+     "value": 187.0
+    },
+    {
+     "year": 2024,
+     "value": 190.0
+    },
+    {
+     "year": 2025,
+     "value": 183.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 168.66666666666666,
+    "median": 168.0,
+    "p20": 157.8,
+    "p80": 179.4,
+    "minimum": 139.0,
+    "maximum": 199.0,
+    "standard_deviation": 13.079245645933357,
+    "trend": {
+     "slope_per_decade": 4.166666666666667,
+     "p_value": 0.01187279707482114,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "growing_season_start_doy",
+   "group": "season",
+   "kind": "day_of_year",
+   "label_fr": "Début de la saison de croissance",
+   "unit": "jour de l'année",
+   "definition_fr": "Premier jour du premier épisode d'au moins 6 jours à plus de 5 °C de moyenne. Repère thermique : ce n'est pas une date de semis.",
+   "source_ids": [
+    "etccdi_indices"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 141.0
+    },
+    {
+     "year": 1982,
+     "value": 124.0
+    },
+    {
+     "year": 1983,
+     "value": 116.0
+    },
+    {
+     "year": 1984,
+     "value": 141.0
+    },
+    {
+     "year": 1985,
+     "value": 135.0
+    },
+    {
+     "year": 1986,
+     "value": 115.0
+    },
+    {
+     "year": 1987,
+     "value": 105.0
+    },
+    {
+     "year": 1988,
+     "value": 125.0
+    },
+    {
+     "year": 1989,
+     "value": 125.0
+    },
+    {
+     "year": 1990,
+     "value": 128.0
+    },
+    {
+     "year": 1991,
+     "value": 139.0
+    },
+    {
+     "year": 1992,
+     "value": 136.0
+    },
+    {
+     "year": 1993,
+     "value": 119.0
+    },
+    {
+     "year": 1994,
+     "value": 124.0
+    },
+    {
+     "year": 1995,
+     "value": 128.0
+    },
+    {
+     "year": 1996,
+     "value": 136.0
+    },
+    {
+     "year": 1997,
+     "value": 139.0
+    },
+    {
+     "year": 1998,
+     "value": 103.0
+    },
+    {
+     "year": 1999,
+     "value": 120.0
+    },
+    {
+     "year": 2000,
+     "value": 133.0
+    },
+    {
+     "year": 2001,
+     "value": 120.0
+    },
+    {
+     "year": 2002,
+     "value": 146.0
+    },
+    {
+     "year": 2003,
+     "value": 134.0
+    },
+    {
+     "year": 2004,
+     "value": 135.0
+    },
+    {
+     "year": 2005,
+     "value": 125.0
+    },
+    {
+     "year": 2006,
+     "value": 120.0
+    },
+    {
+     "year": 2007,
+     "value": 127.0
+    },
+    {
+     "year": 2008,
+     "value": 124.0
+    },
+    {
+     "year": 2009,
+     "value": 125.0
+    },
+    {
+     "year": 2010,
+     "value": 120.0
+    },
+    {
+     "year": 2011,
+     "value": 138.0
+    },
+    {
+     "year": 2012,
+     "value": 122.0
+    },
+    {
+     "year": 2013,
+     "value": 118.0
+    },
+    {
+     "year": 2014,
+     "value": 125.0
+    },
+    {
+     "year": 2015,
+     "value": 117.0
+    },
+    {
+     "year": 2016,
+     "value": 131.0
+    },
+    {
+     "year": 2017,
+     "value": 122.0
+    },
+    {
+     "year": 2018,
+     "value": 121.0
+    },
+    {
+     "year": 2019,
+     "value": 136.0
+    },
+    {
+     "year": 2020,
+     "value": 135.0
+    },
+    {
+     "year": 2021,
+     "value": 129.0
+    },
+    {
+     "year": 2022,
+     "value": 128.0
+    },
+    {
+     "year": 2023,
+     "value": 115.0
+    },
+    {
+     "year": 2024,
+     "value": 122.0
+    },
+    {
+     "year": 2025,
+     "value": 122.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 126.42222222222222,
+    "median": 125.0,
+    "p20": 120.0,
+    "p80": 135.2,
+    "minimum": 103.0,
+    "maximum": 146.0,
+    "standard_deviation": 9.168760703579638,
+    "trend": {
+     "slope_per_decade": -1.0529556650246306,
+     "p_value": 0.3774560327863896,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "growing_season_end_doy",
+   "group": "season",
+   "kind": "day_of_year",
+   "label_fr": "Fin de la saison de croissance",
+   "unit": "jour de l'année",
+   "definition_fr": "Dernier jour avant le premier épisode, après le 1er juillet, de 6 jours à moins de 5 °C de moyenne.",
+   "source_ids": [
+    "etccdi_indices"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 279.0
+    },
+    {
+     "year": 1982,
+     "value": 293.0
+    },
+    {
+     "year": 1983,
+     "value": 291.0
+    },
+    {
+     "year": 1984,
+     "value": 302.0
+    },
+    {
+     "year": 1985,
+     "value": 300.0
+    },
+    {
+     "year": 1986,
+     "value": 292.0
+    },
+    {
+     "year": 1987,
+     "value": 293.0
+    },
+    {
+     "year": 1988,
+     "value": 277.0
+    },
+    {
+     "year": 1989,
+     "value": 286.0
+    },
+    {
+     "year": 1990,
+     "value": 292.0
+    },
+    {
+     "year": 1991,
+     "value": 299.0
+    },
+    {
+     "year": 1992,
+     "value": 287.0
+    },
+    {
+     "year": 1993,
+     "value": 280.0
+    },
+    {
+     "year": 1994,
+     "value": 304.0
+    },
+    {
+     "year": 1995,
+     "value": 301.0
+    },
+    {
+     "year": 1996,
+     "value": 287.0
+    },
+    {
+     "year": 1997,
+     "value": 292.0
+    },
+    {
+     "year": 1998,
+     "value": 301.0
+    },
+    {
+     "year": 1999,
+     "value": 290.0
+    },
+    {
+     "year": 2000,
+     "value": 279.0
+    },
+    {
+     "year": 2001,
+     "value": 298.0
+    },
+    {
+     "year": 2002,
+     "value": 286.0
+    },
+    {
+     "year": 2003,
+     "value": 289.0
+    },
+    {
+     "year": 2004,
+     "value": 291.0
+    },
+    {
+     "year": 2005,
+     "value": 292.0
+    },
+    {
+     "year": 2006,
+     "value": 293.0
+    },
+    {
+     "year": 2007,
+     "value": 300.0
+    },
+    {
+     "year": 2008,
+     "value": 290.0
+    },
+    {
+     "year": 2009,
+     "value": 282.0
+    },
+    {
+     "year": 2010,
+     "value": 301.0
+    },
+    {
+     "year": 2011,
+     "value": 298.0
+    },
+    {
+     "year": 2012,
+     "value": 284.0
+    },
+    {
+     "year": 2013,
+     "value": 295.0
+    },
+    {
+     "year": 2014,
+     "value": 291.0
+    },
+    {
+     "year": 2015,
+     "value": 287.0
+    },
+    {
+     "year": 2016,
+     "value": 296.0
+    },
+    {
+     "year": 2017,
+     "value": 307.0
+    },
+    {
+     "year": 2018,
+     "value": 293.0
+    },
+    {
+     "year": 2019,
+     "value": 303.0
+    },
+    {
+     "year": 2020,
+     "value": 298.0
+    },
+    {
+     "year": 2021,
+     "value": 305.0
+    },
+    {
+     "year": 2022,
+     "value": 314.0
+    },
+    {
+     "year": 2023,
+     "value": 301.0
+    },
+    {
+     "year": 2024,
+     "value": 311.0
+    },
+    {
+     "year": 2025,
+     "value": 304.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 294.0888888888889,
+    "median": 293.0,
+    "p20": 287.0,
+    "p80": 301.0,
+    "minimum": 277.0,
+    "maximum": 314.0,
+    "standard_deviation": 8.469086851530419,
+    "trend": {
+     "slope_per_decade": 3.076923076923077,
+     "p_value": 0.0058804792066451395,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "gdd_base0",
+   "group": "season",
+   "kind": "quantity",
+   "label_fr": "Degrés-jours de croissance, base 0 °C",
+   "unit": "degrés-jours",
+   "definition_fr": "Somme, du 1er avril au 31 octobre, de la moyenne (maximum + minimum) / 2 au-dessus de 0 °C. Base utilisée pour les céréales.",
+   "source_ids": [
+    "aafc_agroclimate",
+    "omafra_fieldcropnews_2025"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 2178.59
+    },
+    {
+     "year": 1982,
+     "value": 2102.505
+    },
+    {
+     "year": 1983,
+     "value": 2222.105
+    },
+    {
+     "year": 1984,
+     "value": 2144.015
+    },
+    {
+     "year": 1985,
+     "value": 2156.605
+    },
+    {
+     "year": 1986,
+     "value": 1973.305
+    },
+    {
+     "year": 1987,
+     "value": 2281.525
+    },
+    {
+     "year": 1988,
+     "value": 2199.65
+    },
+    {
+     "year": 1989,
+     "value": 2331.07
+    },
+    {
+     "year": 1990,
+     "value": 2324.145
+    },
+    {
+     "year": 1991,
+     "value": 2263.7599999999998
+    },
+    {
+     "year": 1992,
+     "value": 2091.49
+    },
+    {
+     "year": 1993,
+     "value": 2291.53
+    },
+    {
+     "year": 1994,
+     "value": 2324.085
+    },
+    {
+     "year": 1995,
+     "value": 2434.4
+    },
+    {
+     "year": 1996,
+     "value": 2231.54
+    },
+    {
+     "year": 1997,
+     "value": 2245.695
+    },
+    {
+     "year": 1998,
+     "value": 2515.055
+    },
+    {
+     "year": 1999,
+     "value": 2519.175
+    },
+    {
+     "year": 2000,
+     "value": 2138.795
+    },
+    {
+     "year": 2001,
+     "value": 2490.755
+    },
+    {
+     "year": 2002,
+     "value": 2268.895
+    },
+    {
+     "year": 2003,
+     "value": 2378.005
+    },
+    {
+     "year": 2004,
+     "value": 2151.165
+    },
+    {
+     "year": 2005,
+     "value": 2456.045
+    },
+    {
+     "year": 2006,
+     "value": 2381.755
+    },
+    {
+     "year": 2007,
+     "value": 2384.98
+    },
+    {
+     "year": 2008,
+     "value": 2358.995
+    },
+    {
+     "year": 2009,
+     "value": 2257.42
+    },
+    {
+     "year": 2010,
+     "value": 2531.695
+    },
+    {
+     "year": 2011,
+     "value": 2412.71
+    },
+    {
+     "year": 2012,
+     "value": 2552.335
+    },
+    {
+     "year": 2013,
+     "value": 2409.8
+    },
+    {
+     "year": 2014,
+     "value": 2480.68
+    },
+    {
+     "year": 2015,
+     "value": 2436.435
+    },
+    {
+     "year": 2016,
+     "value": 2433.97
+    },
+    {
+     "year": 2017,
+     "value": 2469.945
+    },
+    {
+     "year": 2018,
+     "value": 2350.43
+    },
+    {
+     "year": 2019,
+     "value": 2257.465
+    },
+    {
+     "year": 2020,
+     "value": 2347.73
+    },
+    {
+     "year": 2021,
+     "value": 2724.8
+    },
+    {
+     "year": 2022,
+     "value": 2591.47
+    },
+    {
+     "year": 2023,
+     "value": 2748.07
+    },
+    {
+     "year": 2024,
+     "value": 2816.73
+    },
+    {
+     "year": 2025,
+     "value": 2607.845
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 2361.5370000000003,
+    "median": 2350.43,
+    "p20": 2217.614,
+    "p80": 2495.6150000000002,
+    "minimum": 1973.305,
+    "maximum": 2816.73,
+    "standard_deviation": 178.15932044848697,
+    "trend": {
+     "slope_per_decade": 97.7623161764707,
+     "p_value": 3.833925494856061e-07,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "gdd_base5",
+   "group": "season",
+   "kind": "quantity",
+   "label_fr": "Degrés-jours de croissance, base 5 °C",
+   "unit": "degrés-jours",
+   "definition_fr": "Somme, du 1er avril au 31 octobre, de la moyenne (maximum + minimum) / 2 au-dessus de 5 °C. Base utilisée pour la luzerne et le canola.",
+   "source_ids": [
+    "aafc_agroclimate",
+    "omafra_fieldcropnews_2025"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 1275.845
+    },
+    {
+     "year": 1982,
+     "value": 1203.795
+    },
+    {
+     "year": 1983,
+     "value": 1316.49
+    },
+    {
+     "year": 1984,
+     "value": 1244.115
+    },
+    {
+     "year": 1985,
+     "value": 1275.765
+    },
+    {
+     "year": 1986,
+     "value": 1063.085
+    },
+    {
+     "year": 1987,
+     "value": 1339.41
+    },
+    {
+     "year": 1988,
+     "value": 1293.525
+    },
+    {
+     "year": 1989,
+     "value": 1416.545
+    },
+    {
+     "year": 1990,
+     "value": 1405.59
+    },
+    {
+     "year": 1991,
+     "value": 1336.26
+    },
+    {
+     "year": 1992,
+     "value": 1217.655
+    },
+    {
+     "year": 1993,
+     "value": 1374.22
+    },
+    {
+     "year": 1994,
+     "value": 1374.125
+    },
+    {
+     "year": 1995,
+     "value": 1498.5
+    },
+    {
+     "year": 1996,
+     "value": 1321.65
+    },
+    {
+     "year": 1997,
+     "value": 1348.425
+    },
+    {
+     "year": 1998,
+     "value": 1532.315
+    },
+    {
+     "year": 1999,
+     "value": 1612.145
+    },
+    {
+     "year": 2000,
+     "value": 1253.31
+    },
+    {
+     "year": 2001,
+     "value": 1556.405
+    },
+    {
+     "year": 2002,
+     "value": 1395.685
+    },
+    {
+     "year": 2003,
+     "value": 1459.345
+    },
+    {
+     "year": 2004,
+     "value": 1267.045
+    },
+    {
+     "year": 2005,
+     "value": 1505.78
+    },
+    {
+     "year": 2006,
+     "value": 1429.48
+    },
+    {
+     "year": 2007,
+     "value": 1430.34
+    },
+    {
+     "year": 2008,
+     "value": 1403.115
+    },
+    {
+     "year": 2009,
+     "value": 1335.01
+    },
+    {
+     "year": 2010,
+     "value": 1543.625
+    },
+    {
+     "year": 2011,
+     "value": 1486.935
+    },
+    {
+     "year": 2012,
+     "value": 1583.945
+    },
+    {
+     "year": 2013,
+     "value": 1462.65
+    },
+    {
+     "year": 2014,
+     "value": 1532.5
+    },
+    {
+     "year": 2015,
+     "value": 1506.94
+    },
+    {
+     "year": 2016,
+     "value": 1528.565
+    },
+    {
+     "year": 2017,
+     "value": 1519.39
+    },
+    {
+     "year": 2018,
+     "value": 1480.595
+    },
+    {
+     "year": 2019,
+     "value": 1326.2450000000001
+    },
+    {
+     "year": 2020,
+     "value": 1477.91
+    },
+    {
+     "year": 2021,
+     "value": 1719.01
+    },
+    {
+     "year": 2022,
+     "value": 1626.31
+    },
+    {
+     "year": 2023,
+     "value": 1751.96
+    },
+    {
+     "year": 2024,
+     "value": 1825.35
+    },
+    {
+     "year": 2025,
+     "value": 1620.175
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 1432.824,
+    "median": 1429.48,
+    "p20": 1311.897,
+    "p80": 1534.7250000000001,
+    "minimum": 1063.085,
+    "maximum": 1825.35,
+    "standard_deviation": 151.6587849439216,
+    "trend": {
+     "slope_per_decade": 83.7236344537815,
+     "p_value": 1.344529385605142e-07,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "gdd_base10",
+   "group": "season",
+   "kind": "quantity",
+   "label_fr": "Degrés-jours de croissance, base 10 °C",
+   "unit": "degrés-jours",
+   "definition_fr": "Somme, du 1er avril au 31 octobre, de la moyenne (maximum + minimum) / 2 au-dessus de 10 °C.",
+   "source_ids": [
+    "aafc_agroclimate"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 594.4
+    },
+    {
+     "year": 1982,
+     "value": 499.13
+    },
+    {
+     "year": 1983,
+     "value": 640.47
+    },
+    {
+     "year": 1984,
+     "value": 562.855
+    },
+    {
+     "year": 1985,
+     "value": 566.045
+    },
+    {
+     "year": 1986,
+     "value": 405.54
+    },
+    {
+     "year": 1987,
+     "value": 619.775
+    },
+    {
+     "year": 1988,
+     "value": 623.38
+    },
+    {
+     "year": 1989,
+     "value": 684.7
+    },
+    {
+     "year": 1990,
+     "value": 692.975
+    },
+    {
+     "year": 1991,
+     "value": 619.85
+    },
+    {
+     "year": 1992,
+     "value": 514.565
+    },
+    {
+     "year": 1993,
+     "value": 667.81
+    },
+    {
+     "year": 1994,
+     "value": 623.79
+    },
+    {
+     "year": 1995,
+     "value": 742.745
+    },
+    {
+     "year": 1996,
+     "value": 635.11
+    },
+    {
+     "year": 1997,
+     "value": 662.855
+    },
+    {
+     "year": 1998,
+     "value": 752.87
+    },
+    {
+     "year": 1999,
+     "value": 856.075
+    },
+    {
+     "year": 2000,
+     "value": 577.255
+    },
+    {
+     "year": 2001,
+     "value": 765.68
+    },
+    {
+     "year": 2002,
+     "value": 719.87
+    },
+    {
+     "year": 2003,
+     "value": 740.14
+    },
+    {
+     "year": 2004,
+     "value": 560.365
+    },
+    {
+     "year": 2005,
+     "value": 767.505
+    },
+    {
+     "year": 2006,
+     "value": 679.555
+    },
+    {
+     "year": 2007,
+     "value": 655.025
+    },
+    {
+     "year": 2008,
+     "value": 648.79
+    },
+    {
+     "year": 2009,
+     "value": 617.375
+    },
+    {
+     "year": 2010,
+     "value": 786.82
+    },
+    {
+     "year": 2011,
+     "value": 735.85
+    },
+    {
+     "year": 2012,
+     "value": 796.13
+    },
+    {
+     "year": 2013,
+     "value": 658.365
+    },
+    {
+     "year": 2014,
+     "value": 786.455
+    },
+    {
+     "year": 2015,
+     "value": 755.96
+    },
+    {
+     "year": 2016,
+     "value": 768.515
+    },
+    {
+     "year": 2017,
+     "value": 700.6
+    },
+    {
+     "year": 2018,
+     "value": 795.425
+    },
+    {
+     "year": 2019,
+     "value": 624.94
+    },
+    {
+     "year": 2020,
+     "value": 800.015
+    },
+    {
+     "year": 2021,
+     "value": 906.365
+    },
+    {
+     "year": 2022,
+     "value": 804.25
+    },
+    {
+     "year": 2023,
+     "value": 917.51
+    },
+    {
+     "year": 2024,
+     "value": 1003.3100000000001
+    },
+    {
+     "year": 2025,
+     "value": 833.41
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 697.1204444444445,
+    "median": 684.7,
+    "p20": 619.295,
+    "p80": 788.541,
+    "minimum": 405.54,
+    "maximum": 1003.3100000000001,
+    "standard_deviation": 115.53541032861946,
+    "trend": {
+     "slope_per_decade": 62.75375874125878,
+     "p_value": 9.747766416268178e-08,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "crop_heat_units",
+   "group": "season",
+   "kind": "quantity",
+   "label_fr": "Unités thermiques maïs (UTM)",
+   "unit": "UTM",
+   "definition_fr": "Chaleur utile aux cultures de saison chaude (maïs, soya), cumulée selon la méthode québécoise : du premier jour où la moyenne mobile sur 5 jours atteint 12,8 °C, après la date médiane du dernier gel, jusqu'au premier gel d'automne à -2 °C ou moins.",
+   "source_ids": [
+    "bourgeois_2012"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 1907.1005016
+    },
+    {
+     "year": 1982,
+     "value": 1781.8381398
+    },
+    {
+     "year": 1983,
+     "value": 2008.3096632
+    },
+    {
+     "year": 1984,
+     "value": 1830.3824088
+    },
+    {
+     "year": 1985,
+     "value": 1820.4015497999999
+    },
+    {
+     "year": 1986,
+     "value": 1604.1718104
+    },
+    {
+     "year": 1987,
+     "value": 2036.9247624
+    },
+    {
+     "year": 1988,
+     "value": 1818.3172344
+    },
+    {
+     "year": 1989,
+     "value": 2193.046743
+    },
+    {
+     "year": 1990,
+     "value": 2014.5763338
+    },
+    {
+     "year": 1991,
+     "value": 1912.6275719999999
+    },
+    {
+     "year": 1992,
+     "value": 1919.1391188
+    },
+    {
+     "year": 1993,
+     "value": 1962.1689204
+    },
+    {
+     "year": 1994,
+     "value": 2070.7491426
+    },
+    {
+     "year": 1995,
+     "value": 2297.1209118
+    },
+    {
+     "year": 1996,
+     "value": 2059.1367486
+    },
+    {
+     "year": 1997,
+     "value": 2084.4847902
+    },
+    {
+     "year": 1998,
+     "value": 2358.9552642
+    },
+    {
+     "year": 1999,
+     "value": 2487.8884776
+    },
+    {
+     "year": 2000,
+     "value": 1886.7638424
+    },
+    {
+     "year": 2001,
+     "value": 2361.8368056
+    },
+    {
+     "year": 2002,
+     "value": 2222.2492158
+    },
+    {
+     "year": 2003,
+     "value": 2362.785618
+    },
+    {
+     "year": 2004,
+     "value": 1947.7726764
+    },
+    {
+     "year": 2005,
+     "value": 2356.6424628
+    },
+    {
+     "year": 2006,
+     "value": 2179.0404684
+    },
+    {
+     "year": 2007,
+     "value": 2216.8412915999997
+    },
+    {
+     "year": 2008,
+     "value": 2087.4072312
+    },
+    {
+     "year": 2009,
+     "value": 1930.630998
+    },
+    {
+     "year": 2010,
+     "value": 2366.0051004
+    },
+    {
+     "year": 2011,
+     "value": 2315.8219086
+    },
+    {
+     "year": 2012,
+     "value": 2495.597286
+    },
+    {
+     "year": 2013,
+     "value": 2132.0157593999998
+    },
+    {
+     "year": 2014,
+     "value": 2335.4942964
+    },
+    {
+     "year": 2015,
+     "value": 2397.1900686
+    },
+    {
+     "year": 2016,
+     "value": 2438.629125
+    },
+    {
+     "year": 2017,
+     "value": 2261.1825024
+    },
+    {
+     "year": 2018,
+     "value": 2269.7731374
+    },
+    {
+     "year": 2019,
+     "value": 1983.8230458
+    },
+    {
+     "year": 2020,
+     "value": 2340.3475392
+    },
+    {
+     "year": 2021,
+     "value": 2720.8668936
+    },
+    {
+     "year": 2022,
+     "value": 2698.669395
+    },
+    {
+     "year": 2023,
+     "value": 2682.673422
+    },
+    {
+     "year": 2024,
+     "value": 2886.3858
+    },
+    {
+     "year": 2025,
+     "value": 2560.3988082
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 2191.20410648,
+    "median": 2193.046743,
+    "p20": 1928.33262216,
+    "p80": 2372.24209404,
+    "minimum": 1604.1718104,
+    "maximum": 2886.3858,
+    "standard_deviation": 279.81818469831455,
+    "trend": {
+     "slope_per_decade": 169.04761613571458,
+     "p_value": 4.54329454058211e-08,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "crop_heat_unit_season_start_doy",
+   "group": "season",
+   "kind": "day_of_year",
+   "label_fr": "Début du cumul des UTM",
+   "unit": "jour de l'année",
+   "definition_fr": "Premier jour, après la date médiane du dernier gel du printemps, où la moyenne mobile sur 5 jours de la température atteint 12,8 °C.",
+   "source_ids": [
+    "bourgeois_2012"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 157.0
+    },
+    {
+     "year": 1982,
+     "value": 151.0
+    },
+    {
+     "year": 1983,
+     "value": 164.0
+    },
+    {
+     "year": 1984,
+     "value": 160.0
+    },
+    {
+     "year": 1985,
+     "value": 169.0
+    },
+    {
+     "year": 1986,
+     "value": 138.0
+    },
+    {
+     "year": 1987,
+     "value": 149.0
+    },
+    {
+     "year": 1988,
+     "value": 166.0
+    },
+    {
+     "year": 1989,
+     "value": 139.0
+    },
+    {
+     "year": 1990,
+     "value": 163.0
+    },
+    {
+     "year": 1991,
+     "value": 160.0
+    },
+    {
+     "year": 1992,
+     "value": 144.0
+    },
+    {
+     "year": 1993,
+     "value": 164.0
+    },
+    {
+     "year": 1994,
+     "value": 159.0
+    },
+    {
+     "year": 1995,
+     "value": 153.0
+    },
+    {
+     "year": 1996,
+     "value": 155.0
+    },
+    {
+     "year": 1997,
+     "value": 160.0
+    },
+    {
+     "year": 1998,
+     "value": 136.0
+    },
+    {
+     "year": 1999,
+     "value": 139.0
+    },
+    {
+     "year": 2000,
+     "value": 168.0
+    },
+    {
+     "year": 2001,
+     "value": 144.0
+    },
+    {
+     "year": 2002,
+     "value": 151.0
+    },
+    {
+     "year": 2003,
+     "value": 140.0
+    },
+    {
+     "year": 2004,
+     "value": 161.0
+    },
+    {
+     "year": 2005,
+     "value": 153.0
+    },
+    {
+     "year": 2006,
+     "value": 150.0
+    },
+    {
+     "year": 2007,
+     "value": 146.0
+    },
+    {
+     "year": 2008,
+     "value": 160.0
+    },
+    {
+     "year": 2009,
+     "value": 166.0
+    },
+    {
+     "year": 2010,
+     "value": 143.0
+    },
+    {
+     "year": 2011,
+     "value": 152.0
+    },
+    {
+     "year": 2012,
+     "value": 142.0
+    },
+    {
+     "year": 2013,
+     "value": 152.0
+    },
+    {
+     "year": 2014,
+     "value": 154.0
+    },
+    {
+     "year": 2015,
+     "value": 139.0
+    },
+    {
+     "year": 2016,
+     "value": 144.0
+    },
+    {
+     "year": 2017,
+     "value": 159.0
+    },
+    {
+     "year": 2018,
+     "value": 152.0
+    },
+    {
+     "year": 2019,
+     "value": 163.0
+    },
+    {
+     "year": 2020,
+     "value": 148.0
+    },
+    {
+     "year": 2021,
+     "value": 141.0
+    },
+    {
+     "year": 2022,
+     "value": 134.0
+    },
+    {
+     "year": 2023,
+     "value": 150.0
+    },
+    {
+     "year": 2024,
+     "value": 140.0
+    },
+    {
+     "year": 2025,
+     "value": 138.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 151.46666666666667,
+    "median": 152.0,
+    "p20": 140.8,
+    "p80": 160.2,
+    "minimum": 134.0,
+    "maximum": 169.0,
+    "standard_deviation": 9.731049960478742,
+    "trend": {
+     "slope_per_decade": -2.939814814814815,
+     "p_value": 0.016396755252845896,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "precipitation_annual_mm",
+   "group": "precipitation",
+   "kind": "quantity",
+   "label_fr": "Précipitations de l'année",
+   "unit": "mm",
+   "definition_fr": "Total des précipitations (pluie et neige en équivalent eau) de l'année.",
+   "source_ids": [
+    "nasa_power"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 891.91
+    },
+    {
+     "year": 1982,
+     "value": 900.66
+    },
+    {
+     "year": 1983,
+     "value": 1082.2
+    },
+    {
+     "year": 1984,
+     "value": 779.33
+    },
+    {
+     "year": 1985,
+     "value": 718.23
+    },
+    {
+     "year": 1986,
+     "value": 931.05
+    },
+    {
+     "year": 1987,
+     "value": 715.25
+    },
+    {
+     "year": 1988,
+     "value": 740.28
+    },
+    {
+     "year": 1989,
+     "value": 636.19
+    },
+    {
+     "year": 1990,
+     "value": 741.6
+    },
+    {
+     "year": 1991,
+     "value": 700.35
+    },
+    {
+     "year": 1992,
+     "value": 773.59
+    },
+    {
+     "year": 1993,
+     "value": 721.9
+    },
+    {
+     "year": 1994,
+     "value": 696.2
+    },
+    {
+     "year": 1995,
+     "value": 605.42
+    },
+    {
+     "year": 1996,
+     "value": 732.08
+    },
+    {
+     "year": 1997,
+     "value": 528.11
+    },
+    {
+     "year": 1998,
+     "value": 848.64
+    },
+    {
+     "year": 1999,
+     "value": 963.41
+    },
+    {
+     "year": 2000,
+     "value": 997.96
+    },
+    {
+     "year": 2001,
+     "value": 834.1
+    },
+    {
+     "year": 2002,
+     "value": 836.3
+    },
+    {
+     "year": 2003,
+     "value": 1136.3700000000001
+    },
+    {
+     "year": 2004,
+     "value": 1658.5
+    },
+    {
+     "year": 2005,
+     "value": 1191.83
+    },
+    {
+     "year": 2006,
+     "value": 1078.08
+    },
+    {
+     "year": 2007,
+     "value": 1133.07
+    },
+    {
+     "year": 2008,
+     "value": 1090.98
+    },
+    {
+     "year": 2009,
+     "value": 970.78
+    },
+    {
+     "year": 2010,
+     "value": 1096.36
+    },
+    {
+     "year": 2011,
+     "value": 1084.4
+    },
+    {
+     "year": 2012,
+     "value": 885.35
+    },
+    {
+     "year": 2013,
+     "value": 874.64
+    },
+    {
+     "year": 2014,
+     "value": 869.83
+    },
+    {
+     "year": 2015,
+     "value": 884.35
+    },
+    {
+     "year": 2016,
+     "value": 947.57
+    },
+    {
+     "year": 2017,
+     "value": 1025.58
+    },
+    {
+     "year": 2018,
+     "value": 903.92
+    },
+    {
+     "year": 2019,
+     "value": 956.14
+    },
+    {
+     "year": 2020,
+     "value": 758.34
+    },
+    {
+     "year": 2021,
+     "value": 590.57
+    },
+    {
+     "year": 2022,
+     "value": 781.41
+    },
+    {
+     "year": 2023,
+     "value": 684.28
+    },
+    {
+     "year": 2024,
+     "value": 623.48
+    },
+    {
+     "year": 2025,
+     "value": 703.62
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 873.4268888888889,
+    "median": 869.83,
+    "p20": 712.924,
+    "p80": 1036.0800000000002,
+    "minimum": 528.11,
+    "maximum": 1658.5,
+    "standard_deviation": 202.34722727499022,
+    "trend": {
+     "slope_per_decade": 12.268841911764696,
+     "p_value": 0.6883648252094026,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "precipitation_growing_season_mm",
+   "group": "precipitation",
+   "kind": "quantity",
+   "label_fr": "Précipitations, avril à octobre",
+   "unit": "mm",
+   "definition_fr": "Total des précipitations du 1er avril au 31 octobre.",
+   "source_ids": [
+    "nasa_power",
+    "aafc_agroclimate"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 674.03
+    },
+    {
+     "year": 1982,
+     "value": 562.97
+    },
+    {
+     "year": 1983,
+     "value": 601.15
+    },
+    {
+     "year": 1984,
+     "value": 460.75
+    },
+    {
+     "year": 1985,
+     "value": 486.03
+    },
+    {
+     "year": 1986,
+     "value": 727.22
+    },
+    {
+     "year": 1987,
+     "value": 581.31
+    },
+    {
+     "year": 1988,
+     "value": 534.91
+    },
+    {
+     "year": 1989,
+     "value": 486.1
+    },
+    {
+     "year": 1990,
+     "value": 522.3199999999999
+    },
+    {
+     "year": 1991,
+     "value": 547.67
+    },
+    {
+     "year": 1992,
+     "value": 605.13
+    },
+    {
+     "year": 1993,
+     "value": 589.42
+    },
+    {
+     "year": 1994,
+     "value": 506.94
+    },
+    {
+     "year": 1995,
+     "value": 381.7
+    },
+    {
+     "year": 1996,
+     "value": 530.04
+    },
+    {
+     "year": 1997,
+     "value": 341.96
+    },
+    {
+     "year": 1998,
+     "value": 569.59
+    },
+    {
+     "year": 1999,
+     "value": 564.26
+    },
+    {
+     "year": 2000,
+     "value": 647.66
+    },
+    {
+     "year": 2001,
+     "value": 608.69
+    },
+    {
+     "year": 2002,
+     "value": 538.3
+    },
+    {
+     "year": 2003,
+     "value": 663.83
+    },
+    {
+     "year": 2004,
+     "value": 1087.17
+    },
+    {
+     "year": 2005,
+     "value": 854.16
+    },
+    {
+     "year": 2006,
+     "value": 684.07
+    },
+    {
+     "year": 2007,
+     "value": 742.8
+    },
+    {
+     "year": 2008,
+     "value": 698.36
+    },
+    {
+     "year": 2009,
+     "value": 652.05
+    },
+    {
+     "year": 2010,
+     "value": 739.64
+    },
+    {
+     "year": 2011,
+     "value": 777.15
+    },
+    {
+     "year": 2012,
+     "value": 636.1
+    },
+    {
+     "year": 2013,
+     "value": 616.65
+    },
+    {
+     "year": 2014,
+     "value": 613.24
+    },
+    {
+     "year": 2015,
+     "value": 606.37
+    },
+    {
+     "year": 2016,
+     "value": 539.8
+    },
+    {
+     "year": 2017,
+     "value": 644.21
+    },
+    {
+     "year": 2018,
+     "value": 559.85
+    },
+    {
+     "year": 2019,
+     "value": 635.16
+    },
+    {
+     "year": 2020,
+     "value": 471.43
+    },
+    {
+     "year": 2021,
+     "value": 397.06
+    },
+    {
+     "year": 2022,
+     "value": 486.63
+    },
+    {
+     "year": 2023,
+     "value": 496.13
+    },
+    {
+     "year": 2024,
+     "value": 409.19
+    },
+    {
+     "year": 2025,
+     "value": 470.93
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 590.002888888889,
+    "median": 581.31,
+    "p20": 486.524,
+    "p80": 665.87,
+    "minimum": 341.96,
+    "maximum": 1087.17,
+    "standard_deviation": 129.52209796225202,
+    "trend": {
+     "slope_per_decade": -0.3530303030303078,
+     "p_value": 1.0,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "precipitation_spring_mm",
+   "group": "precipitation",
+   "kind": "quantity",
+   "label_fr": "Précipitations du printemps (mars à mai)",
+   "unit": "mm",
+   "definition_fr": "Total des précipitations du 1er mars au 31 mai.",
+   "source_ids": [
+    "nasa_power"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 218.39
+    },
+    {
+     "year": 1982,
+     "value": 203.69
+    },
+    {
+     "year": 1983,
+     "value": 401.55
+    },
+    {
+     "year": 1984,
+     "value": 198.06
+    },
+    {
+     "year": 1985,
+     "value": 200.06
+    },
+    {
+     "year": 1986,
+     "value": 209.68
+    },
+    {
+     "year": 1987,
+     "value": 129.75
+    },
+    {
+     "year": 1988,
+     "value": 123.33
+    },
+    {
+     "year": 1989,
+     "value": 192.11
+    },
+    {
+     "year": 1990,
+     "value": 131.75
+    },
+    {
+     "year": 1991,
+     "value": 172.32
+    },
+    {
+     "year": 1992,
+     "value": 130.56
+    },
+    {
+     "year": 1993,
+     "value": 147.83
+    },
+    {
+     "year": 1994,
+     "value": 136.58
+    },
+    {
+     "year": 1995,
+     "value": 141.25
+    },
+    {
+     "year": 1996,
+     "value": 152.54
+    },
+    {
+     "year": 1997,
+     "value": 147.68
+    },
+    {
+     "year": 1998,
+     "value": 130.42
+    },
+    {
+     "year": 1999,
+     "value": 147.14000000000001
+    },
+    {
+     "year": 2000,
+     "value": 288.4
+    },
+    {
+     "year": 2001,
+     "value": 168.19
+    },
+    {
+     "year": 2002,
+     "value": 227.23
+    },
+    {
+     "year": 2003,
+     "value": 195.46
+    },
+    {
+     "year": 2004,
+     "value": 296.82
+    },
+    {
+     "year": 2005,
+     "value": 333.05
+    },
+    {
+     "year": 2006,
+     "value": 190.71
+    },
+    {
+     "year": 2007,
+     "value": 175.3
+    },
+    {
+     "year": 2008,
+     "value": 247.21
+    },
+    {
+     "year": 2009,
+     "value": 213.48
+    },
+    {
+     "year": 2010,
+     "value": 211.59
+    },
+    {
+     "year": 2011,
+     "value": 347.05
+    },
+    {
+     "year": 2012,
+     "value": 233.94
+    },
+    {
+     "year": 2013,
+     "value": 269.53
+    },
+    {
+     "year": 2014,
+     "value": 201.84
+    },
+    {
+     "year": 2015,
+     "value": 184.31
+    },
+    {
+     "year": 2016,
+     "value": 214.47
+    },
+    {
+     "year": 2017,
+     "value": 296.21
+    },
+    {
+     "year": 2018,
+     "value": 223.6
+    },
+    {
+     "year": 2019,
+     "value": 242.12
+    },
+    {
+     "year": 2020,
+     "value": 182.06
+    },
+    {
+     "year": 2021,
+     "value": 135.03
+    },
+    {
+     "year": 2022,
+     "value": 221.11
+    },
+    {
+     "year": 2023,
+     "value": 105.11
+    },
+    {
+     "year": 2024,
+     "value": 108.42
+    },
+    {
+     "year": 2025,
+     "value": 222.99
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 201.10933333333332,
+    "median": 198.06,
+    "p20": 140.316,
+    "p80": 235.57600000000002,
+    "minimum": 105.11,
+    "maximum": 401.55,
+    "standard_deviation": 64.53758727026187,
+    "trend": {
+     "slope_per_decade": 9.032034632034629,
+     "p_value": 0.22888913512266895,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "precipitation_summer_mm",
+   "group": "precipitation",
+   "kind": "quantity",
+   "label_fr": "Précipitations de l'été (juin à août)",
+   "unit": "mm",
+   "definition_fr": "Total des précipitations du 1er juin au 31 août.",
+   "source_ids": [
+    "nasa_power"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 358.32
+    },
+    {
+     "year": 1982,
+     "value": 276.32
+    },
+    {
+     "year": 1983,
+     "value": 159.28
+    },
+    {
+     "year": 1984,
+     "value": 237.35
+    },
+    {
+     "year": 1985,
+     "value": 221.88
+    },
+    {
+     "year": 1986,
+     "value": 391.63
+    },
+    {
+     "year": 1987,
+     "value": 268.41
+    },
+    {
+     "year": 1988,
+     "value": 262.36
+    },
+    {
+     "year": 1989,
+     "value": 219.12
+    },
+    {
+     "year": 1990,
+     "value": 211.98
+    },
+    {
+     "year": 1991,
+     "value": 230.37
+    },
+    {
+     "year": 1992,
+     "value": 363.11
+    },
+    {
+     "year": 1993,
+     "value": 259.55
+    },
+    {
+     "year": 1994,
+     "value": 324.98
+    },
+    {
+     "year": 1995,
+     "value": 169.68
+    },
+    {
+     "year": 1996,
+     "value": 246.36
+    },
+    {
+     "year": 1997,
+     "value": 149.65
+    },
+    {
+     "year": 1998,
+     "value": 300.15
+    },
+    {
+     "year": 1999,
+     "value": 296.56
+    },
+    {
+     "year": 2000,
+     "value": 241.82
+    },
+    {
+     "year": 2001,
+     "value": 304.8
+    },
+    {
+     "year": 2002,
+     "value": 219.22
+    },
+    {
+     "year": 2003,
+     "value": 324.56
+    },
+    {
+     "year": 2004,
+     "value": 630.59
+    },
+    {
+     "year": 2005,
+     "value": 340.26
+    },
+    {
+     "year": 2006,
+     "value": 236.7
+    },
+    {
+     "year": 2007,
+     "value": 402.53000000000003
+    },
+    {
+     "year": 2008,
+     "value": 357.29
+    },
+    {
+     "year": 2009,
+     "value": 313.58
+    },
+    {
+     "year": 2010,
+     "value": 268.56
+    },
+    {
+     "year": 2011,
+     "value": 371.5
+    },
+    {
+     "year": 2012,
+     "value": 260.32
+    },
+    {
+     "year": 2013,
+     "value": 268.26
+    },
+    {
+     "year": 2014,
+     "value": 244.34
+    },
+    {
+     "year": 2015,
+     "value": 329.25
+    },
+    {
+     "year": 2016,
+     "value": 258.23
+    },
+    {
+     "year": 2017,
+     "value": 220.8
+    },
+    {
+     "year": 2018,
+     "value": 222.35999999999999
+    },
+    {
+     "year": 2019,
+     "value": 249.61
+    },
+    {
+     "year": 2020,
+     "value": 195.49
+    },
+    {
+     "year": 2021,
+     "value": 163.61
+    },
+    {
+     "year": 2022,
+     "value": 229.68
+    },
+    {
+     "year": 2023,
+     "value": 295.64
+    },
+    {
+     "year": 2024,
+     "value": 247.42
+    },
+    {
+     "year": 2025,
+     "value": 226.11
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 274.8797777777778,
+    "median": 259.55,
+    "p20": 221.664,
+    "p80": 325.834,
+    "minimum": 149.65,
+    "maximum": 630.59,
+    "standard_deviation": 81.02552712952433,
+    "trend": {
+     "slope_per_decade": -4.3837500000000205,
+     "p_value": 0.5506933321069332,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "precipitation_autumn_mm",
+   "group": "precipitation",
+   "kind": "quantity",
+   "label_fr": "Précipitations de l'automne (septembre à novembre)",
+   "unit": "mm",
+   "definition_fr": "Total des précipitations du 1er septembre au 30 novembre.",
+   "source_ids": [
+    "nasa_power"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 189.77
+    },
+    {
+     "year": 1982,
+     "value": 250.84
+    },
+    {
+     "year": 1983,
+     "value": 272.9
+    },
+    {
+     "year": 1984,
+     "value": 182.95
+    },
+    {
+     "year": 1985,
+     "value": 164.77
+    },
+    {
+     "year": 1986,
+     "value": 207.5
+    },
+    {
+     "year": 1987,
+     "value": 254.52
+    },
+    {
+     "year": 1988,
+     "value": 232.18
+    },
+    {
+     "year": 1989,
+     "value": 148.51
+    },
+    {
+     "year": 1990,
+     "value": 274.43
+    },
+    {
+     "year": 1991,
+     "value": 217.97
+    },
+    {
+     "year": 1992,
+     "value": 170.44
+    },
+    {
+     "year": 1993,
+     "value": 232.28
+    },
+    {
+     "year": 1994,
+     "value": 153.35
+    },
+    {
+     "year": 1995,
+     "value": 186.39000000000001
+    },
+    {
+     "year": 1996,
+     "value": 185.93
+    },
+    {
+     "year": 1997,
+     "value": 106.89
+    },
+    {
+     "year": 1998,
+     "value": 271.08
+    },
+    {
+     "year": 1999,
+     "value": 309.19
+    },
+    {
+     "year": 2000,
+     "value": 239.29
+    },
+    {
+     "year": 2001,
+     "value": 249.84
+    },
+    {
+     "year": 2002,
+     "value": 247.06
+    },
+    {
+     "year": 2003,
+     "value": 309.87
+    },
+    {
+     "year": 2004,
+     "value": 368.88
+    },
+    {
+     "year": 2005,
+     "value": 359.92
+    },
+    {
+     "year": 2006,
+     "value": 387.83
+    },
+    {
+     "year": 2007,
+     "value": 383.73
+    },
+    {
+     "year": 2008,
+     "value": 255.57999999999998
+    },
+    {
+     "year": 2009,
+     "value": 238.53
+    },
+    {
+     "year": 2010,
+     "value": 405.03
+    },
+    {
+     "year": 2011,
+     "value": 216.84
+    },
+    {
+     "year": 2012,
+     "value": 212.45
+    },
+    {
+     "year": 2013,
+     "value": 204.17
+    },
+    {
+     "year": 2014,
+     "value": 271.21
+    },
+    {
+     "year": 2015,
+     "value": 185.48
+    },
+    {
+     "year": 2016,
+     "value": 250.25
+    },
+    {
+     "year": 2017,
+     "value": 303.73
+    },
+    {
+     "year": 2018,
+     "value": 258.16
+    },
+    {
+     "year": 2019,
+     "value": 269.45
+    },
+    {
+     "year": 2020,
+     "value": 212.42
+    },
+    {
+     "year": 2021,
+     "value": 194.32
+    },
+    {
+     "year": 2022,
+     "value": 172.87
+    },
+    {
+     "year": 2023,
+     "value": 165.3
+    },
+    {
+     "year": 2024,
+     "value": 153.93
+    },
+    {
+     "year": 2025,
+     "value": 144.44
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 237.166,
+    "median": 232.28,
+    "p20": 180.934,
+    "p80": 273.20599999999996,
+    "minimum": 106.89,
+    "maximum": 405.03,
+    "standard_deviation": 68.7500010311111,
+    "trend": {
+     "slope_per_decade": 0.16640350877193205,
+     "p_value": 0.9765878749221901,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "wet_days_growing_season",
+   "group": "precipitation",
+   "kind": "quantity",
+   "label_fr": "Jours de pluie, avril à octobre",
+   "unit": "jours",
+   "definition_fr": "Nombre de jours avec au moins 1 mm de précipitations, du 1er avril au 31 octobre.",
+   "source_ids": [
+    "etccdi_indices"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 97.0
+    },
+    {
+     "year": 1982,
+     "value": 101.0
+    },
+    {
+     "year": 1983,
+     "value": 92.0
+    },
+    {
+     "year": 1984,
+     "value": 85.0
+    },
+    {
+     "year": 1985,
+     "value": 84.0
+    },
+    {
+     "year": 1986,
+     "value": 96.0
+    },
+    {
+     "year": 1987,
+     "value": 92.0
+    },
+    {
+     "year": 1988,
+     "value": 92.0
+    },
+    {
+     "year": 1989,
+     "value": 77.0
+    },
+    {
+     "year": 1990,
+     "value": 85.0
+    },
+    {
+     "year": 1991,
+     "value": 83.0
+    },
+    {
+     "year": 1992,
+     "value": 82.0
+    },
+    {
+     "year": 1993,
+     "value": 99.0
+    },
+    {
+     "year": 1994,
+     "value": 87.0
+    },
+    {
+     "year": 1995,
+     "value": 78.0
+    },
+    {
+     "year": 1996,
+     "value": 88.0
+    },
+    {
+     "year": 1997,
+     "value": 70.0
+    },
+    {
+     "year": 1998,
+     "value": 94.0
+    },
+    {
+     "year": 1999,
+     "value": 86.0
+    },
+    {
+     "year": 2000,
+     "value": 105.0
+    },
+    {
+     "year": 2001,
+     "value": 97.0
+    },
+    {
+     "year": 2002,
+     "value": 96.0
+    },
+    {
+     "year": 2003,
+     "value": 101.0
+    },
+    {
+     "year": 2004,
+     "value": 137.0
+    },
+    {
+     "year": 2005,
+     "value": 113.0
+    },
+    {
+     "year": 2006,
+     "value": 111.0
+    },
+    {
+     "year": 2007,
+     "value": 97.0
+    },
+    {
+     "year": 2008,
+     "value": 108.0
+    },
+    {
+     "year": 2009,
+     "value": 111.0
+    },
+    {
+     "year": 2010,
+     "value": 102.0
+    },
+    {
+     "year": 2011,
+     "value": 111.0
+    },
+    {
+     "year": 2012,
+     "value": 96.0
+    },
+    {
+     "year": 2013,
+     "value": 95.0
+    },
+    {
+     "year": 2014,
+     "value": 95.0
+    },
+    {
+     "year": 2015,
+     "value": 95.0
+    },
+    {
+     "year": 2016,
+     "value": 91.0
+    },
+    {
+     "year": 2017,
+     "value": 98.0
+    },
+    {
+     "year": 2018,
+     "value": 90.0
+    },
+    {
+     "year": 2019,
+     "value": 93.0
+    },
+    {
+     "year": 2020,
+     "value": 83.0
+    },
+    {
+     "year": 2021,
+     "value": 77.0
+    },
+    {
+     "year": 2022,
+     "value": 83.0
+    },
+    {
+     "year": 2023,
+     "value": 83.0
+    },
+    {
+     "year": 2024,
+     "value": 70.0
+    },
+    {
+     "year": 2025,
+     "value": 75.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 92.91111111111111,
+    "median": 93.0,
+    "p20": 83.0,
+    "p80": 101.0,
+    "minimum": 70.0,
+    "maximum": 137.0,
+    "standard_deviation": 12.480780285831887,
+    "trend": {
+     "slope_per_decade": -0.5555555555555556,
+     "p_value": 0.5698869617635658,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "max_dry_spell_growing_season_days",
+   "group": "precipitation",
+   "kind": "quantity",
+   "label_fr": "Plus longue période sèche, avril à octobre",
+   "unit": "jours",
+   "definition_fr": "Plus grand nombre de jours consécutifs avec moins de 1 mm de précipitations, du 1er avril au 31 octobre (indice CDD de l'ETCCDI, restreint à cette période).",
+   "source_ids": [
+    "etccdi_indices"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 21.0
+    },
+    {
+     "year": 1982,
+     "value": 14.0
+    },
+    {
+     "year": 1983,
+     "value": 10.0
+    },
+    {
+     "year": 1984,
+     "value": 10.0
+    },
+    {
+     "year": 1985,
+     "value": 11.0
+    },
+    {
+     "year": 1986,
+     "value": 9.0
+    },
+    {
+     "year": 1987,
+     "value": 13.0
+    },
+    {
+     "year": 1988,
+     "value": 11.0
+    },
+    {
+     "year": 1989,
+     "value": 13.0
+    },
+    {
+     "year": 1990,
+     "value": 8.0
+    },
+    {
+     "year": 1991,
+     "value": 11.0
+    },
+    {
+     "year": 1992,
+     "value": 9.0
+    },
+    {
+     "year": 1993,
+     "value": 10.0
+    },
+    {
+     "year": 1994,
+     "value": 10.0
+    },
+    {
+     "year": 1995,
+     "value": 8.0
+    },
+    {
+     "year": 1996,
+     "value": 8.0
+    },
+    {
+     "year": 1997,
+     "value": 12.0
+    },
+    {
+     "year": 1998,
+     "value": 13.0
+    },
+    {
+     "year": 1999,
+     "value": 18.0
+    },
+    {
+     "year": 2000,
+     "value": 8.0
+    },
+    {
+     "year": 2001,
+     "value": 9.0
+    },
+    {
+     "year": 2002,
+     "value": 9.0
+    },
+    {
+     "year": 2003,
+     "value": 11.0
+    },
+    {
+     "year": 2004,
+     "value": 9.0
+    },
+    {
+     "year": 2005,
+     "value": 5.0
+    },
+    {
+     "year": 2006,
+     "value": 6.0
+    },
+    {
+     "year": 2007,
+     "value": 9.0
+    },
+    {
+     "year": 2008,
+     "value": 6.0
+    },
+    {
+     "year": 2009,
+     "value": 10.0
+    },
+    {
+     "year": 2010,
+     "value": 7.0
+    },
+    {
+     "year": 2011,
+     "value": 7.0
+    },
+    {
+     "year": 2012,
+     "value": 11.0
+    },
+    {
+     "year": 2013,
+     "value": 13.0
+    },
+    {
+     "year": 2014,
+     "value": 8.0
+    },
+    {
+     "year": 2015,
+     "value": 8.0
+    },
+    {
+     "year": 2016,
+     "value": 10.0
+    },
+    {
+     "year": 2017,
+     "value": 8.0
+    },
+    {
+     "year": 2018,
+     "value": 7.0
+    },
+    {
+     "year": 2019,
+     "value": 12.0
+    },
+    {
+     "year": 2020,
+     "value": 12.0
+    },
+    {
+     "year": 2021,
+     "value": 14.0
+    },
+    {
+     "year": 2022,
+     "value": 12.0
+    },
+    {
+     "year": 2023,
+     "value": 16.0
+    },
+    {
+     "year": 2024,
+     "value": 17.0
+    },
+    {
+     "year": 2025,
+     "value": 11.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 10.533333333333333,
+    "median": 10.0,
+    "p20": 8.0,
+    "p80": 13.0,
+    "minimum": 5.0,
+    "maximum": 21.0,
+    "standard_deviation": 3.2152414804766654,
+    "trend": {
+     "slope_per_decade": 0.0,
+     "p_value": 0.678958198111919,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "heavy_precipitation_days",
+   "group": "precipitation",
+   "kind": "quantity",
+   "label_fr": "Jours de fortes précipitations, avril à octobre",
+   "unit": "jours",
+   "definition_fr": "Nombre de jours avec au moins 20 mm de précipitations, du 1er avril au 31 octobre (indice R20mm de l'ETCCDI, restreint à cette période).",
+   "source_ids": [
+    "etccdi_indices"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 4.0
+    },
+    {
+     "year": 1982,
+     "value": 0.0
+    },
+    {
+     "year": 1983,
+     "value": 5.0
+    },
+    {
+     "year": 1984,
+     "value": 2.0
+    },
+    {
+     "year": 1985,
+     "value": 3.0
+    },
+    {
+     "year": 1986,
+     "value": 6.0
+    },
+    {
+     "year": 1987,
+     "value": 4.0
+    },
+    {
+     "year": 1988,
+     "value": 1.0
+    },
+    {
+     "year": 1989,
+     "value": 2.0
+    },
+    {
+     "year": 1990,
+     "value": 2.0
+    },
+    {
+     "year": 1991,
+     "value": 3.0
+    },
+    {
+     "year": 1992,
+     "value": 3.0
+    },
+    {
+     "year": 1993,
+     "value": 5.0
+    },
+    {
+     "year": 1994,
+     "value": 2.0
+    },
+    {
+     "year": 1995,
+     "value": 1.0
+    },
+    {
+     "year": 1996,
+     "value": 4.0
+    },
+    {
+     "year": 1997,
+     "value": 1.0
+    },
+    {
+     "year": 1998,
+     "value": 1.0
+    },
+    {
+     "year": 1999,
+     "value": 4.0
+    },
+    {
+     "year": 2000,
+     "value": 5.0
+    },
+    {
+     "year": 2001,
+     "value": 3.0
+    },
+    {
+     "year": 2002,
+     "value": 2.0
+    },
+    {
+     "year": 2003,
+     "value": 5.0
+    },
+    {
+     "year": 2004,
+     "value": 11.0
+    },
+    {
+     "year": 2005,
+     "value": 9.0
+    },
+    {
+     "year": 2006,
+     "value": 9.0
+    },
+    {
+     "year": 2007,
+     "value": 10.0
+    },
+    {
+     "year": 2008,
+     "value": 5.0
+    },
+    {
+     "year": 2009,
+     "value": 2.0
+    },
+    {
+     "year": 2010,
+     "value": 7.0
+    },
+    {
+     "year": 2011,
+     "value": 5.0
+    },
+    {
+     "year": 2012,
+     "value": 3.0
+    },
+    {
+     "year": 2013,
+     "value": 5.0
+    },
+    {
+     "year": 2014,
+     "value": 4.0
+    },
+    {
+     "year": 2015,
+     "value": 4.0
+    },
+    {
+     "year": 2016,
+     "value": 3.0
+    },
+    {
+     "year": 2017,
+     "value": 3.0
+    },
+    {
+     "year": 2018,
+     "value": 3.0
+    },
+    {
+     "year": 2019,
+     "value": 4.0
+    },
+    {
+     "year": 2020,
+     "value": 1.0
+    },
+    {
+     "year": 2021,
+     "value": 2.0
+    },
+    {
+     "year": 2022,
+     "value": 2.0
+    },
+    {
+     "year": 2023,
+     "value": 4.0
+    },
+    {
+     "year": 2024,
+     "value": 2.0
+    },
+    {
+     "year": 2025,
+     "value": 3.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 3.7555555555555555,
+    "median": 3.0,
+    "p20": 2.0,
+    "p80": 5.0,
+    "minimum": 0.0,
+    "maximum": 11.0,
+    "standard_deviation": 2.395881239456632,
+    "trend": {
+     "slope_per_decade": 0.0,
+     "p_value": 0.7581791506099735,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "max_one_day_precipitation_mm",
+   "group": "precipitation",
+   "kind": "quantity",
+   "label_fr": "Plus forte précipitation en une journée",
+   "unit": "mm",
+   "definition_fr": "Plus grand total quotidien de précipitations de l'année (indice Rx1day de l'ETCCDI).",
+   "source_ids": [
+    "etccdi_indices"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 34.95
+    },
+    {
+     "year": 1982,
+     "value": 31.65
+    },
+    {
+     "year": 1983,
+     "value": 32.81
+    },
+    {
+     "year": 1984,
+     "value": 28.89
+    },
+    {
+     "year": 1985,
+     "value": 30.04
+    },
+    {
+     "year": 1986,
+     "value": 39.41
+    },
+    {
+     "year": 1987,
+     "value": 30.49
+    },
+    {
+     "year": 1988,
+     "value": 36.23
+    },
+    {
+     "year": 1989,
+     "value": 22.03
+    },
+    {
+     "year": 1990,
+     "value": 25.36
+    },
+    {
+     "year": 1991,
+     "value": 32.49
+    },
+    {
+     "year": 1992,
+     "value": 26.73
+    },
+    {
+     "year": 1993,
+     "value": 27.73
+    },
+    {
+     "year": 1994,
+     "value": 22.61
+    },
+    {
+     "year": 1995,
+     "value": 21.48
+    },
+    {
+     "year": 1996,
+     "value": 40.67
+    },
+    {
+     "year": 1997,
+     "value": 23.51
+    },
+    {
+     "year": 1998,
+     "value": 32.79
+    },
+    {
+     "year": 1999,
+     "value": 43.95
+    },
+    {
+     "year": 2000,
+     "value": 33.28
+    },
+    {
+     "year": 2001,
+     "value": 29.59
+    },
+    {
+     "year": 2002,
+     "value": 31.86
+    },
+    {
+     "year": 2003,
+     "value": 31.21
+    },
+    {
+     "year": 2004,
+     "value": 53.54
+    },
+    {
+     "year": 2005,
+     "value": 60.4
+    },
+    {
+     "year": 2006,
+     "value": 31.16
+    },
+    {
+     "year": 2007,
+     "value": 39.98
+    },
+    {
+     "year": 2008,
+     "value": 50.58
+    },
+    {
+     "year": 2009,
+     "value": 30.7
+    },
+    {
+     "year": 2010,
+     "value": 40.86
+    },
+    {
+     "year": 2011,
+     "value": 53.14
+    },
+    {
+     "year": 2012,
+     "value": 36.81
+    },
+    {
+     "year": 2013,
+     "value": 35.69
+    },
+    {
+     "year": 2014,
+     "value": 24.39
+    },
+    {
+     "year": 2015,
+     "value": 22.43
+    },
+    {
+     "year": 2016,
+     "value": 33.25
+    },
+    {
+     "year": 2017,
+     "value": 33.05
+    },
+    {
+     "year": 2018,
+     "value": 31.53
+    },
+    {
+     "year": 2019,
+     "value": 28.3
+    },
+    {
+     "year": 2020,
+     "value": 21.29
+    },
+    {
+     "year": 2021,
+     "value": 22.91
+    },
+    {
+     "year": 2022,
+     "value": 22.13
+    },
+    {
+     "year": 2023,
+     "value": 31.42
+    },
+    {
+     "year": 2024,
+     "value": 27.89
+    },
+    {
+     "year": 2025,
+     "value": 30.21
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 32.69822222222222,
+    "median": 31.42,
+    "p20": 25.166,
+    "p80": 37.330000000000005,
+    "minimum": 21.29,
+    "maximum": 60.4,
+    "standard_deviation": 8.804938586167017,
+    "trend": {
+     "slope_per_decade": -0.47012987012987056,
+     "p_value": 0.5377056815207679,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "reference_evapotranspiration_growing_season_mm",
+   "group": "water_balance",
+   "kind": "quantity",
+   "label_fr": "Demande en eau de l'atmosphère, avril à octobre",
+   "unit": "mm",
+   "definition_fr": "Évapotranspiration de référence cumulée du 1er avril au 31 octobre, estimée à partir des températures (méthode de Hargreaves, FAO-56, équation 52). Ordre de grandeur : la méthode tend à surestimer en climat humide.",
+   "source_ids": [
+    "fao56"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 557.4367464840839
+    },
+    {
+     "year": 1982,
+     "value": 553.817235010065
+    },
+    {
+     "year": 1983,
+     "value": 551.0857014852662
+    },
+    {
+     "year": 1984,
+     "value": 541.3257044514947
+    },
+    {
+     "year": 1985,
+     "value": 556.0968208831797
+    },
+    {
+     "year": 1986,
+     "value": 538.4909578293071
+    },
+    {
+     "year": 1987,
+     "value": 587.9672264580901
+    },
+    {
+     "year": 1988,
+     "value": 569.4060200432249
+    },
+    {
+     "year": 1989,
+     "value": 584.6338181971547
+    },
+    {
+     "year": 1990,
+     "value": 599.6209240883268
+    },
+    {
+     "year": 1991,
+     "value": 585.2318962535346
+    },
+    {
+     "year": 1992,
+     "value": 559.8800885648994
+    },
+    {
+     "year": 1993,
+     "value": 579.390993867338
+    },
+    {
+     "year": 1994,
+     "value": 575.5534914296154
+    },
+    {
+     "year": 1995,
+     "value": 616.5768506907559
+    },
+    {
+     "year": 1996,
+     "value": 565.3583773999328
+    },
+    {
+     "year": 1997,
+     "value": 573.0114548052827
+    },
+    {
+     "year": 1998,
+     "value": 595.9083832866121
+    },
+    {
+     "year": 1999,
+     "value": 600.8423206656503
+    },
+    {
+     "year": 2000,
+     "value": 530.9518954064868
+    },
+    {
+     "year": 2001,
+     "value": 595.1326799625873
+    },
+    {
+     "year": 2002,
+     "value": 571.8666539871034
+    },
+    {
+     "year": 2003,
+     "value": 569.5483915693833
+    },
+    {
+     "year": 2004,
+     "value": 526.1482628740239
+    },
+    {
+     "year": 2005,
+     "value": 565.0196688074002
+    },
+    {
+     "year": 2006,
+     "value": 569.3069097696357
+    },
+    {
+     "year": 2007,
+     "value": 572.0906051234102
+    },
+    {
+     "year": 2008,
+     "value": 538.6931066030721
+    },
+    {
+     "year": 2009,
+     "value": 542.8181274133151
+    },
+    {
+     "year": 2010,
+     "value": 579.6156787091056
+    },
+    {
+     "year": 2011,
+     "value": 546.5602584252091
+    },
+    {
+     "year": 2012,
+     "value": 584.6762918508416
+    },
+    {
+     "year": 2013,
+     "value": 573.1098982156152
+    },
+    {
+     "year": 2014,
+     "value": 575.5410199036174
+    },
+    {
+     "year": 2015,
+     "value": 567.6205440420295
+    },
+    {
+     "year": 2016,
+     "value": 559.889489546017
+    },
+    {
+     "year": 2017,
+     "value": 558.6658573491231
+    },
+    {
+     "year": 2018,
+     "value": 582.4613688548778
+    },
+    {
+     "year": 2019,
+     "value": 548.8676784545695
+    },
+    {
+     "year": 2020,
+     "value": 577.9427051233597
+    },
+    {
+     "year": 2021,
+     "value": 624.1041070223661
+    },
+    {
+     "year": 2022,
+     "value": 613.8429844855561
+    },
+    {
+     "year": 2023,
+     "value": 605.7163365942956
+    },
+    {
+     "year": 2024,
+     "value": 644.3657066921013
+    },
+    {
+     "year": 2025,
+     "value": 617.814359147271
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 574.0890132850265,
+    "median": 572.0906051234102,
+    "p20": 553.2709283051053,
+    "p80": 595.2878206273923,
+    "minimum": 526.1482628740239,
+    "maximum": 644.3657066921013,
+    "standard_deviation": 25.51527692689627,
+    "trend": {
+     "slope_per_decade": 6.295213937421846,
+     "p_value": 0.049270169805609054,
+     "years": 45,
+     "is_significant": true
+    }
+   }
+  },
+  {
+   "id": "climatic_water_balance_growing_season_mm",
+   "group": "water_balance",
+   "kind": "quantity",
+   "label_fr": "Bilan hydrique climatique, avril à octobre",
+   "unit": "mm",
+   "definition_fr": "Précipitations moins évapotranspiration de référence, du 1er avril au 31 octobre. Une valeur négative signifie que l'atmosphère demande plus d'eau qu'il n'en tombe ; l'eau stockée dans le sol n'est pas prise en compte.",
+   "source_ids": [
+    "fao56",
+    "audet_2012"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 116.5932535159161
+    },
+    {
+     "year": 1982,
+     "value": 9.152764989935008
+    },
+    {
+     "year": 1983,
+     "value": 50.064298514733764
+    },
+    {
+     "year": 1984,
+     "value": -80.57570445149474
+    },
+    {
+     "year": 1985,
+     "value": -70.06682088317973
+    },
+    {
+     "year": 1986,
+     "value": 188.72904217069288
+    },
+    {
+     "year": 1987,
+     "value": -6.657226458090122
+    },
+    {
+     "year": 1988,
+     "value": -34.49602004322492
+    },
+    {
+     "year": 1989,
+     "value": -98.53381819715469
+    },
+    {
+     "year": 1990,
+     "value": -77.30092408832684
+    },
+    {
+     "year": 1991,
+     "value": -37.561896253534655
+    },
+    {
+     "year": 1992,
+     "value": 45.24991143510056
+    },
+    {
+     "year": 1993,
+     "value": 10.029006132661948
+    },
+    {
+     "year": 1994,
+     "value": -68.61349142961541
+    },
+    {
+     "year": 1995,
+     "value": -234.87685069075593
+    },
+    {
+     "year": 1996,
+     "value": -35.31837739993284
+    },
+    {
+     "year": 1997,
+     "value": -231.05145480528273
+    },
+    {
+     "year": 1998,
+     "value": -26.31838328661206
+    },
+    {
+     "year": 1999,
+     "value": -36.582320665650286
+    },
+    {
+     "year": 2000,
+     "value": 116.70810459351321
+    },
+    {
+     "year": 2001,
+     "value": 13.557320037412751
+    },
+    {
+     "year": 2002,
+     "value": -33.56665398710345
+    },
+    {
+     "year": 2003,
+     "value": 94.28160843061676
+    },
+    {
+     "year": 2004,
+     "value": 561.0217371259762
+    },
+    {
+     "year": 2005,
+     "value": 289.1403311925998
+    },
+    {
+     "year": 2006,
+     "value": 114.76309023036436
+    },
+    {
+     "year": 2007,
+     "value": 170.70939487658973
+    },
+    {
+     "year": 2008,
+     "value": 159.6668933969279
+    },
+    {
+     "year": 2009,
+     "value": 109.23187258668486
+    },
+    {
+     "year": 2010,
+     "value": 160.02432129089436
+    },
+    {
+     "year": 2011,
+     "value": 230.58974157479088
+    },
+    {
+     "year": 2012,
+     "value": 51.423708149158415
+    },
+    {
+     "year": 2013,
+     "value": 43.540101784384774
+    },
+    {
+     "year": 2014,
+     "value": 37.69898009638257
+    },
+    {
+     "year": 2015,
+     "value": 38.749455957970554
+    },
+    {
+     "year": 2016,
+     "value": -20.089489546017035
+    },
+    {
+     "year": 2017,
+     "value": 85.54414265087689
+    },
+    {
+     "year": 2018,
+     "value": -22.61136885487781
+    },
+    {
+     "year": 2019,
+     "value": 86.29232154543047
+    },
+    {
+     "year": 2020,
+     "value": -106.5127051233597
+    },
+    {
+     "year": 2021,
+     "value": -227.04410702236606
+    },
+    {
+     "year": 2022,
+     "value": -127.21298448555615
+    },
+    {
+     "year": 2023,
+     "value": -109.58633659429563
+    },
+    {
+     "year": 2024,
+     "value": -235.1757066921013
+    },
+    {
+     "year": 2025,
+     "value": -146.88435914727103
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 15.913875603862481,
+    "median": 9.152764989935008,
+    "p20": -84.16732720062672,
+    "p80": 115.12912288747471,
+    "minimum": -235.1757066921013,
+    "maximum": 561.0217371259762,
+    "standard_deviation": 146.10646777343027,
+    "trend": {
+     "slope_per_decade": -7.321673017605288,
+     "p_value": 0.6740181631266595,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "haymaking_days_june_july",
+   "group": "field_operations",
+   "kind": "quantity",
+   "label_fr": "Jours de fauche possibles en juin et juillet",
+   "unit": "jours",
+   "definition_fr": "Nombre de jours, du 1er juin au 31 juillet, qui ouvrent une séquence d'au moins 3 jours consécutifs avec moins de 1 mm de précipitations. Le foin hâtif demande au moins trois jours consécutifs sans pluie.",
+   "source_ids": [
+    "cqpf_hay_guide_2002",
+    "etccdi_indices"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 10.0
+    },
+    {
+     "year": 1982,
+     "value": 10.0
+    },
+    {
+     "year": 1983,
+     "value": 11.0
+    },
+    {
+     "year": 1984,
+     "value": 8.0
+    },
+    {
+     "year": 1985,
+     "value": 10.0
+    },
+    {
+     "year": 1986,
+     "value": 5.0
+    },
+    {
+     "year": 1987,
+     "value": 13.0
+    },
+    {
+     "year": 1988,
+     "value": 16.0
+    },
+    {
+     "year": 1989,
+     "value": 18.0
+    },
+    {
+     "year": 1990,
+     "value": 12.0
+    },
+    {
+     "year": 1991,
+     "value": 27.0
+    },
+    {
+     "year": 1992,
+     "value": 8.0
+    },
+    {
+     "year": 1993,
+     "value": 9.0
+    },
+    {
+     "year": 1994,
+     "value": 7.0
+    },
+    {
+     "year": 1995,
+     "value": 14.0
+    },
+    {
+     "year": 1996,
+     "value": 11.0
+    },
+    {
+     "year": 1997,
+     "value": 22.0
+    },
+    {
+     "year": 1998,
+     "value": 9.0
+    },
+    {
+     "year": 1999,
+     "value": 8.0
+    },
+    {
+     "year": 2000,
+     "value": 16.0
+    },
+    {
+     "year": 2001,
+     "value": 9.0
+    },
+    {
+     "year": 2002,
+     "value": 7.0
+    },
+    {
+     "year": 2003,
+     "value": 9.0
+    },
+    {
+     "year": 2004,
+     "value": 0.0
+    },
+    {
+     "year": 2005,
+     "value": 3.0
+    },
+    {
+     "year": 2006,
+     "value": 8.0
+    },
+    {
+     "year": 2007,
+     "value": 11.0
+    },
+    {
+     "year": 2008,
+     "value": 5.0
+    },
+    {
+     "year": 2009,
+     "value": 7.0
+    },
+    {
+     "year": 2010,
+     "value": 4.0
+    },
+    {
+     "year": 2011,
+     "value": 6.0
+    },
+    {
+     "year": 2012,
+     "value": 18.0
+    },
+    {
+     "year": 2013,
+     "value": 22.0
+    },
+    {
+     "year": 2014,
+     "value": 14.0
+    },
+    {
+     "year": 2015,
+     "value": 5.0
+    },
+    {
+     "year": 2016,
+     "value": 8.0
+    },
+    {
+     "year": 2017,
+     "value": 18.0
+    },
+    {
+     "year": 2018,
+     "value": 13.0
+    },
+    {
+     "year": 2019,
+     "value": 13.0
+    },
+    {
+     "year": 2020,
+     "value": 18.0
+    },
+    {
+     "year": 2021,
+     "value": 16.0
+    },
+    {
+     "year": 2022,
+     "value": 6.0
+    },
+    {
+     "year": 2023,
+     "value": 10.0
+    },
+    {
+     "year": 2024,
+     "value": 15.0
+    },
+    {
+     "year": 2025,
+     "value": 12.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 11.133333333333333,
+    "median": 10.0,
+    "p20": 7.0,
+    "p80": 16.0,
+    "minimum": 0.0,
+    "maximum": 27.0,
+    "standard_deviation": 5.418486873657627,
+    "trend": {
+     "slope_per_decade": 0.0,
+     "p_value": 0.9374278745042202,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  },
+  {
+   "id": "wet_days_june_july",
+   "group": "field_operations",
+   "kind": "quantity",
+   "label_fr": "Jours de pluie en juin et juillet",
+   "unit": "jours",
+   "definition_fr": "Nombre de jours avec au moins 1 mm de précipitations, du 1er juin au 31 juillet.",
+   "source_ids": [
+    "etccdi_indices"
+   ],
+   "values": [
+    {
+     "year": 1981,
+     "value": 27.0
+    },
+    {
+     "year": 1982,
+     "value": 31.0
+    },
+    {
+     "year": 1983,
+     "value": 23.0
+    },
+    {
+     "year": 1984,
+     "value": 28.0
+    },
+    {
+     "year": 1985,
+     "value": 28.0
+    },
+    {
+     "year": 1986,
+     "value": 35.0
+    },
+    {
+     "year": 1987,
+     "value": 29.0
+    },
+    {
+     "year": 1988,
+     "value": 24.0
+    },
+    {
+     "year": 1989,
+     "value": 22.0
+    },
+    {
+     "year": 1990,
+     "value": 26.0
+    },
+    {
+     "year": 1991,
+     "value": 18.0
+    },
+    {
+     "year": 1992,
+     "value": 30.0
+    },
+    {
+     "year": 1993,
+     "value": 30.0
+    },
+    {
+     "year": 1994,
+     "value": 32.0
+    },
+    {
+     "year": 1995,
+     "value": 23.0
+    },
+    {
+     "year": 1996,
+     "value": 29.0
+    },
+    {
+     "year": 1997,
+     "value": 20.0
+    },
+    {
+     "year": 1998,
+     "value": 34.0
+    },
+    {
+     "year": 1999,
+     "value": 32.0
+    },
+    {
+     "year": 2000,
+     "value": 27.0
+    },
+    {
+     "year": 2001,
+     "value": 37.0
+    },
+    {
+     "year": 2002,
+     "value": 30.0
+    },
+    {
+     "year": 2003,
+     "value": 34.0
+    },
+    {
+     "year": 2004,
+     "value": 51.0
+    },
+    {
+     "year": 2005,
+     "value": 34.0
+    },
+    {
+     "year": 2006,
+     "value": 34.0
+    },
+    {
+     "year": 2007,
+     "value": 32.0
+    },
+    {
+     "year": 2008,
+     "value": 39.0
+    },
+    {
+     "year": 2009,
+     "value": 39.0
+    },
+    {
+     "year": 2010,
+     "value": 36.0
+    },
+    {
+     "year": 2011,
+     "value": 30.0
+    },
+    {
+     "year": 2012,
+     "value": 26.0
+    },
+    {
+     "year": 2013,
+     "value": 22.0
+    },
+    {
+     "year": 2014,
+     "value": 28.0
+    },
+    {
+     "year": 2015,
+     "value": 31.0
+    },
+    {
+     "year": 2016,
+     "value": 32.0
+    },
+    {
+     "year": 2017,
+     "value": 27.0
+    },
+    {
+     "year": 2018,
+     "value": 24.0
+    },
+    {
+     "year": 2019,
+     "value": 29.0
+    },
+    {
+     "year": 2020,
+     "value": 23.0
+    },
+    {
+     "year": 2021,
+     "value": 24.0
+    },
+    {
+     "year": 2022,
+     "value": 31.0
+    },
+    {
+     "year": 2023,
+     "value": 34.0
+    },
+    {
+     "year": 2024,
+     "value": 24.0
+    },
+    {
+     "year": 2025,
+     "value": 26.0
+    }
+   ],
+   "summary": {
+    "count": 45,
+    "mean": 29.444444444444443,
+    "median": 29.0,
+    "p20": 24.0,
+    "p80": 34.0,
+    "minimum": 18.0,
+    "maximum": 51.0,
+    "standard_deviation": 5.871042139387958,
+    "trend": {
+     "slope_per_decade": 0.2535301668806162,
+     "p_value": 0.6306088970247794,
+     "years": 45,
+     "is_significant": false
+    }
+   }
+  }
+ ],
+ "monthly_normals": [
+  {
+   "month": 1,
+   "t_mean_c": -14.401555555555554,
+   "t_max_mean_c": -10.319698924731183,
+   "t_min_mean_c": -18.878458781362006,
+   "precipitation_mm": 48.504
+  },
+  {
+   "month": 2,
+   "t_mean_c": -12.635987411487019,
+   "t_max_mean_c": -8.519653815892998,
+   "t_min_mean_c": -17.438434303697875,
+   "precipitation_mm": 45.76
+  },
+  {
+   "month": 3,
+   "t_mean_c": -6.827354838709677,
+   "t_max_mean_c": -2.954193548387097,
+   "t_min_mean_c": -11.37321146953405,
+   "precipitation_mm": 53.004
+  },
+  {
+   "month": 4,
+   "t_mean_c": 1.036837037037037,
+   "t_max_mean_c": 5.158007407407408,
+   "t_min_mean_c": -3.2715851851851854,
+   "precipitation_mm": 65.13711111111111
+  },
+  {
+   "month": 5,
+   "t_mean_c": 8.516974910394266,
+   "t_max_mean_c": 13.238802867383514,
+   "t_min_mean_c": 3.3917921146953405,
+   "precipitation_mm": 82.96822222222222
+  },
+  {
+   "month": 6,
+   "t_mean_c": 14.258496296296297,
+   "t_max_mean_c": 18.607392592592593,
+   "t_min_mean_c": 9.433133333333332,
+   "precipitation_mm": 94.00911111111111
+  },
+  {
+   "month": 7,
+   "t_mean_c": 17.407806451612903,
+   "t_max_mean_c": 21.57114695340502,
+   "t_min_mean_c": 12.957204301075269,
+   "precipitation_mm": 92.69533333333334
+  },
+  {
+   "month": 8,
+   "t_mean_c": 16.81536200716846,
+   "t_max_mean_c": 21.197483870967744,
+   "t_min_mean_c": 12.432093189964158,
+   "precipitation_mm": 88.17533333333333
+  },
+  {
+   "month": 9,
+   "t_mean_c": 12.453629629629631,
+   "t_max_mean_c": 16.927948148148147,
+   "t_min_mean_c": 8.202296296296296,
+   "precipitation_mm": 81.41
+  },
+  {
+   "month": 10,
+   "t_mean_c": 5.687541218637993,
+   "t_max_mean_c": 9.420322580645161,
+   "t_min_mean_c": 2.3826594982078855,
+   "precipitation_mm": 85.60777777777777
+  },
+  {
+   "month": 11,
+   "t_mean_c": -2.073096296296296,
+   "t_max_mean_c": 0.9181333333333334,
+   "t_min_mean_c": -4.996866666666667,
+   "precipitation_mm": 70.14822222222223
+  },
+  {
+   "month": 12,
+   "t_mean_c": -9.913225806451614,
+   "t_max_mean_c": -6.4399713261648746,
+   "t_min_mean_c": -13.650121863799281,
+   "precipitation_mm": 66.00777777777778
+  }
+ ],
+ "observation_checks": [
+  {
+   "observation": {
+    "text": "Saison végétative relativement courte ; les gels sont un risque important.",
+    "topic": "frost",
+    "year": null,
+    "crop_id": null
+   },
+   "status": "no_year",
+   "positions": []
+  },
+  {
+   "observation": {
+    "text": "Une tentative de culture du soya a échoué à cause du gel (année non précisée).",
+    "topic": "frost",
+    "year": null,
+    "crop_id": null
+   },
+   "status": "no_year",
+   "positions": []
+  },
+  {
+   "observation": {
+    "text": "Orages fréquents en juin et juillet 2024, récolte du foin sec compliquée.",
+    "topic": "harvest_weather",
+    "year": 2024,
+    "crop_id": "hay_mixed"
+   },
+   "status": "compared",
+   "positions": [
+    {
+     "indicator_id": "wet_days_june_july",
+     "value": 24.0,
+     "median": 29.0,
+     "years_higher": 34,
+     "years_lower": 7,
+     "years_compared": 45
+    },
+    {
+     "indicator_id": "haymaking_days_june_july",
+     "value": 15.0,
+     "median": 10.0,
+     "years_higher": 10,
+     "years_lower": 34,
+     "years_compared": 45
+    },
+    {
+     "indicator_id": "heavy_precipitation_days",
+     "value": 2.0,
+     "median": 3.0,
+     "years_higher": 30,
+     "years_lower": 6,
+     "years_compared": 45
+    }
+   ]
+  },
+  {
+   "observation": {
+    "text": "Irrigation avec l'eau de ruisseaux de montagne.",
+    "topic": "water",
+    "year": null,
+    "crop_id": null
+   },
+   "status": "no_year",
+   "positions": []
+  },
+  {
+   "observation": {
+    "text": "Le chiendent est un problème.",
+    "topic": "weeds",
+    "year": null,
+    "crop_id": null
+   },
+   "status": "topic_not_covered",
+   "positions": []
+  },
+  {
+   "observation": {
+    "text": "L'éloignement des marchés influence les décisions économiques.",
+    "topic": "market",
+    "year": null,
+    "crop_id": null
+   },
+   "status": "topic_not_covered",
+   "positions": []
+  }
+ ],
+ "observation_scale_note_fr": "Position de l'année signalée parmi les années analysées, à l'échelle de la cellule NASA. Un écart avec l'observation peut venir de phénomènes locaux (orages, fonds de vallée) que la cellule ne résout pas : l'observation reste une information précieuse.",
+ "heat_unit_reference": {
+  "median_last_spring_frost_doy": 134,
+  "reference_first_year": 1996,
+  "reference_last_year": 2025
+ }
+}
