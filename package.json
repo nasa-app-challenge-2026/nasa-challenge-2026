@@ -9,8 +9,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "node scripts/dev.mjs",
+    "dev": "vite",
     "dev:front": "vite",
+    "dev:all": "node scripts/dev.mjs",
     "setup": "node scripts/setup.mjs",
     "postinstall": "node scripts/setup.mjs",
     "build": "vite build",

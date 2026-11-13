@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * `npm run dev`: starts everything at once, with prefixed logs. Ctrl+C stops it all.
- *   front   Field Shift front (repo root)   http://localhost:5173
+ * `npm run dev:all`: starts everything at once, with prefixed logs. Ctrl+C stops it all.
+ *   front   Field Shift front (repo root)   http://localhost:5173 (or the next free port)
  *   web     React app (apps/web)            http://localhost:5174
  *   api     Python API (apps/api)           http://127.0.0.1:8000/api/docs
- * `npm run dev:front` starts only the root front.
+ * `npm run dev` (or `dev:front`) starts only the root front: the app most people want.
  */
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
@@ -42,7 +42,8 @@ process.on('SIGINT', stopAll);
 process.on('SIGTERM', stopAll);
 
 const vite = join(root, 'node_modules', 'vite', 'bin', 'vite.js');
-start('front', 32, process.execPath, [vite, '--port', '5173', '--strictPort'], root);
+// No --strictPort: if 5173 is taken, Vite picks the next free port and prints it ([front] Local: …).
+start('front', 32, process.execPath, [vite, '--port', '5173'], root);
 
 const web = join(root, 'apps', 'web');
 if (existsSync(join(web, 'node_modules'))) {
@@ -69,7 +70,7 @@ if (uv) {
 }
 
 console.log(
-  '\n  Front Field Shift  http://localhost:5173' +
+  '\n  Front Field Shift  http://localhost:5173 (si le port est pris : voir la ligne [front] Local)' +
     '\n  App React          http://localhost:5174' +
     '\n  API (docs)         http://127.0.0.1:8000/api/docs\n',
 );

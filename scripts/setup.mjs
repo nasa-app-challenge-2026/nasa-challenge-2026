@@ -40,4 +40,6 @@ if (!run(uv, ['sync', '--frozen'], join(root, 'apps', 'api'))) {
   warn('apps/api : uv sync a échoué. Relance `npm run setup`.');
 }
 
-log('Prêt. Lance `npm run dev`.');
+log(
+  'Prêt. `npm run dev` lance le front Field Shift ; `npm run dev:all` lance tout (front, apps/web, API).',
+);

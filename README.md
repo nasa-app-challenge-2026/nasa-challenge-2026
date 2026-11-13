@@ -29,14 +29,15 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-| Commande                            | Rôle                                           |
-| ----------------------------------- | ---------------------------------------------- |
-| `npm run dev`                       | serveur de développement                       |
-| `npm run build` / `npm run preview` | version de production dans `dist/`             |
-| `npm test`                          | tests (rotations, contrat avec l'algo, RotaAI) |
-| `npm run lint` / `npm run format`   | qualité du code                                |
-| `npm run fixtures`                  | régénère `contract/examples/`                  |
-| `npm run check:algo -- <url>`       | vérifie qu'un algorithme respecte le contrat   |
+| Commande                            | Rôle                                             |
+| ----------------------------------- | ------------------------------------------------ |
+| `npm run dev`                       | le front Field Shift seul (port 5173 ou suivant) |
+| `npm run dev:all`                   | tout : front, `apps/web` (5174) et l'API (8000)  |
+| `npm run build` / `npm run preview` | version de production dans `dist/`               |
+| `npm test`                          | tests (rotations, contrat avec l'algo, RotaAI)   |
+| `npm run lint` / `npm run format`   | qualité du code                                  |
+| `npm run fixtures`                  | régénère `contract/examples/`                    |
+| `npm run check:algo -- <url>`       | vérifie qu'un algorithme respecte le contrat     |
 
 ## Brancher l'algorithme
 
