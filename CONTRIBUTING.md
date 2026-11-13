@@ -7,7 +7,7 @@
 
 Règles de code :
 
-- Un écran = un fichier dans `src/screens/` (voir `docs/ARCHITECTURE.md`).
+- Un écran = un fichier dans `src/screens/` (voir `docs/FRONT_ARCHITECTURE.md`).
 - La logique pure va dans `src/lib/`, avec un test dans `tests/`.
 - Les écrans n'appellent jamais le moteur directement : passez par `app` (`app.updateFarm`, `app.loadField`…).
 - Le contrat avec l'algo ne change qu'avec l'accord de Nour et Yanis, et `contract/field-shift.schema.json`, `docs/ALGO_CONTRACT.md` et le moteur de démo changent ensemble.

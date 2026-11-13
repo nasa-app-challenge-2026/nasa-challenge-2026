@@ -58,15 +58,15 @@ Le workflow [`deploy.yml`](.github/workflows/deploy.yml) publie le site sur GitH
 
 ## Documentation
 
-| Fichier                                          | Contenu                                                       |
-| ------------------------------------------------ | ------------------------------------------------------------- |
-| [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md) | Le contrat front ↔ algo                                       |
-| [`docs/PROMPT_ALGO.md`](docs/PROMPT_ALGO.md)     | Message prêt à envoyer pour coder l'algo                      |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)   | Organisation du code, comment ajouter un écran                |
-| [`docs/DESIGN.md`](docs/DESIGN.md)               | Base commune : couleurs, textures, typo, liste « écran fini » |
-| [`docs/TEAM.md`](docs/TEAM.md)                   | Qui fait quoi, façon de travailler                            |
-| [`docs/ROTAAI.md`](docs/ROTAAI.md)               | L'assistant, aujourd'hui et plus tard                         |
-| [`docs/ROADMAP.md`](docs/ROADMAP.md)             | Ce qui reste à faire                                          |
+| Fichier                                                    | Contenu                                                       |
+| ---------------------------------------------------------- | ------------------------------------------------------------- |
+| [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md)           | Le contrat front ↔ algo                                       |
+| [`docs/PROMPT_ALGO.md`](docs/PROMPT_ALGO.md)               | Message prêt à envoyer pour coder l'algo                      |
+| [`docs/FRONT_ARCHITECTURE.md`](docs/FRONT_ARCHITECTURE.md) | Organisation du code, comment ajouter un écran                |
+| [`docs/DESIGN.md`](docs/DESIGN.md)                         | Base commune : couleurs, textures, typo, liste « écran fini » |
+| [`docs/TEAM.md`](docs/TEAM.md)                             | Qui fait quoi, façon de travailler                            |
+| [`docs/ROTAAI.md`](docs/ROTAAI.md)                         | L'assistant, aujourd'hui et plus tard                         |
+| [`docs/FRONT_ROADMAP.md`](docs/FRONT_ROADMAP.md)           | Ce qui reste à faire                                          |
 
 ## Sources
 

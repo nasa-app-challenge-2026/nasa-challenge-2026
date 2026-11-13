@@ -111,7 +111,7 @@ export default {
         s.ui.authMode = el.dataset.mode;
       }),
     'auth-submit': (app, form) => {
-      // Demo only: no real authentication yet (see docs/ROADMAP.md).
+      // Demo only: no real authentication yet (see docs/FRONT_ROADMAP.md).
       const data = new FormData(form);
       const signup = app.state.ui.authMode === 'signup';
       app.update((s) => {
