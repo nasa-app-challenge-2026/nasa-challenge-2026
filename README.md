@@ -1,78 +1,85 @@
-# Field Shift — rotations de cultures et climat (NASA Space Apps 2026)
+# Field Shift 🌱
 
-Outil d'aide à la décision pour le défi *Field Shift: Adapting Farms with NASA Data*. Il compare la
-rotation actuelle d'une ferme à deux alternatives et les soumet à un **stress test climatique
-rétrospectif** sur 45 années de données quotidiennes NASA POWER (1981–2025), en expliquant
-chaque résultat : pourquoi, avec quelles données, bénéfices, compromis, incertitudes, et ce qui
-reste à valider localement.
+**Planifier la rotation des cultures de sa ferme, section par section, avec les données de la NASA.**
 
-> Outil d'exploration : il ne remplace pas un agronome et ne garantit aucun rendement.
+Projet de l'équipe **NASA-LARPERS** pour le [NASA Space Apps Challenge 2026](https://www.spaceappschallenge.org/2026/) (14 et 15 novembre), défi _Field Shift: Adapting Farms with NASA Data_.
 
-Profil de démonstration : ferme d'avoine et de foin de **Sacré-Cœur (Québec)**, issu d'une entrevue.
+> **v2.0 · front end complet, algorithme en cours.** L'interface marche de bout en bout avec un moteur de démo (chiffres fictifs, badge « Données d'exemple »). Le vrai algorithme se branche sans toucher aux écrans : voir [le contrat](docs/ALGO_CONTRACT.md).
 
-## Démarrage rapide
+![Tableau de bord](docs/screenshots/tableau.png)
 
-Prérequis : Python 3.12, [uv](https://docs.astral.sh/uv/) (`curl -LsSf https://astral.sh/uv/install.sh | sh`), Node.js 22.
+## Ce que fait l'appli
+
+1. Le fermier crée son compte, choisit son **type de ferme** (grandes cultures ; les autres types arrivent), place sa ferme sur la carte et la **découpe en sections** A, B, C…
+2. Il classe ses **priorités** : revenu, résilience, sol, eau, charge de travail.
+3. Le **tableau de bord** montre chaque section, la ferme en vue isométrique avec la texture de la culture de chaque année, un curseur des années, et signale les années où l'assolement est déséquilibré (bouton « Décaler mes sections »).
+4. Pour chaque section : les **données NASA** du champ, l'éditeur de **rotation** (délais de retour, cultures sur plusieurs années, couvertures d'hiver, santé du sol), les **résultats** comparés à la monoculture, **explorer et modifier** en direct, et un **stress test** (sécheresse, canicule, ravageurs).
+5. **RotaAI**, en bas à droite, répond aux « pourquoi ».
+
+| Rotation                                   | Résultats                                    |
+| ------------------------------------------ | -------------------------------------------- |
+| ![Rotation](docs/screenshots/rotation.png) | ![Résultats](docs/screenshots/resultats.png) |
+
+## Démarrer
+
+Il faut Node.js 20 ou plus.
 
 ```bash
-# API (http://127.0.0.1:8000, documentation interactive sur /api/docs)
-cd apps/api
-uv sync --frozen
-uv run uvicorn --factory fieldshift.api.app:create_app --reload --port 8000
+npm install
+npm run dev        # http://localhost:5173
+```
 
-# Interface (http://localhost:5173, les appels /api sont relayés vers l'API)
-cd apps/web
-npm ci
+| Commande                            | Rôle                                           |
+| ----------------------------------- | ---------------------------------------------- |
+| `npm run dev`                       | serveur de développement                       |
+| `npm run build` / `npm run preview` | version de production dans `dist/`             |
+| `npm test`                          | tests (rotations, contrat avec l'algo, RotaAI) |
+| `npm run lint` / `npm run format`   | qualité du code                                |
+| `npm run fixtures`                  | régénère `contract/examples/`                  |
+| `npm run check:algo -- <url>`       | vérifie qu'un algorithme respecte le contrat   |
+
+## Brancher l'algorithme
+
+Le front parle à l'algo à travers **un contrat** : trois routes `POST` en JSON, décrites dans [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md) et [`contract/field-shift.schema.json`](contract/field-shift.schema.json).
+
+```bash
+cp .env.example .env.local
+# VITE_ALGO_MODE=remote
+# VITE_ALGO_URL=http://localhost:8000
+npm run check:algo -- http://localhost:8000
 npm run dev
 ```
 
-### Mode démonstration hors ligne
+Pour l'équipe algo : [`docs/PROMPT_ALGO.md`](docs/PROMPT_ALGO.md) est un message prêt à donner à Claude, avec la liste des fichiers à joindre.
 
-```bash
-FIELDSHIFT_CLIMATE_SOURCE=snapshot_only uv run uvicorn --factory fieldshift.api.app:create_app --port 8000
-```
+## Mettre en ligne
 
-Seuls les instantanés versionnés dans `data/snapshots/` sont utilisés (réponses NASA réelles,
-vérifiées par SHA-256). En mode `live` (défaut), l'instantané n'est utilisé que si l'API NASA
-échoue, et l'interface le signale.
+Le workflow [`deploy.yml`](.github/workflows/deploy.yml) publie le site sur GitHub Pages à chaque push sur `main`. Une fois : **Settings → Pages → Source : GitHub Actions**. Pour utiliser le vrai algo en ligne, ajoutez les variables `VITE_ALGO_MODE` et `VITE_ALGO_URL` dans **Settings → Secrets and variables → Actions → Variables**.
 
-## Tests et qualité
+## Documentation
 
-```bash
-cd apps/api && uv run ruff format --check . && uv run ruff check . && uv run mypy && uv run pytest
-cd apps/web && npm run format:check && npm run lint && npm run typecheck && npm test && npm run build
-```
+| Fichier                                          | Contenu                                                       |
+| ------------------------------------------------ | ------------------------------------------------------------- |
+| [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md) | Le contrat front ↔ algo                                       |
+| [`docs/PROMPT_ALGO.md`](docs/PROMPT_ALGO.md)     | Message prêt à envoyer pour coder l'algo                      |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)   | Organisation du code, comment ajouter un écran                |
+| [`docs/DESIGN.md`](docs/DESIGN.md)               | Base commune : couleurs, textures, typo, liste « écran fini » |
+| [`docs/TEAM.md`](docs/TEAM.md)                   | Qui fait quoi, façon de travailler                            |
+| [`docs/ROTAAI.md`](docs/ROTAAI.md)               | L'assistant, aujourd'hui et plus tard                         |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md)             | Ce qui reste à faire                                          |
 
-Les tests n'appellent jamais l'API NASA. La CI (`.github/workflows/ci.yml`) exécute tout cela à
-chaque push et vérifie que les réponses d'exemple du frontend correspondent à l'API.
+## Sources
 
-## Variables d'environnement
+Les données NASA (POWER, GPM IMERG, SMAP, ECOSTRESS, HLS, NEX-GDDP-CMIP6), SoilGrids et les études utilisées sont listées dans [`src/data/sources.js`](src/data/sources.js) et dans la page « Détail et sources » de l'appli. Polices : Inter et Space Grotesk (Google Fonts, licence SIL OFL).
 
-Voir [.env.example](.env.example) (préfixe `FIELDSHIFT_`). Aucune clé n'est nécessaire.
+## Utilisation de l'IA
 
-## Scripts
+Claude (Anthropic) a servi à la recherche d'études, aux maquettes, à l'architecture et à une première version de ce code ; l'équipe l'a relu et le maintient. Les réponses de RotaAI sont écrites à l'avance et relues par l'équipe. Le journal détaillé sera tenu pour la déclaration de soumission.
 
-| Commande (depuis `apps/api`) | Rôle |
-|---|---|
-| `uv run python ../../scripts/refresh_snapshot.py 2025` | Re-télécharge les instantanés NASA des fermes de démo |
-| `uv run python ../../scripts/export_api_fixtures.py` | Régénère les réponses réelles utilisées par les tests du frontend |
+## Limites
 
-## Structure
+Les chiffres du moteur de démo sont fictifs. Les effets de rotation viennent surtout d'études menées aux États-Unis et devront être calibrés pour le Québec. Field Shift aide à décider ; il ne remplace pas l'avis d'un agronome.
 
-```
-apps/api/      API FastAPI + noyau métier Python (domain / application / infrastructure / api)
-apps/web/      Interface React + TypeScript (Vite, Leaflet, Recharts, Zod)
-data/          Référentiel versionné (cultures, rotations, sources, fermes de démo) et instantanés NASA
-docs/          Architecture, API, méthodologie, sources, ADR, feuille de route, usage de l'IA
-scripts/       Opérations reproductibles
-```
+## Licence
 
-Documentation : [architecture](docs/architecture.md) · [API](docs/api.md) ·
-[méthodologie](docs/methodology.md) · [sources de données](docs/data-sources.md) ·
-[feuille de route et équipe](docs/roadmap.md) · [ADR](docs/adr/) · [usage de l'IA](docs/ai-usage.md)
-
-## Données
-
-Données climatiques : NASA POWER (MERRA-2), licence CC0. *The data was obtained from the
-National Aeronautics and Space Administration (NASA) Langley Research Center (LaRC) Prediction
-Of Worldwide Energy Resources (POWER) project funded through the NASA Earth Science Division.*
+[MIT](LICENSE) · NASA-LARPERS 2026

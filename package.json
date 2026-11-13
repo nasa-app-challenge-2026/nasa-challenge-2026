@@ -1,0 +1,32 @@
+{
+  "name": "field-shift",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Field Shift: crop rotation planning with NASA data. Front end of the NASA-LARPERS team, NASA Space Apps Challenge 2026.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "fixtures": "node scripts/make-fixtures.mjs",
+    "check:algo": "node scripts/check-algo.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "ajv": "^8.17.1",
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0",
+    "prettier": "^3.3.3",
+    "vite": "^5.4.10",
+    "vitest": "^2.1.4"
+  }
+}
