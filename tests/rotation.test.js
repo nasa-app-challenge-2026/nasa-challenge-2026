@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  autoStagger,
   bestOffsets,
   buildCalendar,
   cycleLength,
@@ -124,5 +125,28 @@ describe('calendar and farm mix (the three team cases)', () => {
     const { offsets, imbalanced } = bestOffsets(farm, sections);
     expect(imbalanced).toBeLessThanOrEqual(before);
     expect(offsets.A).toBe(0);
+  });
+});
+
+describe('autoStagger', () => {
+  const farm = { startYear: 2027, horizonYears: 12 };
+  const same = () => [
+    { crop: 'mais', years: 1, cover: null },
+    { crop: 'soya', years: 1, cover: null },
+    { crop: 'ble', years: 1, cover: null },
+  ];
+
+  it('shifts identical rotations so the farm grows different crops each year', () => {
+    const sections = ['A', 'B', 'C'].map((id) => ({ id, areaHa: 5, offset: 0, rotation: same() }));
+    expect(imbalancedYears(farm, sections)).toBe(12);
+    autoStagger(farm, sections);
+    expect(imbalancedYears(farm, sections)).toBe(0);
+    expect(new Set(sections.map((s) => s.offset)).size).toBe(3);
+  });
+
+  it('leaves offsets alone when nothing improves', () => {
+    const sections = [{ id: 'A', areaHa: 5, offset: 0, rotation: same() }];
+    autoStagger(farm, sections);
+    expect(sections[0].offset).toBe(0);
   });
 });

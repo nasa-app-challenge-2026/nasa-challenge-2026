@@ -4,6 +4,7 @@ const SIMPLE = [
   'type-de-ferme',
   'localisation',
   'tracer',
+  'cultures',
   'priorites',
   'tableau',
   'sources',

@@ -24,7 +24,7 @@ Ce que je veux :
    - **Scores** eau, sol, résilience, revenu (0 à 100), pondérés par les priorités du fermier.
    - **Comparaisons** avec le maïs en continu et la rotation maïs-soya.
    - **Stress test** : normal, sec, chaud, ravageurs, sur 1 ou 3 ans (`options.stressYears`).
-   - **Proposition** de rotation pour une durée donnée, qui respecte les délais de retour de `crops.js`.
+   - **Proposition** de rotation pour une durée donnée, qui respecte les délais de retour de `crops.js`, n'utilise que la réserve de semences du fermier (`farm.seeds`, sinon `missingSeeds`), ne répète pas la culture actuelle de la section (`currentCrop`) la première année, et suit l'ordre de ses priorités.
 4. Des tests (pytest) qui passent les fichiers de `contract/examples/*.input.json` et valident chaque réponse contre le schéma.
 5. Un README qui explique comment lancer le serveur et chaque formule, avec ses sources.
 

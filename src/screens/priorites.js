@@ -3,6 +3,7 @@ import { html } from '../lib/html.js';
 import { PRIORITIES, PRIORITY_WEIGHTS } from '../data/catalog.js';
 import { onboardingHeader } from '../ui/layout.js';
 import { icon, ICONS } from '../ui/icons.js';
+import { autoStagger } from '../lib/rotation.js';
 
 export function priorityList(order, { movable = true } = {}) {
   return html`<ol class="prio-list">
@@ -62,7 +63,7 @@ export default {
   title: 'Priorités',
   render(state) {
     const order = state.farm.farm.priorities;
-    return html`${onboardingHeader(4)}
+    return html`${onboardingHeader(5)}
       <main class="page page--narrow" id="main">
         <div class="row-wrap align-start gap-lg">
           <div class="grow-3 stack-md">
@@ -75,7 +76,7 @@ export default {
             </div>
             ${priorityList(order)}
             <div class="actions-bar">
-              <a class="btn btn--secondary" href="#/tracer">Retour</a>
+              <a class="btn btn--secondary" href="#/cultures">Retour</a>
               <button type="button" class="btn btn--primary" data-action="finish-onboarding">
                 Terminer et voir ma ferme →
               </button>
@@ -117,7 +118,9 @@ export default {
   actions: {
     'prio-move': movePriority,
     'finish-onboarding': (app) => {
-      app.update((s) => {
+      // Start with the sections staggered: different crops across the farm each year.
+      app.updateFarm((farm, s) => {
+        autoStagger(farm.farm, farm.sections);
         s.onboarded = true;
       });
       app.go('#/tableau');

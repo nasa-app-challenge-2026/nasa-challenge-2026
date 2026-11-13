@@ -6,10 +6,28 @@
       "name": "Ferme du rang Saint-Pierre",
       "type": "grandes-cultures",
       "location": {
-        "lat": 45.63,
-        "lon": -72.95,
+        "lat": 45.6287,
+        "lon": -72.94815,
         "label": "Saint-Hyacinthe, QC"
       },
+      "boundary": [
+        [
+          45.6314,
+          -72.952
+        ],
+        [
+          45.6314,
+          -72.9443
+        ],
+        [
+          45.626,
+          -72.9443
+        ],
+        [
+          45.626,
+          -72.952
+        ]
+      ],
       "startYear": 2027,
       "horizonYears": 12,
       "priorities": [
@@ -19,7 +37,19 @@
         "eau",
         "travail"
       ],
-      "sensors": false
+      "sensors": false,
+      "seeds": {
+        "crops": [
+          "mais",
+          "soya",
+          "ble",
+          "patate"
+        ],
+        "covers": [
+          "seigle",
+          "trefle"
+        ]
+      }
     },
     "options": {
       "stressYears": 1
@@ -27,24 +57,25 @@
     "sections": [
       {
         "id": "A",
+        "currentCrop": "mais",
         "areaHa": 12,
         "offset": 0,
         "note": "côté route",
         "polygon": [
           [
-            45.632,
+            45.6314,
             -72.952
           ],
           [
-            45.632,
-            -72.948
+            45.6314,
+            -72.94686
           ],
           [
-            45.629,
-            -72.948
+            45.6287,
+            -72.94686
           ],
           [
-            45.629,
+            45.6287,
             -72.952
           ]
         ],
@@ -73,25 +104,26 @@
       },
       {
         "id": "B",
+        "currentCrop": "soya",
         "areaHa": 8,
         "offset": 0,
         "note": "sol plus sableux",
         "polygon": [
           [
-            45.632,
-            -72.948
+            45.6287,
+            -72.94772
           ],
           [
-            45.632,
-            -72.944
+            45.6287,
+            -72.9443
           ],
           [
-            45.63,
-            -72.944
+            45.626,
+            -72.9443
           ],
           [
-            45.63,
-            -72.948
+            45.626,
+            -72.94772
           ]
         ],
         "rotation": [
@@ -114,21 +146,22 @@
       },
       {
         "id": "C",
+        "currentCrop": "soya",
         "areaHa": 10,
         "offset": 0,
         "note": "près du ruisseau",
         "polygon": [
           [
-            45.629,
+            45.6287,
             -72.952
           ],
           [
-            45.629,
-            -72.948
+            45.6287,
+            -72.94772
           ],
           [
             45.626,
-            -72.948
+            -72.94772
           ],
           [
             45.626,
@@ -160,25 +193,26 @@
       },
       {
         "id": "D",
+        "currentCrop": "ble",
         "areaHa": 6,
         "offset": 0,
         "note": "derrière la grange",
         "polygon": [
           [
-            45.63,
-            -72.948
+            45.6314,
+            -72.94686
           ],
           [
-            45.63,
-            -72.944
+            45.6314,
+            -72.9443
           ],
           [
-            45.626,
-            -72.944
+            45.6287,
+            -72.9443
           ],
           [
-            45.626,
-            -72.948
+            45.6287,
+            -72.94686
           ]
         ],
         "rotation": [

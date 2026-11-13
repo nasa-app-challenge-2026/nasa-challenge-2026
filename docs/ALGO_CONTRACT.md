@@ -38,7 +38,8 @@ Le serveur doit autoriser le CORS depuis l'adresse du site (GitHub Pages) avec l
     "startYear": 2027,
     "horizonYears": 12,
     "priorities": ["revenu", "resilience", "sol", "eau", "travail"],
-    "sensors": false
+    "sensors": false,
+    "seeds": { "crops": ["mais", "soya", "ble", "patate"], "covers": ["seigle", "trefle"] }
   },
   "options": { "stressYears": 1 },
   "sections": [
@@ -46,6 +47,7 @@ Le serveur doit autoriser le CORS depuis l'adresse du site (GitHub Pages) avec l
       "id": "A",
       "areaHa": 12,
       "offset": 0,
+      "currentCrop": "mais",
       "polygon": [
         [45.632, -72.952],
         [45.632, -72.948],
@@ -70,7 +72,9 @@ Règles :
 - **`offset`** = position dans le cycle la première année. C'est ce qui décale les sections entre elles (assolement).
 - **`priorities`** = de la plus importante à la moins importante. Le front leur donne les poids 35, 25, 18, 13 et 9 % ; l'algo peut faire autrement.
 - **`options.stressYears`** = durée d'un choc du stress test (1 ou 3 ans). La question est encore ouverte dans l'équipe.
-- Le front n'envoie **jamais** une rotation avec une année vide.
+- **`farm.seeds`** (optionnel) = la réserve de semences du fermier : les cultures (`crops`) et couvertures (`covers`) qu'il peut semer. Absent = tout le catalogue. Le front l'envoie toujours.
+- **`section.currentCrop`** (optionnel, `null` possible) = ce qui pousse sur la section **maintenant**, la saison avant `startYear`. La culture de la première année analysée (position `offset` dans le cycle) ne doit pas répéter une culture d'un an (tous les délais de retour sont d'au moins 2 ans) ; un bloc de luzerne ne peut pas commencer en son milieu, sauf si la section est déjà en luzerne. Le front vérifie la même règle (`currentCropConflict` dans `src/lib/rotation.js`).
+- Le front n'envoie **jamais** une rotation avec une année vide. Le fermier peut choisir à la main une culture hors de sa réserve : c'est permis, l'interface le signale.
 
 ## Sortie : `FarmPlan`
 
@@ -167,7 +171,14 @@ Règles :
 ## `/propose`
 
 Entrée : `{ "farm": FarmInput, "sectionId": "A", "cycleYears": 4 }`.
-Sortie : `{ "rotation": [RotationEntry…], "reasons": ["…"] }`. La rotation doit durer exactement `cycleYears` ans et respecter les délais de retour.
+Sortie : `{ "rotation": [RotationEntry…], "reasons": ["…"], "missingSeeds": ["…"] }`.
+
+- La rotation dure exactement `cycleYears` ans et respecte les délais de retour.
+- Elle n'utilise **que** les cultures et couvertures de `farm.seeds`. Si c'est impossible (ex. une seule culture et 3 ans), elle peut en ajouter, mais doit les lister dans `missingSeeds` : l'interface propose alors de les ajouter à la réserve.
+- Sa première année (position `offset` de la section) respecte `currentCrop` (voir plus haut).
+- Elle suit l'ordre des `priorities`.
+- `reasons` : 2 à 5 phrases courtes, affichées telles quelles sous la rotation (« Pourquoi cette rotation »). Pas de nom d'étude.
+- Le bouton « Proposer avec mes semences » de l'étape « Mes cultures » appelle `/propose` pour chaque section l'une après l'autre (chaque appel voit les rotations déjà choisies), avec `cycleYears` = la somme des durées des semences (entre 2 et 6), puis le front décale les sections.
 
 ## `/field-data`
 
@@ -203,7 +214,7 @@ Les entrées sont dans `contract/examples/` :
 ## Brancher l'algo
 
 1. L'algo tourne quelque part (en local : `http://localhost:8000`).
-2. `npm run check:algo -- http://localhost:8000` doit afficher « Tout respecte le contrat ».
+2. `npm run check:algo -- http://localhost:8000` doit afficher « Tout respecte le contrat ». Il vérifie aussi que `/propose` reste dans la réserve de semences et respecte la culture actuelle de chaque section.
 3. Dans `.env.local` : `VITE_ALGO_MODE=remote` et `VITE_ALGO_URL=http://localhost:8000`, puis `npm run dev`.
 4. En ligne : les mêmes valeurs dans les variables du dépôt GitHub (Settings → Secrets and variables → Actions → Variables).
 

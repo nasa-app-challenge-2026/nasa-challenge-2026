@@ -5,10 +5,28 @@
     "name": "Cas 2",
     "type": "grandes-cultures",
     "location": {
-      "lat": 45.63,
-      "lon": -72.95,
+      "lat": 45.6287,
+      "lon": -72.94815,
       "label": "Saint-Hyacinthe, QC"
     },
+    "boundary": [
+      [
+        45.6314,
+        -72.952
+      ],
+      [
+        45.6314,
+        -72.9443
+      ],
+      [
+        45.626,
+        -72.9443
+      ],
+      [
+        45.626,
+        -72.952
+      ]
+    ],
     "startYear": 2027,
     "horizonYears": 12,
     "priorities": [
@@ -18,7 +36,19 @@
       "eau",
       "travail"
     ],
-    "sensors": false
+    "sensors": false,
+    "seeds": {
+      "crops": [
+        "mais",
+        "soya",
+        "ble",
+        "patate"
+      ],
+      "covers": [
+        "seigle",
+        "trefle"
+      ]
+    }
   },
   "options": {
     "stressYears": 1

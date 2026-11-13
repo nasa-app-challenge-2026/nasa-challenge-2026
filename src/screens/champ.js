@@ -4,6 +4,7 @@ import { CROPS } from '../data/crops.js';
 import { buildCalendar } from '../lib/rotation.js';
 import { sectionLayout, pageTitle } from '../ui/layout.js';
 import { infoButton, loading, sparkline, switchButton } from '../ui/widgets.js';
+import { farmPlan } from '../ui/farmPlan.js';
 
 function metricCard(state, sectionId, m) {
   const key = `${sectionId}:${m.id}`;
@@ -47,6 +48,23 @@ export default {
       horizonYears: state.farm.farm.horizonYears,
     });
     const now = cal[yi] ?? cal[0];
+    const cropOf = (sid) => {
+      const sec = app.section(sid);
+      const c = buildCalendar(sec.rotation, {
+        offset: sec.offset,
+        startYear: state.farm.farm.startYear,
+        horizonYears: state.farm.farm.horizonYears,
+      });
+      return (c[yi] ?? c[0]).crop;
+    };
+    const mapLabel = `Carte de la section ${id}, en ${CROPS[now.crop]?.name ?? '—'} en ${now.year}`;
+    const plan = farmPlan({
+      sections: state.farm.sections,
+      boundary: state.farm.farm.boundary,
+      cropOf,
+      selectedId: id,
+      label: mapLabel,
+    });
     const body = html` ${pageTitle(
         'Mon champ',
         `Ce que les satellites de la NASA voient sur la section ${id}, en moyenne sur les 10 dernières années.`,
@@ -63,36 +81,42 @@ export default {
           ${f?.data ? f.data.metrics.map((m) => metricCard(state, id, m)) : loading('Lecture des données satellites…')}
         </div>
         <div class="card card--flush grow-1 section-map">
-          <svg
-            viewBox="0 0 320 300"
-            role="img"
-            aria-label="Carte de la section ${id}, en ${CROPS[now.crop]?.name ?? '—'} en ${now.year}"
-          >
-            <rect width="320" height="300" fill="url(#pat-soya)"></rect>
-            <rect x="210" y="0" width="110" height="300" fill="url(#pat-orge)"></rect>
-            <rect x="0" y="230" width="210" height="70" fill="url(#pat-mais)"></rect>
-            <polygon
-              points="40,40 200,40 200,220 40,220"
-              fill="url(#pat-${now.crop})"
-              stroke="#FFFFFF"
-              stroke-width="4"
-            ></polygon>
-            <rect
-              x="96"
-              y="104"
-              width="48"
-              height="48"
-              rx="12"
-              fill="#FFFFFF"
-              fill-opacity=".92"
-            ></rect>
-            <text x="120" y="139" text-anchor="middle" class="map-section__id">${id}</text>
-          </svg>
+          ${
+            plan ??
+            html`<svg viewBox="0 0 320 300" role="img" aria-label="${mapLabel}">
+              <rect width="320" height="300" fill="#4A6B3C"></rect>
+              <polygon
+                points="40,40 200,40 200,220 40,220"
+                fill="url(#pat-${now.crop})"
+                stroke="#FFFFFF"
+                stroke-width="4"
+                stroke-dasharray="10 6"
+              ></polygon>
+              <rect
+                x="96"
+                y="104"
+                width="48"
+                height="48"
+                rx="12"
+                fill="#FFFFFF"
+                fill-opacity=".92"
+              ></rect>
+              <text x="120" y="139" text-anchor="middle" class="map-section__id">${id}</text>
+            </svg>`
+          }
           <div class="pad stack-0">
             <strong
               >Section ${id} · ${section.areaHa} ha · ${CROPS[now.crop]?.name.toLowerCase()} en
               ${now.year}</strong
-            ><span class="muted small">${section.note ?? ''}</span>
+            ><span class="muted small"
+              >${section.note ?? ''}${
+                plan
+                  ? ''
+                  : html`${section.note ? ' · ' : ''}<a href="#/tracer"
+                        >Tracer cette section sur la carte</a
+                      >`
+              }</span
+            >
           </div>
         </div>
       </div>

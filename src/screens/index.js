@@ -8,6 +8,7 @@ import connexion from './connexion.js';
 import typeFerme from './typeFerme.js';
 import localisation from './localisation.js';
 import tracer from './tracer.js';
+import cultures from './cultures.js';
 import priorites from './priorites.js';
 import tableau from './tableau.js';
 import champ from './champ.js';
@@ -23,6 +24,7 @@ export const SCREENS = {
   'type-de-ferme': typeFerme,
   localisation,
   tracer,
+  cultures,
   priorites,
   tableau,
   'section-champ': champ,

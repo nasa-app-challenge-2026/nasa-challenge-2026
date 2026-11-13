@@ -16,6 +16,15 @@ export const SOURCES = [
   },
   {
     kind: 'data',
+    title: 'Open-Meteo',
+    use: 'Météo du jour et prévisions à 7 jours',
+    what: 'Prévisions locales gratuites, sans compte, construites à partir des modèles météo nationaux. Ce n’est pas une donnée NASA : c’est le complément « aujourd’hui » aux moyennes sur 10 ans des satellites.',
+    where: 'Tableau de bord',
+    href: 'https://open-meteo.com/en/docs',
+    linkLabel: 'Documentation',
+  },
+  {
+    kind: 'data',
     title: 'GPM IMERG',
     use: 'Précipitations',
     what: 'Estimation de la pluie à partir des satellites de la mission GPM. Utilisée pour la pluie de la saison et le scénario « sécheresse ».',

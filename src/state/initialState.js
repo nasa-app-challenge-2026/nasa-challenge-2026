@@ -1,5 +1,6 @@
 import { DEMO_FARM } from '../data/demoFarm.js';
 import { GREETING } from '../rotaai/answers.js';
+import { deriveSeeds } from '../lib/seeds.js';
 
 export const STORAGE_KEY = 'field-shift:v2';
 
@@ -8,7 +9,16 @@ export const persisted = (state) => ({
   user: state.user,
   onboarded: state.onboarded,
   farm: state.farm,
+  prefs: state.prefs,
 });
+
+/** Bring a farm saved by an older version up to the current model. */
+export function migrateFarm(farm) {
+  const f = structuredClone(farm);
+  for (const s of f.sections ?? []) if (s.currentCrop === undefined) s.currentCrop = null;
+  if (!f.farm.seeds) f.farm.seeds = deriveSeeds(f);
+  return f;
+}
 
 export function loadSaved(storage) {
   try {
@@ -32,14 +42,18 @@ export function initialState(engineName, saved) {
     engineName,
     user: saved?.user ?? null,
     onboarded: saved?.onboarded ?? false,
-    farm: saved?.farm ?? structuredClone(DEMO_FARM),
+    farm: saved?.farm ? migrateFarm(saved.farm) : structuredClone(DEMO_FARM),
+    /** Per-browser display preferences. dashboard = order of the dashboard blocks (null = default). */
+    prefs: { dashboard: null, ...(saved?.prefs ?? {}) },
     plan: { status: 'idle', data: null, error: null },
     field: {},
+    weather: { status: 'idle', data: null, error: null, key: null },
     ui: {
       route: { name: 'connexion', params: {} },
       authMode: 'login',
       farmTypeSel: 'grandes-cultures',
-      placeSel: 0,
+      geo: { query: '', results: null, status: 'idle', error: null },
+      draw: { target: 'farm', drawing: false },
       selectedSection: 'A',
       yearIndex: 1,
       prevOffsets: null,
@@ -55,6 +69,10 @@ export function initialState(engineName, saved) {
       explorerSnap: {},
       explorerBase: {},
       proposing: false,
+      /** Last answer of the engine's /propose, shown under the rotation: { sectionId, reasons, missingSeeds }. */
+      proposal: null,
+      proposeAll: { status: 'idle', missing: [], error: null },
+      dashAnnounce: '',
       rota: { open: false, typing: false, msgs: [{ from: 'bot', text: GREETING }] },
     },
   };

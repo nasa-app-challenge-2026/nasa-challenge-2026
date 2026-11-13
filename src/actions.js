@@ -36,6 +36,13 @@ export const globalActions = {
       s.ui.selectedSection = el.dataset.id;
     }),
   'retry-plan': (app) => app.refreshPlan(),
+  /** Open a settings tab from anywhere: data-tab="semences". */
+  'open-settings': (app, el) => {
+    app.update((s) => {
+      s.ui.settingsTab = el.dataset.tab;
+    });
+    app.go('#/compte');
+  },
   'set-role': (app, el) =>
     app.update((s) => {
       s.ui.role = el.dataset.role;

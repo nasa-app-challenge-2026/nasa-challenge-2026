@@ -197,24 +197,68 @@ export function imbalancedYears(farm, sections, offsets) {
 }
 
 /**
- * Offsets that minimise the number of unbalanced years. The first section keeps
- * offset 0. Exhaustive search for small farms, greedy beyond that.
+ * The crop of the first analysed year, and whether that slot is the start of
+ * its planting (false in the middle of a 3-year alfalfa block).
+ */
+export function firstYear(section, offset = section.offset ?? 0) {
+  const slots = toSlots(section.rotation);
+  const L = slots.length;
+  if (!L) return { crop: null, blockStart: true };
+  const pos = offset % L;
+  return { crop: slots[pos].crop, blockStart: entryStart(section.rotation, pos) === pos };
+}
+
+/**
+ * Why the first analysed year clashes with what grows on the section now
+ * (`section.currentCrop`, the season before `startYear`), or null.
+ * Rule: a one-year crop never follows itself (every return delay is ≥ 2 years);
+ * a multi-year crop cannot start "in the middle" unless it is already there.
+ */
+export function currentCropConflict(section, offset = section.offset ?? 0) {
+  const now = section.currentCrop;
+  if (!now || !CROPS[now]) return null;
+  const { crop, blockStart } = firstYear(section, offset);
+  if (!crop || !CROPS[crop]) return null;
+  if (crop === now && CROPS[crop].years === 1) {
+    return `${CROPS[crop].name} deux ans de suite : la section est déjà en ${CROPS[crop].name.toLowerCase()}`;
+  }
+  if (!blockStart && crop !== now) {
+    return `La ${CROPS[crop].name.toLowerCase()} ne peut pas commencer en cours de bloc : elle n’est pas encore semée`;
+  }
+  return null;
+}
+
+export function conflictCount(sections, offsets) {
+  return sections.filter((s) => currentCropConflict(s, offsets?.[s.id] ?? s.offset ?? 0)).length;
+}
+
+/** What the offset search minimises: clashes with the current crops first, then unbalanced years. */
+const offsetCost = (farm, sections, o) =>
+  conflictCount(sections, o) * 1000 + imbalancedYears(farm, sections, o);
+
+/**
+ * Offsets that avoid clashing with what grows now, then minimise the number of
+ * unbalanced years. Without current crops, offsets are relative and the first
+ * section keeps offset 0. Exhaustive search for small farms, greedy beyond.
  */
 export function bestOffsets(farm, sections) {
   const current = Object.fromEntries(sections.map((s) => [s.id, s.offset ?? 0]));
+  if (!sections.length) return { offsets: current, imbalanced: 0, conflicts: 0 };
   let best = { ...current };
-  let bestBad = imbalancedYears(farm, sections, best);
+  let bestCost = offsetCost(farm, sections, best);
   const lengths = sections.map((s) => Math.max(1, cycleLength(s.rotation)));
-  const combos = lengths.slice(1).reduce((a, b) => a * b, 1);
+  const anchored = sections.some((s) => s.currentCrop);
+  const from = anchored ? 0 : 1;
+  const combos = lengths.slice(from).reduce((a, b) => a * b, 1);
 
   if (combos <= 20000) {
     const offs = new Array(sections.length).fill(0);
     const walk = (i) => {
       if (i === sections.length) {
         const o = Object.fromEntries(sections.map((s, k) => [s.id, offs[k]]));
-        const bad = imbalancedYears(farm, sections, o);
-        if (bad < bestBad) {
-          bestBad = bad;
+        const cost = offsetCost(farm, sections, o);
+        if (cost < bestCost) {
+          bestCost = cost;
           best = o;
         }
         return;
@@ -224,27 +268,73 @@ export function bestOffsets(farm, sections) {
         walk(i + 1);
       }
     };
-    offs[0] = 0;
-    walk(1);
+    walk(from);
   } else {
-    const o = { ...current, [sections[0].id]: 0 };
-    for (let i = 1; i < sections.length; i++) {
+    const o = anchored ? { ...current } : { ...current, [sections[0].id]: 0 };
+    for (let i = from; i < sections.length; i++) {
       let bestV = o[sections[i].id];
-      let bestLocal = imbalancedYears(farm, sections, o);
+      let bestLocal = offsetCost(farm, sections, o);
       for (let v = 0; v < lengths[i]; v++) {
-        const bad = imbalancedYears(farm, sections, { ...o, [sections[i].id]: v });
-        if (bad < bestLocal) {
-          bestLocal = bad;
+        const cost = offsetCost(farm, sections, { ...o, [sections[i].id]: v });
+        if (cost < bestLocal) {
+          bestLocal = cost;
           bestV = v;
         }
       }
       o[sections[i].id] = bestV;
     }
-    const bad = imbalancedYears(farm, sections, o);
-    if (bad < bestBad) {
-      bestBad = bad;
+    const cost = offsetCost(farm, sections, o);
+    if (cost < bestCost) {
+      bestCost = cost;
       best = o;
     }
   }
-  return { offsets: best, imbalanced: bestBad };
+  return {
+    offsets: best,
+    imbalanced: imbalancedYears(farm, sections, best),
+    conflicts: conflictCount(sections, best),
+  };
+}
+
+/** Best offset for one section, the others staying where they are. */
+export function bestOffsetFor(farm, sections, id) {
+  const sec = sections.find((s) => s.id === id);
+  if (!sec) return 0;
+  const base = Object.fromEntries(sections.map((s) => [s.id, s.offset ?? 0]));
+  let bestV = base[id];
+  let bestCost = offsetCost(farm, sections, base);
+  for (let v = 0; v < Math.max(1, cycleLength(sec.rotation)); v++) {
+    const cost = offsetCost(farm, sections, { ...base, [id]: v });
+    if (cost < bestCost) {
+      bestCost = cost;
+      bestV = v;
+    }
+  }
+  return bestV;
+}
+
+/**
+ * Stagger the sections (set their offsets) so that they do not clash with
+ * what grows now and grow different crops the same year, whenever that
+ * improves things. This is what makes "the same rotation on every section" a
+ * real rotation at farm level (contract case 1). Mutates and returns `sections`.
+ */
+export function autoStagger(farm, sections) {
+  if (!sections.length) return sections;
+  if (sections.length < 2 && !sections[0].currentCrop) return sections;
+  const now = offsetCost(farm, sections);
+  const { offsets } = bestOffsets(farm, sections);
+  if (offsetCost(farm, sections, offsets) < now) {
+    sections.forEach((s) => (s.offset = offsets[s.id] ?? 0));
+  }
+  return sections;
+}
+
+/**
+ * Cycle length that lets a rotation use every seed once (alfalfa counts for
+ * its 3 years), kept between 2 and 6 years like the rotation screen.
+ */
+export function suggestCycleYears(cropIds) {
+  const total = [...new Set(cropIds)].reduce((n, c) => n + (CROPS[c]?.years ?? 0), 0);
+  return Math.max(2, Math.min(6, total || 3));
 }

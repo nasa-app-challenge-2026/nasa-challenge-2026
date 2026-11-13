@@ -45,6 +45,10 @@
           "description": "Position dans le cycle la première année (décalage entre sections)."
         },
         "note": { "type": "string" },
+        "currentCrop": {
+          "enum": ["mais", "soya", "ble", "orge", "patate", "luzerne", null],
+          "description": "Ce qui pousse sur la section maintenant (la saison avant startYear), ou null. La première année analysée doit respecter le délai de retour après cette culture."
+        },
         "polygon": {
           "type": "array",
           "description": "Coins de la section, [latitude, longitude].",
@@ -81,6 +85,33 @@
                 "lat": { "type": "number", "minimum": -90, "maximum": 90 },
                 "lon": { "type": "number", "minimum": -180, "maximum": 180 },
                 "label": { "type": "string" }
+              }
+            },
+            "seeds": {
+              "type": "object",
+              "description": "Réserve de semences du fermier. /propose n'utilise que ces cultures et couvertures ; absent = tout le catalogue.",
+              "required": ["crops"],
+              "properties": {
+                "crops": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/CropId" },
+                  "uniqueItems": true
+                },
+                "covers": {
+                  "type": "array",
+                  "items": { "enum": ["seigle", "trefle", "radis"] },
+                  "uniqueItems": true
+                }
+              }
+            },
+            "boundary": {
+              "type": "array",
+              "description": "Contour de la ferme, [latitude, longitude].",
+              "items": {
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 2,
+                "maxItems": 2
               }
             },
             "startYear": { "type": "integer", "minimum": 2000 },
@@ -269,7 +300,12 @@
       "required": ["rotation", "reasons"],
       "properties": {
         "rotation": { "type": "array", "items": { "$ref": "#/definitions/RotationEntry" } },
-        "reasons": { "type": "array", "items": { "type": "string" } }
+        "reasons": { "type": "array", "items": { "type": "string" } },
+        "missingSeeds": {
+          "type": "array",
+          "description": "Cultures utilisées qui ne sont pas dans farm.seeds (seulement quand aucune rotation n'est possible avec la réserve).",
+          "items": { "$ref": "#/definitions/CropId" }
+        }
       }
     },
     "FieldDataRequest": {

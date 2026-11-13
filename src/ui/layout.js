@@ -33,7 +33,7 @@ export function appHeader(state, active) {
   </header>`;
 }
 
-const STEPS = ['Type de ferme', 'Localisation', 'Tracer la ferme', 'Priorités'];
+const STEPS = ['Type de ferme', 'Localisation', 'Tracer la ferme', 'Mes cultures', 'Priorités'];
 
 export function onboardingHeader(step) {
   return html`<header class="app-header">
@@ -70,7 +70,8 @@ export function sectionLayout(state, section, tab, body) {
         <a class="back-link" href="#/tableau">← Tableau de bord</a>
         <div class="card section-card">
           <div class="section-card__head">
-            <span class="section-badge is-dark">${section.id}</span
+            <span class="section-badge is-dark" style="view-transition-name: section-${section.id}"
+              >${section.id}</span
             ><span class="stack-xs"
               ><strong>Section ${section.id}</strong
               ><span class="muted small">${section.areaHa} ha · cycle de ${L} ans</span></span

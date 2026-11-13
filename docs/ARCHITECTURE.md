@@ -33,6 +33,8 @@ export default {
   title: 'Rotation', // titre de l'onglet
   rota: 'rotation', // questions proposées par RotaAI sur cet écran
   onEnter(app, params) {}, // à l'arrivée (charger des données…)
+  mount(app, params) {}, // après chaque rendu, pour ce qui vit hors du HTML (carte Leaflet) ; idempotent
+  unmount(app) {}, // en quittant l'écran (détruire la carte)
   render(state, params, app) {
     // renvoie du HTML (gabarit html`` qui échappe tout)
     return html`<button data-action="place-crop" data-crop="ble">Blé</button>`;
@@ -47,7 +49,9 @@ export default {
 };
 ```
 
-- **Rendu :** chaque changement d'état redessine l'écran courant. Simple, sans framework, assez rapide ici.
+- **Rendu :** chaque changement d'état redessine l'écran courant. Simple, sans framework, assez rapide ici. Trois choses survivent au redessin : les champs marqués `data-preserve` (valeur et focus), le focus d'un élément `data-refocus` (avec un `id`), et les cartes Leaflet (`mapSlot()` dans `src/ui/leafletMap.js`, nœud DOM conservé et ré-attaché).
+- **Blocs déplaçables :** un conteneur `data-sortable data-commit="action"` dont les enfants ont `data-sort-id` et une poignée `data-drag-handle` se réordonne à la souris, au doigt ou au clavier (`src/ui/dragSort.js`). Pendant un glissement, le rendu attend ; au relâchement, l'action reçoit `{ ids, moved }`. Le tableau de bord l'utilise, l'ordre est dans `prefs.dashboard` (`src/lib/dashboard.js`).
+- **Transitions :** un changement de page passe par l'API View Transitions (fondu court ; glissement gauche/droite pendant les 5 étapes de configuration). L'en-tête et le bouton RotaAI ont leur propre `view-transition-name` et restent immobiles ; la lettre d'une section (`section-A`…) voyage du tableau de bord au menu de la section. Sans l'API ou avec « réduire les animations », l'écran change simplement.
 - **Événements :** un seul écouteur par type sur la page ; il lit `data-action` (clic), `data-submit` (formulaire), `data-change` et `data-input`.
 - **Données de la ferme :** toujours via `app.updateFarm(…)`, qui relance le calcul. Les écrans n'appellent jamais le moteur directement.
 - **Sécurité :** le gabarit `html```  échappe toutes les valeurs. `raw()` seulement pour du texte de confiance.

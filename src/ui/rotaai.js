@@ -47,6 +47,7 @@ export function rotaai(state, ctx) {
               <label class="sr-only" for="rota-input">Votre question</label>
               <input
                 id="rota-input"
+                data-preserve
                 name="q"
                 type="text"
                 autocomplete="off"

@@ -79,31 +79,11 @@ export const PRIORITIES = {
 /** Weight of each priority rank (1st … 5th), in percent. */
 export const PRIORITY_WEIGHTS = [35, 25, 18, 13, 9];
 
+/** Suggestions shown before the first address search. */
 export const DEMO_PLACES = [
-  {
-    label: '2450, rang Saint-Pierre',
-    detail: 'Saint-Hyacinthe, QC',
-    lat: 45.63,
-    lon: -72.95,
-    x: 58,
-    y: 48,
-  },
-  {
-    label: 'Saint-Hyacinthe',
-    detail: 'Montérégie, QC · ville',
-    lat: 45.63,
-    lon: -72.96,
-    x: 44,
-    y: 34,
-  },
-  {
-    label: 'Rang Saint-Pierre Nord',
-    detail: 'Saint-Dominique, QC',
-    lat: 45.57,
-    lon: -72.85,
-    x: 70,
-    y: 40,
-  },
+  { label: 'Rang Saint-Pierre', detail: 'Saint-Hyacinthe, QC', lat: 45.6287, lon: -72.94815 },
+  { label: 'Saint-Hyacinthe', detail: 'Montérégie, QC · ville', lat: 45.6307, lon: -72.957 },
+  { label: 'Saint-Dominique', detail: 'Montérégie, QC', lat: 45.5833, lon: -72.8333 },
 ];
 
 export const STRESS_SCENARIOS = [

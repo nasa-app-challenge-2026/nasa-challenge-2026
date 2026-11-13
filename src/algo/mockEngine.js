@@ -6,8 +6,15 @@
  * Do not add real agronomy here: the real algorithm replaces this file's role
  * through src/algo/remoteEngine.js (or a local module with the same interface).
  */
-import { CROPS } from '../data/crops.js';
-import { buildCalendar, cycleLength, rotationErrors, toSlots } from '../lib/rotation.js';
+import { CROPS, CROP_IDS, COVERS, COVER_IDS } from '../data/crops.js';
+import {
+  buildCalendar,
+  currentCropConflict,
+  cycleLength,
+  firstYear,
+  rotationErrors,
+  toSlots,
+} from '../lib/rotation.js';
 import { soilByCalendar, countTrue } from '../lib/soil.js';
 
 /** Illustrative effect of "previous → next" on yield, in %. Inspired by the studies, not calibrated. */
@@ -208,7 +215,12 @@ function analyseSection(farmInput, section) {
     stress,
     suggestions,
     explanations,
-    warnings: rotationErrors(section.rotation).map((message) => ({ code: 'ROTATION', message })),
+    warnings: [
+      ...rotationErrors(section.rotation).map((message) => ({ code: 'ROTATION', message })),
+      ...[currentCropConflict(section)]
+        .filter(Boolean)
+        .map((message) => ({ code: 'CURRENT_CROP', message: `${message}.` })),
+    ],
   };
 }
 
@@ -216,6 +228,125 @@ const PRIORITY_KEY = { revenu: 'revenu', resilience: 'resilience', sol: 'sol', e
 const WORKLOAD_SCORE = { faible: 85, moyenne: 65, elevee: 45 };
 const WEIGHTS = [0.35, 0.25, 0.18, 0.13, 0.09];
 
+/**
+ * Illustrative proposal: try every sequence of the farmer's seeds that fills
+ * `cycleYears`, keep those that respect the return delays and do not clash
+ * with the current crop, and rank them with the farmer's priorities. The real
+ * algorithm replaces this ranking with the studies and NASA data.
+ */
+function rankRotations({ pool, cycleYears, section, priorities }) {
+  const w = Object.fromEntries((priorities ?? []).map((p, i) => [p, WEIGHTS[i] ?? 0]));
+  const seq = [];
+  let best = null;
+  const consider = () => {
+    const rotation = seq.map((c) => ({ crop: c, years: CROPS[c].years, cover: null }));
+    if (rotationErrors(rotation).length) return;
+    const probe = { ...section, rotation };
+    if (currentCropConflict(probe)) return;
+    const slots = toSlots(rotation).map((s) => s.crop);
+    const L = slots.length;
+    let pairs = 0;
+    for (let i = 0; i < seq.length && seq.length > 1; i++) {
+      pairs += PAIR_EFFECT[`${seq[i]}>${seq[(i + 1) % seq.length]}`] ?? 0;
+    }
+    const first = firstYear(probe).crop;
+    const opening = section.currentCrop ? (PAIR_EFFECT[`${section.currentCrop}>${first}`] ?? 0) : 0;
+    const distinct = new Set(slots).size;
+    const share = (role) => slots.filter((c) => CROPS[c].roles.includes(role)).length / L;
+    const avgRevenue = slots.reduce((a, c) => a + BASE_REV[c], 0) / L;
+    // One illustrative term per priority, each on a 0–10 scale, weighted by the farmer's order.
+    const terms = {
+      revenu: Math.max(0, (avgRevenue - 700) / 95),
+      sol: (share('azote') + share('racines')) * 5,
+      eau: share('sec') * 10,
+      resilience: (distinct / L) * 10,
+      travail: Math.max(0, 10 - (distinct - 1) * 2),
+    };
+    const fit = Object.entries(terms).reduce((a, [k, v]) => a + v * (w[k] ?? 0), 0);
+    const score = pairs + opening / 2 + distinct * 3 + fit * 6;
+    if (!best || score > best.score + 1e-9) best = { score, crops: [...seq] };
+  };
+  const walk = (len) => {
+    if (len === cycleYears) return consider();
+    for (const c of pool) {
+      if (len + CROPS[c].years > cycleYears) continue;
+      seq.push(c);
+      walk(len + CROPS[c].years);
+      seq.pop();
+    }
+  };
+  walk(0);
+  return best;
+}
+
+/** Winter covers from the reserve: clover before a hungry crop, rye after corn, radish for deep roots. */
+function addCovers(crops, covers) {
+  const has = new Set(covers);
+  let radis = crops.some((c) => CROPS[c].roles.includes('racines'));
+  return crops.map((c, i) => {
+    const next = crops[(i + 1) % crops.length];
+    let cover = null;
+    if (CROPS[c].years === 1 && crops.length > 1) {
+      if (CROPS[next].roles.includes('gourmand') && has.has('trefle')) cover = 'trefle';
+      else if (c === 'mais' && has.has('seigle')) cover = 'seigle';
+      else if (!radis && has.has('radis')) {
+        cover = 'radis';
+        radis = true;
+      }
+    }
+    return { crop: c, years: CROPS[c].years, cover };
+  });
+}
+
+const names = (ids, dict = CROPS) => ids.map((c) => dict[c].name.toLowerCase()).join(', ');
+
+function propose(farmInput, sectionId, cycleYears) {
+  const section = farmInput.sections.find((s) => s.id === sectionId) ?? { rotation: [] };
+  const seeds = farmInput.farm.seeds;
+  const own = (seeds?.crops ?? CROP_IDS).filter((c) => CROPS[c]);
+  const covers = (seeds?.covers ?? COVER_IDS).filter((c) => COVERS[c]);
+  const ctx = { cycleYears, section, priorities: farmInput.farm.priorities };
+
+  let found = own.length ? rankRotations({ ...ctx, pool: own }) : null;
+  let missing = [];
+  if (!found) {
+    found = rankRotations({ ...ctx, pool: CROP_IDS });
+    if (found) missing = CROP_IDS.filter((c) => found.crops.includes(c) && !own.includes(c));
+  }
+  const rotation = found
+    ? addCovers(found.crops, covers)
+    : structuredClone(PROPOSALS[cycleYears] ?? PROPOSALS[4]);
+
+  const crops = [...new Set(rotation.map((e) => e.crop))];
+  const reasons = [];
+  if (missing.length) {
+    reasons.push(
+      `Avec vos semences seules, aucune rotation de ${cycleYears} ans ne respecte les délais de retour : il faudrait des semences de ${names(missing)}.`,
+    );
+  } else if (seeds) {
+    reasons.push(`Construite avec vos semences : ${names(crops)}.`);
+  }
+  const first = firstYear({ ...section, rotation }).crop;
+  if (section.currentCrop && first) {
+    const pair = PAIR_TEXT[`${section.currentCrop}>${first}`];
+    reasons.push(
+      `La section est en ${CROPS[section.currentCrop].name.toLowerCase()} maintenant : on commence par ${CROPS[first].name.toLowerCase()}.${pair ? ` ${pair}` : ''}`,
+    );
+  }
+  for (let i = 0; i < rotation.length && reasons.length < 4; i++) {
+    const key = `${rotation[i].crop}>${rotation[(i + 1) % rotation.length].crop}`;
+    if (PAIR_TEXT[key] && !reasons.some((r) => r.includes(PAIR_TEXT[key])))
+      reasons.push(PAIR_TEXT[key]);
+  }
+  reasons.push('Aucune culture ne revient avant son délai de retour.');
+  const usedCovers = [...new Set(rotation.map((e) => e.cover).filter(Boolean))];
+  if (usedCovers.length)
+    reasons.push(`Couvertures d’hiver de votre réserve : ${names(usedCovers, COVERS)}.`);
+
+  return missing.length ? { rotation, reasons, missingSeeds: missing } : { rotation, reasons };
+}
+
+/** Fallback when no sequence is possible at all (should not happen with the full catalogue). */
 const PROPOSALS = {
   1: [{ crop: 'mais', years: 1, cover: 'seigle' }],
   2: [
@@ -278,17 +409,9 @@ export function createMockEngine({ latencyMs = 0 } = {}) {
       };
     },
 
-    async proposeRotation({ cycleYears }) {
+    async proposeRotation({ farm, sectionId, cycleYears }) {
       await wait(latencyMs);
-      const rotation = structuredClone(PROPOSALS[cycleYears] ?? PROPOSALS[4]);
-      return {
-        rotation,
-        reasons: [
-          'Une légumineuse avant les cultures gourmandes en azote.',
-          'Aucune culture ne revient avant son délai de retour.',
-          'Une couverture d’hiver quand le sol resterait nu.',
-        ],
-      };
+      return propose(farm, sectionId, cycleYears);
     },
 
     async getFieldData({ farm, sectionId }) {

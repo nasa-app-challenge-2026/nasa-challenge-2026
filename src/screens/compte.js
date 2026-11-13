@@ -5,10 +5,12 @@ import { toSlots } from '../lib/rotation.js';
 import { appHeader } from '../ui/layout.js';
 import { switchButton } from '../ui/widgets.js';
 import { priorityList, movePriority } from './priorites.js';
+import { currentCropsEditor, proposeAllCard, seedActions, seedBank } from '../ui/seedsEditor.js';
 
 const TABS = [
   ['profil', 'Profil'],
   ['ferme', 'Ma ferme'],
+  ['semences', 'Cultures et semences'],
   ['prio', 'Priorités'],
   ['capteurs', 'Capteurs'],
   ['cgu', 'Conditions d’utilisation'],
@@ -40,6 +42,25 @@ function panel(state) {
               data-key="email"
           /></label>
         </div>
+      </div>`;
+    case 'semences':
+      return html`<div class="stack-lg">
+        <div class="stack-xs">
+          <h2 class="h2 h2--lg">Cultures et semences</h2>
+          <p class="muted small">
+            L’appli propose les rotations avec ces semences et vérifie que la première année ne
+            répète pas ce qui pousse maintenant.
+          </p>
+        </div>
+        <div class="stack-sm">
+          <span class="eyebrow">Ce qui pousse en ${farm.farm.startYear - 1}</span>
+          ${currentCropsEditor(state)}
+        </div>
+        <div class="stack-sm">
+          <span class="eyebrow">Ma réserve de semences</span>
+          ${seedBank(state)}
+        </div>
+        ${proposeAllCard(state)}
       </div>`;
     case 'prio':
       return html`<div class="stack-md">
@@ -144,6 +165,7 @@ export default {
   },
   rota: 'tableau',
   actions: {
+    ...seedActions,
     'settings-tab': (app, el) =>
       app.update((s) => {
         s.ui.settingsTab = el.dataset.tab;

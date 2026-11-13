@@ -4,7 +4,11 @@
  */
 import { createStore } from './state/store.js';
 import { initialState, loadSaved, save } from './state/initialState.js';
-import { toSlots } from './lib/rotation.js';
+import { autoStagger, suggestCycleYears, toSlots } from './lib/rotation.js';
+import { getSeeds } from './lib/seeds.js';
+import { fetchWeather, weatherKey } from './lib/weather.js';
+
+const WEATHER_TTL_MS = 30 * 60 * 1000;
 
 export function createApp({ engine, storage = globalThis.localStorage }) {
   const store = createStore(initialState(engine.name, loadSaved(storage)));
@@ -60,18 +64,52 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
       }
     },
 
+    /** Weather at the farm (Open-Meteo), cached 30 min per location. */
+    async loadWeather({ force = false } = {}) {
+      const { lat, lon } = store.get().farm.farm.location ?? {};
+      if (typeof lat !== 'number' || typeof lon !== 'number') return;
+      const key = weatherKey(lat, lon);
+      const cur = store.get().weather;
+      const fresh = cur.key === key && cur.data && Date.now() - cur.data.fetchedAt < WEATHER_TTL_MS;
+      if (!force && (fresh || (cur.status === 'loading' && cur.key === key))) return;
+      store.update((s) => {
+        s.weather = {
+          status: 'loading',
+          data: cur.key === key ? cur.data : null,
+          error: null,
+          key,
+        };
+      });
+      try {
+        const data = await fetchWeather(lat, lon);
+        store.update((s) => {
+          if (s.weather.key === key) s.weather = { status: 'ready', data, error: null, key };
+        });
+      } catch (err) {
+        store.update((s) => {
+          if (s.weather.key === key)
+            s.weather = { status: 'error', data: null, error: err.message, key };
+        });
+      }
+    },
+
     async proposeRotation(sectionId, cycleYears) {
       store.update((s) => {
         s.ui.proposing = true;
       });
       try {
-        const { rotation } = await engine.proposeRotation({
+        const res = await engine.proposeRotation({
           farm: store.get().farm,
           sectionId,
           cycleYears,
         });
-        app.updateFarm((farm) => {
-          farm.sections.find((x) => x.id === sectionId).rotation = rotation;
+        app.updateFarm((farm, s) => {
+          farm.sections.find((x) => x.id === sectionId).rotation = res.rotation;
+          s.ui.proposal = {
+            sectionId,
+            reasons: res.reasons ?? [],
+            missingSeeds: res.missingSeeds ?? [],
+          };
         });
       } finally {
         store.update((s) => {
@@ -79,6 +117,42 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
         });
       }
     },
+  };
+
+  /**
+   * Ask the engine for a rotation on every section, built from the seed
+   * reserve, then stagger the sections. Sections are proposed one after the
+   * other so that each request sees the rotations already chosen.
+   */
+  app.proposeAll = async () => {
+    const cycleYears = suggestCycleYears(getSeeds(store.get().farm).crops);
+    store.update((s) => {
+      s.ui.proposeAll = { status: 'loading', missing: [], error: null };
+    });
+    const missing = new Set();
+    try {
+      for (const { id } of store.get().farm.sections) {
+        const res = await engine.proposeRotation({
+          farm: store.get().farm,
+          sectionId: id,
+          cycleYears,
+        });
+        (res.missingSeeds ?? []).forEach((c) => missing.add(c));
+        store.update((s) => {
+          const sec = s.farm.sections.find((x) => x.id === id);
+          if (sec) sec.rotation = res.rotation;
+        });
+      }
+      app.updateFarm((farm, s) => {
+        autoStagger(farm.farm, farm.sections);
+        s.ui.proposeAll = { status: 'ready', missing: [...missing], error: null };
+      });
+    } catch (err) {
+      store.update((s) => {
+        s.ui.proposeAll = { status: 'error', missing: [], error: err.message };
+      });
+      app.refreshPlan();
+    }
   };
 
   async function evaluate() {
