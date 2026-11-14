@@ -5,7 +5,8 @@ export default [
   { ignores: ['dist/**', 'node_modules/**', 'coverage/**'] },
   js.configs.recommended,
   {
-    files: ['src/**/*.js'],
+    // The four layers run in the browser (see docs/ARCHITECTURE.md).
+    files: ['frontend/**/*.js', 'backend/**/*.js', 'application/**/*.js', 'data/**/*.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
@@ -18,7 +19,7 @@ export default [
     },
   },
   {
-    files: ['tests/**/*.js', 'scripts/**/*.mjs', 'contract/**/*.js', '*.config.js'],
+    files: ['tests/**/*.js', 'backend/scripts/**/*.mjs', '*.config.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',

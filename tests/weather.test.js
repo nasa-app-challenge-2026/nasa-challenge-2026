@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { dayLabel, describeWmo, normalize, weatherKey } from '../src/lib/weather.js';
+import { describeWmo, normalize, weatherKey } from '../data/access/weather.js';
+import { dayLabel } from '../frontend/ui/weatherWidget.js';
 
 describe('weather', () => {
   it('maps WMO codes to French labels', () => {

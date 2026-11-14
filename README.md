@@ -29,18 +29,31 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-| Commande                            | Rôle                                           |
-| ----------------------------------- | ---------------------------------------------- |
-| `npm run dev`                       | serveur de développement                       |
-| `npm run build` / `npm run preview` | version de production dans `dist/`             |
-| `npm test`                          | tests (rotations, contrat avec l'algo, RotaAI) |
-| `npm run lint` / `npm run format`   | qualité du code                                |
-| `npm run fixtures`                  | régénère `contract/examples/`                  |
-| `npm run check:algo -- <url>`       | vérifie qu'un algorithme respecte le contrat   |
+| Commande                            | Rôle                                                    |
+| ----------------------------------- | ------------------------------------------------------- |
+| `npm run dev`                       | serveur de développement                                |
+| `npm run build` / `npm run preview` | version de production dans `dist/`                      |
+| `npm test`                          | tests (rotations, contrat avec l'algo, RotaAI, couches) |
+| `npm run lint` / `npm run format`   | qualité du code                                         |
+| `npm run fixtures`                  | régénère `backend/contract/examples/`                   |
+| `npm run check:algo -- <url>`       | vérifie qu'un algorithme respecte le contrat            |
+
+## Architecture
+
+Le code est rangé en **quatre couches**, une par dossier. Une couche n'importe que les couches en dessous d'elle (`npm test` le vérifie) :
+
+| Couche          | Dossier                        | Contenu                                                                   |
+| --------------- | ------------------------------ | ------------------------------------------------------------------------- |
+| **Frontend**    | [`frontend/`](frontend/)       | la page, les écrans, les composants, les styles                           |
+| **Back end**    | [`backend/`](backend/)         | le moteur (démo ou vrai algorithme) et son contrat                        |
+| **Application** | [`application/`](application/) | le contrôleur `app`, l'état, les règles métier (rotations, semences, sol) |
+| **Data**        | [`data/`](data/)               | les données fixes, l'accès au réseau (météo, adresses) et à la sauvegarde |
+
+Détails, règles d'import et « où mettre du nouveau code » : [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Brancher l'algorithme
 
-Le front parle à l'algo à travers **un contrat** : trois routes `POST` en JSON, décrites dans [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md) et [`contract/field-shift.schema.json`](contract/field-shift.schema.json).
+Le front parle à l'algo à travers **un contrat** : trois routes `POST` en JSON, décrites dans [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md) et [`backend/contract/field-shift.schema.json`](backend/contract/field-shift.schema.json).
 
 ```bash
 cp .env.example .env.local
@@ -58,19 +71,19 @@ Le workflow [`deploy.yml`](.github/workflows/deploy.yml) publie le site sur GitH
 
 ## Documentation
 
-| Fichier                                                    | Contenu                                                       |
-| ---------------------------------------------------------- | ------------------------------------------------------------- |
-| [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md)           | Le contrat front ↔ algo                                       |
-| [`docs/PROMPT_ALGO.md`](docs/PROMPT_ALGO.md)               | Message prêt à envoyer pour coder l'algo                      |
-| [`docs/FRONT_ARCHITECTURE.md`](docs/FRONT_ARCHITECTURE.md) | Organisation du code, comment ajouter un écran                |
-| [`docs/DESIGN.md`](docs/DESIGN.md)                         | Base commune : couleurs, textures, typo, liste « écran fini » |
-| [`docs/TEAM.md`](docs/TEAM.md)                             | Qui fait quoi, façon de travailler                            |
-| [`docs/ROTAAI.md`](docs/ROTAAI.md)                         | L'assistant, aujourd'hui et plus tard                         |
-| [`docs/FRONT_ROADMAP.md`](docs/FRONT_ROADMAP.md)           | Ce qui reste à faire                                          |
+| Fichier                                          | Contenu                                                        |
+| ------------------------------------------------ | -------------------------------------------------------------- |
+| [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md) | Le contrat front ↔ algo                                        |
+| [`docs/PROMPT_ALGO.md`](docs/PROMPT_ALGO.md)     | Message prêt à envoyer pour coder l'algo                       |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)   | Les quatre couches, qui importe quoi, comment ajouter un écran |
+| [`docs/DESIGN.md`](docs/DESIGN.md)               | Base commune : couleurs, textures, typo, liste « écran fini »  |
+| [`docs/TEAM.md`](docs/TEAM.md)                   | Qui fait quoi, façon de travailler                             |
+| [`docs/ROTAAI.md`](docs/ROTAAI.md)               | L'assistant, aujourd'hui et plus tard                          |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md)             | Ce qui reste à faire                                           |
 
 ## Sources
 
-Les données NASA (POWER, GPM IMERG, SMAP, ECOSTRESS, HLS, NEX-GDDP-CMIP6), SoilGrids et les études utilisées sont listées dans [`src/data/sources.js`](src/data/sources.js) et dans la page « Détail et sources » de l'appli. Polices : Inter et Space Grotesk (Google Fonts, licence SIL OFL).
+Les données NASA (POWER, GPM IMERG, SMAP, ECOSTRESS, HLS, NEX-GDDP-CMIP6), SoilGrids et les études utilisées sont listées dans [`data/reference/sources.js`](data/reference/sources.js) et dans la page « Détail et sources » de l'appli. Polices : Inter et Space Grotesk (Google Fonts, licence SIL OFL).
 
 ## Utilisation de l'IA
 

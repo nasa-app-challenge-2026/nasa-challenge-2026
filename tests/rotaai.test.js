@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { answer, SUGGESTED } from '../src/rotaai/answers.js';
+import { answer, SUGGESTED } from '../data/reference/rotaaiAnswers.js';
 
 describe('RotaAI', () => {
   it('answers every suggested question with a real answer (not the fallback)', () => {

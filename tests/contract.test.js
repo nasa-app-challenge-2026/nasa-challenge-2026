@@ -5,11 +5,11 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import Ajv from 'ajv';
-import { CASES } from '../contract/cases.js';
-import { createMockEngine } from '../src/algo/mockEngine.js';
+import { CASES } from '../backend/contract/cases.js';
+import { createMockEngine } from '../backend/mockEngine.js';
 
 const schema = JSON.parse(
-  readFileSync(new URL('../contract/field-shift.schema.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('../backend/contract/field-shift.schema.json', import.meta.url), 'utf8'),
 );
 const ajv = new Ajv({ allErrors: true, strict: false });
 ajv.addSchema(schema);

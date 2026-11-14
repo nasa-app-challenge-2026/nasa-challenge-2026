@@ -2,8 +2,8 @@
 
 Ce document dit **exactement** ce que l'interface envoie à l'algorithme et ce qu'elle attend en retour. Si l'algorithme respecte ce contrat, on le branche en changeant une seule variable, sans toucher aux écrans.
 
-- **Source de vérité :** [`contract/field-shift.schema.json`](../contract/field-shift.schema.json) (JSON Schema, draft-07)
-- **Exemples :** [`contract/examples/`](../contract/examples/) : une entrée par cas de référence, et la réponse du moteur de démo pour montrer la forme attendue
+- **Source de vérité :** [`backend/contract/field-shift.schema.json`](../backend/contract/field-shift.schema.json) (JSON Schema, draft-07)
+- **Exemples :** [`backend/contract/examples/`](../backend/contract/examples/) : une entrée par cas de référence, et la réponse du moteur de démo pour montrer la forme attendue
 - **Vérification automatique :** `npm run check:algo -- http://localhost:8000`
 
 ## Qui calcule quoi
@@ -13,7 +13,7 @@ Ce document dit **exactement** ce que l'interface envoie à l'algorithme et ce q
 | La structure : calendrier année par année, durée des cycles, cycle coupé à la fin, délais de retour (cadenas), décalage des sections, mélange de cultures de la ferme | Tout ce qui demande des **données** ou des **études** : scores, rendements, revenus, comparaisons, stress test, suggestions, explications, données NASA de chaque section |
 | Le compte des rôles pour la santé du sol (années avec azote, couverture…), à partir du catalogue des cultures                                                         | La **valeur** de ces rôles dans les scores                                                                                                                                |
 
-Le catalogue des cultures (noms, délais de retour, rôles) est dans [`src/data/crops.js`](../src/data/crops.js). Les délais sont provisoires : s'ils changent côté algo, il faut les changer là aussi.
+Le catalogue des cultures (noms, délais de retour, rôles) est dans [`data/reference/crops.js`](../data/reference/crops.js). Les délais sont provisoires : s'ils changent côté algo, il faut les changer là aussi.
 
 ## Les trois opérations
 
@@ -73,7 +73,7 @@ Règles :
 - **`priorities`** = de la plus importante à la moins importante. Le front leur donne les poids 35, 25, 18, 13 et 9 % ; l'algo peut faire autrement.
 - **`options.stressYears`** = durée d'un choc du stress test (1 ou 3 ans). La question est encore ouverte dans l'équipe.
 - **`farm.seeds`** (optionnel) = la réserve de semences du fermier : les cultures (`crops`) et couvertures (`covers`) qu'il peut semer. Absent = tout le catalogue. Le front l'envoie toujours.
-- **`section.currentCrop`** (optionnel, `null` possible) = ce qui pousse sur la section **maintenant**, la saison avant `startYear`. La culture de la première année analysée (position `offset` dans le cycle) ne doit pas répéter une culture d'un an (tous les délais de retour sont d'au moins 2 ans) ; un bloc de luzerne ne peut pas commencer en son milieu, sauf si la section est déjà en luzerne. Le front vérifie la même règle (`currentCropConflict` dans `src/lib/rotation.js`).
+- **`section.currentCrop`** (optionnel, `null` possible) = ce qui pousse sur la section **maintenant**, la saison avant `startYear`. La culture de la première année analysée (position `offset` dans le cycle) ne doit pas répéter une culture d'un an (tous les délais de retour sont d'au moins 2 ans) ; un bloc de luzerne ne peut pas commencer en son milieu, sauf si la section est déjà en luzerne. Le front vérifie la même règle (`currentCropConflict` dans `application/rules/rotation.js`).
 - Le front n'envoie **jamais** une rotation avec une année vide. Le fermier peut choisir à la main une culture hors de sa réserve : c'est permis, l'interface le signale.
 
 ## Sortie : `FarmPlan`
@@ -202,7 +202,7 @@ Métriques attendues par l'écran : `rain` (GPM IMERG), `soilMoisture` (SMAP, ou
 
 ## Les trois cas de référence
 
-Les entrées sont dans `contract/examples/` :
+Les entrées sont dans `backend/contract/examples/` :
 
 | Fichier                      | Ce qu'il teste                                                    |
 | ---------------------------- | ----------------------------------------------------------------- |
@@ -218,4 +218,4 @@ Les entrées sont dans `contract/examples/` :
 3. Dans `.env.local` : `VITE_ALGO_MODE=remote` et `VITE_ALGO_URL=http://localhost:8000`, puis `npm run dev`.
 4. En ligne : les mêmes valeurs dans les variables du dépôt GitHub (Settings → Secrets and variables → Actions → Variables).
 
-L'algo peut aussi être écrit en JavaScript et appelé directement : il suffit d'un objet avec `evaluateFarm`, `proposeRotation` et `getFieldData` (voir `src/algo/mockEngine.js`), branché dans `src/algo/index.js`.
+L'algo peut aussi être écrit en JavaScript et appelé directement : il suffit d'un objet avec `evaluateFarm`, `proposeRotation` et `getFieldData` (voir `backend/mockEngine.js`), branché dans `backend/index.js`.

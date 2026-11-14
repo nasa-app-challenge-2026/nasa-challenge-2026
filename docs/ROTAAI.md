@@ -2,8 +2,8 @@
 
 ## Aujourd'hui : réponses écrites à l'avance
 
-- [`src/rotaai/answers.js`](../src/rotaai/answers.js) : les questions proposées par écran (`SUGGESTED`) et une vingtaine de réponses (`INTENTS`), trouvées par mots-clés, sans accents ni majuscules.
-- [`src/ui/rotaai.js`](../src/ui/rotaai.js) : le bouton et le panneau.
+- [`data/reference/rotaaiAnswers.js`](../data/reference/rotaaiAnswers.js) : les questions proposées par écran (`SUGGESTED`) et une vingtaine de réponses (`INTENTS`), trouvées par mots-clés, sans accents ni majuscules.
+- [`frontend/ui/rotaai.js`](../frontend/ui/rotaai.js) : le bouton et le panneau.
 - Les tests vérifient que chaque question proposée a une vraie réponse et qu'aucune réponse ne cite une étude.
 
 Ajouter une réponse : un objet `{ keys, text, sources }` dans `INTENTS`. Les mots-clés les plus précis vont en haut de la liste.

@@ -7,9 +7,10 @@
 
 Règles de code :
 
-- Un écran = un fichier dans `src/screens/` (voir `docs/FRONT_ARCHITECTURE.md`).
-- La logique pure va dans `src/lib/`, avec un test dans `tests/`.
-- Les écrans n'appellent jamais le moteur directement : passez par `app` (`app.updateFarm`, `app.loadField`…).
-- Le contrat avec l'algo ne change qu'avec l'accord de Nour et Yanis, et `contract/field-shift.schema.json`, `docs/ALGO_CONTRACT.md` et le moteur de démo changent ensemble.
+- Chaque fichier va dans sa couche : `frontend/` (affichage), `backend/` (moteur et contrat), `application/` (contrôleur, état, règles métier), `data/` (données fixes, réseau, sauvegarde). Une couche n'importe que les couches en dessous d'elle ; `npm test` le vérifie (voir `docs/ARCHITECTURE.md`).
+- Un écran = un fichier dans `frontend/screens/`.
+- La logique pure va dans `application/rules/`, avec un test dans `tests/`.
+- Les écrans n'appellent jamais le moteur ni le réseau directement : passez par `app` (`app.updateFarm`, `app.loadField`, `app.searchPlaces`…).
+- Le contrat avec l'algo ne change qu'avec l'accord de Nour et Yanis, et `backend/contract/field-shift.schema.json`, `docs/ALGO_CONTRACT.md` et le moteur de démo (`backend/mockEngine.js`) changent ensemble.
 - Aucun nom d'étude dans un texte affiché ailleurs que sur la page Sources.
-- Chaque source utilisée (donnée, étude, police, icône, outil d'IA) est ajoutée à `src/data/sources.js` ou au README.
+- Chaque source utilisée (donnée, étude, police, icône, outil d'IA) est ajoutée à `data/reference/sources.js` ou au README.

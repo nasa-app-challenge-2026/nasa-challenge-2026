@@ -17,8 +17,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "fixtures": "node scripts/make-fixtures.mjs",
-    "check:algo": "node scripts/check-algo.mjs"
+    "fixtures": "node backend/scripts/make-fixtures.mjs",
+    "check:algo": "node backend/scripts/check-algo.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DEMO_FARM } from '../src/data/demoFarm.js';
-import { createMockEngine } from '../src/algo/mockEngine.js';
+import { DEMO_FARM } from '../data/reference/demoFarm.js';
+import { createMockEngine } from '../backend/mockEngine.js';
 import {
   bestOffsets,
   currentCropConflict,
@@ -8,9 +8,9 @@ import {
   rotationErrors,
   suggestCycleYears,
   toSlots,
-} from '../src/lib/rotation.js';
-import { addSeeds, deriveSeeds, getSeeds, missingSeeds } from '../src/lib/seeds.js';
-import { migrateFarm } from '../src/state/initialState.js';
+} from '../application/rules/rotation.js';
+import { addSeeds, deriveSeeds, getSeeds, missingSeeds } from '../application/rules/seeds.js';
+import { migrateFarm } from '../application/state/initialState.js';
 
 const R3 = [
   { crop: 'mais', years: 1, cover: null },

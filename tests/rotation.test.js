@@ -13,8 +13,8 @@ import {
   setCover,
   setCycleYears,
   toSlots,
-} from '../src/lib/rotation.js';
-import { CASES } from '../contract/cases.js';
+} from '../application/rules/rotation.js';
+import { CASES } from '../backend/contract/cases.js';
 
 const R4 = CASES['cas1-meme-rotation-decalee'].sections[0].rotation;
 const farmOf = (c) => CASES[c].farm;

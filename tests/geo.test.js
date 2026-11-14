@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { areaHa, bounds, fitToBox, isClosed, roundHa } from '../src/lib/geo.js';
-import { DEMO_FARM } from '../src/data/demoFarm.js';
+import { areaHa, bounds, fitToBox, isClosed, roundHa } from '../application/rules/geo.js';
+import { DEMO_FARM } from '../data/reference/demoFarm.js';
 
 describe('geo', () => {
   it('a polygon needs 3 corners', () => {

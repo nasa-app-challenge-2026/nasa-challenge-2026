@@ -2,5 +2,5 @@ dist
 node_modules
 coverage
 package-lock.json
-contract/examples
+backend/contract/examples
 docs/screenshots
