@@ -1,0 +1,1116 @@
+{
+ "cases": [
+  {
+   "name": "maïs-soya",
+   "C": 2,
+   "occs": [
+    [
+     "Maïs",
+     2027,
+     2027,
+     "chaîne"
+    ],
+    [
+     "Soya",
+     2028,
+     2028,
+     "chaîne"
+    ]
+   ],
+   "historique": null,
+   "maladies": [],
+   "ok": false,
+   "violations": [
+    {
+     "raison": "Soya après Soya",
+     "annees_sans": 1,
+     "minimum": 2,
+     "de": [
+      2026,
+      "cycle précédent"
+     ],
+     "a": [
+      2028,
+      "chaîne"
+     ]
+    },
+    {
+     "raison": "Soya après Soya",
+     "annees_sans": 1,
+     "minimum": 2,
+     "de": [
+      2028,
+      "chaîne"
+     ],
+     "a": [
+      2030,
+      "cycle suivant"
+     ]
+    }
+   ],
+   "vigilances": [],
+   "note_ravageurs": 0.6666666666666666,
+   "partial": {
+    "ok": true,
+    "violations": []
+   },
+   "partial_note": 1.0
+  },
+  {
+   "name": "soya-soya-historique",
+   "C": 4,
+   "occs": [
+    [
+     "Soya",
+     2027,
+     2027,
+     "chaîne"
+    ],
+    [
+     "Maïs",
+     2028,
+     2028,
+     "chaîne"
+    ],
+    [
+     "Soya",
+     2029,
+     2029,
+     "chaîne"
+    ],
+    [
+     "Maïs",
+     2030,
+     2030,
+     "chaîne"
+    ]
+   ],
+   "historique": [
+    [
+     "Maïs",
+     2024,
+     2024,
+     "chaîne"
+    ],
+    [
+     "Soya",
+     2025,
+     2025,
+     "chaîne"
+    ],
+    [
+     "Maïs",
+     2026,
+     2026,
+     "chaîne"
+    ]
+   ],
+   "maladies": [],
+   "ok": false,
+   "violations": [
+    {
+     "raison": "Soya après Soya",
+     "annees_sans": 1,
+     "minimum": 2,
+     "de": [
+      2025,
+      "historique"
+     ],
+     "a": [
+      2027,
+      "chaîne"
+     ]
+    },
+    {
+     "raison": "Soya après Soya",
+     "annees_sans": 1,
+     "minimum": 2,
+     "de": [
+      2027,
+      "chaîne"
+     ],
+     "a": [
+      2029,
+      "chaîne"
+     ]
+    },
+    {
+     "raison": "Soya après Soya",
+     "annees_sans": 1,
+     "minimum": 2,
+     "de": [
+      2029,
+      "chaîne"
+     ],
+     "a": [
+      2031,
+      "cycle suivant"
+     ]
+    }
+   ],
+   "vigilances": [],
+   "note_ravageurs": 0.6666666666666666,
+   "partial": {
+    "ok": false,
+    "violations": [
+     {
+      "raison": "Soya après Soya",
+      "annees_sans": 1,
+      "minimum": 2,
+      "de": [
+       2025,
+       "historique"
+      ],
+      "a": [
+       2027,
+       "chaîne"
+      ]
+     }
+    ]
+   },
+   "partial_note": 0.6666666666666666
+  },
+  {
+   "name": "fabacées",
+   "C": 4,
+   "occs": [
+    [
+     "Maïs",
+     2028,
+     2028,
+     "chaîne"
+    ],
+    [
+     "Soya",
+     2029,
+     2029,
+     "chaîne"
+    ],
+    [
+     "Luzerne",
+     2030,
+     2031,
+     "chaîne"
+    ]
+   ],
+   "historique": [
+    [
+     "Luzerne",
+     2025,
+     2027,
+     "chaîne"
+    ]
+   ],
+   "maladies": [],
+   "ok": false,
+   "violations": [
+    {
+     "raison": "même famille (Fabacées) : Luzerne après Soya",
+     "annees_sans": 0,
+     "minimum": 1,
+     "de": [
+      2029,
+      "chaîne"
+     ],
+     "a": [
+      2030,
+      "chaîne"
+     ]
+    }
+   ],
+   "vigilances": [],
+   "note_ravageurs": 0.5555555555555555,
+   "partial": {
+    "ok": true,
+    "violations": []
+   },
+   "partial_note": 0.8333333333333333
+  },
+  {
+   "name": "hernie-canola",
+   "C": 5,
+   "occs": [
+    [
+     "Canola",
+     2027,
+     2027,
+     "chaîne"
+    ],
+    [
+     "Blé d'automne",
+     2028,
+     2028,
+     "chaîne"
+    ],
+    [
+     "Orge",
+     2029,
+     2029,
+     "chaîne"
+    ],
+    [
+     "Soya",
+     2030,
+     2030,
+     "chaîne"
+    ],
+    [
+     "Maïs",
+     2031,
+     2031,
+     "chaîne"
+    ]
+   ],
+   "historique": null,
+   "maladies": [
+    "hernie des crucifères"
+   ],
+   "ok": false,
+   "violations": [
+    {
+     "raison": "hernie des crucifères présente : Canola après Canola",
+     "annees_sans": 4,
+     "minimum": 7,
+     "de": [
+      2022,
+      "cycle précédent"
+     ],
+     "a": [
+      2027,
+      "chaîne"
+     ]
+    },
+    {
+     "raison": "hernie des crucifères présente : Canola après Canola",
+     "annees_sans": 4,
+     "minimum": 7,
+     "de": [
+      2027,
+      "chaîne"
+     ],
+     "a": [
+      2032,
+      "cycle suivant"
+     ]
+    }
+   ],
+   "vigilances": [
+    "Canola 1 an(s) après Soya : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
+   ],
+   "note_ravageurs": 0.925,
+   "partial": {
+    "ok": true,
+    "violations": []
+   },
+   "partial_note": 1.0
+  },
+  {
+   "name": "vigilance-moisissure",
+   "C": 4,
+   "occs": [
+    [
+     "Soya",
+     2027,
+     2027,
+     "chaîne"
+    ],
+    [
+     "Maïs",
+     2028,
+     2028,
+     "chaîne"
+    ],
+    [
+     "Canola",
+     2029,
+     2029,
+     "chaîne"
+    ],
+    [
+     "Blé d'automne",
+     2030,
+     2030,
+     "chaîne"
+    ]
+   ],
+   "historique": [
+    [
+     "Pomme de terre",
+     2025,
+     2025,
+     "chaîne"
+    ]
+   ],
+   "maladies": [],
+   "ok": true,
+   "violations": [],
+   "vigilances": [
+    "Soya 1 an(s) après Pomme de terre : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît).",
+    "Canola 3 an(s) après Pomme de terre : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît).",
+    "Canola 1 an(s) après Soya : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
+   ],
+   "note_ravageurs": 0.95,
+   "partial": {
+    "ok": true,
+    "violations": []
+   },
+   "partial_note": 1.0
+  },
+  {
+   "name": "double-culture",
+   "C": 3,
+   "occs": [
+    [
+     "Blé d'automne",
+     2028,
+     2028,
+     "chaîne"
+    ],
+    [
+     "Soya",
+     2028,
+     2028,
+     "chaîne"
+    ],
+    [
+     "Maïs",
+     2029,
+     2029,
+     "chaîne"
+    ],
+    [
+     "Orge",
+     2030,
+     2030,
+     "chaîne"
+    ]
+   ],
+   "historique": null,
+   "maladies": [],
+   "ok": true,
+   "violations": [],
+   "vigilances": [],
+   "note_ravageurs": 1.0,
+   "partial": {
+    "ok": true,
+    "violations": []
+   },
+   "partial_note": 1.0
+  }
+ ],
+ "impossible": [
+  {
+   "C": 2,
+   "maladies": [],
+   "result": {
+    "Soya": "Soya demande 2 an(s) sans soya entre deux récoltes ; un cycle de 2 ans n'en laisse que 1. Il faudrait un cycle d'au moins 3 ans.",
+    "Canola": "Canola demande 3 an(s) sans canola entre deux récoltes ; un cycle de 2 ans n'en laisse que 1. Il faudrait un cycle d'au moins 4 ans.",
+    "Luzerne ×2": "Luzerne ×2 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 2 ans n'en laisse que 0. Il faudrait un cycle d'au moins 4 ans.",
+    "Luzerne ×3": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 2 ans n'en laisse que -1. Il faudrait un cycle d'au moins 5 ans.",
+    "Foin ×3": "Foin ×3 demande 0 an(s) sans foin entre deux peuplements ; un cycle de 2 ans n'en laisse que -1. Il faudrait un cycle d'au moins 3 ans.",
+    "Pois": "Pois demande 3 an(s) sans pois entre deux récoltes ; un cycle de 2 ans n'en laisse que 1. Il faudrait un cycle d'au moins 4 ans."
+   }
+  },
+  {
+   "C": 2,
+   "maladies": [
+    "hernie des crucifères"
+   ],
+   "result": {
+    "Soya": "Soya demande 2 an(s) sans soya entre deux récoltes ; un cycle de 2 ans n'en laisse que 1. Il faudrait un cycle d'au moins 3 ans.",
+    "Canola": "Canola demande 7 an(s) sans canola entre deux récoltes ; un cycle de 2 ans n'en laisse que 1. Il faudrait un cycle d'au moins 8 ans.",
+    "Luzerne ×2": "Luzerne ×2 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 2 ans n'en laisse que 0. Il faudrait un cycle d'au moins 4 ans.",
+    "Luzerne ×3": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 2 ans n'en laisse que -1. Il faudrait un cycle d'au moins 5 ans.",
+    "Foin ×3": "Foin ×3 demande 0 an(s) sans foin entre deux peuplements ; un cycle de 2 ans n'en laisse que -1. Il faudrait un cycle d'au moins 3 ans.",
+    "Pois": "Pois demande 3 an(s) sans pois entre deux récoltes ; un cycle de 2 ans n'en laisse que 1. Il faudrait un cycle d'au moins 4 ans."
+   }
+  },
+  {
+   "C": 2,
+   "maladies": [
+    "moisissure blanche"
+   ],
+   "result": {
+    "Soya": "Soya demande 5 an(s) sans soya entre deux récoltes ; un cycle de 2 ans n'en laisse que 1. Il faudrait un cycle d'au moins 6 ans.",
+    "Canola": "Canola demande 5 an(s) sans canola entre deux récoltes ; un cycle de 2 ans n'en laisse que 1. Il faudrait un cycle d'au moins 6 ans.",
+    "Luzerne ×2": "Luzerne ×2 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 2 ans n'en laisse que 0. Il faudrait un cycle d'au moins 4 ans.",
+    "Luzerne ×3": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 2 ans n'en laisse que -1. Il faudrait un cycle d'au moins 5 ans.",
+    "Foin ×3": "Foin ×3 demande 0 an(s) sans foin entre deux peuplements ; un cycle de 2 ans n'en laisse que -1. Il faudrait un cycle d'au moins 3 ans.",
+    "Pois": "Pois demande 5 an(s) sans pois entre deux récoltes ; un cycle de 2 ans n'en laisse que 1. Il faudrait un cycle d'au moins 6 ans."
+   }
+  },
+  {
+   "C": 3,
+   "maladies": [],
+   "result": {
+    "Canola": "Canola demande 3 an(s) sans canola entre deux récoltes ; un cycle de 3 ans n'en laisse que 2. Il faudrait un cycle d'au moins 4 ans.",
+    "Luzerne ×2": "Luzerne ×2 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 3 ans n'en laisse que 1. Il faudrait un cycle d'au moins 4 ans.",
+    "Luzerne ×3": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 3 ans n'en laisse que 0. Il faudrait un cycle d'au moins 5 ans.",
+    "Pois": "Pois demande 3 an(s) sans pois entre deux récoltes ; un cycle de 3 ans n'en laisse que 2. Il faudrait un cycle d'au moins 4 ans."
+   }
+  },
+  {
+   "C": 3,
+   "maladies": [
+    "hernie des crucifères"
+   ],
+   "result": {
+    "Canola": "Canola demande 7 an(s) sans canola entre deux récoltes ; un cycle de 3 ans n'en laisse que 2. Il faudrait un cycle d'au moins 8 ans.",
+    "Luzerne ×2": "Luzerne ×2 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 3 ans n'en laisse que 1. Il faudrait un cycle d'au moins 4 ans.",
+    "Luzerne ×3": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 3 ans n'en laisse que 0. Il faudrait un cycle d'au moins 5 ans.",
+    "Pois": "Pois demande 3 an(s) sans pois entre deux récoltes ; un cycle de 3 ans n'en laisse que 2. Il faudrait un cycle d'au moins 4 ans."
+   }
+  },
+  {
+   "C": 3,
+   "maladies": [
+    "moisissure blanche"
+   ],
+   "result": {
+    "Soya": "Soya demande 5 an(s) sans soya entre deux récoltes ; un cycle de 3 ans n'en laisse que 2. Il faudrait un cycle d'au moins 6 ans.",
+    "Canola": "Canola demande 5 an(s) sans canola entre deux récoltes ; un cycle de 3 ans n'en laisse que 2. Il faudrait un cycle d'au moins 6 ans.",
+    "Luzerne ×2": "Luzerne ×2 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 3 ans n'en laisse que 1. Il faudrait un cycle d'au moins 4 ans.",
+    "Luzerne ×3": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 3 ans n'en laisse que 0. Il faudrait un cycle d'au moins 5 ans.",
+    "Pois": "Pois demande 5 an(s) sans pois entre deux récoltes ; un cycle de 3 ans n'en laisse que 2. Il faudrait un cycle d'au moins 6 ans."
+   }
+  },
+  {
+   "C": 4,
+   "maladies": [],
+   "result": {
+    "Luzerne ×3": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n'en laisse que 1. Il faudrait un cycle d'au moins 5 ans."
+   }
+  },
+  {
+   "C": 4,
+   "maladies": [
+    "hernie des crucifères"
+   ],
+   "result": {
+    "Canola": "Canola demande 7 an(s) sans canola entre deux récoltes ; un cycle de 4 ans n'en laisse que 3. Il faudrait un cycle d'au moins 8 ans.",
+    "Luzerne ×3": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n'en laisse que 1. Il faudrait un cycle d'au moins 5 ans."
+   }
+  },
+  {
+   "C": 4,
+   "maladies": [
+    "moisissure blanche"
+   ],
+   "result": {
+    "Soya": "Soya demande 5 an(s) sans soya entre deux récoltes ; un cycle de 4 ans n'en laisse que 3. Il faudrait un cycle d'au moins 6 ans.",
+    "Canola": "Canola demande 5 an(s) sans canola entre deux récoltes ; un cycle de 4 ans n'en laisse que 3. Il faudrait un cycle d'au moins 6 ans.",
+    "Luzerne ×3": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n'en laisse que 1. Il faudrait un cycle d'au moins 5 ans.",
+    "Pois": "Pois demande 5 an(s) sans pois entre deux récoltes ; un cycle de 4 ans n'en laisse que 3. Il faudrait un cycle d'au moins 6 ans."
+   }
+  },
+  {
+   "C": 5,
+   "maladies": [],
+   "result": {}
+  },
+  {
+   "C": 5,
+   "maladies": [
+    "hernie des crucifères"
+   ],
+   "result": {
+    "Canola": "Canola demande 7 an(s) sans canola entre deux récoltes ; un cycle de 5 ans n'en laisse que 4. Il faudrait un cycle d'au moins 8 ans."
+   }
+  },
+  {
+   "C": 5,
+   "maladies": [
+    "moisissure blanche"
+   ],
+   "result": {
+    "Soya": "Soya demande 5 an(s) sans soya entre deux récoltes ; un cycle de 5 ans n'en laisse que 4. Il faudrait un cycle d'au moins 6 ans.",
+    "Canola": "Canola demande 5 an(s) sans canola entre deux récoltes ; un cycle de 5 ans n'en laisse que 4. Il faudrait un cycle d'au moins 6 ans.",
+    "Pois": "Pois demande 5 an(s) sans pois entre deux récoltes ; un cycle de 5 ans n'en laisse que 4. Il faudrait un cycle d'au moins 6 ans."
+   }
+  },
+  {
+   "C": 6,
+   "maladies": [],
+   "result": {}
+  },
+  {
+   "C": 6,
+   "maladies": [
+    "hernie des crucifères"
+   ],
+   "result": {
+    "Canola": "Canola demande 7 an(s) sans canola entre deux récoltes ; un cycle de 6 ans n'en laisse que 5. Il faudrait un cycle d'au moins 8 ans."
+   }
+  },
+  {
+   "C": 6,
+   "maladies": [
+    "moisissure blanche"
+   ],
+   "result": {}
+  }
+ ],
+ "history": [
+  {
+   "nom": "P1",
+   "culture_en_place": "Maïs",
+   "libre": 321.6,
+   "historique": [
+    "Maïs",
+    "Soya"
+   ],
+   "result": [
+    [
+     "Maïs",
+     2024,
+     2024,
+     "historique"
+    ],
+    [
+     "Soya",
+     2025,
+     2025,
+     "historique"
+    ],
+    [
+     "Maïs",
+     2026,
+     2026,
+     "historique"
+    ]
+   ]
+  },
+  {
+   "nom": "P2",
+   "culture_en_place": "Luzerne ×3",
+   "libre": 332.75,
+   "historique": [
+    "Luzerne",
+    "Luzerne"
+   ],
+   "result": [
+    [
+     "Luzerne",
+     2025,
+     2027,
+     "historique"
+    ]
+   ]
+  },
+  {
+   "nom": "P3",
+   "culture_en_place": "Soya",
+   "libre": 320.5,
+   "historique": [
+    "Maïs",
+    "Maïs",
+    "Soya"
+   ],
+   "result": [
+    [
+     "Maïs",
+     2024,
+     2025,
+     "historique"
+    ],
+    [
+     "Soya",
+     2026,
+     2026,
+     "historique"
+    ]
+   ]
+  },
+  {
+   "nom": "P4",
+   "culture_en_place": "Blé d'automne",
+   "libre": 318.65,
+   "historique": [
+    "Pomme de terre",
+    "Maïs",
+    "Maïs"
+   ],
+   "result": [
+    [
+     "Pomme de terre",
+     2023,
+     2023,
+     "historique"
+    ],
+    [
+     "Maïs",
+     2024,
+     2025,
+     "historique"
+    ],
+    [
+     "Blé d'automne",
+     2026,
+     2026,
+     "historique"
+    ]
+   ]
+  }
+ ],
+ "delays": {
+  "Maïs": {
+   "famille": "Poacées",
+   "ff": 1,
+   "sare": 2,
+   "perenne": false,
+   "minimum": 1,
+   "recommande": 2,
+   "maladies": [
+    "fusariose de l'épi / gibbérelle"
+   ]
+  },
+  "Blé d'automne": {
+   "famille": "Poacées",
+   "ff": 1,
+   "sare": 2,
+   "perenne": false,
+   "minimum": 1,
+   "recommande": 2,
+   "maladies": [
+    "fusariose de l'épi / gibbérelle"
+   ]
+  },
+  "Orge": {
+   "famille": "Poacées",
+   "ff": 1,
+   "sare": 2,
+   "perenne": false,
+   "minimum": 1,
+   "recommande": 2,
+   "maladies": [
+    "fusariose de l'épi / gibbérelle"
+   ]
+  },
+  "Avoine": {
+   "famille": "Poacées",
+   "ff": 2,
+   "sare": 2,
+   "perenne": false,
+   "minimum": 2,
+   "recommande": 2,
+   "maladies": [
+    "fusariose de l'épi / gibbérelle"
+   ]
+  },
+  "Seigle": {
+   "famille": "Poacées",
+   "ff": 1,
+   "sare": 2,
+   "perenne": false,
+   "minimum": 1,
+   "recommande": 2,
+   "maladies": [
+    "fusariose de l'épi / gibbérelle"
+   ]
+  },
+  "Foin": {
+   "famille": "Poacées",
+   "ff": 0,
+   "sare": null,
+   "perenne": true,
+   "minimum": 0,
+   "recommande": 0,
+   "maladies": []
+  },
+  "Sarrasin": {
+   "famille": "Polygonacées",
+   "ff": 1,
+   "sare": null,
+   "perenne": false,
+   "minimum": 1,
+   "recommande": 1,
+   "maladies": []
+  },
+  "Soya": {
+   "famille": "Fabacées",
+   "ff": 2,
+   "sare": 2,
+   "perenne": false,
+   "minimum": 2,
+   "recommande": 2,
+   "maladies": [
+    "moisissure blanche",
+    "pourriture brune de la tige",
+    "nématode à kyste du soya"
+   ]
+  },
+  "Haricot sec": {
+   "famille": "Fabacées",
+   "ff": 2,
+   "sare": 3,
+   "perenne": false,
+   "minimum": 2,
+   "recommande": 3,
+   "maladies": [
+    "moisissure blanche",
+    "pourridiés des légumineuses"
+   ]
+  },
+  "Pois": {
+   "famille": "Fabacées",
+   "ff": 4,
+   "sare": 3,
+   "perenne": false,
+   "minimum": 3,
+   "recommande": 4,
+   "maladies": [
+    "moisissure blanche",
+    "pourridiés des légumineuses"
+   ]
+  },
+  "Luzerne": {
+   "famille": "Fabacées",
+   "ff": 3,
+   "sare": 2,
+   "perenne": true,
+   "minimum": 2,
+   "recommande": 3,
+   "maladies": [
+    "anthracnose de la luzerne"
+   ]
+  },
+  "Canola": {
+   "famille": "Brassicacées",
+   "ff": 3,
+   "sare": 4,
+   "perenne": false,
+   "minimum": 3,
+   "recommande": 4,
+   "maladies": [
+    "moisissure blanche",
+    "hernie des crucifères",
+    "jambe noire"
+   ]
+  },
+  "Chou": {
+   "famille": "Brassicacées",
+   "ff": 4,
+   "sare": 4,
+   "perenne": false,
+   "minimum": 4,
+   "recommande": 4,
+   "maladies": [
+    "moisissure blanche",
+    "hernie des crucifères",
+    "jambe noire",
+    "pourriture noire"
+   ]
+  },
+  "Navet": {
+   "famille": "Brassicacées",
+   "ff": 2,
+   "sare": 3,
+   "perenne": false,
+   "minimum": 2,
+   "recommande": 3,
+   "maladies": [
+    "hernie des crucifères",
+    "jambe noire",
+    "pourriture noire",
+    "gale commune"
+   ]
+  },
+  "Radis": {
+   "famille": "Brassicacées",
+   "ff": 2,
+   "sare": 3,
+   "perenne": false,
+   "minimum": 2,
+   "recommande": 3,
+   "maladies": [
+    "hernie des crucifères",
+    "jambe noire",
+    "pourriture noire",
+    "gale commune"
+   ]
+  },
+  "Pomme de terre": {
+   "famille": "Solanacées",
+   "ff": 2,
+   "sare": 3,
+   "perenne": false,
+   "minimum": 2,
+   "recommande": 3,
+   "maladies": [
+    "moisissure blanche",
+    "gale commune"
+   ]
+  },
+  "Tomate": {
+   "famille": "Solanacées",
+   "ff": null,
+   "sare": 3,
+   "perenne": false,
+   "minimum": 1,
+   "recommande": 3,
+   "maladies": [
+    "septoriose de la tomate",
+    "flétrissure fusarienne de la tomate"
+   ]
+  },
+  "Carotte": {
+   "famille": "Apiacées",
+   "ff": 3,
+   "sare": 3,
+   "perenne": false,
+   "minimum": 3,
+   "recommande": 3,
+   "maladies": [
+    "moisissure blanche",
+    "gale commune",
+    "tache profonde"
+   ]
+  },
+  "Céleri": {
+   "famille": "Apiacées",
+   "ff": 2,
+   "sare": 2,
+   "perenne": false,
+   "minimum": 2,
+   "recommande": 2,
+   "maladies": [
+    "septoriose du céleri"
+   ]
+  },
+  "Oignon": {
+   "famille": "Amaryllidacées",
+   "ff": 2,
+   "sare": 3,
+   "perenne": false,
+   "minimum": 2,
+   "recommande": 3,
+   "maladies": [
+    "brûlure botrytique"
+   ]
+  },
+  "Laitue": {
+   "famille": "Astéracées",
+   "ff": 1,
+   "sare": 2,
+   "perenne": false,
+   "minimum": 1,
+   "recommande": 2,
+   "maladies": [
+    "mildiou de la laitue"
+   ]
+  },
+  "Épinard": {
+   "famille": "Amaranthacées",
+   "ff": 1,
+   "sare": 2,
+   "perenne": false,
+   "minimum": 1,
+   "recommande": 2,
+   "maladies": [
+    "mildiou de l'épinard"
+   ]
+  },
+  "Betterave": {
+   "famille": "Amaranthacées",
+   "ff": 3,
+   "sare": 3,
+   "perenne": false,
+   "minimum": 3,
+   "recommande": 3,
+   "maladies": [
+    "gale commune",
+    "cercosporiose de la betterave"
+   ]
+  },
+  "Courge": {
+   "famille": "Cucurbitacées",
+   "ff": 1,
+   "sare": 2,
+   "perenne": false,
+   "minimum": 1,
+   "recommande": 2,
+   "maladies": [
+    "moisissure blanche",
+    "anthracnose des cucurbitacées",
+    "flétrissure fusarienne des cucurbitacées"
+   ]
+  }
+ },
+ "weights": [
+  {
+   "classement": [
+    "erosion",
+    "rendement",
+    "azote",
+    "reserve",
+    "matiere_org",
+    "marche"
+   ],
+   "base": {
+    "rendement": 0.24166666666666667,
+    "eau": 0.006944444444444444,
+    "fourrage": 0.006944444444444444,
+    "azote": 0.15833333333333333,
+    "erosion": 0.4083333333333334,
+    "matiere_org": 0.061111111111111116,
+    "marche": 0.027777777777777776,
+    "ravageurs": 0.006944444444444444,
+    "reserve": 0.10277777777777779
+   },
+   "adjusted": {
+    "rendement": 0.24166666666666667,
+    "eau": 0.009791666666666666,
+    "fourrage": 0.0020833333333333333,
+    "azote": 0.15833333333333333,
+    "erosion": 0.7186666666666668,
+    "matiere_org": 0.061111111111111116,
+    "marche": 0.027777777777777776,
+    "ravageurs": 0.006944444444444444,
+    "reserve": 0.10277777777777779
+   }
+  },
+  {
+   "classement": [
+    "rendement",
+    "eau",
+    "fourrage",
+    "azote",
+    "erosion"
+   ],
+   "base": {
+    "rendement": 0.45666666666666667,
+    "eau": 0.25666666666666665,
+    "fourrage": 0.15666666666666668,
+    "azote": 0.09,
+    "erosion": 0.04,
+    "matiere_org": 0.01,
+    "marche": 0.01,
+    "ravageurs": 0.01,
+    "reserve": 0.01
+   },
+   "adjusted": {
+    "rendement": 0.45666666666666667,
+    "eau": 0.36189999999999994,
+    "fourrage": 0.047,
+    "azote": 0.09,
+    "erosion": 0.0704,
+    "matiere_org": 0.01,
+    "marche": 0.01,
+    "ravageurs": 0.01,
+    "reserve": 0.01
+   }
+  },
+  {
+   "classement": [
+    "rendement",
+    "eau",
+    "fourrage",
+    "azote",
+    "erosion",
+    "matiere_org",
+    "marche",
+    "ravageurs",
+    "reserve"
+   ],
+   "base": {
+    "rendement": 0.3143298059964727,
+    "eau": 0.20321869488536154,
+    "fourrage": 0.147663139329806,
+    "azote": 0.11062610229276897,
+    "erosion": 0.08284832451499119,
+    "matiere_org": 0.060626102292768956,
+    "marche": 0.04210758377425044,
+    "ravageurs": 0.026234567901234566,
+    "reserve": 0.012345679012345678
+   },
+   "adjusted": {
+    "rendement": 0.3143298059964727,
+    "eau": 0.28653835978835973,
+    "fourrage": 0.044298941798941796,
+    "azote": 0.11062610229276897,
+    "erosion": 0.1458130511463845,
+    "matiere_org": 0.060626102292768956,
+    "marche": 0.04210758377425044,
+    "ravageurs": 0.026234567901234566,
+    "reserve": 0.012345679012345678
+   }
+  },
+  {
+   "classement": [
+    "marche"
+   ],
+   "base": {
+    "rendement": 0.25,
+    "eau": 0.25,
+    "fourrage": 0.25,
+    "azote": 0.25,
+    "erosion": 0.25,
+    "matiere_org": 0.25,
+    "marche": 1.0,
+    "ravageurs": 0.25,
+    "reserve": 0.25
+   },
+   "adjusted": {
+    "rendement": 0.25,
+    "eau": 0.3525,
+    "fourrage": 0.075,
+    "azote": 0.25,
+    "erosion": 0.44,
+    "matiere_org": 0.25,
+    "marche": 1.0,
+    "ravageurs": 0.25,
+    "reserve": 0.25
+   }
+  }
+ ],
+ "history_depth": [
+  {
+   "cultures": [
+    "Maïs",
+    "Soya"
+   ],
+   "maladies": [],
+   "depth": 3
+  },
+  {
+   "cultures": [
+    "Maïs",
+    "Blé d'automne",
+    "Orge",
+    "Avoine",
+    "Seigle",
+    "Foin",
+    "Sarrasin",
+    "Soya",
+    "Haricot sec",
+    "Pois",
+    "Luzerne",
+    "Canola",
+    "Chou",
+    "Navet",
+    "Radis",
+    "Pomme de terre",
+    "Tomate",
+    "Carotte",
+    "Céleri",
+    "Oignon",
+    "Laitue",
+    "Épinard",
+    "Betterave",
+    "Courge"
+   ],
+   "maladies": [],
+   "depth": 4
+  },
+  {
+   "cultures": [
+    "Maïs",
+    "Canola"
+   ],
+   "maladies": [
+    "hernie des crucifères"
+   ],
+   "depth": 7
+  }
+ ]
+}

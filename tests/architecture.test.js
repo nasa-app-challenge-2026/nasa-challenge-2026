@@ -76,13 +76,15 @@ describe('layered architecture', () => {
   });
 
   it('the rules catch what they should', () => {
-    expect(violation('data/reference/crops.js', 'application/rules/rotation.js')).not.toBeNull();
+    expect(violation('data/reference/crops.js', 'application/rules/seeds.js')).not.toBeNull();
     expect(violation('application/app.js', 'backend/index.js')).not.toBeNull();
     expect(violation('application/app.js', 'frontend/lib/html.js')).not.toBeNull();
     expect(violation('frontend/screens/tableau.js', 'backend/index.js')).not.toBeNull();
     expect(violation('frontend/screens/localisation.js', 'data/access/geocode.js')).not.toBeNull();
     expect(violation('frontend/main.js', 'backend/index.js')).toBeNull();
-    expect(violation('backend/mockEngine.js', 'application/rules/rotation.js')).toBeNull();
-    expect(violation('frontend/screens/rotation.js', 'data/reference/crops.js')).toBeNull();
+    expect(
+      violation('backend/algorithm/input/FarmInputReader.js', 'application/rules/timeSettings.js'),
+    ).toBeNull();
+    expect(violation('frontend/screens/plan.js', 'data/reference/crops.js')).toBeNull();
   });
 });

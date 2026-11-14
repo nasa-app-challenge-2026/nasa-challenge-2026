@@ -3,19 +3,19 @@
  * never call the engine or the network directly; they go through these helpers.
  *
  * The engine (back end) is handed in by frontend/main.js: this layer only knows
- * its interface (evaluateFarm, proposeRotation, getFieldData; see
- * backend/contract/types.js), never which engine runs.
+ * its interface (planFarm, see backend/contract/types.js), never which engine runs.
  */
 import { createStore } from './state/store.js';
 import { initialState, persisted } from './state/initialState.js';
-import { autoStagger, suggestCycleYears, toSlots } from './rules/rotation.js';
-import { getSeeds } from './rules/seeds.js';
 import { coordsLabel, sameCoord } from './rules/geo.js';
+import { sectionInputProblems } from './rules/sectionInputs.js';
 import { loadSaved, save } from '../data/access/storage.js';
 import { fetchWeather, weatherKey } from '../data/access/weather.js';
 import { geocode, reverseGeocode } from '../data/access/geocode.js';
 
 const WEATHER_TTL_MS = 30 * 60 * 1000;
+/** Wait this long after the last change before planning again. */
+const PLAN_DEBOUNCE_MS = 250;
 
 export function createApp({ engine, storage = globalThis.localStorage }) {
   const store = createStore(initialState(engine.name, loadSaved(storage)));
@@ -42,33 +42,23 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
       return store.get().plan.data?.sections.find((s) => s.id === id) ?? null;
     },
 
-    /** Change the farm, then recompute the plan (debounced). */
+    /** Change the farm, then plan again (debounced). */
     updateFarm(fn) {
       store.update((s) => fn(s.farm, s));
       app.refreshPlan();
     },
 
-    refreshPlan() {
-      clearTimeout(timer);
-      timer = setTimeout(evaluate, 120);
+    /** Change one section of the farm. */
+    updateSection(id, fn) {
+      app.updateFarm((farm, s) => {
+        const section = farm.sections.find((x) => x.id === id);
+        if (section) fn(section, farm, s);
+      });
     },
 
-    async loadField(sectionId, { force = false } = {}) {
-      const cur = store.get().field[sectionId];
-      if (!force && (cur?.status === 'ready' || cur?.status === 'loading')) return;
-      store.update((s) => {
-        s.field[sectionId] = { status: 'loading', data: cur?.data ?? null, error: null };
-      });
-      try {
-        const data = await engine.getFieldData({ farm: store.get().farm, sectionId });
-        store.update((s) => {
-          s.field[sectionId] = { status: 'ready', data, error: null };
-        });
-      } catch (err) {
-        store.update((s) => {
-          s.field[sectionId] = { status: 'error', data: null, error: err.message };
-        });
-      }
+    refreshPlan() {
+      clearTimeout(timer);
+      timer = setTimeout(plan, PLAN_DEBOUNCE_MS);
     },
 
     /** Weather at the farm (Open-Meteo), cached 30 min per location. */
@@ -124,8 +114,8 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
      * until a readable address is found (Nominatim), unless the farm moved again.
      */
     setFarmLocation(lat, lon, label) {
-      store.update((s) => {
-        s.farm.farm.location = { lat, lon, label: label ?? coordsLabel(lat, lon) };
+      app.updateFarm((farm) => {
+        farm.farm.location = { lat, lon, label: label ?? coordsLabel(lat, lon) };
       });
       if (label) return;
       reverseGeocode(lat, lon).then((found) => {
@@ -136,75 +126,17 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
         });
       });
     },
-
-    async proposeRotation(sectionId, cycleYears) {
-      store.update((s) => {
-        s.ui.proposing = true;
-      });
-      try {
-        const res = await engine.proposeRotation({
-          farm: store.get().farm,
-          sectionId,
-          cycleYears,
-        });
-        app.updateFarm((farm, s) => {
-          farm.sections.find((x) => x.id === sectionId).rotation = res.rotation;
-          s.ui.proposal = {
-            sectionId,
-            reasons: res.reasons ?? [],
-            missingSeeds: res.missingSeeds ?? [],
-          };
-        });
-      } finally {
-        store.update((s) => {
-          s.ui.proposing = false;
-        });
-      }
-    },
   };
 
-  /**
-   * Ask the engine for a rotation on every section, built from the seed
-   * reserve, then stagger the sections. Sections are proposed one after the
-   * other so that each request sees the rotations already chosen.
-   */
-  app.proposeAll = async () => {
-    const cycleYears = suggestCycleYears(getSeeds(store.get().farm).crops);
-    store.update((s) => {
-      s.ui.proposeAll = { status: 'loading', missing: [], error: null };
-    });
-    const missing = new Set();
-    try {
-      for (const { id } of store.get().farm.sections) {
-        const res = await engine.proposeRotation({
-          farm: store.get().farm,
-          sectionId: id,
-          cycleYears,
-        });
-        (res.missingSeeds ?? []).forEach((c) => missing.add(c));
-        store.update((s) => {
-          const sec = s.farm.sections.find((x) => x.id === id);
-          if (sec) sec.rotation = res.rotation;
-        });
-      }
-      app.updateFarm((farm, s) => {
-        autoStagger(farm.farm, farm.sections);
-        s.ui.proposeAll = { status: 'ready', missing: [...missing], error: null };
-      });
-    } catch (err) {
-      store.update((s) => {
-        s.ui.proposeAll = { status: 'error', missing: [], error: err.message };
-      });
-      app.refreshPlan();
-    }
-  };
-
-  async function evaluate() {
+  /** Ask the engine for the plan of every section (latest request wins). */
+  async function plan() {
     const farm = store.get().farm;
-    const incomplete = farm.sections.some((s) => toSlots(s.rotation).some((x) => !x.crop));
-    if (incomplete) {
+    const problems = farm.sections.flatMap((s) =>
+      sectionInputProblems(s).map((p) => `Section ${s.id} : ${p}`),
+    );
+    if (problems.length) {
       store.update((s) => {
-        s.plan.status = 'incomplete';
+        s.plan = { ...s.plan, status: 'incomplete', error: problems.join(' ') };
       });
       return;
     }
@@ -214,15 +146,10 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
       s.plan.error = null;
     });
     try {
-      const data = await engine.evaluateFarm(farm);
+      const data = await engine.planFarm(farm);
       if (mine !== seq) return;
       store.update((s) => {
         s.plan = { status: 'ready', data, error: null };
-        for (const sec of data.sections) {
-          if (s.ui.explorerSnap[sec.id] && !s.ui.explorerBase[sec.id]) {
-            s.ui.explorerBase[sec.id] = sec.scores;
-          }
-        }
       });
     } catch (err) {
       if (mine !== seq) return;

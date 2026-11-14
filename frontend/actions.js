@@ -43,8 +43,14 @@ export const globalActions = {
     });
     app.go('#/compte');
   },
-  'set-role': (app, el) =>
+  /** Year shown by the dashboard and the section screens. */
+  'set-year': (app, el) =>
     app.update((s) => {
-      s.ui.role = el.dataset.role;
+      s.ui.year = Number(el.value ?? el.dataset.year);
+    }),
+  /** Cycle shown on the plan and twins screens. */
+  'set-cycle': (app, el) =>
+    app.update((s) => {
+      s.ui.cycle = Number(el.dataset.cycle);
     }),
 };

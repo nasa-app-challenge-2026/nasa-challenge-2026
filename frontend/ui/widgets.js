@@ -1,7 +1,6 @@
 /** Small reusable pieces of UI (the "base commune"). All return safe HTML. */
 import { html } from '../lib/html.js';
-import { CROPS, ROLES } from '../../data/reference/crops.js';
-import { icon } from './icons.js';
+import { colorOf, nameOf } from '../../data/reference/crops.js';
 
 /**
  * The Field Shift logo (leaf + name), cut from the team's logo.png into
@@ -33,26 +32,10 @@ export function demoBadge(show) {
   return show ? html`<span class="pill pill--warn">Données d’exemple</span>` : '';
 }
 
-export function cropChip(cropId, { current = false, faded = false } = {}) {
-  const c = CROPS[cropId];
-  if (!c) return html`<span class="crop-chip crop-chip--empty">—</span>`;
+export function cropChip(id, { current = false, faded = false, note = '' } = {}) {
+  if (!id) return html`<span class="crop-chip crop-chip--empty">—</span>`;
   const cls = ['crop-chip', current && 'is-current', faded && 'is-faded'].filter(Boolean).join(' ');
-  return html`<span class="${cls}" style="background: ${c.color}">${c.name}</span>`;
-}
-
-export function roleTag(roleId, { action, active } = {}) {
-  const r = ROLES[roleId];
-  const inner = html`${icon(r.icon, { size: 12, width: 2.4 })}${r.label}`;
-  if (!action)
-    return html`<span class="role-tag" style="background: ${r.bg}; color: ${r.fg}">${inner}</span>`;
-  return html`<button
-    type="button"
-    class="role-tag role-tag--btn ${active ? 'is-active' : ''}"
-    data-action="${action}"
-    data-role="${roleId}"
-  >
-    ${inner}
-  </button>`;
+  return html`<span class="${cls}" style="background: ${colorOf(id)}">${nameOf(id)}${note}</span>`;
 }
 
 /** Score bar with optional reference marker and delta (colour + arrow, never colour alone). */
@@ -82,7 +65,7 @@ export function alertBox(kind, text, extra = '') {
   </div>`;
 }
 
-export function switchButton(on, action, label) {
+export function switchButton(on, action, label, attrs = '') {
   return html`<button
     type="button"
     class="switch ${on ? 'is-on' : ''}"
@@ -90,6 +73,7 @@ export function switchButton(on, action, label) {
     aria-checked="${on ? 'true' : 'false'}"
     aria-label="${label}"
     data-action="${action}"
+    ${attrs}
   >
     <span class="switch__knob"></span>
   </button>`;

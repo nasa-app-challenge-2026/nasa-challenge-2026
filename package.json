@@ -1,8 +1,8 @@
 {
   "name": "field-shift",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
-  "description": "Field Shift: crop rotation planning with NASA data. Front end of the NASA-LARPERS team, NASA Space Apps Challenge 2026.",
+  "description": "Field Shift: crop rotations chosen with the climate twin of the farm and NASA data (algorithm v5.1 in the browser). NASA-LARPERS, NASA Space Apps Challenge 2026.",
   "type": "module",
   "license": "MIT",
   "engines": {

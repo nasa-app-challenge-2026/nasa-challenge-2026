@@ -1,0 +1,1358 @@
+{
+ "soil": [
+  {
+   "a": {
+    "argile": 30,
+    "sable": 25,
+    "soc": 25,
+    "ph": 6.5
+   },
+   "b": {
+    "argile": 30,
+    "sable": 25,
+    "soc": 25,
+    "ph": 6.5
+   },
+   "distance": 0.0
+  },
+  {
+   "a": {
+    "argile": 30,
+    "sable": 25,
+    "soc": 25,
+    "ph": 6.5
+   },
+   "b": {
+    "argile": 38,
+    "sable": 13,
+    "soc": 37.5,
+    "ph": 7.1
+   },
+   "distance": 0.9999999999999999
+  },
+  {
+   "a": {
+    "argile": 12,
+    "sable": 60,
+    "soc": 10,
+    "ph": 5.8
+   },
+   "b": {
+    "argile": 35,
+    "sable": 20,
+    "soc": 30,
+    "ph": 7.4
+   },
+   "distance": 2.9081479785330413
+  }
+ ],
+ "canonical": [
+  {
+   "sequence": [
+    "Maïs",
+    "Soya",
+    "Maïs",
+    "Soya",
+    "Maïs",
+    "Soya",
+    "Maïs",
+    "Soya"
+   ],
+   "result": "Maïs → Soya"
+  },
+  {
+   "sequence": [
+    "Soya",
+    "Maïs",
+    "Soya",
+    "Maïs",
+    "Soya",
+    "Maïs",
+    "Soya",
+    "Maïs"
+   ],
+   "result": "Maïs → Soya"
+  },
+  {
+   "sequence": [
+    "Maïs",
+    "Maïs",
+    "Maïs",
+    "Maïs"
+   ],
+   "result": "Maïs (monoculture)"
+  },
+  {
+   "sequence": [
+    "Luzerne",
+    "Luzerne",
+    "Luzerne",
+    "Maïs",
+    "Soya",
+    "Luzerne",
+    "Luzerne",
+    "Luzerne"
+   ],
+   "result": null
+  },
+  {
+   "sequence": [
+    "Maïs",
+    "Soya",
+    "Blé d'automne",
+    "Maïs",
+    "Soya",
+    "Blé d'automne",
+    "Maïs",
+    "Soya"
+   ],
+   "result": "Blé d'automne → Maïs → Soya"
+  },
+  {
+   "sequence": [
+    "Maïs",
+    "Soya",
+    "Orge",
+    "Canola",
+    "Blé d'automne",
+    "Sarrasin",
+    "Foin",
+    "Maïs"
+   ],
+   "result": null
+  },
+  {
+   "sequence": [
+    "Blé d'automne",
+    "Soya",
+    "Maïs",
+    "Blé d'automne",
+    "Soya",
+    "Orge",
+    "Blé d'automne",
+    "Soya"
+   ],
+   "result": "Blé d'automne → Soya → Maïs"
+  },
+  {
+   "sequence": [
+    "Maïs",
+    "Soya",
+    "Maïs",
+    "Orge",
+    "Maïs",
+    "Soya",
+    "Maïs",
+    "Soya"
+   ],
+   "result": "Maïs → Soya"
+  }
+ ],
+ "ndvi_gap": [
+  {
+   "args": [
+    0.9,
+    0.85,
+    0.7,
+    0.6
+   ],
+   "result": 0.0
+  },
+  {
+   "args": [
+    0.8,
+    0.85,
+    0.7,
+    0.6
+   ],
+   "result": 0.09999999999999984
+  },
+  {
+   "args": [
+    0.7,
+    0.85,
+    0.7,
+    0.6
+   ],
+   "result": 0.3
+  },
+  {
+   "args": [
+    0.65,
+    0.85,
+    0.7,
+    0.6
+   ],
+   "result": 0.4249999999999998
+  },
+  {
+   "args": [
+    0.5,
+    0.85,
+    0.7,
+    0.6
+   ],
+   "result": 0.8
+  },
+  {
+   "args": [
+    0.2,
+    0.85,
+    0.7,
+    0.6
+   ],
+   "result": 1.0
+  },
+  {
+   "args": [
+    0.6,
+    0.85,
+    0.7,
+    0.7
+   ],
+   "result": 1.0
+  }
+ ],
+ "precrop": {
+  "rows": [
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3034930712559694
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3140425968980615
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3501948663267283
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.4563924575021456
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.320316086067034
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3777905417968475
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3272430756256185
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3505035242300963
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3556181109769354
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.44183496764946495
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.4157234073224121
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.38459486015354977
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3784944720000469
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.30665791426164
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.484179323624903
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.4201306976937366
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3289083743602542
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.33613874383090936
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3533034618260821
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.31140580680752444
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.4697004060119858
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.30829860456674296
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.4819410412488231
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.37600212193839355
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Maïs",
+    "ecart": 0.3984280881930274
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.17224516562290731
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.3463897833583829
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.2812324925005587
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.2736454944702077
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.24166357139668593
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.24225488942687162
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.18576752451982698
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.2841760965688974
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.16435747724695013
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.1997841875300669
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.2825162638595869
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.24257276611988096
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.3299933727737485
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.21009716161531264
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.30008833275646357
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.26391048725410854
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.3231302430728126
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.31996336773501866
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.2517239370857011
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.26616706387892697
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.2503404996825105
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.28626017446455554
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.16488157856039776
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.2986786889604659
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.2189948106505884
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.19850491455220848
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.3307303496546719
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.18470818066723094
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.3485889879048751
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Soya",
+    "ecart": 0.239035156224405
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.21602610825375937
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.39627151721914833
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.22240768551007267
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.24138725671981798
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.20426912233432248
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.27480420008059786
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.27354209053960726
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.3502524373821227
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.2354048724451125
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.2285977980255139
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.24430848958171367
+   },
+   {
+    "culture": "Maïs",
+    "precedent": "Orge",
+    "ecart": 0.2151005989010914
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5210095545840494
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.4522093266491822
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5964066826721685
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5469792682430611
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.43625736079935795
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5790631458065767
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5571112292619008
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5161477012169304
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5656854424465846
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.40199233908299
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5721998750102706
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.4601666207705469
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5029512150692527
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5581026078938053
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5709856418757633
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.4479189849681775
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.49732339889617794
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.4977881174058598
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5302152982587998
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.4226622505219012
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.5294949426918732
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Soya",
+    "ecart": 0.4503786794144561
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.27923401521017494
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.4051482103556153
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.40926207590813846
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.38966616175121915
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.27529389309943364
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.4115138027637795
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.2827732104029381
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.44563936022838546
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.3575575843954261
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.36215635161481624
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.34924879879655724
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.288766708615593
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.35779158329022653
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.25751700252644577
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.3032289540643007
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.2648416378604442
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.27070116150225565
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.31576687538333553
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.2828416289914593
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.3482730467330073
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.3882388489964599
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.3774799081159196
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.4326446635567791
+   },
+   {
+    "culture": "Soya",
+    "precedent": "Maïs",
+    "ecart": 0.29055454928453756
+   }
+  ],
+  "results": [
+   {
+    "a": "Soya",
+    "b": "Maïs",
+    "value": 11.730669754959644
+   },
+   {
+    "a": "Orge",
+    "b": "Maïs",
+    "value": null
+   },
+   {
+    "a": "Maïs",
+    "b": "Soya",
+    "value": 17.02615751308957
+   },
+   {
+    "a": "Blé d'automne",
+    "b": "Maïs",
+    "value": null
+   }
+  ]
+ },
+ "twin_evidence": {
+  "fields": [
+   {
+    "sequence": [
+     "Maïs",
+     "Soya",
+     "Maïs",
+     "Soya",
+     "Maïs",
+     "Soya",
+     "Maïs",
+     "Soya"
+    ],
+    "superficie": 10,
+    "sigma": 0.0
+   },
+   {
+    "sequence": [
+     "Soya",
+     "Maïs",
+     "Soya",
+     "Maïs",
+     "Soya",
+     "Maïs",
+     "Soya",
+     "Maïs"
+    ],
+    "superficie": 13,
+    "sigma": 0.4
+   },
+   {
+    "sequence": [
+     "Maïs",
+     "Maïs",
+     "Maïs",
+     "Maïs"
+    ],
+    "superficie": 16,
+    "sigma": 0.8
+   },
+   {
+    "sequence": [
+     "Luzerne",
+     "Luzerne",
+     "Luzerne",
+     "Maïs",
+     "Soya",
+     "Luzerne",
+     "Luzerne",
+     "Luzerne"
+    ],
+    "superficie": 19,
+    "sigma": 1.2000000000000002
+   },
+   {
+    "sequence": [
+     "Maïs",
+     "Soya",
+     "Blé d'automne",
+     "Maïs",
+     "Soya",
+     "Blé d'automne",
+     "Maïs",
+     "Soya"
+    ],
+    "superficie": 22,
+    "sigma": 1.6
+   },
+   {
+    "sequence": [
+     "Maïs",
+     "Soya",
+     "Orge",
+     "Canola",
+     "Blé d'automne",
+     "Sarrasin",
+     "Foin",
+     "Maïs"
+    ],
+    "superficie": 25,
+    "sigma": 2.0
+   },
+   {
+    "sequence": [
+     "Blé d'automne",
+     "Soya",
+     "Maïs",
+     "Blé d'automne",
+     "Soya",
+     "Orge",
+     "Blé d'automne",
+     "Soya"
+    ],
+    "superficie": 28,
+    "sigma": 2.4000000000000004
+   },
+   {
+    "sequence": [
+     "Maïs",
+     "Soya",
+     "Maïs",
+     "Orge",
+     "Maïs",
+     "Soya",
+     "Maïs",
+     "Soya"
+    ],
+    "superficie": 31,
+    "sigma": 2.8000000000000003
+   }
+  ],
+  "cultures": [
+   "Blé d'automne",
+   "Luzerne",
+   "Maïs",
+   "Soya"
+  ],
+  "precedents": [
+   [
+    "Blé d'automne",
+    "Maïs",
+    null
+   ],
+   [
+    "Luzerne",
+    "Maïs",
+    null
+   ],
+   [
+    "Maïs",
+    "Soya",
+    17.02615751308957
+   ],
+   [
+    "Soya",
+    "Blé d'automne",
+    null
+   ],
+   [
+    "Soya",
+    "Luzerne",
+    null
+   ],
+   [
+    "Soya",
+    "Maïs",
+    11.730669754959644
+   ]
+  ],
+  "sigma_moyen": 0.8,
+  "top": [
+   [
+    "Maïs → Soya",
+    20.4
+   ],
+   [
+    "Maïs (monoculture)",
+    9.6
+   ],
+   [
+    "Blé d'automne → Maïs → Soya",
+    4.399999999999999
+   ]
+  ]
+ },
+ "diagnostics": [
+  {
+   "measures": {
+    "pente_pct": 6,
+    "jours_pluie_intense": 6,
+    "jours_sol_nu": 120,
+    "esi_ete": 0.6,
+    "smap_secheresse": 0.4,
+    "grace_tendance_cm_an": -1
+   },
+   "rain": 0.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 0.76,
+    "risque_eau": 0.37000000000000005
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 6,
+    "jours_pluie_intense": 6,
+    "jours_sol_nu": 120,
+    "esi_ete": 0.6,
+    "smap_secheresse": 0.4,
+    "grace_tendance_cm_an": -1
+   },
+   "rain": 0.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 0.76,
+    "risque_eau": 0.14800000000000002
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 6,
+    "jours_pluie_intense": 6,
+    "jours_sol_nu": 120,
+    "esi_ete": 0.6,
+    "smap_secheresse": 0.4,
+    "grace_tendance_cm_an": -1
+   },
+   "rain": -4.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 0.76,
+    "risque_eau": 0.4100000000000001
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 6,
+    "jours_pluie_intense": 6,
+    "jours_sol_nu": 120,
+    "esi_ete": 0.6,
+    "smap_secheresse": 0.4,
+    "grace_tendance_cm_an": -1
+   },
+   "rain": -4.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 0.76,
+    "risque_eau": 0.16400000000000003
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 6,
+    "jours_pluie_intense": 6,
+    "jours_sol_nu": 120,
+    "esi_ete": 0.6,
+    "smap_secheresse": 0.4,
+    "grace_tendance_cm_an": -1
+   },
+   "rain": -25.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 0.76,
+    "risque_eau": 0.5700000000000001
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 6,
+    "jours_pluie_intense": 6,
+    "jours_sol_nu": 120,
+    "esi_ete": 0.6,
+    "smap_secheresse": 0.4,
+    "grace_tendance_cm_an": -1
+   },
+   "rain": -25.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 0.76,
+    "risque_eau": 0.22800000000000004
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 6,
+    "jours_pluie_intense": 6,
+    "jours_sol_nu": 120,
+    "esi_ete": 0.6,
+    "smap_secheresse": 0.4,
+    "grace_tendance_cm_an": -1
+   },
+   "rain": 10.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 0.76,
+    "risque_eau": 0.37000000000000005
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 6,
+    "jours_pluie_intense": 6,
+    "jours_sol_nu": 120,
+    "esi_ete": 0.6,
+    "smap_secheresse": 0.4,
+    "grace_tendance_cm_an": -1
+   },
+   "rain": 10.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 0.76,
+    "risque_eau": 0.14800000000000002
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 12,
+    "jours_pluie_intense": 10,
+    "jours_sol_nu": 200,
+    "esi_ete": 0.3,
+    "smap_secheresse": 0.9,
+    "grace_tendance_cm_an": -3
+   },
+   "rain": 0.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 1.0,
+    "risque_eau": 0.77
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 12,
+    "jours_pluie_intense": 10,
+    "jours_sol_nu": 200,
+    "esi_ete": 0.3,
+    "smap_secheresse": 0.9,
+    "grace_tendance_cm_an": -3
+   },
+   "rain": 0.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 1.0,
+    "risque_eau": 0.30800000000000005
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 12,
+    "jours_pluie_intense": 10,
+    "jours_sol_nu": 200,
+    "esi_ete": 0.3,
+    "smap_secheresse": 0.9,
+    "grace_tendance_cm_an": -3
+   },
+   "rain": -4.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 1.0,
+    "risque_eau": 0.81
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 12,
+    "jours_pluie_intense": 10,
+    "jours_sol_nu": 200,
+    "esi_ete": 0.3,
+    "smap_secheresse": 0.9,
+    "grace_tendance_cm_an": -3
+   },
+   "rain": -4.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 1.0,
+    "risque_eau": 0.32400000000000007
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 12,
+    "jours_pluie_intense": 10,
+    "jours_sol_nu": 200,
+    "esi_ete": 0.3,
+    "smap_secheresse": 0.9,
+    "grace_tendance_cm_an": -3
+   },
+   "rain": -25.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 1.0,
+    "risque_eau": 0.9700000000000001
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 12,
+    "jours_pluie_intense": 10,
+    "jours_sol_nu": 200,
+    "esi_ete": 0.3,
+    "smap_secheresse": 0.9,
+    "grace_tendance_cm_an": -3
+   },
+   "rain": -25.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 1.0,
+    "risque_eau": 0.38800000000000007
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 12,
+    "jours_pluie_intense": 10,
+    "jours_sol_nu": 200,
+    "esi_ete": 0.3,
+    "smap_secheresse": 0.9,
+    "grace_tendance_cm_an": -3
+   },
+   "rain": 10.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 1.0,
+    "risque_eau": 0.77
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 12,
+    "jours_pluie_intense": 10,
+    "jours_sol_nu": 200,
+    "esi_ete": 0.3,
+    "smap_secheresse": 0.9,
+    "grace_tendance_cm_an": -3
+   },
+   "rain": 10.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 1.0,
+    "risque_eau": 0.30800000000000005
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 0.5,
+    "jours_pluie_intense": 1,
+    "jours_sol_nu": 20,
+    "esi_ete": 0.95,
+    "smap_secheresse": 0.0,
+    "grace_tendance_cm_an": 1
+   },
+   "rain": 0.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 0.09541666666666668,
+    "risque_eau": 0.0
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 0.5,
+    "jours_pluie_intense": 1,
+    "jours_sol_nu": 20,
+    "esi_ete": 0.95,
+    "smap_secheresse": 0.0,
+    "grace_tendance_cm_an": 1
+   },
+   "rain": 0.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 0.09541666666666668,
+    "risque_eau": 0.0
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 0.5,
+    "jours_pluie_intense": 1,
+    "jours_sol_nu": 20,
+    "esi_ete": 0.95,
+    "smap_secheresse": 0.0,
+    "grace_tendance_cm_an": 1
+   },
+   "rain": -4.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 0.09541666666666668,
+    "risque_eau": 0.04000000000000001
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 0.5,
+    "jours_pluie_intense": 1,
+    "jours_sol_nu": 20,
+    "esi_ete": 0.95,
+    "smap_secheresse": 0.0,
+    "grace_tendance_cm_an": 1
+   },
+   "rain": -4.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 0.09541666666666668,
+    "risque_eau": 0.016000000000000004
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 0.5,
+    "jours_pluie_intense": 1,
+    "jours_sol_nu": 20,
+    "esi_ete": 0.95,
+    "smap_secheresse": 0.0,
+    "grace_tendance_cm_an": 1
+   },
+   "rain": -25.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 0.09541666666666668,
+    "risque_eau": 0.2
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 0.5,
+    "jours_pluie_intense": 1,
+    "jours_sol_nu": 20,
+    "esi_ete": 0.95,
+    "smap_secheresse": 0.0,
+    "grace_tendance_cm_an": 1
+   },
+   "rain": -25.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 0.09541666666666668,
+    "risque_eau": 0.08000000000000002
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 0.5,
+    "jours_pluie_intense": 1,
+    "jours_sol_nu": 20,
+    "esi_ete": 0.95,
+    "smap_secheresse": 0.0,
+    "grace_tendance_cm_an": 1
+   },
+   "rain": 10.0,
+   "irrigation": false,
+   "result": {
+    "risque_erosion": 0.09541666666666668,
+    "risque_eau": 0.0
+   }
+  },
+  {
+   "measures": {
+    "pente_pct": 0.5,
+    "jours_pluie_intense": 1,
+    "jours_sol_nu": 20,
+    "esi_ete": 0.95,
+    "smap_secheresse": 0.0,
+    "grace_tendance_cm_an": 1
+   },
+   "rain": 10.0,
+   "irrigation": true,
+   "result": {
+    "risque_erosion": 0.09541666666666668,
+    "risque_eau": 0.0
+   }
+  }
+ ]
+}

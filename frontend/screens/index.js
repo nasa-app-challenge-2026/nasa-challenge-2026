@@ -1,8 +1,8 @@
 /**
  * Screen registry. A screen is { title, render(state, params, app), actions?, onEnter?, rota? }.
- * Owners (see docs/TEAM.md): Ali = tableau, rotation · Loïc = connexion, type-de-ferme,
- * localisation, tracer, priorites, compte, RotaAI · Justin = champ, resultats, explorer,
- * stress, sources.
+ * Owners (see docs/TEAM.md): Ali = tableau, parcelle · Loïc = connexion, type-de-ferme,
+ * localisation, tracer, cultures, temps, priorites, compte, RotaAI · Justin = champ, plan,
+ * jumeaux, sources.
  */
 import connexion from './connexion.js';
 import typeFerme from './typeFerme.js';
@@ -12,10 +12,10 @@ import cultures from './cultures.js';
 import priorites from './priorites.js';
 import tableau from './tableau.js';
 import champ from './champ.js';
-import rotation from './rotation.js';
-import resultats from './resultats.js';
-import explorer from './explorer.js';
-import stress from './stress.js';
+import parcelle from './parcelle.js';
+import plan from './plan.js';
+import jumeaux from './jumeaux.js';
+import temps from './temps.js';
 import sources from './sources.js';
 import compte from './compte.js';
 
@@ -25,13 +25,13 @@ export const SCREENS = {
   localisation,
   tracer,
   cultures,
+  temps,
   priorites,
   tableau,
+  'section-parcelle': parcelle,
   'section-champ': champ,
-  'section-rotation': rotation,
-  'section-resultats': resultats,
-  'section-explorer': explorer,
-  'section-stress': stress,
+  'section-plan': plan,
+  'section-jumeaux': jumeaux,
   sources,
   compte,
 };

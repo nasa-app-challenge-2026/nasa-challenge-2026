@@ -1,51 +1,47 @@
 /**
- * The farmer's seed reserve (`farm.seeds`): which main crops and winter covers
- * they can sow. The engine builds its proposals from it; the farmer can still
- * pick anything by hand (the UI then flags the missing seeds).
- *
- * Shape (contract): { crops: CropId[], covers: CoverId[] }.
+ * The farmer's seed reserve (`farm.seeds`, step 1 block B): the list of seeds he
+ * owns, without quantities, and the mode: "preferer" (default, the reserve counts
+ * in the score) or "uniquement" (only the reserve is proposed).
  */
-import { CROPS, CROP_IDS, COVERS } from '../../data/reference/crops.js';
-import { toSlots } from './rotation.js';
+import { SEED_IDS, SHEETS } from '../../data/reference/crops.js';
 
-/** Seeds implied by what the farm already grows: current crops + crops in the rotations. */
+export const DEFAULT_RESERVE_MODE = 'preferer';
+
+/** Seeds implied by what the farm grows now: crops in place and in the current rotations. */
 export function deriveSeeds(farmInput) {
-  const crops = new Set();
-  const covers = new Set();
+  const owned = new Set();
   for (const s of farmInput.sections ?? []) {
-    if (CROPS[s.currentCrop]) crops.add(s.currentCrop);
-    for (const slot of toSlots(s.rotation ?? [])) {
-      if (CROPS[slot.crop]) crops.add(slot.crop);
-      if (COVERS[slot.cover]) covers.add(slot.cover);
+    for (const id of [s.currentCrop, ...(s.currentRotation ?? [])]) {
+      const seed = SHEETS[id]?.seedId ?? id;
+      if (SEED_IDS.includes(seed)) owned.add(seed);
     }
   }
-  return { crops: CROP_IDS.filter((c) => crops.has(c)), covers: [...covers] };
+  return { crops: SEED_IDS.filter((c) => owned.has(c)), mode: DEFAULT_RESERVE_MODE };
 }
 
-/** The reserve, or a derived one for farms saved before seeds existed. */
 export function getSeeds(farmInput) {
   const s = farmInput.farm?.seeds;
   return s && Array.isArray(s.crops)
-    ? { crops: s.crops, covers: s.covers ?? [] }
+    ? { crops: s.crops, mode: s.mode ?? DEFAULT_RESERVE_MODE }
     : deriveSeeds(farmInput);
 }
 
-export const hasSeed = (farmInput, crop) => getSeeds(farmInput).crops.includes(crop);
-
-/** Crops of a rotation that are not in the reserve, in catalogue order. */
-export function missingSeeds(farmInput, rotation) {
-  const have = new Set(getSeeds(farmInput).crops);
-  const used = new Set(
-    toSlots(rotation)
-      .map((s) => s.crop)
-      .filter(Boolean),
-  );
-  return CROP_IDS.filter((c) => used.has(c) && !have.has(c));
+/** Add or remove a seed (keeps the catalogue order). Mutates `farmInput`. */
+export function toggleSeed(farmInput, seedId) {
+  const seeds = getSeeds(farmInput);
+  const set = new Set(seeds.crops);
+  if (set.has(seedId)) set.delete(seedId);
+  else set.add(seedId);
+  farmInput.farm.seeds = { ...seeds, crops: SEED_IDS.filter((c) => set.has(c)) };
 }
 
-/** Add crops to the reserve (mutates `farmInput`, keeps catalogue order). */
-export function addSeeds(farmInput, cropIds) {
+/** Add seeds to the reserve. Mutates `farmInput`. */
+export function addSeeds(farmInput, seedIds) {
   const seeds = getSeeds(farmInput);
-  const set = new Set([...seeds.crops, ...cropIds.filter((c) => CROPS[c])]);
-  farmInput.farm.seeds = { crops: CROP_IDS.filter((c) => set.has(c)), covers: [...seeds.covers] };
+  const set = new Set([...seeds.crops, ...seedIds]);
+  farmInput.farm.seeds = { ...seeds, crops: SEED_IDS.filter((c) => set.has(c)) };
+}
+
+export function setReserveMode(farmInput, mode) {
+  farmInput.farm.seeds = { ...getSeeds(farmInput), mode };
 }

@@ -14,13 +14,13 @@ export default {
     const back = state.ui.selectedSection;
     return html`${appHeader(state, 'sources')}
       <main class="page page--read stack-md" id="main">
-        <a class="back-link" href="#/section/${back}/resultats">← Retour à la section ${back}</a>
+        <a class="back-link" href="#/section/${back}/plan">← Retour à la section ${back}</a>
         <div class="stack-xs">
           <h1 class="h1 h1--xl">D’où viennent les chiffres</h1>
           <p class="lead">
-            Les suggestions de l’appli ne citent pas d’études, pour rester simples. Tout est ici :
-            les données des satellites de la NASA et les études qui donnent l’effet de chaque
-            enchaînement de cultures.
+            Les conseils de l’appli ne citent pas d’études, pour rester simples. Tout est ici : les
+            données de la NASA et des cartes de cultures, et les méthodes de l’algorithme. « Fictif
+            » veut dire que l’appli utilise pour l’instant des données d’exemple à la place.
           </p>
         </div>
         <div class="row-wrap gap-md align-stretch">
@@ -28,21 +28,21 @@ export default {
             <span class="h1">${nData}</span><span class="muted small">jeux de données</span>
           </div>
           <div class="card grow-1 stack-0">
-            <span class="h1">${nStudy}</span><span class="muted small">études scientifiques</span>
+            <span class="h1">${nStudy}</span><span class="muted small">méthodes publiées</span>
           </div>
           <div class="card card--soft grow-2 row-start">
             <span class="info-dot">i</span>
             <p class="small">
-              Confiance élevée = plusieurs études couvrent cet enchaînement. Sur 15 ans et plus, la
-              confiance baisse d’un niveau.
+              Toutes ces données sont ouvertes ou gratuites. Celles des centres de données de la
+              NASA demandent un compte Earthdata gratuit pour le téléchargement.
             </p>
           </div>
         </div>
         <div class="row-wrap gap-sm" role="group" aria-label="Filtrer">
           ${[
             ['all', `Tout (${SOURCES.length})`],
-            ['data', `Données NASA (${nData})`],
-            ['study', `Études (${nStudy})`],
+            ['data', `Données (${nData})`],
+            ['study', `Méthodes (${nStudy})`],
           ].map(
             ([k, label]) =>
               html`<button
@@ -68,8 +68,8 @@ export default {
                 aria-expanded="${String(open)}"
               >
                 <span class="pill ${s.kind === 'data' ? 'pill--info' : 'pill--ok'}"
-                  >${s.kind === 'data' ? 'Données' : 'Étude'}</span
-                >
+                  >${s.kind === 'data' ? 'Données' : 'Méthode'}</span
+                >${s.status === 'fictif' ? html`<span class="pill pill--warn">fictif</span>` : ''}
                 <span class="stack-0 grow"
                   ><strong>${s.title}</strong><span class="muted small">${s.use}</span></span
                 >
@@ -96,8 +96,8 @@ export default {
           })}
         </div>
         <p class="muted small">
-          Field Shift aide à décider ; il ne remplace pas l’avis d’un agronome. Les effets viennent
-          surtout d’études menées aux États-Unis et devront être calibrés pour le Québec.
+          Field Shift aide à explorer ; il ne remplace ni le jugement du fermier ni l’avis d’un
+          agronome. Les fiches des cultures et les seuils sont indicatifs et doivent être validés.
         </p>
       </main>`;
   },

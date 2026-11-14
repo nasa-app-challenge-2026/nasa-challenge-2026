@@ -1,6 +1,7 @@
 /**
  * RotaAI, version "written in advance": questions are matched by keywords to
- * answers checked by the team. Reliable for the demo video and free to run.
+ * answers checked by the team. They explain the algorithm (field_shift v5.1) in
+ * plain words. Reliable for the demo video and free to run.
  *
  * To plug a real language model later, keep this file as the fallback and see
  * docs/ROTAAI.md.
@@ -9,142 +10,141 @@
 /** Suggested questions, per screen. */
 export const SUGGESTED = {
   tableau: [
-    'C’est quoi l’assolement ?',
-    'Pourquoi certaines années sont en ⚠ ?',
-    'Que fait « Décaler mes sections » ?',
+    'C’est quoi un jumeau climatique ?',
+    'Comment l’appli choisit mes cultures ?',
+    'Pourquoi garder ou changer ?',
     'Comment lire la vue 3D ?',
   ],
-  rotation: [
-    'Pourquoi le soya avant le blé ?',
-    'Pourquoi un cadenas sur la patate ?',
-    'À quoi sert une couverture d’hiver ?',
-    'Pourquoi le cycle est coupé ?',
-  ],
-  resultats: [
-    'D’où vient le gain de rendement ?',
-    'Pourquoi comparer au maïs en continu ?',
-    'Pourquoi aucune racine profonde ?',
-    'C’est quoi la charge de travail ?',
+  parcelle: [
+    'Pourquoi demander les années précédentes ?',
+    'À quoi sert ma rotation actuelle ?',
+    'C’est quoi un délai de retour ?',
+    'Pourquoi déclarer une maladie du sol ?',
   ],
   champ: [
-    'C’est quoi le NDVI ?',
+    'Comment est calculé le risque d’érosion ?',
+    'Comment est calculé le risque d’eau ?',
     'D’où viennent ces données ?',
-    'Pourquoi activer les capteurs ?',
     'Que fait « Signaler » ?',
   ],
-  stress: [
-    'Pourquoi la rotation résiste mieux au sec ?',
-    'Pourquoi de l’orge à la place du maïs ?',
-    'Comment les ravageurs sont touchés ?',
-    'D’où viennent ces chiffres ?',
+  plan: [
+    'Pourquoi une jachère ?',
+    'Pourquoi du seigle entre deux cultures ?',
+    'C’est quoi la robustesse ?',
+    'Que veut dire précédent inconnu ?',
+  ],
+  jumeaux: [
+    'C’est quoi sigma ?',
+    'Pourquoi des modèles climatiques après 10 ans ?',
+    'Pourquoi les jumeaux sont plus au sud ?',
+    'Pourquoi comparer à 2011-2024 ?',
   ],
 };
 
 export const GREETING =
-  'Bonjour ! Je suis RotaAI. Je vous explique les chiffres et les choix de l’appli. Posez une question ou choisissez-en une ci-dessous.';
+  'Bonjour ! Je suis RotaAI. Je vous explique comment l’appli construit votre plan. Posez une question ou choisissez-en une ci-dessous.';
 
 const FALLBACK = {
-  text: 'Je n’ai pas encore de réponse à ça. Essayez une des questions proposées, ou regardez Détail et sources pour les données et les études.',
+  text: 'Je n’ai pas encore de réponse à ça. Essayez une des questions proposées, ou regardez Détail et sources pour les données et les méthodes.',
   sources: true,
 };
 
 /** Order matters on ties: specific intents first. */
 export const INTENTS = [
   {
-    keys: ['soya avant', 'soya puis', 'apres le soya', 'soya et ble'],
-    text: 'Le soya est une légumineuse : il laisse de l’azote dans le sol. Le blé qui suit en profite, et les études par satellite mesurent environ +8 % de rendement pour cet enchaînement (avec le blé de printemps). Attention : soya puis blé d’hiver donne l’inverse, environ −12 %.',
+    keys: ['jumeau', 'analogue'],
+    text: 'Un jumeau climatique est un endroit qui a déjà connu, entre 2011 et 2024, le climat que votre ferme aura pendant un cycle. L’appli regarde ce que les fermiers y cultivent sur un sol comme le vôtre, et avec quel succès vu par satellite.',
     sources: true,
   },
   {
-    keys: ['cadenas', 'patate', 'delai', 'revenir', 'trop tot'],
-    text: 'La patate attire des maladies et des insectes qui restent dans le sol plusieurs années. Il faut attendre au moins 4 ans avant d’en replanter au même endroit : c’est son délai de retour. Le cadenas apparaît quand votre cycle la ferait revenir trop tôt.',
-  },
-  {
-    keys: ['couverture', 'hiver', 'seigle', 'trefle', 'radis'],
-    text: 'Une couverture d’hiver pousse entre deux récoltes. Le sol n’est jamais nu : moins d’érosion, plus de matière organique. Le trèfle ajoute de l’azote, le radis fourrager casse le sol tassé, et le seigle protège bien contre l’érosion.',
+    keys: ['sigma', 'σ', 'ressemblance'],
+    text: 'Sigma mesure à quel point deux climats se ressemblent, en tenant compte des écarts normaux d’une année à l’autre. 0 = identiques, moins de 2 = bon jumeau. Au-delà de 2, le climat visé n’existe nulle part et la recommandation est moins fiable.',
     sources: true,
   },
   {
-    keys: ['coupe', 'pas exactement', '12 ans', 'duree d analyse'],
-    text: 'La ferme est analysée sur une seule durée, 12 ans par défaut. Si votre cycle ne rentre pas exactement (5 ans, par exemple), le dernier cycle s’arrête en route. Ce n’est pas une erreur : c’est la fin de la période d’analyse.',
+    keys: ['plus au sud', 'sud'],
+    text: 'Votre ferme va se réchauffer : le climat qu’elle aura ressemble à celui d’endroits un peu plus chauds aujourd’hui, souvent plus au sud. Plus le cycle est loin, plus il fait chaud, plus les jumeaux s’éloignent.',
   },
   {
-    keys: ['decaler', 'decalage'],
-    text: '« Décaler mes sections » change l’année de départ de chaque section dans son cycle, sans toucher à vos cultures. L’appli essaie les combinaisons et garde celle qui a le moins d’années déséquilibrées.',
+    keys: ['modele', '10 ans', 'cmip6'],
+    text: 'Pour les cycles qui finissent dans les 10 ans, l’appli prolonge la tendance des 40 dernières années de NASA POWER. Plus loin, une tendance en ligne droite ne suffit plus : elle applique à la vraie météo de la ferme le changement que prévoient plusieurs modèles climatiques, chacun séparément.',
+    sources: true,
   },
   {
-    keys: ['assolement'],
-    text: 'L’assolement, c’est découper la ferme en sections décalées dans le temps. La même année, A est en maïs, B en soya, C en blé : la ferme a toujours plusieurs cultures. Le revenu est plus stable et les machines servent chaque année.',
+    keys: ['2011', '2024', 'comparer a'],
+    text: 'La météo NASA POWER remonte à 1981, mais les cartes de cultures du Québec commencent en 2011. On compare donc les climats sur les années où l’on sait aussi ce que les jumeaux cultivaient.',
   },
   {
-    keys: ['⚠', 'desequilibr', 'alerte', 'meme culture'],
-    text: 'Une année est en ⚠ quand deux sections ont la même culture. Ça arrive quand les cycles n’ont pas la même durée : ils glissent l’un par rapport à l’autre. Ce n’est pas interdit, mais la ferme perd une partie de l’avantage de l’assolement.',
+    keys: ['choisit', 'comment l appli', 'construit'],
+    text: 'Pour chaque cycle, l’appli calcule le climat de votre ferme, trouve ses jumeaux, garde les cultures qui y poussent, puis essaie des milliers de suites de cultures. Elle écarte celles qui ne respectent pas le calendrier, le gel, les délais de retour ou ce qui se fait chez les jumeaux, et note les autres selon vos priorités.',
+  },
+  {
+    keys: ['garder', 'changer'],
+    text: 'Au premier cycle, la suite en place est votre rotation actuelle ; ensuite, celle choisie au cycle d’avant. On la garde si elle respecte les délais de retour, si ses cultures poussent encore chez les jumeaux et si sa note est à 5 points ou moins de la meilleure. Sinon, on change.',
+  },
+  {
+    keys: ['robustesse'],
+    text: 'La robustesse rejoue une suite de cultures dans tous les cycles suivants, avec leur climat et leurs jumeaux, et garde sa pire note. Si elle devient impossible plus tard, l’appli l’affiche.',
+  },
+  {
+    keys: ['jachere', 'repos', 'vide'],
+    text: 'Une jachère est une position laissée sans culture vendue. Avec les couverts de seigle, le sol reste couvert, ce qui plaît aux critères eau et érosion. Jamais deux jachères de suite. Si l’appli en propose souvent, les fiches des cultures sont à revoir avec un agronome.',
+  },
+  {
+    keys: ['seigle', 'couvert', 'couverture'],
+    text: 'Avec une culture par an, l’appli sème un seigle dans chaque intervalle assez long entre une récolte et le semis suivant. Le sol n’est pas nu l’hiver : moins d’érosion, plus de matière organique.',
+  },
+  {
+    keys: ['precedent inconnu', 'inconnu', 'lacune'],
+    text: 'Un précédent inconnu veut dire que l’enchaînement a été vu chez les jumeaux, mais dans moins de 20 champs : on ne peut pas mesurer s’il aide la culture suivante. Il compte neutre dans la note, et l’appli le signale.',
+  },
+  {
+    keys: ['delai', 'retour', 'revenir', 'trop tot'],
+    text: 'Le délai de retour, c’est le nombre d’années sans une culture avant de la remettre au même endroit, pour que ses maladies et ses insectes disparaissent du sol. Par exemple, au moins 2 ans sans soya. Le minimum est obligatoire ; le délai conseillé compte dans le critère ravageurs.',
+    sources: true,
+  },
+  {
+    keys: ['annees precedentes', 'historique', 'precedentes'],
+    text: 'Les délais de retour se comptent aussi avec ce qui a poussé avant. Si vous avez eu du soya en 2025, l’appli ne peut pas en remettre en 2027. Elle demande autant d’années que le plus long délai de retour des cultures possibles.',
+  },
+  {
+    keys: ['maladie', 'hernie'],
+    text: 'Une maladie du sol que vous connaissez rend obligatoire son délai le plus long pour toutes ses cultures-hôtes. Par exemple, avec la hernie des crucifères, 7 ans sans canola, chou ni radis.',
+  },
+  {
+    keys: ['rotation actuelle', 'reference', 'actuelle'],
+    text: 'Votre rotation actuelle est prolongée cycle après cycle et notée avec les mêmes règles. Elle sert de comparaison : si elle ne respecte pas un délai de retour, l’appli vous le signale, sans la rejeter.',
+  },
+  {
+    keys: ['erosion'],
+    text: 'Le risque d’érosion combine la pente (la moitié), les jours de forte pluie et les jours de sol nu, vus par satellite. Plus il est haut, plus le critère érosion pèse dans la note.',
+    sources: true,
+  },
+  {
+    keys: ['risque d eau', 'eau', 'secheresse'],
+    text: 'Le risque d’eau combine le stress des plantes en été, la sécheresse des racines, la baisse de pluie prévue pour le cycle et la baisse des réserves d’eau de la région. Une parcelle irriguée en garde 40 %.',
+    sources: true,
   },
   {
     keys: ['3d', 'vue', 'losange', 'souleve'],
-    text: 'Chaque losange est une section. Sa texture montre la culture de l’année choisie avec le curseur : blé doré, maïs en rangs, soya en touffes. La section sélectionnée se soulève. Bougez le curseur pour voir la ferme changer d’année en année.',
-  },
-  {
-    keys: ['sec', 'secheresse', 'resiste'],
-    text: 'Des cultures différentes n’ont pas besoin d’eau au même moment, et un sol plus riche garde mieux l’eau. Les études sur plusieurs sites d’Amérique du Nord montrent que les rotations diversifiées perdent beaucoup moins de rendement les années sèches.',
-    sources: true,
-  },
-  {
-    keys: ['orge'],
-    text: 'L’orge demande moins d’eau que le maïs et finit son cycle avant les chaleurs de l’été. La mettre à la place du maïs une année réduit le risque les années sèches.',
-  },
-  {
-    keys: ['ravageur', 'insecte', 'maladie'],
-    text: 'Beaucoup d’insectes et de maladies vivent sur une seule culture. Quand la culture change chaque année, ils ne trouvent plus de quoi se nourrir et leur nombre baisse. C’est un des premiers avantages de la rotation.',
-  },
-  {
-    keys: ['gain', 'rendement', '%', 'pourcent'],
-    text: 'Le gain vient de deux choses : l’effet de chaque enchaînement de cultures, mesuré par des études sur des millions de champs vus par satellite, et les conditions de votre section (pluie, chaleur, sol) d’après les données de la NASA. La fourchette montre l’écart entre bonnes et mauvaises années.',
-    sources: true,
-  },
-  {
-    keys: ['continu', 'monoculture', 'comparer'],
-    text: 'Le maïs en continu est la pratique la plus courante sans rotation : c’est la référence la plus parlante. Il perd environ 4 % de rendement par rapport à une rotation, et beaucoup plus les années sèches.',
-    sources: true,
-  },
-  {
-    keys: ['racine', 'profond', 'tasse'],
-    text: 'Les racines profondes (luzerne, radis fourrager) cassent le sol tassé et aident l’eau à descendre. Si votre rotation n’en a pas, un radis fourrager en couverture d’hiver est la façon la plus simple d’en ajouter.',
-  },
-  {
-    keys: ['charge', 'travail', 'machine', 'equipement'],
-    text: 'La charge de travail compte le nombre de cultures différentes, donc de semoirs, de récolteuses et de périodes de récolte. Plus de cultures, c’est un meilleur sol, mais un peu plus de travail.',
-  },
-  {
-    keys: ['ndvi', 'vigueur'],
-    text: 'Le NDVI est un indice de 0 à 1 calculé à partir des images satellites. Plus il est haut, plus les plantes sont vertes et en santé. On le tire des images HLS (Landsat et Sentinel-2) de la NASA.',
-    sources: true,
-  },
-  {
-    keys: ['capteur', 'sonde'],
-    text: 'Les satellites estiment l’humidité du sol sur une grande zone. Si vous avez des sondes dans votre champ, l’appli utilise vos mesures à la place : c’est plus précis, surtout pour les grandes fermes.',
+    text: 'Chaque forme est une section. Sa texture montre la culture de l’année choisie avec le curseur. La section sélectionnée se soulève. Bougez le curseur pour suivre le plan année après année.',
   },
   {
     keys: ['signaler', 'fausse', 'erreur'],
-    text: 'Si une donnée vous semble fausse (il a beaucoup plus plu que ce qui est affiché, par exemple), « Signaler » nous le dit. On vérifie la donnée et on peut corriger le calcul de votre section.',
+    text: 'Si une donnée vous semble fausse, « Signaler » nous le dit. On vérifie la donnée et on peut corriger le calcul de votre section.',
   },
   {
     keys: ['donnee', 'source', 'nasa', 'vient', 'satellite', 'chiffre'],
-    text: 'Les données viennent de satellites de la NASA : NASA POWER pour la météo, GPM IMERG pour la pluie, SMAP pour l’humidité du sol, ECOSTRESS pour l’évapotranspiration et HLS pour la vigueur des plantes. Toutes les sources sont dans Détail et sources.',
+    text: 'La météo de la ferme vient de NASA POWER. Le reste viendra de SoilGrids, des cartes de cultures (USDA, AAC) et de satellites NASA (HLS, SRTM, GPM IMERG, MODIS, ECOSTRESS, SMAP, GRACE-FO) ; pour l’instant ces données sont des exemples. Tout est dans Détail et sources.',
     sources: true,
   },
   {
-    keys: ['azote', 'legumineuse'],
-    text: 'Les légumineuses (soya, luzerne, trèfle) vivent avec des bactéries dans leurs racines qui captent l’azote de l’air. Elles en laissent dans le sol pour la culture suivante : moins d’engrais à acheter.',
-  },
-  {
-    keys: ['rotation', 'pourquoi changer', 'ca sert'],
-    text: 'Changer de culture chaque année casse le cycle des ravageurs, nourrit le sol (surtout avec les légumineuses) et répartit le risque. Les études mesurent en général +5 à +10 % de rendement, et beaucoup moins de pertes les années sèches.',
-    sources: true,
+    keys: ['priorite', 'poids', 'critere'],
+    text: 'Vous classez les critères qui comptent ; le premier pèse le plus. Un critère non classé garde un petit poids. L’appli donne aussi plus de poids à l’érosion et à l’eau si votre champ y est fragile.',
   },
   {
     keys: ['bonjour', 'salut', 'allo', 'hello'],
-    text: 'Bonjour ! Demandez-moi pourquoi l’appli propose une culture, ce que veut dire un score, ou d’où viennent les données.',
+    text: 'Bonjour ! Demandez-moi pourquoi l’appli propose une culture, ce qu’est un jumeau climatique ou d’où viennent les données.',
   },
 ];
 

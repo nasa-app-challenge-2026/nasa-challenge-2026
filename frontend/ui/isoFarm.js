@@ -7,7 +7,8 @@
  * traced yet fall back to a square grid of diamonds.
  */
 import { html } from '../lib/html.js';
-import { CROPS } from '../../data/reference/crops.js';
+import { nameOf } from '../../data/reference/crops.js';
+import { textureFill } from './textures.js';
 import { centroidXY, fitToBox, isClosed } from '../../application/rules/geo.js';
 
 const LIFT = 26;
@@ -43,7 +44,7 @@ function prism({ s, top, up, cropId, selected, labelScale = 1 }) {
     ${up ? html`<polygon points="${pts(top)}" fill="#3E2E1F"></polygon>` : ''}${walls}
     <polygon
       points="${pts(lifted)}"
-      fill="url(#pat-${cropId || 'sol'})"
+      fill="${textureFill(cropId)}"
       stroke="${selected ? '#18211B' : '#FFFFFF'}"
       stroke-width="${selected ? 3 : 2}"
       stroke-linejoin="round"
@@ -52,7 +53,7 @@ function prism({ s, top, up, cropId, selected, labelScale = 1 }) {
       <rect x="-40" y="-24" width="80" height="48" rx="10" fill="#FFFFFF" fill-opacity=".92"></rect>
       <text x="0" y="-2" text-anchor="middle" class="iso-tile__id">${s.id}</text>
       <text x="0" y="17" text-anchor="middle" class="iso-tile__crop"
-        >${CROPS[cropId]?.name ?? '—'}</text
+        >${cropId ? nameOf(cropId) : '—'}</text
       >
     </g>
   </g>`;

@@ -1,21 +1,19 @@
 /** 13 · Compte et réglages. Owner: Loïc. */
 import { html } from '../lib/html.js';
-import { CROPS } from '../../data/reference/crops.js';
-import { toSlots } from '../../application/rules/rotation.js';
+import { nameOf } from '../../data/reference/crops.js';
 import { appHeader } from '../ui/layout.js';
-import { switchButton } from '../ui/widgets.js';
-import { priorityList, movePriority } from './priorites.js';
-import { currentCropsEditor, proposeAllCard, seedActions, seedBank } from '../ui/seedsEditor.js';
+import { farmFactsEditor, priorityActions, priorityEditor } from './priorites.js';
+import { seedActions, seedBank } from '../ui/seedsEditor.js';
+import { timeActions, timeSettingsEditor } from '../ui/timeSettingsEditor.js';
 
 const TABS = [
   ['profil', 'Profil'],
   ['ferme', 'Ma ferme'],
-  ['semences', 'Cultures et semences'],
+  ['semences', 'Semences'],
+  ['temps', 'Cycle et horizon'],
   ['prio', 'Priorités'],
-  ['capteurs', 'Capteurs'],
   ['cgu', 'Conditions d’utilisation'],
 ];
-const HORIZONS = [3, 4, 5, 10, 12, 15, 30];
 
 function panel(state) {
   const { user, farm } = state;
@@ -44,59 +42,33 @@ function panel(state) {
         </div>
       </div>`;
     case 'semences':
-      return html`<div class="stack-lg">
+      return html`<div class="stack-md">
         <div class="stack-xs">
-          <h2 class="h2 h2--lg">Cultures et semences</h2>
+          <h2 class="h2 h2--lg">Ma réserve de semences</h2>
           <p class="muted small">
-            L’appli propose les rotations avec ces semences et vérifie que la première année ne
-            répète pas ce qui pousse maintenant.
+            Les semences que vous avez déjà, sans les quantités. Ce qui pousse sur chaque section se
+            change dans « Ma parcelle ».
           </p>
         </div>
-        <div class="stack-sm">
-          <span class="eyebrow">Ce qui pousse en ${farm.farm.startYear - 1}</span>
-          ${currentCropsEditor(state)}
+        ${seedBank(state)}
+      </div>`;
+    case 'temps':
+      return html`<div class="stack-md">
+        <div class="stack-xs">
+          <h2 class="h2 h2--lg">Cycle et horizon</h2>
+          <p class="muted small">Le même découpage du temps pour toutes les sections.</p>
         </div>
-        <div class="stack-sm">
-          <span class="eyebrow">Ma réserve de semences</span>
-          ${seedBank(state)}
-        </div>
-        ${proposeAllCard(state)}
+        ${timeSettingsEditor(state)}
       </div>`;
     case 'prio':
       return html`<div class="stack-md">
         <div class="stack-xs">
           <h2 class="h2 h2--lg">Priorités</h2>
-          <p class="muted small">L’ordre sert à classer les rotations proposées.</p>
+          <p class="muted small">
+            L’ordre donne le poids de chaque critère dans la note des suites de cultures.
+          </p>
         </div>
-        ${priorityList(farm.farm.priorities)}
-      </div>`;
-    case 'capteurs':
-      return html`<div class="stack-md">
-        <div class="row-between">
-          <div class="stack-xs">
-            <h2 class="h2 h2--lg">Capteurs</h2>
-            <p class="muted small">
-              Option pour les grandes fermes : vos mesures remplacent les estimations des
-              satellites.
-            </p>
-          </div>
-          ${switchButton(farm.farm.sensors, 'toggle-sensors', 'Utiliser mes capteurs')}
-        </div>
-        ${
-          farm.farm.sensors
-            ? html`<div class="stack-xs">
-                <div class="list-row">
-                  <span class="dot dot--blue"></span
-                  ><span class="grow">Sonde d’humidité · Section A</span
-                  ><span class="pill pill--info">Connectée</span>
-                </div>
-                <button type="button" class="btn btn--dashed">+ Ajouter un capteur</button>
-              </div>`
-            : html`<div class="card card--tint small">
-                Formule de base : toutes les données viennent des satellites de la NASA. Aucun
-                matériel nécessaire.
-              </div>`
-        }
+        ${priorityEditor(state)} ${farmFactsEditor(state)}
       </div>`;
     case 'cgu':
       return html`<div class="stack-sm">
@@ -129,21 +101,12 @@ function panel(state) {
                 ><span class="stack-0 grow"
                   ><strong>Section ${s.id} · ${s.areaHa} ha</strong
                   ><span class="muted small"
-                    >${toSlots(s.rotation)
-                      .map((x) => CROPS[x.crop]?.name ?? '—')
-                      .join(' → ')}</span
+                    >${(s.currentRotation ?? []).map(nameOf).join(' → ') || 'Pas de rotation actuelle'}</span
                   ></span
-                ><a href="#/section/${s.id}/rotation">Modifier</a>
+                ><a href="#/section/${s.id}/parcelle">Modifier</a>
               </div>`,
           )}
         </div>
-        <label class="field field--narrow"
-          >Durée d’analyse de la ferme
-          <select data-change="set-horizon">
-            ${HORIZONS.map((h) => html`<option value="${h}" ${h === farm.farm.horizonYears ? 'selected' : ''}>${h} ans (${farm.farm.startYear} à ${farm.farm.startYear + h - 1})</option>`)}
-          </select>
-          <span class="muted small">Chaque section répète son cycle pour remplir cette durée.</span>
-        </label>
       </div>`;
   }
 }
@@ -166,6 +129,8 @@ export default {
   rota: 'tableau',
   actions: {
     ...seedActions,
+    ...timeActions,
+    ...priorityActions,
     'settings-tab': (app, el) =>
       app.update((s) => {
         s.ui.settingsTab = el.dataset.tab;
@@ -174,19 +139,6 @@ export default {
       app.update((s) => {
         s.user[el.dataset.key] = el.value;
       }),
-    'set-horizon': (app, el) =>
-      app.updateFarm((farm) => {
-        farm.farm.horizonYears = Number(el.value);
-      }),
-    'toggle-sensors': (app) => {
-      app.updateFarm((farm) => {
-        farm.farm.sensors = !farm.farm.sensors;
-      });
-      app.update((s) => {
-        s.field = {};
-      });
-    },
-    'prio-move': movePriority,
     logout: (app) => {
       app.update((s) => {
         s.user = null;

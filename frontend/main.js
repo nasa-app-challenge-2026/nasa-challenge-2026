@@ -50,7 +50,7 @@ function defaultRoute(s) {
  * `view-transition-name` on both pages (the section letter, the header) travel
  * or stay put. Older browsers and "reduce motion" users get an instant swap.
  */
-const ONBOARDING = ['type-de-ferme', 'localisation', 'tracer', 'cultures', 'priorites'];
+const ONBOARDING = ['type-de-ferme', 'localisation', 'tracer', 'cultures', 'temps', 'priorites'];
 let lastRouteName = null;
 let pendingNav = null; // 'forward' | 'back' | 'fade' | null
 

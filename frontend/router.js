@@ -5,12 +5,13 @@ const SIMPLE = [
   'localisation',
   'tracer',
   'cultures',
+  'temps',
   'priorites',
   'tableau',
   'sources',
   'compte',
 ];
-export const SECTION_TABS = ['champ', 'rotation', 'resultats', 'explorer', 'stress'];
+export const SECTION_TABS = ['parcelle', 'champ', 'plan', 'jumeaux'];
 
 export function parseHash(hash) {
   const parts = String(hash || '')

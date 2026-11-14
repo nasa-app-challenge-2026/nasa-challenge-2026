@@ -1,7 +1,6 @@
 /** Page frames: app header, onboarding header, section layout with side menu. */
 import { html } from '../lib/html.js';
-import { CROPS } from '../../data/reference/crops.js';
-import { cycleLength, toSlots } from '../../application/rules/rotation.js';
+import { colorOf, nameOf } from '../../data/reference/crops.js';
 import { icon, ICONS } from './icons.js';
 import { demoBadge, logo } from './widgets.js';
 
@@ -33,7 +32,14 @@ export function appHeader(state, active) {
   </header>`;
 }
 
-const STEPS = ['Type de ferme', 'Localisation', 'Tracer la ferme', 'Mes cultures', 'Priorités'];
+const STEPS = [
+  'Type de ferme',
+  'Localisation',
+  'Tracer la ferme',
+  'Mes cultures',
+  'Cycle et horizon',
+  'Priorités',
+];
 
 export function onboardingHeader(step) {
   return html`<header class="app-header">
@@ -55,15 +61,20 @@ export function onboardingHeader(step) {
 }
 
 const SECTION_TABS = [
+  ['parcelle', 'Ma parcelle'],
   ['champ', 'Mon champ'],
-  ['rotation', 'Rotation'],
-  ['resultats', 'Résultats'],
-  ['explorer', 'Explorer et modifier'],
-  ['stress', 'Stress test'],
+  ['plan', 'Plan par cycle'],
+  ['jumeaux', 'Climat et jumeaux'],
 ];
 
+/** "Maïs en place, récolte oct. 2026" or "Parcelle libre". */
+function inPlaceText(section) {
+  if (!section.currentCrop) return 'Parcelle libre';
+  return `${nameOf(section.currentCrop)} en place`;
+}
+
 export function sectionLayout(state, section, tab, body) {
-  const L = cycleLength(section.rotation);
+  const rotation = section.currentRotation ?? [];
   return html`${appHeader(state, 'tableau')}
     <div class="page page--section">
       <aside class="section-aside">
@@ -74,11 +85,11 @@ export function sectionLayout(state, section, tab, body) {
               >${section.id}</span
             ><span class="stack-xs"
               ><strong>Section ${section.id}</strong
-              ><span class="muted small">${section.areaHa} ha · cycle de ${L} ans</span></span
+              ><span class="muted small">${section.areaHa} ha · ${inPlaceText(section)}</span></span
             >
           </div>
           <div class="mini-cycle">
-            ${toSlots(section.rotation).map((s) => html`<span style="background: ${CROPS[s.crop]?.color || '#E5E9E0'}"></span>`)}
+            ${rotation.map((id) => html`<span title="${nameOf(id)}" style="background: ${colorOf(id)}"></span>`)}
           </div>
         </div>
         <nav class="section-nav" aria-label="Pages de la section">

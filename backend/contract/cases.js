@@ -1,55 +1,22 @@
 /**
- * The three reference cases agreed by the team (sections A to D, 12 years).
- * Used to generate backend/contract/examples/*.json and by the tests.
+ * Reference inputs of the contract, used to write backend/contract/examples/ and by
+ * the tests. `today` is fixed so that the examples do not change from day to day.
  */
 import { DEMO_FARM } from '../../data/reference/demoFarm.js';
 
-const R4 = [
-  { crop: 'soya', years: 1, cover: null },
-  { crop: 'ble', years: 1, cover: null },
-  { crop: 'mais', years: 1, cover: null },
-  { crop: 'patate', years: 1, cover: null },
-];
-const R3 = [
-  { crop: 'mais', years: 1, cover: null },
-  { crop: 'soya', years: 1, cover: null },
-  { crop: 'ble', years: 1, cover: null },
-];
-const R5 = [
-  { crop: 'mais', years: 1, cover: null },
-  { crop: 'soya', years: 1, cover: null },
-  { crop: 'luzerne', years: 3, cover: null },
-];
+export const EXAMPLE_TODAY = '2026-11-13';
 
-const section = (id, rotation, offset) => ({ id, areaHa: 10, offset, rotation });
-
-function farm(name, sections) {
-  return {
-    version: '1.0',
-    farm: { ...DEMO_FARM.farm, id: name, name },
-    options: { stressYears: 1 },
-    sections,
-  };
-}
+const withTime = (time) => ({
+  ...structuredClone(DEMO_FARM),
+  today: EXAMPLE_TODAY,
+  farm: { ...structuredClone(DEMO_FARM.farm), time },
+});
 
 export const CASES = {
-  'cas1-meme-rotation-decalee': farm('Cas 1', [
-    section('A', R4, 0),
-    section('B', R4, 1),
-    section('C', R4, 2),
-    section('D', R4, 3),
-  ]),
-  'cas2-durees-differentes': farm('Cas 2', [
-    section('A', R4, 0),
-    section('B', R4, 1),
-    section('C', R4, 2),
-    section('D', R3, 0),
-  ]),
-  'cas3-luzerne-cycle-coupe': farm('Cas 3', [
-    section('A', R3, 0),
-    section('B', R3, 1),
-    section('C', R3, 2),
-    section('D', R5, 0),
-  ]),
-  'ferme-demo': structuredClone(DEMO_FARM),
+  /** The demo farm: cycle of 4 years, one crop a year, 12 years. */
+  'ferme-demo': withTime({ cycleYears: 4, frequencyMonths: 12, horizonYears: 12 }),
+  /** Two crops a year: rye takes its own positions. */
+  'deux-cultures-par-an': withTime({ cycleYears: 4, frequencyMonths: 6, horizonYears: 8 }),
+  /** A 5-year cycle: alfalfa ×3 fits again. */
+  'cycle-5-ans': withTime({ cycleYears: 5, frequencyMonths: 12, horizonYears: 10 }),
 };

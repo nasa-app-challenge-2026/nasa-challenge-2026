@@ -20,16 +20,13 @@ import {
   isClosed,
   roundHa,
 } from '../../application/rules/geo.js';
-import { autoStagger } from '../../application/rules/rotation.js';
+import { blankSection } from '../../application/rules/sectionInputs.js';
 import { followOutline } from '../../application/rules/sections.js';
 
 const KEY = 'tracer';
 const LETTERS = 'ABCDEFGHIJ';
-const DEFAULT_ROTATION = [
-  { crop: 'mais', years: 1, cover: null },
-  { crop: 'soya', years: 1, cover: null },
-  { crop: 'ble', years: 1, cover: null },
-];
+/** Area of a section before it is drawn (then computed from its polygon). */
+const NEW_SECTION_AREA_HA = 5;
 const FARM_COLOR = '#FFD27A';
 const SECTION_COLOR = '#0072B2';
 /** Shapes this far from the farm pin were drawn for another place (e.g. the demo farm). */
@@ -182,7 +179,8 @@ export default {
             <h1 class="h1">Tracez votre ferme</h1>
             <p class="muted">
               Cliquez d’abord les coins principaux pour relier le contour de la ferme, puis les
-              coins de chaque section. Chaque section aura sa propre rotation.
+              coins de chaque section. L’appli planifiera chaque section à partir de ce qui y
+              pousse.
             </p>
           </div>
 
@@ -382,17 +380,8 @@ export default {
       const id = [...LETTERS].find((l) => !used.has(l));
       if (!id) return;
       app.updateFarm((farm) => {
-        farm.sections.push({
-          id,
-          areaHa: 5,
-          offset: 0,
-          currentCrop: null,
-          polygon: [],
-          rotation: structuredClone(DEFAULT_ROTATION),
-        });
+        farm.sections.push({ ...blankSection(id), areaHa: NEW_SECTION_AREA_HA });
         sortSections(farm);
-        // Same rotation as the others? Shift it so the farm grows several crops each year.
-        autoStagger(farm.farm, farm.sections);
       });
       app.update((s) => {
         s.ui.selectedSection = id;
@@ -402,7 +391,6 @@ export default {
     'remove-section': (app, el) => {
       app.updateFarm((farm, s) => {
         farm.sections = farm.sections.filter((x) => x.id !== el.dataset.id);
-        autoStagger(farm.farm, farm.sections);
         if (s.ui.selectedSection === el.dataset.id) s.ui.selectedSection = farm.sections[0].id;
         if (s.ui.draw.target === el.dataset.id) s.ui.draw = nextTarget(s);
       });

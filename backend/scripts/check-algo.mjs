@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 /**
- * Checks that a running algorithm respects the contract.
+ * Checks that a running algorithm server respects the contract (v2.0).
  *
  *   npm run check:algo -- http://localhost:8000
  *   (or set VITE_ALGO_URL)
  *
- * Sends every example input to the three endpoints and validates each answer
- * against backend/contract/field-shift.schema.json. Exit code 1 if anything fails.
+ * Sends every reference input to POST /plan and validates each answer against
+ * backend/contract/field-shift.schema.json. Exit code 1 if anything fails.
  */
 import { readFileSync } from 'node:fs';
 import Ajv from 'ajv';
 import { CASES } from '../contract/cases.js';
-import { currentCropConflict, rotationErrors } from '../../application/rules/rotation.js';
 
 const schema = JSON.parse(
   readFileSync(new URL('../contract/field-shift.schema.json', import.meta.url), 'utf8'),
@@ -29,77 +28,34 @@ if (!baseUrl) {
   process.exit(1);
 }
 
-async function post(path, body) {
-  const res = await fetch(`${baseUrl}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(`${path} → HTTP ${res.status}`);
-  return res.json();
-}
-
 let failures = 0;
-const report = (label, errors) => {
-  if (errors.length === 0) console.log(`  ✓ ${label}`);
-  else {
-    failures++;
-    console.log(`  ✗ ${label}`);
-    errors.slice(0, 8).forEach((e) => console.log(`      ${e}`));
-  }
-};
-
 console.log(`Vérification de ${baseUrl}\n`);
 for (const [name, input] of Object.entries(CASES)) {
+  const errors = [];
   try {
-    const plan = await post('/evaluate', input);
-    const errors = check('FarmPlan', plan);
-    if (plan.sections?.length !== input.sections.length) {
-      errors.push('sections : il faut un résultat par section, dans le même ordre');
-    }
-    plan.sections?.forEach((s, i) => {
-      if (s.id !== input.sections[i]?.id)
-        errors.push(`sections[${i}].id devrait être ${input.sections[i]?.id}`);
+    const res = await fetch(`${baseUrl}/plan`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
     });
-    report(`/evaluate · ${name}`, errors);
+    if (!res.ok) throw new Error(`/plan → HTTP ${res.status}`);
+    const plan = await res.json();
+    errors.push(...check('FarmPlan', plan));
+    if (plan.sections?.map((s) => s.id).join() !== input.sections.map((s) => s.id).join())
+      errors.push('sections : il faut un plan par section, dans le même ordre');
+    const cycles = input.farm.time.horizonYears / input.farm.time.cycleYears;
+    plan.sections?.forEach((s) => {
+      if (s.cycles.length !== cycles && s.cycles.at(-1)?.decision !== 'aucune')
+        errors.push(`section ${s.id} : ${s.cycles.length} cycles au lieu de ${cycles}`);
+    });
   } catch (e) {
-    report(`/evaluate · ${name}`, [e.message]);
+    errors.push(e.message);
   }
+  if (errors.length) {
+    failures++;
+    console.log(`  ✗ /plan · ${name}`);
+    errors.slice(0, 8).forEach((e) => console.log(`      ${e}`));
+  } else console.log(`  ✓ /plan · ${name}`);
 }
-const demo = CASES['ferme-demo'];
-const seeds = demo.farm.seeds;
-for (const years of [3, 4, 5]) {
-  for (const sec of demo.sections) {
-    const label = `/propose · section ${sec.id} (en ${sec.currentCrop} maintenant) · ${years} ans`;
-    try {
-      const r = await post('/propose', { farm: demo, sectionId: sec.id, cycleYears: years });
-      const errors = check('ProposeResponse', r);
-      const rotation = r.rotation || [];
-      const total = rotation.reduce((n, e) => n + (e.years || 1), 0);
-      if (total !== years)
-        errors.push(`la rotation proposée dure ${total} ans au lieu de ${years}`);
-      errors.push(...rotationErrors(rotation));
-      const allowed = new Set([...seeds.crops, ...(r.missingSeeds ?? [])]);
-      const outside = rotation.map((e) => e.crop).filter((c) => !allowed.has(c));
-      if (outside.length) {
-        errors.push(`hors de farm.seeds sans missingSeeds : ${[...new Set(outside)].join(', ')}`);
-      }
-      const badCovers = rotation.map((e) => e.cover).filter((c) => c && !seeds.covers.includes(c));
-      if (badCovers.length) errors.push(`couverture hors de farm.seeds : ${badCovers.join(', ')}`);
-      const clash = currentCropConflict({ ...sec, rotation });
-      if (clash) errors.push(`première année : ${clash}`);
-      report(label, errors);
-    } catch (e) {
-      report(label, [e.message]);
-    }
-  }
-}
-try {
-  const r = await post('/field-data', { farm: demo, sectionId: 'A' });
-  report('/field-data · section A', check('FieldDataResponse', r));
-} catch (e) {
-  report('/field-data · section A', [e.message]);
-}
-
 console.log(failures ? `\n${failures} vérification(s) en échec.` : '\nTout respecte le contrat.');
 process.exit(failures ? 1 : 0);

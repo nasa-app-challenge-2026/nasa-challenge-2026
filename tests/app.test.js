@@ -8,9 +8,7 @@ import { STORAGE_KEY } from '../data/access/storage.js';
 
 const engine = {
   name: 'test',
-  evaluateFarm: vi.fn(),
-  proposeRotation: vi.fn(),
-  getFieldData: vi.fn(),
+  planFarm: vi.fn(async () => ({ version: '2.0', sections: [] })),
 };
 
 function memoryStorage() {
@@ -81,6 +79,54 @@ describe('application', () => {
     await vi.waitFor(() =>
       expect(app.state.farm.farm.location.label).toBe('Rang Saint-Pierre, Saint-Dominique, Québec'),
     );
+  });
+
+  it('asks the engine for a plan and keeps it', async () => {
+    const app = createApp({ engine, storage: memoryStorage() });
+    app.refreshPlan();
+    await vi.waitFor(() => expect(app.state.plan.status).toBe('ready'));
+    expect(engine.planFarm).toHaveBeenCalledWith(app.state.farm);
+  });
+
+  it('does not plan while a section misses its harvest month', async () => {
+    const app = createApp({ engine, storage: memoryStorage() });
+    app.updateSection('A', (s) => (s.currentHarvest = null));
+    await vi.waitFor(() => expect(app.state.plan.status).toBe('incomplete'));
+    expect(app.state.plan.error).toMatch(/Section A/);
+  });
+
+  it('migrates a farm saved by the previous version', () => {
+    const storage = memoryStorage();
+    storage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        user: null,
+        farm: {
+          version: '1.0',
+          farm: { name: 'Vieille ferme', location: { lat: 45, lon: -73, label: 'X' } },
+          sections: [
+            {
+              id: 'A',
+              areaHa: 3,
+              offset: 1,
+              currentCrop: 'ble',
+              rotation: [
+                { crop: 'ble', years: 1 },
+                { crop: 'patate', years: 1 },
+              ],
+            },
+          ],
+        },
+      }),
+    );
+    const farm = createApp({ engine, storage }).state.farm;
+    expect(farm.version).toBe('2.0');
+    expect(farm.farm.name).toBe('Vieille ferme');
+    expect(farm.sections[0]).toMatchObject({
+      currentCrop: 'ble-automne',
+      currentRotation: ['ble-automne'],
+    });
+    expect(farm.sections[0].offset).toBeUndefined();
   });
 
   it('keeps a given label without looking up the address', () => {

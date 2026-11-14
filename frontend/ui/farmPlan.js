@@ -5,6 +5,7 @@
  */
 import { html } from '../lib/html.js';
 import { centroidXY, fitToBox, isClosed } from '../../application/rules/geo.js';
+import { textureFill } from './textures.js';
 
 const toPoints = (pts) => pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
 
@@ -51,7 +52,7 @@ export function farmPlan({
       return html`<g class="map-section" data-action="select-section" data-id="${s.id}">
         <polygon
           points="${toPoints(tiles[i])}"
-          fill="url(#pat-${crop || 'sol'})"
+          fill="${textureFill(crop)}"
           stroke="#FFFFFF"
           stroke-opacity="${on ? 1 : 0.75}"
           stroke-width="${on ? 4 : 1.5}"

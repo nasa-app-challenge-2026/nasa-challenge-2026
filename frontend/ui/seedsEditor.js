@@ -1,218 +1,263 @@
 /**
- * "What grows now" + "my seed reserve", shared by the onboarding step
- * (screens/cultures.js) and the settings (screens/compte.js).
- *
- * Choosing a current crop adds it to the reserve: if it grows on the farm, the
- * farmer can get its seeds. Everything stays editable.
+ * The farmer's inputs that the algorithm needs (step 1), shared by the onboarding
+ * (screens/cultures.js), the section screen (screens/parcelle.js) and the settings
+ * (screens/compte.js): the crop in place and its harvest month, the current
+ * rotation and where the field is in it, the previous years, the seed reserve.
  */
-import { html, plural } from '../lib/html.js';
-import { CROPS, CROP_IDS, COVERS, COVER_IDS, ROLES } from '../../data/reference/crops.js';
-import { addSeeds, getSeeds } from '../../application/rules/seeds.js';
-import { cycleLength, suggestCycleYears, toSlots } from '../../application/rules/rotation.js';
+import { html } from '../lib/html.js';
+import {
+  CROPS,
+  OTHER_CROP_IDS,
+  SEED_IDS,
+  SHEETS,
+  SOLD_SHEET_IDS,
+  colorOf,
+  nameOf,
+} from '../../data/reference/crops.js';
+import { RESERVE_MODES } from '../../data/reference/planning.js';
+import { SOIL_DISEASES } from '../../data/reference/returnDelays.js';
+import { getSeeds, setReserveMode, toggleSeed } from '../../application/rules/seeds.js';
+import {
+  addToRotation,
+  historyCropOf,
+  historyYearsToAsk,
+  moveInRotation,
+  removeFromRotation,
+  setCurrentCrop,
+  setHistoryCrop,
+  toggleDisease,
+} from '../../application/rules/sectionInputs.js';
 import { fieldSwatch } from './textures.js';
 import { icon, ICONS } from './icons.js';
 
-export function currentCropsEditor(state) {
-  const year = state.farm.farm.startYear - 1;
-  return html`<div class="stack-xs">
-    ${state.farm.sections.map(
-      (s) =>
-        html`<div class="now-row">
-          <span class="row gap-sm now-row__who"
-            ><span class="section-badge">${s.id}</span
-            ><span class="stack-0"
-              ><strong>Section ${s.id}</strong><span class="muted small">${s.areaHa} ha</span></span
-            ></span
-          >
-          <div
-            class="now-row__opts"
-            role="radiogroup"
-            aria-label="Culture en ${year} sur la section ${s.id}"
-          >
-            ${CROP_IDS.map((c) => {
-              const on = s.currentCrop === c;
-              return html`<button
-                type="button"
-                role="radio"
-                aria-checked="${String(on)}"
-                class="now-chip ${on ? 'is-on' : ''}"
-                style="${on ? `background: ${CROPS[c].color}` : ''}"
-                data-action="set-current-crop"
-                data-id="${s.id}"
-                data-crop="${c}"
-              >
-                ${fieldSwatch(c, 16)}${CROPS[c].name}
-              </button>`;
-            })}
-            <button
-              type="button"
-              role="radio"
-              aria-checked="${String(!s.currentCrop)}"
-              class="now-chip now-chip--none ${s.currentCrop ? '' : 'is-on'}"
-              data-action="set-current-crop"
-              data-id="${s.id}"
-              data-crop=""
-            >
-              Rien / je ne sais pas
-            </button>
-          </div>
-        </div>`,
-    )}
-  </div>`;
+/** Month of the year (1–12) a crop is usually harvested, to prefill the harvest month. */
+const USUAL_SUMMER_HARVEST_MONTH = 10;
+const usualHarvestMonth = (id) => {
+  const fixed = SHEETS[id]?.harvestMonth;
+  return fixed ? Math.floor(fixed) + 1 : USUAL_SUMMER_HARVEST_MONTH;
+};
+const thisYear = () => new Date().getFullYear();
+
+const option = (value, label, selected) =>
+  html`<option value="${value}" ${selected ? 'selected' : ''}>${label}</option>`;
+
+function cropSelect({ id, value, action, sectionId, extra = '', emptyLabel, sheetsOnly = false }) {
+  const sold = SOLD_SHEET_IDS;
+  const others = OTHER_CROP_IDS;
+  return html`<select id="${id}" data-change="${action}" data-id="${sectionId}" ${extra}>
+    ${option('', emptyLabel, !value)}
+    <optgroup label="Cultures de l’algorithme">
+      ${sold.map((c) => option(c, nameOf(c), value === c))}
+    </optgroup>
+    ${
+      sheetsOnly
+        ? ''
+        : html`<optgroup label="Autres cultures">
+            ${others.map((c) => option(c, CROPS[c].name, value === c))}
+          </optgroup>`
+    }
+  </select>`;
 }
 
-export function seedBank(state) {
-  const seeds = getSeeds(state.farm);
-  const growing = new Set(state.farm.sections.map((s) => s.currentCrop).filter(Boolean));
-  const only = seeds.crops.length === 1;
+/** Crop in place + harvest month + current rotation of one section. */
+export function inPlaceEditor(section) {
+  const id = section.id;
+  const rotation = section.currentRotation ?? [];
   return html`<div class="stack-sm">
-    <div class="seed-grid">
-      ${CROP_IDS.map((c) => {
-        const info = CROPS[c];
-        const on = seeds.crops.includes(c);
-        const role = info.roles[0]
-          ? ROLES[info.roles[0]].label
-          : `retour après ${info.returnDelay} ans`;
-        return html`<button
-          type="button"
-          class="seed-card ${on ? 'is-on' : ''}"
-          aria-pressed="${String(on)}"
-          data-action="toggle-seed"
-          data-crop="${c}"
-          ${on && only ? 'disabled' : ''}
-          title="${on && only ? 'Gardez au moins une culture' : `${on ? 'Retirer' : 'Ajouter'} ${info.name}`}"
-        >
-          <span class="seed-card__swatch">${fieldSwatch(c, 40)}</span>
-          <span class="stack-0 grow">
-            <strong>${info.name}</strong>
-            <span class="muted small">${info.years > 1 ? `occupe ${info.years} ans` : role}</span>
-          </span>
-          ${growing.has(c) ? html`<span class="pill pill--ok">en culture</span>` : ''}
-          <span class="seed-card__check" aria-hidden="true"
-            >${on ? icon(ICONS.check, { size: 16, width: 3 }) : ''}</span
-          >
-        </button>`;
-      })}
+    <div class="grid grid--2">
+      <label class="field"
+        >Culture en place
+        ${cropSelect({
+          id: `now-${id}`,
+          value: section.currentCrop,
+          action: 'set-current-crop',
+          sectionId: id,
+          emptyLabel: 'Rien (parcelle libre)',
+        })}
+      </label>
+      <label class="field"
+        >Récolte prévue (ou fin pour une prairie)
+        <input
+          id="harvest-${id}"
+          type="month"
+          value="${section.currentHarvest ?? ''}"
+          data-change="set-harvest"
+          data-id="${id}"
+          ${section.currentCrop ? '' : 'disabled'}
+        />
+      </label>
     </div>
     <div class="stack-xs">
-      <span class="eyebrow">Couvertures d’hiver</span>
-      <div class="row-wrap gap-sm">
-        ${COVER_IDS.map((c) => {
-          const on = seeds.covers.includes(c);
-          return html`<button
-            type="button"
-            class="now-chip ${on ? 'is-on is-cover' : ''}"
-            aria-pressed="${String(on)}"
-            data-action="toggle-cover-seed"
-            data-cover="${c}"
-          >
-            ${icon(ICONS.umbrella, { size: 14, width: 2.2 })}${COVERS[c].name}
-          </button>`;
+      <span class="strong small">Ma rotation actuelle</span>
+      <span class="muted small"
+        >La suite de cultures que vous suivez. Elle sert de référence : l’appli la compare à ses
+        propositions. Cochez la culture en place.</span
+      >
+      <div class="row-wrap gap-xs" role="list">
+        ${rotation.map(
+          (sheet, i) =>
+            html`<span
+              class="rot-edit ${i === section.rotationPosition ? 'is-now' : ''}"
+              role="listitem"
+            >
+              <button
+                type="button"
+                class="rot-edit__pick"
+                style="background: ${colorOf(sheet)}"
+                data-action="set-position"
+                data-id="${id}"
+                data-i="${i}"
+                aria-pressed="${String(i === section.rotationPosition)}"
+                title="C’est la culture en place"
+              >
+                ${i === section.rotationPosition ? '● ' : ''}${nameOf(sheet)}
+              </button>
+              <button
+                type="button"
+                class="icon-btn icon-btn--sm"
+                data-action="move-rotation"
+                data-id="${id}"
+                data-i="${i}"
+                data-d="-1"
+                aria-label="Avancer ${nameOf(sheet)}"
+                ${i === 0 ? 'disabled' : ''}
+              >
+                ${icon(ICONS.up, { size: 14 })}
+              </button>
+              <button
+                type="button"
+                class="icon-btn icon-btn--sm"
+                data-action="remove-rotation"
+                data-id="${id}"
+                data-i="${i}"
+                aria-label="Retirer ${nameOf(sheet)}"
+              >
+                ${icon(ICONS.close, { size: 14 })}
+              </button>
+            </span>`,
+        )}
+        ${cropSelect({
+          id: `add-${id}`,
+          value: null,
+          action: 'add-rotation',
+          sectionId: id,
+          emptyLabel: '+ Ajouter une culture',
+          sheetsOnly: true,
         })}
       </div>
     </div>
   </div>`;
 }
 
-/** Summary + "propose with my seeds" for the whole farm. */
-export function proposeAllCard(state) {
-  const seeds = getSeeds(state.farm);
-  const years = suggestCycleYears(seeds.crops);
-  const p = state.ui.proposeAll;
-  const busy = p.status === 'loading';
-  return html`<div class="card stack-sm">
-    <div class="row-between wrap">
-      <div class="stack-0">
-        <strong>Rotations de départ</strong>
-        <span class="muted small"
-          >L’appli construit une rotation de ${years} ans par section avec vos
-          ${plural(seeds.crops.length, 'culture', 'cultures')}, en tenant compte de ce qui pousse
-          maintenant.</span
-        >
-      </div>
-      <button
-        type="button"
-        class="btn btn--primary"
-        data-action="propose-all"
-        ${busy ? 'disabled' : ''}
-      >
-        ${icon(ICONS.magic, { size: 18 })}${busy ? 'Calcul…' : 'Proposer avec mes semences'}
-      </button>
-    </div>
-    ${p.status === 'error' ? html`<div class="alert alert--bad small">⚠ ${p.error}</div>` : ''}
-    ${
-      p.missing.length
-        ? html`<div class="alert alert--warn small row-between wrap">
-            <span
-              >⚠ Il manque des semences de
-              ${p.missing.map((c) => CROPS[c].name.toLowerCase()).join(', ')} pour respecter les
-              délais de retour.</span
-            >
-            <button
-              type="button"
-              class="btn btn--secondary btn--sm"
-              data-action="add-seeds"
-              data-crops="${p.missing.join(',')}"
-            >
-              Ajouter à ma réserve
-            </button>
-          </div>`
-        : ''
-    }
-    <div class="stack-xs">
-      ${state.farm.sections.map((s) => {
-        const slots = toSlots(s.rotation);
-        return html`<div class="rot-preview">
-          <span class="section-badge">${s.id}</span>
-          <span class="rot-preview__chips">
-            ${slots.map(
-              (x) =>
-                html`<span
-                  class="rot-chip ${seeds.crops.includes(x.crop) ? '' : 'is-missing'}"
-                  style="background: ${CROPS[x.crop]?.color ?? '#E5E9E0'}"
-                  >${CROPS[x.crop]?.name ?? '—'}</span
-                >`,
-            )}
-          </span>
-          <span class="muted small nowrap">${cycleLength(s.rotation)} ans</span>
-        </div>`;
-      })}
-    </div>
-    <span class="muted small">Tout reste modifiable ensuite, section par section.</span>
+/** The previous years of one section (as many as the return delays need). */
+export function historyEditor(section, { currentYear, years }) {
+  return html`<div class="row-wrap gap-sm">
+    ${historyYearsToAsk(section, currentYear, years).map(
+      (year) =>
+        html`<label class="field field--narrow"
+          >${year}
+          <select
+            id="hist-${section.id}-${year}"
+            data-change="set-history"
+            data-id="${section.id}"
+            data-year="${year}"
+          >
+            ${option('', '—', !historyCropOf(section, year))}
+            ${[...SEED_IDS, ...OTHER_CROP_IDS].map((c) => option(c, CROPS[c].name, historyCropOf(section, year) === c))}
+          </select>
+        </label>`,
+    )}
   </div>`;
 }
 
-const toggle = (list, v) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
+/** Soil diseases the farmer knows on the section. */
+export function diseasesEditor(section) {
+  return html`<div class="row-wrap gap-xs">
+    ${Object.entries(SOIL_DISEASES).map(([id, d]) => {
+      const on = section.diseases.includes(id);
+      return html`<button
+        type="button"
+        class="now-chip ${on ? 'is-on' : ''}"
+        aria-pressed="${String(on)}"
+        data-action="toggle-disease"
+        data-id="${section.id}"
+        data-disease="${id}"
+        title="${d.latin}"
+      >
+        ${d.name}
+      </button>`;
+    })}
+  </div>`;
+}
+
+/** The seed reserve: seeds owned (no quantities) and the reserve mode. */
+export function seedBank(state) {
+  const seeds = getSeeds(state.farm);
+  return html`<div class="stack-sm">
+    <div class="seed-grid">
+      ${SEED_IDS.map((c) => {
+        const on = seeds.crops.includes(c);
+        return html`<button
+          type="button"
+          class="seed-card ${on ? 'is-on' : ''}"
+          aria-pressed="${String(on)}"
+          data-action="toggle-seed"
+          data-crop="${c}"
+          title="${on ? 'Retirer' : 'Ajouter'} ${CROPS[c].name}"
+        >
+          <span class="seed-card__swatch">${fieldSwatch(c, 40)}</span>
+          <span class="stack-0 grow"><strong>${CROPS[c].name}</strong></span>
+          <span class="seed-card__check" aria-hidden="true"
+            >${on ? icon(ICONS.check, { size: 16, width: 3 }) : ''}</span
+          >
+        </button>`;
+      })}
+    </div>
+    <div class="segmented segmented--inline" role="group" aria-label="Mode de la réserve">
+      ${Object.entries(RESERVE_MODES).map(
+        ([mode, m]) =>
+          html`<button
+            type="button"
+            class="${seeds.mode === mode ? 'is-on' : ''}"
+            data-action="set-reserve-mode"
+            data-mode="${mode}"
+            aria-pressed="${String(seeds.mode === mode)}"
+            title="${m.text}"
+          >
+            ${m.label}
+          </button>`,
+      )}
+    </div>
+    <span class="muted small">${RESERVE_MODES[seeds.mode].text}</span>
+  </div>`;
+}
+
+const onSection = (app, el, fn) => app.updateSection(el.dataset.id, fn);
 
 export const seedActions = {
-  'set-current-crop': (app, el) => {
-    const crop = el.dataset.crop || null;
-    app.updateFarm((farm) => {
-      const sec = farm.sections.find((x) => x.id === el.dataset.id);
-      if (!sec) return;
-      sec.currentCrop = crop;
-      if (crop) addSeeds(farm, [crop]);
-    });
-  },
-  'toggle-seed': (app, el) =>
-    app.updateFarm((farm) => {
-      const seeds = getSeeds(farm);
-      const crops = toggle(seeds.crops, el.dataset.crop);
-      if (!crops.length) return;
-      farm.farm.seeds = { crops: CROP_IDS.filter((c) => crops.includes(c)), covers: seeds.covers };
+  'set-current-crop': (app, el) =>
+    onSection(app, el, (s) => {
+      const crop = el.value || null;
+      setCurrentCrop(
+        s,
+        crop,
+        crop ? `${thisYear()}-${String(usualHarvestMonth(crop)).padStart(2, '0')}` : null,
+      );
     }),
-  'toggle-cover-seed': (app, el) =>
-    app.updateFarm((farm) => {
-      const seeds = getSeeds(farm);
-      const covers = toggle(seeds.covers, el.dataset.cover);
-      farm.farm.seeds = { crops: seeds.crops, covers: COVER_IDS.filter((c) => covers.includes(c)) };
+  'set-harvest': (app, el) => onSection(app, el, (s) => (s.currentHarvest = el.value || null)),
+  'add-rotation': (app, el) => el.value && onSection(app, el, (s) => addToRotation(s, el.value)),
+  'remove-rotation': (app, el) =>
+    onSection(app, el, (s) => removeFromRotation(s, Number(el.dataset.i))),
+  'move-rotation': (app, el) =>
+    onSection(app, el, (s) => moveInRotation(s, Number(el.dataset.i), Number(el.dataset.d))),
+  'set-position': (app, el) =>
+    onSection(app, el, (s) => {
+      s.rotationPosition = Number(el.dataset.i);
+      if (!s.currentCrop) s.currentCrop = s.currentRotation[s.rotationPosition];
     }),
-  'add-seeds': (app, el) => {
-    app.updateFarm((farm) => addSeeds(farm, el.dataset.crops.split(',').filter(Boolean)));
-    app.update((s) => {
-      s.ui.proposeAll.missing = [];
-      if (s.ui.proposal) s.ui.proposal.missingSeeds = [];
-    });
-  },
-  'propose-all': (app) => app.proposeAll(),
+  'set-history': (app, el) =>
+    onSection(app, el, (s) => setHistoryCrop(s, Number(el.dataset.year), el.value || null)),
+  'toggle-disease': (app, el) => onSection(app, el, (s) => toggleDisease(s, el.dataset.disease)),
+  'toggle-seed': (app, el) => app.updateFarm((farm) => toggleSeed(farm, el.dataset.crop)),
+  'set-reserve-mode': (app, el) => app.updateFarm((farm) => setReserveMode(farm, el.dataset.mode)),
 };

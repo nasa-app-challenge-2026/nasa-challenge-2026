@@ -540,15 +540,7 @@
   font-size: 12px;
   font-weight: 600;
 }
-.role-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 999px;
-}
+
 .role-tag--btn {
   border: 1px solid rgba(24, 33, 27, 0.25);
   background: rgba(255, 255, 255, 0.7);

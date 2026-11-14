@@ -1,16 +1,14 @@
 /**
- * Demo farm used on first launch and in tests: four sections, three with a
- * 4-year cycle and one with a 3-year cycle (the "cas 2" discussed by the team).
- * The shape is exactly the FarmInput of docs/ALGO_CONTRACT.md.
+ * Demo farm used on first launch and in tests: four sections near Saint-Hyacinthe
+ * (Montérégie), drawn on a 600 m × 600 m block (36 ha). The shape is exactly the
+ * FarmInput v2 of docs/ALGO_CONTRACT.md.
  *
- * The outline is a 600 m × 600 m block (36 ha) near Saint-Hyacinthe, split in
- * four rectangles whose real areas match `areaHa` (see tests/geo.test.js).
- *
- * `seeds` is the farmer's seed reserve and `currentCrop` what grows on each
- * section now (2026): every first year respects its return delay.
+ * Sections A and B are the two fields of the algorithm's worked example
+ * (field_shift.py v5.1): corn harvested in October 2026 in a corn → soybean
+ * rotation, and alfalfa ending in September 2027 in alfalfa ×3 → corn → soybean.
  */
 export const DEMO_FARM = {
-  version: '1.0',
+  version: '2.0',
   farm: {
     id: 'demo',
     name: 'Ferme du rang Saint-Pierre',
@@ -22,19 +20,16 @@ export const DEMO_FARM = {
       [45.626, -72.9443],
       [45.626, -72.952],
     ],
-    startYear: 2027,
-    horizonYears: 12,
-    priorities: ['revenu', 'resilience', 'sol', 'eau', 'travail'],
-    sensors: false,
-    seeds: { crops: ['mais', 'soya', 'ble', 'patate'], covers: ['seigle', 'trefle'] },
+    time: { cycleYears: 4, frequencyMonths: 12, horizonYears: 12 },
+    priorities: ['erosion', 'rendement', 'azote', 'reserve', 'matiere_org', 'marche'],
+    livestock: false,
+    missingEquipment: [],
+    seeds: { crops: ['mais', 'soya', 'ble-automne', 'seigle'], mode: 'preferer' },
   },
-  options: { stressYears: 1 },
   sections: [
     {
       id: 'A',
-      currentCrop: 'mais',
       areaHa: 12,
-      offset: 0,
       note: 'côté route',
       polygon: [
         [45.6314, -72.952],
@@ -42,18 +37,22 @@ export const DEMO_FARM = {
         [45.6287, -72.94686],
         [45.6287, -72.952],
       ],
-      rotation: [
-        { crop: 'soya', years: 1, cover: null },
-        { crop: 'ble', years: 1, cover: 'trefle' },
-        { crop: 'mais', years: 1, cover: 'seigle' },
-        { crop: 'patate', years: 1, cover: null },
+      currentCrop: 'mais',
+      currentHarvest: '2026-10',
+      history: [
+        { year: 2023, crop: 'soya' },
+        { year: 2024, crop: 'mais' },
+        { year: 2025, crop: 'soya' },
       ],
+      currentRotation: ['mais', 'soya'],
+      rotationPosition: 0,
+      diseases: [],
+      irrigated: false,
+      soilTest: null,
     },
     {
       id: 'B',
-      currentCrop: 'soya',
       areaHa: 8,
-      offset: 0,
       note: 'sol plus sableux',
       polygon: [
         [45.6287, -72.94772],
@@ -61,17 +60,21 @@ export const DEMO_FARM = {
         [45.626, -72.9443],
         [45.626, -72.94772],
       ],
-      rotation: [
-        { crop: 'mais', years: 1, cover: null },
-        { crop: 'soya', years: 1, cover: null },
-        { crop: 'ble', years: 1, cover: null },
+      currentCrop: 'luzerne-3',
+      currentHarvest: '2027-09',
+      history: [
+        { year: 2023, crop: 'soya' },
+        { year: 2024, crop: 'mais' },
       ],
+      currentRotation: ['luzerne-3', 'mais', 'soya'],
+      rotationPosition: 0,
+      diseases: [],
+      irrigated: false,
+      soilTest: null,
     },
     {
       id: 'C',
-      currentCrop: 'soya',
       areaHa: 10,
-      offset: 0,
       note: 'près du ruisseau',
       polygon: [
         [45.6287, -72.952],
@@ -79,18 +82,22 @@ export const DEMO_FARM = {
         [45.626, -72.94772],
         [45.626, -72.952],
       ],
-      rotation: [
-        { crop: 'ble', years: 1, cover: null },
-        { crop: 'mais', years: 1, cover: null },
-        { crop: 'soya', years: 1, cover: null },
-        { crop: 'patate', years: 1, cover: null },
+      currentCrop: 'soya',
+      currentHarvest: '2026-09',
+      history: [
+        { year: 2023, crop: 'soya' },
+        { year: 2024, crop: 'mais' },
+        { year: 2025, crop: 'ble-automne' },
       ],
+      currentRotation: ['mais', 'soya', 'ble-automne'],
+      rotationPosition: 1,
+      diseases: [],
+      irrigated: false,
+      soilTest: null,
     },
     {
       id: 'D',
-      currentCrop: 'ble',
       areaHa: 6,
-      offset: 0,
       note: 'derrière la grange',
       polygon: [
         [45.6314, -72.94686],
@@ -98,12 +105,18 @@ export const DEMO_FARM = {
         [45.6287, -72.9443],
         [45.6287, -72.94686],
       ],
-      rotation: [
-        { crop: 'patate', years: 1, cover: null },
-        { crop: 'soya', years: 1, cover: null },
-        { crop: 'ble', years: 1, cover: null },
-        { crop: 'mais', years: 1, cover: null },
+      currentCrop: 'ble-automne',
+      currentHarvest: '2026-07',
+      history: [
+        { year: 2023, crop: 'mais' },
+        { year: 2024, crop: 'soya' },
+        { year: 2025, crop: 'pomme-de-terre' },
       ],
+      currentRotation: ['mais', 'soya', 'ble-automne'],
+      rotationPosition: 2,
+      diseases: [],
+      irrigated: false,
+      soilTest: null,
     },
   ],
 };

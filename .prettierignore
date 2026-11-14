@@ -4,3 +4,5 @@ coverage
 package-lock.json
 backend/contract/examples
 docs/screenshots
+# Golden fixtures generated from field_shift.py (tests/algorithm/fixtures/export_reference.py)
+tests/algorithm/fixtures/

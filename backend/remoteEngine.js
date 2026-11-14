@@ -1,10 +1,9 @@
 /**
- * Real algorithm over HTTP. The algo team only has to expose three POST
- * endpoints that respect backend/contract/field-shift.schema.json:
+ * The algorithm over HTTP (for a server version, e.g. one that reads the real
+ * NEX-GDDP-CMIP6 files and crop maps). It only has to expose one POST endpoint
+ * that respects backend/contract/field-shift.schema.json:
  *
- *   POST {baseUrl}/evaluate    FarmInput         → FarmPlan
- *   POST {baseUrl}/propose     ProposeRequest    → ProposeResponse
- *   POST {baseUrl}/field-data  FieldDataRequest  → FieldDataResponse
+ *   POST {baseUrl}/plan    FarmInput → FarmPlan
  *
  * CORS must allow the site's origin (GitHub Pages) and the Content-Type header.
  */
@@ -16,6 +15,8 @@ export class EngineError extends Error {
     this.cause = cause;
   }
 }
+
+const DEFAULT_TIMEOUT_MS = 30000;
 
 async function post(baseUrl, path, body, timeoutMs) {
   const ctrl = new AbortController();
@@ -50,14 +51,12 @@ async function post(baseUrl, path, body, timeoutMs) {
  * @param {{ baseUrl: string, timeoutMs?: number }} options
  * @returns {import('./contract/types.js').Engine}
  */
-export function createRemoteEngine({ baseUrl, timeoutMs = 15000 }) {
+export function createRemoteEngine({ baseUrl, timeoutMs = DEFAULT_TIMEOUT_MS }) {
   if (!baseUrl)
     throw new Error('VITE_ALGO_URL est vide : impossible d’utiliser le moteur distant.');
   const url = baseUrl.replace(/\/+$/, '');
   return {
     name: 'remote',
-    evaluateFarm: (input) => post(url, '/evaluate', input, timeoutMs),
-    proposeRotation: (req) => post(url, '/propose', req, timeoutMs),
-    getFieldData: (req) => post(url, '/field-data', req, timeoutMs),
+    planFarm: (input) => post(url, '/plan', input, timeoutMs),
   };
 }

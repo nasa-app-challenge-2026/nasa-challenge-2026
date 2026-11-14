@@ -1,27 +1,16 @@
 /**
- * Types of the front ↔ algorithm contract (JSDoc only, for editor hints).
- * The source of truth is backend/contract/field-shift.schema.json; the explanation is
- * docs/ALGO_CONTRACT.md.
+ * Types of the front ↔ algorithm contract, version 2.0 (JSDoc only, for editor
+ * hints). The source of truth is backend/contract/field-shift.schema.json; the
+ * explanation is docs/ALGO_CONTRACT.md.
  *
- * @typedef {'mais'|'soya'|'ble'|'orge'|'patate'|'luzerne'} CropId
- * @typedef {'seigle'|'trefle'|'radis'|null} CoverId
- * @typedef {{ crop: CropId, years: number, cover?: CoverId }} RotationEntry
- * @typedef {{ id: string, areaHa: number, offset: number, note?: string,
- *             polygon?: number[][], rotation: RotationEntry[] }} Section
- * @typedef {{ version: '1.0', farm: object, options?: { stressYears?: 1|3 },
- *             sections: Section[] }} FarmInput
- * @typedef {{ eau: number, sol: number, resilience: number, revenu: number }} Scores
- * @typedef {object} SectionPlan
- * @typedef {{ version: '1.0', meta: { engine: string, demo: boolean },
- *             farm: { score: number, revenuePerYear: number },
- *             sections: SectionPlan[] }} FarmPlan
+ * @typedef {object} FarmInput   what the screens send: the farm, its settings
+ *   (cycle, frequency, horizon, priorities, seeds) and one entry per section
+ *   (crop in place, harvest month, history, current rotation, diseases…)
+ * @typedef {object} FarmPlan    what the algorithm returns: one plan per section,
+ *   cycle by cycle (decision, chosen chain, reference, alternatives, climate, twins)
  *
  * @typedef {object} Engine
  * @property {string} name
- * @property {(input: FarmInput) => Promise<FarmPlan>} evaluateFarm
- * @property {(req: { farm: FarmInput, sectionId: string, cycleYears: number })
- *   => Promise<{ rotation: RotationEntry[], reasons: string[] }>} proposeRotation
- * @property {(req: { farm: FarmInput, sectionId: string })
- *   => Promise<{ sectionId: string, demo?: boolean, metrics: object[] }>} getFieldData
+ * @property {(input: FarmInput) => Promise<FarmPlan>} planFarm
  */
 export {};

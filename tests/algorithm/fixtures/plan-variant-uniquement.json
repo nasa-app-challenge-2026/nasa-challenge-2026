@@ -1,0 +1,1465 @@
+{
+ "scenario": {
+  "name": "variant-uniquement",
+  "C": 4,
+  "f": 12,
+  "H": 8,
+  "mode": "uniquement",
+  "reserve": [
+   "Soya",
+   "Blé d'automne",
+   "Maïs",
+   "Orge"
+  ]
+ },
+ "parcelles": [
+  {
+   "nom": "P1",
+   "superficie_ha": 20,
+   "culture_en_place": "Maïs",
+   "recolte_en_place": 321.6,
+   "historique": [
+    "Maïs",
+    "Soya"
+   ],
+   "rotation_commencee": [
+    "Maïs",
+    "Soya"
+   ],
+   "position_actuelle": 0,
+   "maladies": []
+  },
+  {
+   "nom": "P2",
+   "superficie_ha": 12,
+   "culture_en_place": "Luzerne ×3",
+   "recolte_en_place": 332.75,
+   "historique": [
+    "Luzerne",
+    "Luzerne"
+   ],
+   "rotation_commencee": [
+    "Luzerne ×3",
+    "Maïs",
+    "Soya"
+   ],
+   "position_actuelle": 0,
+   "maladies": []
+  }
+ ],
+ "fermier": {
+  "classement": [
+   "erosion",
+   "rendement",
+   "azote",
+   "reserve",
+   "matiere_org",
+   "marche"
+  ],
+  "betail": false,
+  "equipement_manquant": []
+ },
+ "reserve": [
+  "Blé d'automne",
+  "Maïs",
+  "Orge",
+  "Soya"
+ ],
+ "mesures": {
+  "pente_pct": 6,
+  "jours_pluie_intense": 6,
+  "jours_sol_nu": 120,
+  "esi_ete": 0.6,
+  "smap_secheresse": 0.4,
+  "grace_tendance_cm_an": -1
+ },
+ "debut": 322.4,
+ "annee_actuelle": 2026,
+ "canonical_matches_original": true,
+ "parcels": [
+  {
+   "nom": "P1",
+   "cycles": [
+    {
+     "cycle": 1,
+     "annees": [
+      2027,
+      2030
+     ],
+     "decision": "changer",
+     "chaine": [
+      [
+       "Jachère",
+       null,
+       321.6,
+       0,
+       0
+      ],
+      [
+       "Soya",
+       340.5,
+       343.95,
+       1,
+       1
+      ],
+      [
+       "Blé d'automne",
+       344.5,
+       354.60445481610566,
+       2,
+       2
+      ],
+      [
+       "Maïs",
+       364.25,
+       368.4,
+       3,
+       3
+      ]
+     ],
+     "note": 49.12308308922495,
+     "criteres": {
+      "erosion": 0.36884280866886715,
+      "eau": 0.516054197539139,
+      "fourrage": 0.23396484013652644,
+      "azote": 0.4093043906327043,
+      "matiere_org": 0.3794966983250122,
+      "marche": 0.7999999999999999,
+      "rendement": 0.671875,
+      "ravageurs": 1.0,
+      "reserve": 1.0
+     },
+     "lacunes": [],
+     "achats": [],
+     "intercalaires": [],
+     "vigilances": [],
+     "diagnostic": {
+      "risque_erosion": 0.76,
+      "risque_eau": 0.37000000000000005
+     },
+     "reference": [
+      [
+       "Soya",
+       328.5,
+       331.95,
+       0,
+       0
+      ],
+      [
+       "Maïs",
+       340.25,
+       344.4,
+       1,
+       1
+      ],
+      [
+       "Soya",
+       352.5,
+       355.95,
+       2,
+       2
+      ],
+      [
+       "Maïs",
+       364.25,
+       368.4,
+       3,
+       3
+      ]
+     ],
+     "note_reference": 46.152506873276245,
+     "alertes_reference": [
+      {
+       "raison": "Soya après Soya",
+       "annees_sans": 1,
+       "minimum": 2,
+       "de": [
+        2025,
+        "historique"
+       ],
+       "a": [
+        2027,
+        "chaîne"
+       ]
+      },
+      {
+       "raison": "Soya après Soya",
+       "annees_sans": 1,
+       "minimum": 2,
+       "de": [
+        2027,
+        "chaîne"
+       ],
+       "a": [
+        2029,
+        "chaîne"
+       ]
+      },
+      {
+       "raison": "Soya après Soya",
+       "annees_sans": 1,
+       "minimum": 2,
+       "de": [
+        2029,
+        "chaîne"
+       ],
+       "a": [
+        2031,
+        "cycle suivant"
+       ]
+      }
+     ],
+     "impossibles": {},
+     "alternatives": [
+      [
+       [
+        "Jachère",
+        "Maïs",
+        "Soya",
+        "Blé d'automne"
+       ],
+       47.09144867060386
+      ],
+      [
+       [
+        "Jachère",
+        "Soya",
+        "Blé d'automne",
+        "Jachère"
+       ],
+       45.39131615120647
+      ]
+     ],
+     "robustesse": 44.732215078959925,
+     "non_faisable_plus_tard": false,
+     "texte": "Jachère → Soya → Blé d'automne → Maïs",
+     "ctx": {
+      "p0": 27,
+      "recolte_entree": 321.6,
+      "vente_entree": "Maïs",
+      "culture_entree": "Maïs",
+      "candidates": [
+       "Maïs",
+       "Soya",
+       "Blé d'automne",
+       "Orge",
+       "Jachère"
+      ],
+      "poids": {
+       "rendement": 0.24166666666666667,
+       "eau": 0.00951388888888889,
+       "fourrage": 0.0020833333333333333,
+       "azote": 0.15833333333333333,
+       "erosion": 0.7186666666666668,
+       "matiere_org": 0.061111111111111116,
+       "marche": 0.027777777777777776,
+       "ravageurs": 0.006944444444444444,
+       "reserve": 0.10277777777777779
+      },
+      "historique_occ": [
+       [
+        "Maïs",
+        2024,
+        2024,
+        "historique"
+       ],
+       [
+        "Soya",
+        2025,
+        2025,
+        "historique"
+       ],
+       [
+        "Maïs",
+        2026,
+        2026,
+        "historique"
+       ]
+      ],
+      "couverts_auto": false
+     }
+    },
+    {
+     "cycle": 2,
+     "annees": [
+      2031,
+      2034
+     ],
+     "decision": "changer",
+     "chaine": [
+      [
+       "Soya",
+       376.5,
+       379.9,
+       0,
+       0
+      ],
+      [
+       "Blé d'automne",
+       380.5,
+       390.5914419064216,
+       1,
+       1
+      ],
+      [
+       "Jachère",
+       null,
+       390.5914419064216,
+       2,
+       2
+      ],
+      [
+       "Blé d'automne",
+       404.5,
+       414.5914419064216,
+       3,
+       3
+      ]
+     ],
+     "note": 50.29600185326789,
+     "criteres": {
+      "erosion": 0.49131007943423316,
+      "eau": 0.6502072265970928,
+      "fourrage": 0.2502072265970929,
+      "azote": 0.3244819335072678,
+      "matiere_org": 0.5004144531941858,
+      "marche": 0.7333333333333334,
+      "rendement": 0.6171875,
+      "ravageurs": 0.7777777777777777,
+      "reserve": null
+     },
+     "lacunes": [],
+     "achats": [],
+     "intercalaires": [],
+     "vigilances": [],
+     "diagnostic": {
+      "risque_erosion": 0.76,
+      "risque_eau": 0.37000000000000005
+     },
+     "reference": [
+      [
+       "Soya",
+       376.5,
+       379.9,
+       0,
+       0
+      ],
+      [
+       "Maïs",
+       388.25,
+       392.3,
+       1,
+       1
+      ],
+      [
+       "Soya",
+       400.5,
+       403.9,
+       2,
+       2
+      ],
+      [
+       "Maïs",
+       412.25,
+       416.3,
+       3,
+       3
+      ]
+     ],
+     "note_reference": 41.362229123277686,
+     "alertes_reference": [
+      {
+       "raison": "Soya après Soya",
+       "annees_sans": 1,
+       "minimum": 2,
+       "de": [
+        2029,
+        "historique"
+       ],
+       "a": [
+        2031,
+        "chaîne"
+       ]
+      },
+      {
+       "raison": "Soya après Soya",
+       "annees_sans": 1,
+       "minimum": 2,
+       "de": [
+        2031,
+        "chaîne"
+       ],
+       "a": [
+        2033,
+        "chaîne"
+       ]
+      },
+      {
+       "raison": "Soya après Soya",
+       "annees_sans": 1,
+       "minimum": 2,
+       "de": [
+        2033,
+        "chaîne"
+       ],
+       "a": [
+        2035,
+        "cycle suivant"
+       ]
+      }
+     ],
+     "impossibles": {},
+     "alternatives": [
+      [
+       [
+        "Jachère",
+        "Soya",
+        "Blé d'automne",
+        "Maïs"
+       ],
+       44.732215078959925
+      ],
+      [
+       [
+        "Soya",
+        "Blé d'automne",
+        "Maïs",
+        "Jachère"
+       ],
+       43.8126259506954
+      ]
+     ],
+     "robustesse": 50.29600185326789,
+     "non_faisable_plus_tard": false,
+     "texte": "Soya → Blé d'automne → Jachère → Blé d'automne",
+     "ctx": {
+      "p0": 31,
+      "recolte_entree": 368.4,
+      "vente_entree": "Maïs",
+      "culture_entree": "Maïs",
+      "candidates": [
+       "Maïs",
+       "Soya",
+       "Blé d'automne",
+       "Orge",
+       "Jachère"
+      ],
+      "poids": {
+       "rendement": 0.24166666666666667,
+       "eau": 0.00951388888888889,
+       "fourrage": 0.0020833333333333333,
+       "azote": 0.15833333333333333,
+       "erosion": 0.7186666666666668,
+       "matiere_org": 0.061111111111111116,
+       "marche": 0.027777777777777776,
+       "ravageurs": 0.006944444444444444,
+       "reserve": 0.10277777777777779
+      },
+      "historique_occ": [
+       [
+        "Maïs",
+        2024,
+        2024,
+        "historique"
+       ],
+       [
+        "Soya",
+        2025,
+        2025,
+        "historique"
+       ],
+       [
+        "Maïs",
+        2026,
+        2026,
+        "historique"
+       ],
+       [
+        "Soya",
+        2028,
+        2028,
+        "chaîne"
+       ],
+       [
+        "Blé d'automne",
+        2029,
+        2029,
+        "chaîne"
+       ],
+       [
+        "Maïs",
+        2030,
+        2030,
+        "chaîne"
+       ]
+      ],
+      "couverts_auto": false
+     }
+    }
+   ],
+   "error": null
+  },
+  {
+   "nom": "P2",
+   "cycles": [
+    {
+     "cycle": 1,
+     "annees": [
+      2028,
+      2031
+     ],
+     "decision": "changer",
+     "chaine": [
+      [
+       "Maïs",
+       340.25,
+       344.34999999999997,
+       0,
+       0
+      ],
+      [
+       "Jachère",
+       null,
+       344.34999999999997,
+       1,
+       1
+      ],
+      [
+       "Soya",
+       364.5,
+       367.9,
+       2,
+       2
+      ],
+      [
+       "Blé d'automne",
+       368.5,
+       378.60120158868466,
+       3,
+       3
+      ]
+     ],
+     "note": 49.79455052186692,
+     "criteres": {
+      "erosion": 0.3666916997642626,
+      "eau": 0.5213787269204052,
+      "fourrage": 0.2225756386529227,
+      "azote": 0.4315097452673872,
+      "matiere_org": 0.3692535935064573,
+      "marche": 0.7999999999999999,
+      "rendement": 0.703125,
+      "ravageurs": 1.0,
+      "reserve": 1.0
+     },
+     "lacunes": [],
+     "achats": [],
+     "intercalaires": [],
+     "vigilances": [],
+     "diagnostic": {
+      "risque_erosion": 0.76,
+      "risque_eau": 0.37000000000000005
+     },
+     "reference": [
+      [
+       "Maïs",
+       340.25,
+       344.34999999999997,
+       0,
+       0
+      ],
+      [
+       "Soya",
+       352.5,
+       355.9,
+       1,
+       1
+      ],
+      [
+       "Luzerne ×2",
+       363.75,
+       380.7012015886847,
+       2,
+       3
+      ]
+     ],
+     "note_reference": 58.51826843570518,
+     "alertes_reference": [
+      {
+       "raison": "même famille (Fabacées) : Luzerne après Soya",
+       "annees_sans": 0,
+       "minimum": 1,
+       "de": [
+        2029,
+        "chaîne"
+       ],
+       "a": [
+        2030,
+        "chaîne"
+       ]
+      }
+     ],
+     "impossibles": {},
+     "alternatives": [
+      [
+       [
+        "Maïs",
+        "Soya",
+        "Blé d'automne",
+        "Jachère"
+       ],
+       48.89061430625234
+      ],
+      [
+       [
+        "Maïs",
+        "Soya",
+        "Jachère",
+        "Blé d'automne"
+       ],
+       48.70443608358819
+      ]
+     ],
+     "robustesse": 44.8887825730771,
+     "non_faisable_plus_tard": false,
+     "texte": "Maïs → Jachère → Soya → Blé d'automne",
+     "ctx": {
+      "p0": 28,
+      "recolte_entree": 332.75,
+      "vente_entree": "Luzerne ×3",
+      "culture_entree": "Luzerne",
+      "candidates": [
+       "Maïs",
+       "Soya",
+       "Blé d'automne",
+       "Orge",
+       "Jachère"
+      ],
+      "poids": {
+       "rendement": 0.24166666666666667,
+       "eau": 0.00951388888888889,
+       "fourrage": 0.0020833333333333333,
+       "azote": 0.15833333333333333,
+       "erosion": 0.7186666666666668,
+       "matiere_org": 0.061111111111111116,
+       "marche": 0.027777777777777776,
+       "ravageurs": 0.006944444444444444,
+       "reserve": 0.10277777777777779
+      },
+      "historique_occ": [
+       [
+        "Luzerne",
+        2025,
+        2027,
+        "historique"
+       ]
+      ],
+      "couverts_auto": false
+     }
+    },
+    {
+     "cycle": 2,
+     "annees": [
+      2032,
+      2035
+     ],
+     "decision": "garder",
+     "chaine": [
+      [
+       "Maïs",
+       388.25,
+       392.3,
+       0,
+       0
+      ],
+      [
+       "Jachère",
+       null,
+       392.3,
+       1,
+       1
+      ],
+      [
+       "Soya",
+       412.5,
+       415.9,
+       2,
+       2
+      ],
+      [
+       "Blé d'automne",
+       416.5,
+       426.58818867900055,
+       3,
+       3
+      ]
+     ],
+     "note": 44.8887825730771,
+     "criteres": {
+      "erosion": 0.36537893081251127,
+      "eau": 0.5159992935839791,
+      "fourrage": 0.23018690353359286,
+      "azote": 0.417353094897123,
+      "matiere_org": 0.3747330996049754,
+      "marche": 0.7999999999999999,
+      "rendement": 0.6796875,
+      "ravageurs": 1.0,
+      "reserve": null
+     },
+     "lacunes": [],
+     "achats": [],
+     "intercalaires": [],
+     "vigilances": [],
+     "diagnostic": {
+      "risque_erosion": 0.76,
+      "risque_eau": 0.37000000000000005
+     },
+     "reference": [
+      [
+       "Maïs",
+       388.25,
+       392.3,
+       0,
+       0
+      ],
+      [
+       "Soya",
+       400.5,
+       403.9,
+       1,
+       1
+      ],
+      [
+       "Luzerne ×2",
+       411.75,
+       428.6881886790006,
+       2,
+       3
+      ]
+     ],
+     "note_reference": 57.7545829309454,
+     "alertes_reference": [
+      {
+       "raison": "même famille (Fabacées) : Luzerne après Soya",
+       "annees_sans": 0,
+       "minimum": 1,
+       "de": [
+        2033,
+        "chaîne"
+       ],
+       "a": [
+        2034,
+        "chaîne"
+       ]
+      }
+     ],
+     "impossibles": {},
+     "alternatives": [
+      [
+       [
+        "Jachère",
+        "Blé d'automne",
+        "Soya",
+        "Blé d'automne"
+       ],
+       49.6396798012478
+      ],
+      [
+       [
+        "Maïs",
+        "Soya",
+        "Blé d'automne",
+        "Jachère"
+       ],
+       43.9736016746284
+      ]
+     ],
+     "robustesse": null,
+     "non_faisable_plus_tard": null,
+     "texte": "Maïs → Jachère → Soya → Blé d'automne",
+     "ctx": {
+      "p0": 32,
+      "recolte_entree": 378.60120158868466,
+      "vente_entree": "Blé d'automne",
+      "culture_entree": "Blé d'automne",
+      "candidates": [
+       "Maïs",
+       "Soya",
+       "Blé d'automne",
+       "Orge",
+       "Jachère"
+      ],
+      "poids": {
+       "rendement": 0.24166666666666667,
+       "eau": 0.00951388888888889,
+       "fourrage": 0.0020833333333333333,
+       "azote": 0.15833333333333333,
+       "erosion": 0.7186666666666668,
+       "matiere_org": 0.061111111111111116,
+       "marche": 0.027777777777777776,
+       "ravageurs": 0.006944444444444444,
+       "reserve": 0.10277777777777779
+      },
+      "historique_occ": [
+       [
+        "Luzerne",
+        2025,
+        2027,
+        "historique"
+       ],
+       [
+        "Maïs",
+        2028,
+        2028,
+        "chaîne"
+       ],
+       [
+        "Soya",
+        2030,
+        2030,
+        "chaîne"
+       ],
+       [
+        "Blé d'automne",
+        2031,
+        2031,
+        "chaîne"
+       ]
+      ],
+      "couverts_auto": false
+     }
+    }
+   ],
+   "error": null
+  }
+ ],
+ "windows": {
+  "2027-2030": {
+   "climate": {
+    "dj_jour": [
+     0.0,
+     0.0028012425559244677,
+     0.20315283158516279,
+     1.7972757185650188,
+     5.6239164287401415,
+     9.661160553488186,
+     11.162405078793668,
+     10.494209299237765,
+     6.681377434316431,
+     2.604341350722754,
+     0.5065172940901287,
+     0.012137363368977023
+    ],
+    "gel_printemps": 3.7532851511169514,
+    "gel_automne": 9.241130091984232,
+    "tmin_janvier": -14.589768390835813,
+    "decalage_fin": 0.0455451838943185,
+    "source": "tendance NASA POWER",
+    "delta_pluie_ete_pct": 0.0
+   },
+   "cultures": [
+    "Blé d'automne",
+    "Canola",
+    "Foin",
+    "Luzerne",
+    "Maïs",
+    "Orge",
+    "Sarrasin",
+    "Soya"
+   ],
+   "precedents": [
+    [
+     "Soya",
+     "Maïs",
+     8
+    ],
+    [
+     "Blé d'automne",
+     "Maïs",
+     6
+    ],
+    [
+     "Luzerne",
+     "Maïs",
+     9
+    ],
+    [
+     "Foin",
+     "Maïs",
+     7
+    ],
+    [
+     "Maïs",
+     "Soya",
+     5
+    ],
+    [
+     "Blé d'automne",
+     "Soya",
+     4
+    ],
+    [
+     "Soya",
+     "Blé d'automne",
+     6
+    ],
+    [
+     "Maïs",
+     "Orge",
+     3
+    ],
+    [
+     "Orge",
+     "Luzerne",
+     null
+    ],
+    [
+     "Orge",
+     "Foin",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Luzerne",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Foin",
+     null
+    ],
+    [
+     "Soya",
+     "Orge",
+     4
+    ],
+    [
+     "Orge",
+     "Maïs",
+     5
+    ],
+    [
+     "Maïs",
+     "Luzerne",
+     null
+    ],
+    [
+     "Soya",
+     "Luzerne",
+     null
+    ],
+    [
+     "Sarrasin",
+     "Blé d'automne",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Sarrasin",
+     null
+    ],
+    [
+     "Sarrasin",
+     "Maïs",
+     3
+    ],
+    [
+     "Soya",
+     "Sarrasin",
+     null
+    ],
+    [
+     "Canola",
+     "Blé d'automne",
+     5
+    ],
+    [
+     "Blé d'automne",
+     "Canola",
+     null
+    ],
+    [
+     "Orge",
+     "Canola",
+     null
+    ],
+    [
+     "Canola",
+     "Maïs",
+     4
+    ]
+   ],
+   "sigma_moyen": 1.0
+  },
+  "2031-2034": {
+   "climate": {
+    "dj_jour": [
+     0.0,
+     0.003031559541483595,
+     0.21367504651474906,
+     1.8485072806642537,
+     5.710397777770712,
+     9.77296784851062,
+     11.272982812883164,
+     10.604190554521384,
+     6.777894835283949,
+     2.666349048711718,
+     0.5318916692244338,
+     0.013365353794498307
+    ],
+    "gel_printemps": 3.6727989487516424,
+    "gel_automne": 9.241130091984232,
+    "tmin_janvier": -14.459639293994904,
+    "decalage_fin": 0.05855809357840949,
+    "source": "tendance NASA POWER",
+    "delta_pluie_ete_pct": 0.0
+   },
+   "cultures": [
+    "Blé d'automne",
+    "Canola",
+    "Foin",
+    "Luzerne",
+    "Maïs",
+    "Orge",
+    "Sarrasin",
+    "Soya"
+   ],
+   "precedents": [
+    [
+     "Soya",
+     "Maïs",
+     8
+    ],
+    [
+     "Blé d'automne",
+     "Maïs",
+     6
+    ],
+    [
+     "Luzerne",
+     "Maïs",
+     9
+    ],
+    [
+     "Foin",
+     "Maïs",
+     7
+    ],
+    [
+     "Maïs",
+     "Soya",
+     5
+    ],
+    [
+     "Blé d'automne",
+     "Soya",
+     4
+    ],
+    [
+     "Soya",
+     "Blé d'automne",
+     6
+    ],
+    [
+     "Maïs",
+     "Orge",
+     3
+    ],
+    [
+     "Orge",
+     "Luzerne",
+     null
+    ],
+    [
+     "Orge",
+     "Foin",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Luzerne",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Foin",
+     null
+    ],
+    [
+     "Soya",
+     "Orge",
+     4
+    ],
+    [
+     "Orge",
+     "Maïs",
+     5
+    ],
+    [
+     "Maïs",
+     "Luzerne",
+     null
+    ],
+    [
+     "Soya",
+     "Luzerne",
+     null
+    ],
+    [
+     "Sarrasin",
+     "Blé d'automne",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Sarrasin",
+     null
+    ],
+    [
+     "Sarrasin",
+     "Maïs",
+     3
+    ],
+    [
+     "Soya",
+     "Sarrasin",
+     null
+    ],
+    [
+     "Canola",
+     "Blé d'automne",
+     5
+    ],
+    [
+     "Blé d'automne",
+     "Canola",
+     null
+    ],
+    [
+     "Orge",
+     "Canola",
+     null
+    ],
+    [
+     "Canola",
+     "Maïs",
+     4
+    ]
+   ],
+   "sigma_moyen": 1.0
+  },
+  "2028-2031": {
+   "climate": {
+    "dj_jour": [
+     0.0,
+     0.002858821802314248,
+     0.20574605010665167,
+     1.8100146957935157,
+     5.64545026994365,
+     9.689128024831314,
+     11.190082192183883,
+     10.521728881074957,
+     6.705387864493262,
+     2.619811799595889,
+     0.5127083693890051,
+     0.012425956124067744
+    ],
+    "gel_printemps": 3.7401445466491454,
+    "gel_automne": 9.241130091984232,
+    "tmin_janvier": -14.557236116625585,
+    "decalage_fin": 0.048798411315341246,
+    "source": "tendance NASA POWER",
+    "delta_pluie_ete_pct": 0.0
+   },
+   "cultures": [
+    "Blé d'automne",
+    "Canola",
+    "Foin",
+    "Luzerne",
+    "Maïs",
+    "Orge",
+    "Sarrasin",
+    "Soya"
+   ],
+   "precedents": [
+    [
+     "Soya",
+     "Maïs",
+     8
+    ],
+    [
+     "Blé d'automne",
+     "Maïs",
+     6
+    ],
+    [
+     "Luzerne",
+     "Maïs",
+     9
+    ],
+    [
+     "Foin",
+     "Maïs",
+     7
+    ],
+    [
+     "Maïs",
+     "Soya",
+     5
+    ],
+    [
+     "Blé d'automne",
+     "Soya",
+     4
+    ],
+    [
+     "Soya",
+     "Blé d'automne",
+     6
+    ],
+    [
+     "Maïs",
+     "Orge",
+     3
+    ],
+    [
+     "Orge",
+     "Luzerne",
+     null
+    ],
+    [
+     "Orge",
+     "Foin",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Luzerne",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Foin",
+     null
+    ],
+    [
+     "Soya",
+     "Orge",
+     4
+    ],
+    [
+     "Orge",
+     "Maïs",
+     5
+    ],
+    [
+     "Maïs",
+     "Luzerne",
+     null
+    ],
+    [
+     "Soya",
+     "Luzerne",
+     null
+    ],
+    [
+     "Sarrasin",
+     "Blé d'automne",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Sarrasin",
+     null
+    ],
+    [
+     "Sarrasin",
+     "Maïs",
+     3
+    ],
+    [
+     "Soya",
+     "Sarrasin",
+     null
+    ],
+    [
+     "Canola",
+     "Blé d'automne",
+     5
+    ],
+    [
+     "Blé d'automne",
+     "Canola",
+     null
+    ],
+    [
+     "Orge",
+     "Canola",
+     null
+    ],
+    [
+     "Canola",
+     "Maïs",
+     4
+    ]
+   ],
+   "sigma_moyen": 1.0
+  },
+  "2032-2035": {
+   "climate": {
+    "dj_jour": [
+     0.0,
+     0.003089138787873382,
+     0.21642669613474633,
+     1.8614357746498595,
+     5.732084612225642,
+     9.800908454752708,
+     11.300633034888516,
+     10.63162741249112,
+     6.802104269342061,
+     2.6819801454530703,
+     0.5384738619148296,
+     0.013680182254597275
+    ],
+    "gel_printemps": 3.6727989487516424,
+    "gel_automne": 9.25262812089356,
+    "tmin_janvier": -14.427107019784675,
+    "decalage_fin": 0.06181132099943224,
+    "source": "tendance NASA POWER",
+    "delta_pluie_ete_pct": 0.0
+   },
+   "cultures": [
+    "Blé d'automne",
+    "Canola",
+    "Foin",
+    "Luzerne",
+    "Maïs",
+    "Orge",
+    "Sarrasin",
+    "Soya"
+   ],
+   "precedents": [
+    [
+     "Soya",
+     "Maïs",
+     8
+    ],
+    [
+     "Blé d'automne",
+     "Maïs",
+     6
+    ],
+    [
+     "Luzerne",
+     "Maïs",
+     9
+    ],
+    [
+     "Foin",
+     "Maïs",
+     7
+    ],
+    [
+     "Maïs",
+     "Soya",
+     5
+    ],
+    [
+     "Blé d'automne",
+     "Soya",
+     4
+    ],
+    [
+     "Soya",
+     "Blé d'automne",
+     6
+    ],
+    [
+     "Maïs",
+     "Orge",
+     3
+    ],
+    [
+     "Orge",
+     "Luzerne",
+     null
+    ],
+    [
+     "Orge",
+     "Foin",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Luzerne",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Foin",
+     null
+    ],
+    [
+     "Soya",
+     "Orge",
+     4
+    ],
+    [
+     "Orge",
+     "Maïs",
+     5
+    ],
+    [
+     "Maïs",
+     "Luzerne",
+     null
+    ],
+    [
+     "Soya",
+     "Luzerne",
+     null
+    ],
+    [
+     "Sarrasin",
+     "Blé d'automne",
+     null
+    ],
+    [
+     "Blé d'automne",
+     "Sarrasin",
+     null
+    ],
+    [
+     "Sarrasin",
+     "Maïs",
+     3
+    ],
+    [
+     "Soya",
+     "Sarrasin",
+     null
+    ],
+    [
+     "Canola",
+     "Blé d'automne",
+     5
+    ],
+    [
+     "Blé d'automne",
+     "Canola",
+     null
+    ],
+    [
+     "Orge",
+     "Canola",
+     null
+    ],
+    [
+     "Canola",
+     "Maïs",
+     4
+    ]
+   ],
+   "sigma_moyen": 1.0
+  }
+ }
+}
