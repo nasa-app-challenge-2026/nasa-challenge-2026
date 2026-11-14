@@ -2,12 +2,14 @@
 
 Field Shift suit une **architecture en quatre couches**. Chaque couche est un dossier à la racine du dépôt :
 
-| Couche          | Dossier        | Rôle                                                                                                                                      |
-| --------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| **Frontend**    | `frontend/`    | Ce que le fermier voit et touche : la page, les écrans, les composants, les styles. Aucun calcul métier, aucun appel réseau.              |
-| **Back end**    | `backend/`     | Le moteur qui calcule les résultats et son contrat : moteur de démo, client du vrai algorithme, schéma JSON, outils de vérification.      |
-| **Application** | `application/` | Le contrôleur `app` que les écrans appellent, l'état de l'appli et les règles métier pures (rotations, semences, santé du sol, surfaces). |
-| **Data**        | `data/`        | Les données fixes (`reference/` : cultures, textes, ferme de démo, sources) et l'accès au réseau et à la sauvegarde (`access/`).          |
+| Couche          | Dossier        | Rôle                                                                                                                                             |
+| --------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Frontend**    | `frontend/`    | Ce que le fermier voit et touche : la page, les écrans, les composants, les styles. Aucun calcul métier, aucun appel réseau.                     |
+| **Back end**    | `backend/`     | Le moteur qui calcule les résultats et son contrat : moteur de démo, client du vrai algorithme, schéma JSON, outils de vérification.             |
+| **Application** | `application/` | Le contrôleur `app` que les écrans appellent, l'état de l'appli et les règles de structure (rotations, semences, santé du sol, surfaces, tracé). |
+| **Data**        | `data/`        | Les données fixes (`reference/` : cultures, textes, ferme de démo, sources) et l'accès au réseau et à la sauvegarde (`access/`).                 |
+
+**Aucune logique métier dans ce dépôt.** Scores, rendements, revenus, stress tests et données NASA de chaque section sont calculés par l'algorithme, branché derrière `backend/` (voir [`ALGO_CONTRACT.md`](ALGO_CONTRACT.md)). Le front ne calcule que la structure que le contrat lui confie (calendrier, cycles, délais de retour, décalage des sections, tracé de la ferme). Le moteur de démo (`backend/mockEngine.js`) ne fait qu'imiter l'algorithme avec des chiffres fictifs pour que l'interface tourne en attendant.
 
 ## Qui peut importer quoi
 
@@ -16,7 +18,7 @@ frontend/      présentation
    ↓
 backend/       moteur + contrat
    ↓
-application/   contrôleur, état, règles métier
+application/   contrôleur, état, règles de structure
    ↓
 data/          données fixes, réseau, sauvegarde
 ```
@@ -35,7 +37,7 @@ L'application appelle le moteur (`engine.evaluateFarm`…) **sans l'importer** :
 ```
 frontend/              COUCHE PRÉSENTATION
   index.html             page unique (racine de Vite)
-  public/                fichiers copiés tels quels (favicon)
+  public/                fichiers copiés tels quels : favicon, logos, vidéo de la connexion
   main.js                point d'entrée : assemble les couches, rendu, événements, transitions
   router.js              routes en #/… (marche sur GitHub Pages sans configuration)
   actions.js             actions communes à tous les écrans (RotaAI, sélection…)
@@ -52,7 +54,7 @@ backend/               COUCHE BACK END : LE POINT DE BRANCHEMENT AVEC L'ALGO
 application/           COUCHE APPLICATION
   app.js                 contrôleur : état, appels au moteur, réseau, navigation
   state/                 store observable, état initial, migration des anciennes sauvegardes
-  rules/                 règles métier pures et testées : rotations, semences, santé du sol, géométrie
+  rules/                 règles de structure, testées : rotations, semences, santé du sol, géométrie, tracé des sections
 data/                  COUCHE DONNÉES
   reference/             cultures, types de ferme, priorités, ferme de démo, sources, réponses de RotaAI
   access/                météo (Open-Meteo), adresses (Nominatim), sauvegarde locale (localStorage)
@@ -68,6 +70,7 @@ docs/                  documentation
 | un composant réutilisé                                  | `frontend/ui/`                                                                        |
 | une opération qui appelle le moteur ou le réseau        | une méthode de `app` dans `application/app.js`                                        |
 | une règle de calcul sans interface (rotation, surface…) | `application/rules/`, avec un test dans `tests/`                                      |
+| un calcul agronomique (score, rendement, donnée NASA)   | nulle part ici : c'est le rôle de l'algorithme, à demander par le contrat             |
 | une route du vrai algorithme                            | `backend/`, en commençant par le contrat (`docs/ALGO_CONTRACT.md`)                    |
 | un service externe (API, stockage)                      | `data/access/`, appelé depuis `application/app.js`                                    |
 | une donnée fixe (culture, texte, source)                | `data/reference/`                                                                     |

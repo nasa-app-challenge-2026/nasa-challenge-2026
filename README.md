@@ -42,14 +42,14 @@ npm run dev        # http://localhost:5173
 
 Le code est rangé en **quatre couches**, une par dossier. Une couche n'importe que les couches en dessous d'elle (`npm test` le vérifie) :
 
-| Couche          | Dossier                        | Contenu                                                                   |
-| --------------- | ------------------------------ | ------------------------------------------------------------------------- |
-| **Frontend**    | [`frontend/`](frontend/)       | la page, les écrans, les composants, les styles                           |
-| **Back end**    | [`backend/`](backend/)         | le moteur (démo ou vrai algorithme) et son contrat                        |
-| **Application** | [`application/`](application/) | le contrôleur `app`, l'état, les règles métier (rotations, semences, sol) |
-| **Data**        | [`data/`](data/)               | les données fixes, l'accès au réseau (météo, adresses) et à la sauvegarde |
+| Couche          | Dossier                        | Contenu                                                                                |
+| --------------- | ------------------------------ | -------------------------------------------------------------------------------------- |
+| **Frontend**    | [`frontend/`](frontend/)       | la page, les écrans, les composants, les styles                                        |
+| **Back end**    | [`backend/`](backend/)         | le moteur (démo ou vrai algorithme) et son contrat                                     |
+| **Application** | [`application/`](application/) | le contrôleur `app`, l'état, les règles de structure (rotations, semences, sol, tracé) |
+| **Data**        | [`data/`](data/)               | les données fixes, l'accès au réseau (météo, adresses) et à la sauvegarde              |
 
-Détails, règles d'import et « où mettre du nouveau code » : [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Aucune logique métier ici : scores, rendements, revenus et données NASA viennent de l'algorithme, branché par `backend/`. Détails, règles d'import et « où mettre du nouveau code » : [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Brancher l'algorithme
 
