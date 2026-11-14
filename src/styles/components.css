@@ -493,6 +493,10 @@
   background: #f1f3ec;
   color: var(--c-text-2);
 }
+.pill--bad {
+  background: var(--c-bad-soft);
+  color: var(--c-bad-text);
+}
 .pill--lg {
   min-height: var(--tap);
   padding: 0 14px;
@@ -679,6 +683,11 @@
 .alert--ok {
   background: var(--c-good-soft);
   color: var(--c-good-text);
+}
+.alert--info {
+  background: var(--c-surface-2);
+  color: var(--c-text);
+  border: 1px solid var(--c-border);
 }
 .alert--warn {
   background: var(--c-warn-soft);

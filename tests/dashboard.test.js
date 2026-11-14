@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { dashboardOrder, defaultOrder, isDefaultOrder, moveBlock } from '../src/lib/dashboard.js';
 
 describe('dashboard order', () => {
-  it('has a default layout: weather + A B, 3D + C D, mix, then more sections', () => {
+  it('has a default layout: weather + A B, 3D + C D, mix, fires, then more sections', () => {
     expect(defaultOrder(['A', 'B', 'C', 'D', 'E'])).toEqual([
       'weather',
       'sec:A',
@@ -11,6 +11,7 @@ describe('dashboard order', () => {
       'sec:C',
       'sec:D',
       'mix',
+      'fire',
       'sec:E',
     ]);
   });
@@ -24,6 +25,7 @@ describe('dashboard order', () => {
       'sec:A',
       'sec:C',
       'farm3d',
+      'fire',
     ]);
   });
 
@@ -33,6 +35,7 @@ describe('dashboard order', () => {
       'mix',
       'weather',
       'farm3d',
+      'fire',
     ]);
     expect(dashboardOrder(null, ['A'])).toEqual(defaultOrder(['A']));
   });

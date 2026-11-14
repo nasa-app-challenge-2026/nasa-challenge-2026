@@ -7,6 +7,7 @@ import { initialState, loadSaved, save } from './state/initialState.js';
 import { autoStagger, suggestCycleYears, toSlots } from './lib/rotation.js';
 import { getSeeds } from './lib/seeds.js';
 import { fetchWeather, weatherKey } from './lib/weather.js';
+import { fireController } from './fireController.js';
 
 const WEATHER_TTL_MS = 30 * 60 * 1000;
 
@@ -154,6 +155,9 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
       app.refreshPlan();
     }
   };
+
+  /** Wildfires near the farm and their effect on the sections (see src/fireController.js). */
+  Object.assign(app, fireController(store));
 
   async function evaluate() {
     const farm = store.get().farm;

@@ -32,6 +32,13 @@ export const SUGGESTED = {
     'Pourquoi activer les capteurs ?',
     'Que fait « Signaler » ?',
   ],
+  feux: [
+    'Que faire si un feu approche ?',
+    'C’est quoi le dNBR ?',
+    'Pourquoi une couverture après un feu ?',
+    'C’est quoi un point chaud ?',
+    'Pourquoi des feux sur des terres agricoles ?',
+  ],
   stress: [
     'Pourquoi la rotation résiste mieux au sec ?',
     'Pourquoi de l’orge à la place du maïs ?',
@@ -50,6 +57,42 @@ const FALLBACK = {
 
 /** Order matters on ties: specific intents first. */
 export const INTENTS = [
+  {
+    keys: ['dnbr', 'nbr', 'gravite'],
+    text: 'Le NBR compare deux lumières invisibles à l’œil : l’infrarouge proche, que renvoient les plantes vertes, et l’infrarouge moyen, que renvoient le sol nu et les cendres. Le dNBR, c’est la baisse du NBR entre une image prise juste avant le feu et une prise juste après. Sous 0,1 : pas de brûlage. De 0,1 à 0,27 : faible. Au-delà de 0,44 : fort. Une récolte fait aussi baisser le NBR, d’où l’importance de dates rapprochées.',
+    sources: true,
+  },
+  {
+    keys: ['apres un feu', 'apres le feu', 'couverture apres', 'sol brule'],
+    text: 'Après un feu, le sol est à nu : le vent et la pluie l’emportent, et il a perdu une partie de son azote et de sa matière organique. Une culture de couverture (seigle d’automne, avoine au printemps, trèfle) le protège tout de suite, et ses racines nourrissent la vie du sol. Le trèfle refait aussi de l’azote pour la culture suivante.',
+  },
+  {
+    keys: [
+      'feu approche',
+      'que faire si un feu',
+      'feu actif',
+      'feu proche',
+      'pendant un feu',
+      'pendant le feu',
+      'coupe-feu',
+      'coupe feu',
+    ],
+    text: 'Quand un gros feu brûle à moins de 25 km, l’appli classe vos sections de la plus proche du feu à la plus loin. Côté feu : récoltez d’abord les céréales mûres et passez le disque sur une bande de chaume, car la terre nue arrête un feu d’herbe. Une culture verte brûle mal. Pour la rotation, elle propose une couverture d’hiver (seigle, sinon trèfle) sur les sections côté feu : elle reverdit tôt au printemps, quand les feux de chaume sont fréquents. Le reste ne change pas : si le feu touche une section, l’appli mesure le brûlage après coup et ajuste sa rotation.',
+  },
+  {
+    keys: ['point chaud', 'points chauds', 'hotspot', 'viirs', 'modis', 'firms'],
+    text: 'Un point chaud, c’est un pixel où un satellite de la NASA (MODIS ou VIIRS) a vu une chaleur anormale : souvent un feu, parfois une usine ou une torchère. Les pixels font de 375 m à 1 km : un point chaud près d’une section ne prouve pas qu’elle a brûlé. C’est pour ça que l’appli mesure ensuite le brûlage avec les images HLS, à 30 m.',
+    sources: true,
+  },
+  {
+    keys: ['terres agricoles', 'feux agricoles', 'brulage', 'chaume', 'feu de champ'],
+    text: 'Beaucoup de feux près des fermes sont des brûlages de chaume, d’andains ou de fossés, au printemps et à l’automne. Ils sont plus petits que les feux de forêt, mais ils laissent aussi le sol à nu. Le type de végétation de chaque point chaud vient de la carte des combustibles du Canada.',
+  },
+  {
+    keys: ['danger', 'risque d incendie', 'indice foret'],
+    text: 'Le danger d’incendie du jour vient des prévisions de Ressources naturelles Canada : bas, modéré, élevé, très élevé ou extrême. Il combine la météo (chaleur, vent, sécheresse) et l’état de la végétation. À partir d’« élevé », évitez les brûlages et suivez les avis de votre province.',
+    sources: true,
+  },
   {
     keys: ['soya avant', 'soya puis', 'apres le soya', 'soya et ble'],
     text: 'Le soya est une légumineuse : il laisse de l’azote dans le sol. Le blé qui suit en profite, et les études par satellite mesurent environ +8 % de rendement pour cet enchaînement (avec le blé de printemps). Attention : soya puis blé d’hiver donne l’inverse, environ −12 %.',

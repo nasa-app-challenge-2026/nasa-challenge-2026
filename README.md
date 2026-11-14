@@ -14,7 +14,8 @@ Projet de l'équipe **NASA-LARPERS** pour le [NASA Space Apps Challenge 2026](ht
 2. Il classe ses **priorités** : revenu, résilience, sol, eau, charge de travail.
 3. Le **tableau de bord** montre chaque section, la ferme en vue isométrique avec la texture de la culture de chaque année, un curseur des années, et signale les années où l'assolement est déséquilibré (bouton « Décaler mes sections »).
 4. Pour chaque section : les **données NASA** du champ, l'éditeur de **rotation** (délais de retour, cultures sur plusieurs années, couvertures d'hiver, santé du sol), les **résultats** comparés à la monoculture, **explorer et modifier** en direct, et un **stress test** (sécheresse, canicule, ravageurs).
-5. **RotaAI**, en bas à droite, répond aux « pourquoi ».
+5. **Feux près de la ferme**, un petit bloc du tableau de bord qui tient en une ligne : « Aucun risque pour le moment », sauf gros feu actif à moins de 25 km ou danger d'incendie élevé. Son détail garde l'essentiel : la carte et la liste des feux de l'année (points chauds MODIS et VIIRS de la NASA, zones brûlées et danger d'incendie du Canada ; les plus anciens dans des archives repliées), le brûlage mesuré sur chaque section (NBR des images HLS avant et après le feu), pendant une alerte quoi faire section par section (de la plus proche du feu à la plus loin, avec une couverture d'hiver pour les sections côté feu) et, pour les sections touchées, quoi faire et une rotation ajustée à appliquer (le sol SoilGrids et l'inventaire des cultures d'Agriculture Canada servent au calcul). Un **exemple réel** (feu agricole de mai 2023 en Saskatchewan) montre toute la chaîne.
+6. **RotaAI**, en bas à droite, répond aux « pourquoi ».
 
 | Rotation                                   | Résultats                                    |
 | ------------------------------------------ | -------------------------------------------- |

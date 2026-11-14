@@ -48,7 +48,11 @@ export function initialState(engineName, saved) {
     plan: { status: 'idle', data: null, error: null },
     field: {},
     weather: { status: 'idle', data: null, error: null, key: null },
+    /** Wildfire caches (see src/fireController.js). Never saved. */
+    fire: { ctx: {}, crops: {}, soil: {}, severity: {} },
     ui: {
+      /** Fire page: analysed subject ('farm' | 'exemple'), selected fire, archives open. */
+      fire: { subject: 'farm', eventId: null, showArchive: false },
       route: { name: 'connexion', params: {} },
       authMode: 'login',
       farmTypeSel: 'grandes-cultures',

@@ -23,6 +23,8 @@ import { isoFarm } from '../ui/isoFarm.js';
 import { fieldStrip } from '../ui/textures.js';
 import { errorBox } from '../ui/widgets.js';
 import { weatherWidget } from '../ui/weatherWidget.js';
+import { fireWidget } from '../ui/fireWidget.js';
+import { DASH_FIRE } from '../fireController.js';
 
 const GRIP = 'M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01';
 
@@ -190,7 +192,10 @@ function block(id, content) {
 export default {
   title: 'Tableau de bord',
   rota: 'tableau',
-  onEnter: (app) => app.loadWeather(),
+  onEnter: (app) => {
+    app.loadWeather();
+    app.loadFire(DASH_FIRE);
+  },
   render(state, _params, app) {
     const { farm } = state;
     const sections = farm.sections;
@@ -218,6 +223,7 @@ export default {
       weather: () => weatherWidget(state),
       farm3d: () => farm3dCard(state, { sections, sel, cropOf }),
       mix: () => mixCard(state, { year, thisYear, bad, sections }),
+      fire: () => fireWidget(state),
     };
     for (const s of sections) {
       content[secBlock(s.id)] = () => sectionWidget(state, s, yi, app.sectionPlan(s.id));
@@ -304,6 +310,7 @@ export default {
     },
     unshift: (app) => app.updateFarm((farm) => farm.sections.forEach((s) => (s.offset = 0))),
     'retry-weather': (app) => app.loadWeather({ force: true }),
+    'retry-fire': (app) => app.loadFire({ ...DASH_FIRE, force: true }),
     'reorder-dashboard': (app, _list, { ids, moved }) =>
       app.update((s) => {
         s.prefs.dashboard = ids;

@@ -7,6 +7,7 @@ const SIMPLE = [
   'cultures',
   'priorites',
   'tableau',
+  'feux',
   'sources',
   'compte',
 ];

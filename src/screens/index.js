@@ -18,6 +18,7 @@ import explorer from './explorer.js';
 import stress from './stress.js';
 import sources from './sources.js';
 import compte from './compte.js';
+import feux from './feux.js';
 
 export const SCREENS = {
   connexion,
@@ -32,6 +33,7 @@ export const SCREENS = {
   'section-resultats': resultats,
   'section-explorer': explorer,
   'section-stress': stress,
+  feux,
   sources,
   compte,
 };

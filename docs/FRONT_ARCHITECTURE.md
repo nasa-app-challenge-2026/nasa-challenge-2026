@@ -7,6 +7,7 @@ src/
   app.js              contrôleur : état, appels au moteur, navigation
   router.js           routes en #/… (marche sur GitHub Pages sans configuration)
   actions.js          actions communes à tous les écrans (RotaAI, sélection…)
+  fireController.js   données des feux dans l'état : chargement, caches, feu choisi
   state/              store observable, état initial, sauvegarde locale
   algo/               LE POINT DE BRANCHEMENT AVEC L'ALGO
     index.js            choisit le moteur (démo ou distant) selon VITE_ALGO_MODE
@@ -17,7 +18,7 @@ src/
   data/               catalogue des cultures, ferme de démo, sources, textes
   rotaai/             réponses de RotaAI (écrites à l'avance)
   ui/                 composants réutilisés : en-têtes, widgets, vue 3D, textures, RotaAI
-  screens/            un fichier par écran (13)
+  screens/            un fichier par écran (14)
   styles/             tokens (base commune), base, composants, écrans
 contract/             schéma JSON du contrat, exemples, cas de référence
 scripts/              génération des exemples, vérification de l'algo
@@ -63,3 +64,7 @@ export default {
 ## Sauvegarde
 
 L'utilisateur, la ferme et l'étape de configuration sont gardés dans le `localStorage` du navigateur (`field-shift:v2`). C'est un confort de démo : rien n'est partagé, et l'appli marche aussi si le stockage est bloqué. Pour repartir de zéro : vider le stockage du site, ou se déconnecter.
+
+## Feux près de la ferme
+
+Un petit bloc `fire` du tableau de bord, et sa page de détail `src/screens/feux.js` (`#/feux`, pas dans le menu principal : on y arrive par le bloc). Calme par défaut : « Aucun risque pour le moment », sauf gros feu actif cette semaine ou danger d'incendie élevé (`fireStatus`) ; rayon fixe de 25 km sur 10 ans, partagé avec le bloc ; feux de plus de 12 mois rangés dans des archives repliées ; seules les sections touchées ont une carte (quoi faire, rotation proposée, « Pourquoi ? » replié). Pendant une alerte (`fireStatus` = `alert`), `alertAdvice` classe les sections de la plus proche du feu à la plus loin : ce qui est au champ selon la saison (`fieldFuel`, d'après `currentCrop`), les travaux de la semaine, et pour les sections côté feu une couverture d'hiver (seigle, sinon trèfle) prise dans la réserve de semences (`fireCoverAdvice`), sans toucher aux délais de retour, à appliquer et comparer dans l'explorateur ; l'exemple réel montre ce que l'appli aurait conseillé pendant son feu. Tout passe par le navigateur, sans clé ni serveur : SCIFV de Ressources naturelles Canada (points chauds NASA, zones brûlées, danger), HLS de la NASA sur Microsoft Planetary Computer (NBR par section), inventaire des cultures d'AAC, SoilGrids. Le réseau est dans `src/lib/fireData.js`, la logique pure (événements, gravité, sol, effet, rotation proposée) dans `src/lib/wildfire.js`, testée dans `tests/wildfire.test.js`. Détail des services : [data-sources.md](data-sources.md#feux-près-de-la-ferme-front).

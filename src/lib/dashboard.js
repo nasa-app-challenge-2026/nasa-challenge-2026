@@ -1,16 +1,16 @@
 /**
- * Order of the dashboard blocks. Ids: 'weather', 'farm3d', 'mix' and one
+ * Order of the dashboard blocks. Ids: 'weather', 'farm3d', 'mix', 'fire' and one
  * 'sec:<id>' per section. The saved order (prefs.dashboard) is merged with the
  * current sections: removed sections disappear, new ones slot in after the
  * last section already placed.
  */
-export const FIXED_BLOCKS = ['weather', 'farm3d', 'mix'];
+export const FIXED_BLOCKS = ['weather', 'farm3d', 'mix', 'fire'];
 export const secBlock = (id) => `sec:${id}`;
 
-/** Default layout on a 4-column grid: weather + A B / 3D + C D / 3D + mix / more sections. */
+/** Default layout on a 4-column grid: weather + A B / 3D + C D / 3D + mix / fires + more sections. */
 export function defaultOrder(sectionIds) {
   const s = sectionIds.map(secBlock);
-  return ['weather', ...s.slice(0, 2), 'farm3d', ...s.slice(2, 4), 'mix', ...s.slice(4)];
+  return ['weather', ...s.slice(0, 2), 'farm3d', ...s.slice(2, 4), 'mix', 'fire', ...s.slice(4)];
 }
 
 export function dashboardOrder(saved, sectionIds) {
@@ -46,5 +46,12 @@ export const isDefaultOrder = (order, sectionIds) =>
 /** Human name of a block, for screen readers and handles. */
 export function blockLabel(id) {
   if (id.startsWith('sec:')) return `Section ${id.slice(4)}`;
-  return { weather: 'Météo à la ferme', farm3d: 'Ma ferme en 3D', mix: 'Toute la ferme' }[id] ?? id;
+  return (
+    {
+      weather: 'Météo à la ferme',
+      farm3d: 'Ma ferme en 3D',
+      mix: 'Toute la ferme',
+      fire: 'Feux près de la ferme',
+    }[id] ?? id
+  );
 }
