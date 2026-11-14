@@ -12,6 +12,7 @@ from fastapi.testclient import TestClient
 from field_shift.algorithm.ranking.measure_weights import measure_weights
 from field_shift.algorithm.ranking.measures import (
     MeasureResult,
+    PestsMeasure,
     SectionContext,
     SoilProtectionMeasure,
     all_measures,
@@ -101,9 +102,10 @@ class TestRanking:
 
     def test_measures_not_written_are_left_out_and_the_weights_rescaled(self):
         ranked = rank_rotations([rotation("R1", "mais")], context(), measure_weights(None))[0]
-        assert ranked.weights == {"rendement": 0, "eau": 0, "protection_sol": 1, "ravageurs": 0}
+        assert ranked.weights == {"rendement": 0, "eau": 0, "protection_sol": 0.5, "ravageurs": 0.5}
         assert not ranked.results["rendement"].available
-        assert ranked.score == pytest.approx(100 * ranked.results["protection_sol"].score)
+        soil, pests = ranked.results["protection_sol"].score, ranked.results["ravageurs"].score
+        assert ranked.score == pytest.approx(100 * (0.5 * soil + 0.5 * pests))
 
     def test_the_score_is_the_weighted_sum_of_the_measures(self):
         class Fixed:
@@ -126,9 +128,10 @@ class TestRanking:
         assert [r.rotation.id for r in ranked] == ["R1", "R2"]
         assert all(r.score is None for r in ranked)
 
-    def test_one_measure_is_written_and_three_are_waiting(self):
+    def test_two_measures_are_written_and_two_are_waiting(self):
         assert [m.id for m in all_measures()] == list(MEASURE_IDS)
-        assert [m.id for m in all_measures() if m.implemented] == [SoilProtectionMeasure.id]
+        written = [m.id for m in all_measures() if m.implemented]
+        assert written == [SoilProtectionMeasure.id, PestsMeasure.id]
 
 
 class TestRankRoute:
@@ -160,8 +163,8 @@ class TestRankRoute:
                     "note": "La mesure « Rendement » (rendement) n’est pas encore calculée.",
                 }
         meta = body["meta"]
-        assert meta["implementedMeasures"] == ["protection_sol"]
-        assert meta["pendingMeasures"] == ["rendement", "eau", "ravageurs"]
+        assert meta["implementedMeasures"] == ["protection_sol", "ravageurs"]
+        assert meta["pendingMeasures"] == ["rendement", "eau"]
         assert meta["weights"]["protection_sol"] == pytest.approx(2 / 3, abs=1e-4)
         assert meta["rotationCount"] == 3 and meta["rotationsGenerated"] is False
 
@@ -207,7 +210,7 @@ class TestRankRoute:
         body = client.post("/rotations/rank", json=request).json()
         names = [r["name"] for r in body["sections"][0]["rotations"]]
         assert body["meta"]["rotationsGenerated"] and body["meta"]["rotationCount"] == 6
-        assert names[0] == "Luzerne ×2" and names[-1] == "Soya → Soya"
+        assert names[0] == "Luzerne → Maïs" and names[-1] == "Soya → Soya"
 
     def test_a_ranking_of_measures_is_accepted_as_priorities(self, client):
         request = REQUEST | {"priorities": ["protection_sol", "eau"]}
@@ -260,7 +263,15 @@ class TestMeasureRoutes:
         }
         assert body["sections"][0]["rotations"][0]["rotationId"] == "prairie"
 
-    @pytest.mark.parametrize("path", ["rendement", "eau", "ravageurs"])
+    def test_the_pests_alone(self, client):
+        body = client.post("/measures/ravageurs", json=REQUEST).json()
+        assert body["meta"]["weights"]["ravageurs"] == 1
+        rotations = body["sections"][0]["rotations"]
+        assert [r["rotationId"] for r in rotations] == ["couvert", "mais-soya", "prairie"]
+        hay = rotations[-1]["measures"]["ravageurs"]  # no organism known for hay: no score
+        assert not hay["available"] and hay["score"] is None and "Foin" in hay["note"]
+
+    @pytest.mark.parametrize("path", ["rendement", "eau"])
     def test_the_other_measures_have_their_route_and_say_they_are_not_written(self, client, path):
         response = client.post(f"/measures/{path}", json=REQUEST)
         assert response.status_code == 501
@@ -272,7 +283,7 @@ class TestMeasureRoutes:
     def test_the_list_of_measures(self, client):
         measures = client.get("/measures").json()
         assert [m["id"] for m in measures] == list(MEASURE_IDS)
-        assert [m["implemented"] for m in measures] == [False, False, True, False]
+        assert [m["implemented"] for m in measures] == [False, False, True, True]
 
     def test_the_crops_a_rotation_can_contain(self, client):
         crops = {crop["id"]: crop for crop in client.get("/crops").json()}

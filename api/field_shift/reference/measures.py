@@ -3,8 +3,8 @@
 Every candidate rotation gets one result per measure; the results are then added, weighted by the
 priorities of the farmer, to give the score the rotations are ranked by.
 
-Only `protection_sol` is computed today. The three others have their route and their place in the
-ranking, and are reported as "not available" until their logic is written.
+`protection_sol` and `ravageurs` are computed today. The two others have their route and their
+place in the ranking, and are reported as "not available" until their logic is written.
 """
 
 from __future__ import annotations
