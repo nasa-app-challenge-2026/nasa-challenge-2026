@@ -2,26 +2,35 @@
 import { html } from '../lib/html.js';
 import { logo } from '../ui/widgets.js';
 
-const fieldsArt = html`<svg
-  class="auth__art"
-  viewBox="0 0 720 900"
-  preserveAspectRatio="xMidYMid slice"
-  aria-hidden="true"
->
-  <g transform="translate(360 470) rotate(-18) translate(-560 -560)">
-    <rect width="1120" height="1120" fill="#26462F"></rect>
-    <rect x="40" y="60" width="320" height="300" fill="url(#pat-soya)"></rect>
-    <rect x="380" y="60" width="300" height="300" fill="url(#pat-ble)"></rect>
-    <rect x="700" y="60" width="380" height="300" fill="url(#pat-mais)"></rect>
-    <rect x="40" y="380" width="460" height="320" fill="url(#pat-orge)"></rect>
-    <rect x="520" y="380" width="260" height="320" fill="url(#pat-patate)"></rect>
-    <rect x="800" y="380" width="280" height="320" fill="url(#pat-ble)"></rect>
-    <rect x="40" y="720" width="300" height="340" fill="url(#pat-luzerne)"></rect>
-    <rect x="360" y="720" width="420" height="340" fill="url(#pat-mais)"></rect>
-    <rect x="800" y="720" width="280" height="340" fill="url(#pat-soya)"></rect>
-  </g>
-  <rect width="720" height="900" fill="#0E1F13" fill-opacity=".58"></rect>
-</svg>`;
+/**
+ * Hero video (frontend/public/connexion-champs.mp4): a 12.7 s drone shot of a tractor
+ * working a field, played in full and looped. The poster is its first frame.
+ */
+const VIDEO_SRC = 'connexion-champs.mp4';
+const VIDEO_POSTER = 'connexion-champs.jpg';
+
+// The screen is re-rendered with innerHTML on every state change: the <video>
+// is created once and moved back into its slot by mount(), so it keeps playing
+// when the user switches between « Se connecter » and « Créer un compte ».
+let video = null;
+
+const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function heroVideo() {
+  if (video) return video;
+  video = document.createElement('video');
+  video.className = 'auth__video';
+  video.muted = true;
+  video.defaultMuted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.disablePictureInPicture = true;
+  video.preload = reduceMotion() ? 'metadata' : 'auto';
+  video.poster = VIDEO_POSTER;
+  video.setAttribute('aria-hidden', 'true');
+  video.src = VIDEO_SRC;
+  return video;
+}
 
 export default {
   title: 'Connexion',
@@ -29,19 +38,15 @@ export default {
     const signup = state.ui.authMode === 'signup';
     return html`<div class="auth">
       <section class="auth__hero">
-        ${fieldsArt}
-        <div class="auth__brand">${logo(44)}<span class="brand__name">Field Shift</span></div>
+        <div class="auth__art" data-video-slot></div>
+        <div class="auth__shade" aria-hidden="true"></div>
+        <div class="auth__brand">${logo({ height: 48, onDark: true })}</div>
         <div class="auth__pitch">
           <h1>Planifiez vos rotations avec les données des satellites.</h1>
           <p>
             Pluie, humidité du sol, chaleur : Field Shift lit les données de la NASA pour votre
             ferme et vous aide à choisir quoi planter, section par section, année après année.
           </p>
-          <div class="chips-row">
-            <span class="chip chip--glass">Données NASA</span
-            ><span class="chip chip--glass">Rotation par section</span
-            ><span class="chip chip--glass">Prévisions sur 3 à 30 ans</span>
-          </div>
         </div>
       </section>
       <main class="auth__panel" id="main">
@@ -104,6 +109,16 @@ export default {
         </div>
       </main>
     </div>`;
+  },
+  mount() {
+    const slot = document.querySelector('[data-video-slot]');
+    if (!slot) return;
+    const v = heroVideo();
+    if (v.parentNode !== slot) slot.appendChild(v);
+    if (v.paused && !reduceMotion()) v.play().catch(() => {});
+  },
+  unmount() {
+    video?.pause();
   },
   actions: {
     'auth-mode': (app, el) =>

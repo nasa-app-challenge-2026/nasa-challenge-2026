@@ -58,6 +58,51 @@ export function bounds(polygons) {
   ];
 }
 
+/** Distance in metres from a [lat, lon] point to a `bounds()` box (0 when inside). */
+export function distanceToBoundsM([[minLat, minLon], [maxLat, maxLon]], [lat, lon]) {
+  const outside = (v, min, max) => (v < min ? min - v : v > max ? v - max : 0);
+  const kx = EARTH_M_PER_DEG * Math.cos((lat * Math.PI) / 180);
+  return Math.hypot(
+    outside(lat, minLat, maxLat) * EARTH_M_PER_DEG,
+    outside(lon, minLon, maxLon) * kx,
+  );
+}
+
+const EPS = 1e-9;
+const samePt = (a, b) => Math.abs(a[0] - b[0]) < 1e-10 && Math.abs(a[1] - b[1]) < 1e-10;
+
+/** Position of `v` along the segment p→q (0..1, ends excluded), or null when it is not on it. */
+function along(v, p, q) {
+  const e = [q[0] - p[0], q[1] - p[1]];
+  const len2 = e[0] * e[0] + e[1] * e[1];
+  if (len2 === 0) return null;
+  const t = ((v[0] - p[0]) * e[0] + (v[1] - p[1]) * e[1]) / len2;
+  if (t <= EPS || t >= 1 - EPS) return null;
+  const off = Math.hypot(p[0] + t * e[0] - v[0], p[1] + t * e[1] - v[1]);
+  return off < 1e-8 ? t : null;
+}
+
+/**
+ * Corner `i` of the outline `ring` moves to `to`: move the same corner in a
+ * section polygon, and slide the points that sat on the two outline edges
+ * touching it (section corners snapped onto them) so they stay on those edges.
+ */
+export function followCorner(poly, ring, i, to) {
+  const n = ring.length;
+  const from = ring[i];
+  const prev = ring[(i - 1 + n) % n];
+  const next = ring[(i + 1) % n];
+  const lerp = (p, q, t) => [p[0] + t * (q[0] - p[0]), p[1] + t * (q[1] - p[1])];
+  return poly.map((v) => {
+    if (samePt(v, from)) return [to[0], to[1]];
+    const t1 = along(v, prev, from);
+    if (t1 !== null) return lerp(prev, to, t1);
+    const t2 = along(v, from, next);
+    if (t2 !== null) return lerp(to, next, t2);
+    return v;
+  });
+}
+
 /**
  * Fit several polygons into a `width × height` box (metres are scaled uniformly,
  * north stays up). Returns the projected polygons as {x, y} in box units plus

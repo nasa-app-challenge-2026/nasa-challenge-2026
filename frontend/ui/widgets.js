@@ -1,12 +1,21 @@
 /** Small reusable pieces of UI (the "base commune"). All return safe HTML. */
 import { html } from '../lib/html.js';
 import { CROPS, ROLES } from '../../data/reference/crops.js';
-import { icon, ICONS } from './icons.js';
+import { icon } from './icons.js';
 
-export const logo = (size = 36) =>
-  html`<span class="brand-mark" style="width: ${size}px; height: ${size}px"
-    >${icon(ICONS.sprout, { size: size * 0.56, color: '#FFFFFF' })}</span
-  >`;
+/**
+ * The Field Shift logo (leaf + name), cut from the team's logo.png into
+ * frontend/public/: white lettering for dark backgrounds, dark lettering for light ones.
+ */
+const LOGO_RATIO = 762 / 144;
+export const logo = ({ height = 34, onDark = false } = {}) =>
+  html`<img
+    class="brand-logo"
+    src="${onDark ? 'logo-texte-blanc.png' : 'logo-texte-sombre.png'}"
+    alt="Field Shift"
+    width="${Math.round(height * LOGO_RATIO)}"
+    height="${height}"
+  />`;
 
 export function infoButton(action, label, attrs = '') {
   return html`<button

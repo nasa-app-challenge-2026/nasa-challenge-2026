@@ -16,7 +16,7 @@ export function appHeader(state, active) {
     ['compte', '#/compte', 'Compte'],
   ];
   return html`<header class="app-header">
-    <a class="brand" href="#/tableau">${logo()}<span class="brand__name">Field Shift</span></a>
+    <a class="brand" href="#/tableau">${logo()}</a>
     <nav class="main-nav" aria-label="Navigation principale">
       ${links.map(([id, href, label]) =>
         id === active
@@ -37,7 +37,7 @@ const STEPS = ['Type de ferme', 'Localisation', 'Tracer la ferme', 'Mes cultures
 
 export function onboardingHeader(step) {
   return html`<header class="app-header">
-    <span class="brand">${logo()}<span class="brand__name">Field Shift</span></span>
+    <span class="brand">${logo()}</span>
     <ol class="stepper" aria-label="Étapes de configuration">
       ${STEPS.map((label, i) => {
         const n = i + 1;
