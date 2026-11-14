@@ -1,0 +1,115 @@
+{
+  "sectionId": "A",
+  "demo": true,
+  "metrics": [
+    {
+      "id": "rain",
+      "label": "Pluie de la saison",
+      "value": 540,
+      "unit": "mm",
+      "source": "NASA GPM IMERG",
+      "series": [
+        576.4,
+        549.6,
+        515.5,
+        500,
+        514.7,
+        548.6,
+        575.9,
+        576.1,
+        548.9,
+        515
+      ],
+      "explain": "Total de pluie de mai à septembre. Plus il pleut, plus la rotation profite à certaines cultures."
+    },
+    {
+      "id": "soilMoisture",
+      "label": "Humidité du sol",
+      "value": 0.3,
+      "unit": "m³/m³",
+      "source": "NASA SMAP · estimation",
+      "fromSensors": false,
+      "series": [
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3
+      ],
+      "explain": "La part d’eau dans le sol en surface. Avec des capteurs, l’appli remplace l’estimation du satellite par vos mesures."
+    },
+    {
+      "id": "temperature",
+      "label": "Température moyenne",
+      "value": 18.4,
+      "unit": "°C",
+      "source": "NASA POWER",
+      "series": [
+        17.4,
+        17.2,
+        17.6,
+        18.3,
+        18.8,
+        18.6,
+        18,
+        17.4,
+        17.2,
+        17.6
+      ],
+      "explain": "Moyenne de la saison de croissance. La tendance monte : les années chaudes deviennent plus fréquentes."
+    },
+    {
+      "id": "et",
+      "label": "Évapotranspiration",
+      "value": 3.6,
+      "unit": "mm/jour",
+      "source": "NASA ECOSTRESS",
+      "series": [
+        3.3,
+        3.5,
+        3.7,
+        3.9,
+        3.8,
+        3.6,
+        3.4,
+        3.3,
+        3.5,
+        3.8
+      ],
+      "explain": "L’eau que les plantes et le sol perdent dans l’air chaque jour : ce que les cultures consomment."
+    },
+    {
+      "id": "ndvi",
+      "label": "Vigueur des plantes",
+      "value": 0.7,
+      "unit": "NDVI",
+      "source": "NASA HLS",
+      "series": [
+        0.6,
+        0.7,
+        0.7,
+        0.7,
+        0.6,
+        0.5,
+        0.5,
+        0.6,
+        0.7,
+        0.7
+      ],
+      "explain": "Un indice de 0 à 1 qui mesure à quel point la végétation est verte et en santé, calculé à partir des images satellites."
+    },
+    {
+      "id": "soil",
+      "label": "Type de sol",
+      "value": "Loam argileux",
+      "unit": "2,8 % MO",
+      "source": "SoilGrids",
+      "explain": "La texture du sol et sa matière organique (MO). Un sol argileux garde mieux l’eau."
+    }
+  ]
+}

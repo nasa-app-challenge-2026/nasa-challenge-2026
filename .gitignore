@@ -1,14 +1,17 @@
-# Python
+node_modules/
+dist/
+coverage/
+.env
+.env.local
+.env.*.local
+.DS_Store
+Thumbs.db
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Python (apps/api)
 __pycache__/
 *.pyc
 .venv/
-.mypy_cache/
-.ruff_cache/
-.pytest_cache/
-# Node
-node_modules/
-dist/
-# Local runtime data (NASA responses fetched by this machine; snapshots live in data/)
-.cache/
-# Environment
-.env
