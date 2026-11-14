@@ -1,0 +1,15 @@
+{
+  "hash": "39a67131",
+  "configHash": "1444d684",
+  "lockfileHash": "8c78ae60",
+  "browserHash": "7afff7fc",
+  "optimized": {
+    "leaflet": {
+      "src": "../../node_modules/leaflet/dist/leaflet-src.js",
+      "file": "leaflet.js",
+      "fileHash": "564bcd58",
+      "needsInterop": true
+    }
+  },
+  "chunks": {}
+}

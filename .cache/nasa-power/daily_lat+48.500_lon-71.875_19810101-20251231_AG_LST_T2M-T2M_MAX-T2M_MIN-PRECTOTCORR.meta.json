@@ -1,0 +1,20 @@
+{
+  "provider": "NASA POWER Daily API",
+  "request_url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR&community=AG&latitude=48.5000&longitude=-71.8750&start=19810101&end=20251231&format=JSON&time-standard=LST",
+  "retrieved_at": "2026-11-10T23:28:55.664630+00:00",
+  "sha256": "877af17df4a50992d7737412b895be1fcbe42191ab4006bab5daa25a322d831a",
+  "request": {
+    "latitude": 48.5,
+    "longitude": -71.875,
+    "start": "1981-01-01",
+    "end": "2025-12-31",
+    "parameters": [
+      "T2M",
+      "T2M_MAX",
+      "T2M_MIN",
+      "PRECTOTCORR"
+    ],
+    "community": "AG",
+    "time_standard": "LST"
+  }
+}
