@@ -46,7 +46,7 @@ npm install
 npm run dev
 ```
 
-Le front appelle le serveur à l'adresse `VITE_ALGO_URL` (`http://localhost:8000` par défaut avec `npm run dev`, voir [`.env.example`](.env.example)). Si le serveur est éteint, l'écran le dit et propose de réessayer. Sans réseau, lancez le serveur avec la variable d'environnement `FIELD_SHIFT_WEATHER=demo` : la météo est alors fictive (réglages : [`backend/server/README.md`](backend/server/README.md)).
+Le front appelle le serveur à l'adresse `VITE_ALGO_URL` (`http://localhost:8000` par défaut avec `npm run dev`, voir [`.env.example`](.env.example)). Si le serveur est éteint, l'écran le dit et propose de réessayer. Le serveur lit toujours les données réelles (NASA POWER, SoilGrids, Copernicus DEM, MODIS) et répond `502` quand une source ne répond pas : il n'y a plus de mode démo (réglages : [`api/README.md`](api/README.md)).
 
 | Commande                                          | Rôle                                                                                   |
 | ------------------------------------------------- | -------------------------------------------------------------------------------------- |

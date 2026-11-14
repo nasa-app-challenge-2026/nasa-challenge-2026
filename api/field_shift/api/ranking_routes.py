@@ -35,10 +35,19 @@ from field_shift.reference.measures import (
     MEASURE_WATER,
     MEASURE_YIELD,
 )
-from field_shift.services.ranking_service import RankingInputError, RankingService
+from field_shift.services.ranking_service import (
+    RankingInputError,
+    RankingService,
+    SectionDataError,
+)
 
 #: Status of a request that is well formed but cannot be ranked (as the validation errors).
 UNPROCESSABLE = 422
+#: A data service the ranking needs failed.
+BAD_GATEWAY = 502
+DATA_ERROR_RESPONSE = {
+    BAD_GATEWAY: {"description": "A data service failed: `detail` names the section and service."}
+}
 
 TAG_RANKING = "Classement des rotations"
 TAG_MEASURES = "Mesures"
@@ -60,13 +69,22 @@ def get_ranking_service(request: Request) -> RankingService:
 def _ranked(
     service: RankingService, ranking_input: RankingInput, only_measure: str | None = None
 ) -> RotationRanking:
-    """The ranking, or a 422 in the format of the validation errors when it cannot be done."""
+    """The ranking; a 422 in the format of the validation errors when it cannot be done, a 502
+    with every failed service when the data of a section could not be read."""
     try:
         return service.rank(ranking_input, only_measure)
     except RankingInputError as error:
         raise HTTPException(
             UNPROCESSABLE,
             detail=[{"loc": ["body"], "msg": str(error), "type": "value_error"}],
+        ) from error
+    except SectionDataError as error:
+        raise HTTPException(
+            BAD_GATEWAY,
+            detail=[
+                {"section": error.section_id, "source": failure.dataset, "msg": failure.reason}
+                for failure in error.failures
+            ],
         ) from error
 
 
@@ -99,6 +117,7 @@ def ranking_router() -> APIRouter:
         response_model=RotationRanking,
         tags=[TAG_RANKING],
         summary="Rank the candidate rotations of every section",
+        responses=DATA_ERROR_RESPONSE,
     )
     def rank_rotations(
         ranking_input: RankingInput, service: RankingService = Depends(get_ranking_service)
@@ -120,7 +139,10 @@ def ranking_router() -> APIRouter:
             response_model=RotationRanking,
             tags=[TAG_MEASURES],
             summary=f"{MEASURE_NAMES[measure_id]} : classer les rotations sur cette seule mesure",
-            responses={501: {"description": "The logic of this measure is not written yet."}},
+            responses={
+                501: {"description": "The logic of this measure is not written yet."},
+                **DATA_ERROR_RESPONSE,
+            },
         )
 
     @router.get("/measures", tags=[TAG_MEASURES], summary="The four measures of the ranking")
@@ -149,24 +171,19 @@ def ranking_router() -> APIRouter:
         "/data-sources",
         response_model=list[DataSourceOut],
         tags=[TAG_REFERENCE],
-        summary="The data sources and the addresses the server runs with",
+        summary="The data services and the addresses the server runs with",
     )
     def data_sources(request: Request) -> list[DataSourceOut]:
-        """Addresses are shown without their query string (it may hold a key). In demo mode no
-        source is read, whatever is configured: `configured` is then false everywhere."""
-        settings = request.app.state.settings
-        config = settings.data_sources
-        if settings.weather == "demo":
-            config = config.without_network()
+        """Addresses are shown without their query string (it may hold a key); headers are never
+        shown."""
+        config = request.app.state.settings.data_sources
         return [
             DataSourceOut(
                 key=source.key,
                 dataset=source.dataset,
                 provides=source.provides,
-                configured=source.is_configured,
+                reference=source.reference,
                 url=public_url(source.url),
-                json_path=source.json_path,
-                scale=source.scale,
             )
             for source in config.sources.values()
         ]

@@ -3,76 +3,64 @@ satellite measures that adjust the theory to what really happens there.
 
 Pipeline of the specification, and the data each step reads:
 
-    step 1  static properties   SSURGO (Ksat, organic matter, texture, K) + SRTM (slope)
+    step 1  static properties   SoilGrids 2.0 (texture, organic carbon) + Copernicus DEM (slope)
     step 2  rotation timeline   the rotation itself (see `algorithm/rotation`)
-    step 3  vigour adjustment   Landsat / MODIS NDVI (canopy) + ECOSTRESS (root activity)
-    step 4  external forcing    GPM IMERG (rain, storms) + SMAP (soil moisture)
+    step 3  vigour adjustment   MODIS NDVI (canopy) + MODIS ET / PET (root activity)
+    step 4  external forcing    NASA POWER (rain, storms, soil moisture)
 
-The values of steps 3 and 4 are optional: without them the model keeps the theoretical values.
+There is NO default value: every variable comes from the request, from a data source, or from a
+published model fed with those (Ksat, K and R, see `site_estimates`). A missing variable is an
+error (`MissingSiteDataError`), never a silent guess.
 """
 
 from __future__ import annotations
 
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 
-from field_shift.algorithm.config.soil_protection import (
-    DEFAULT_ANNUAL_RAIN_MM,
-    DEFAULT_CLAY_PCT,
-    DEFAULT_KSAT_MM_H,
-    DEFAULT_ORGANIC_MATTER_PCT,
-    DEFAULT_SAND_PCT,
-    DEFAULT_SLOPE_LENGTH_M,
-    DEFAULT_SLOPE_PCT,
-    DEFAULT_STORM_INTENSITY_MM_H,
-    NDVI_BARE_SOIL,
-    NDVI_FULL_CANOPY,
-)
+from field_shift.algorithm.config.soil_protection import NDVI_BARE_SOIL, NDVI_FULL_CANOPY
 from field_shift.algorithm.numerics.ratios import clamp01
 
 
 @dataclass(frozen=True)
 class SiteConditions:
-    """The conditions of one section. Defaults describe a loam on a gentle slope.
+    """The conditions of one section.
 
-    Step 1, static (SSURGO, SRTM)
+    Step 1, static
         slope_pct               slope steepness (%)
         slope_length_m          length of the slope the runoff travels (m)
         sand_pct, clay_pct      texture of the fine earth (%); silt is the rest
         organic_matter_pct      inherent organic matter (%)
         ksat_mm_h               saturated hydraulic conductivity (mm/h): the infiltration baseline
-        k_factor                RUSLE soil erodibility K in SI units (t·ha·h/(ha·MJ·mm)); None to
-                                estimate it from the texture and the organic matter
+        k_factor                RUSLE soil erodibility K in SI units (t·ha·h/(ha·MJ·mm))
         support_practice_factor RUSLE P factor (contouring, strips, terraces): 1 = none
 
-    Step 3, vigour (optional)
-        ndvi                    mean NDVI of the growing season (Landsat, MODIS / VIIRS)
-        root_activity           actual / potential evapotranspiration, 0 to 1 (ECOSTRESS): how much
-                                of the root system really works
+    Step 3, vigour
+        ndvi                    mean NDVI of the growing season
+        root_activity           actual / potential evapotranspiration, 0 to 1: how much of the
+                                root system really works
 
     Step 4, forcing
         annual_rain_mm          mean annual rain (mm)
-        r_factor                RUSLE erosivity R in SI units (MJ·mm/(ha·h·year)), from the storm
-                                intensities of GPM IMERG; None to estimate it from the annual rain
+        r_factor                RUSLE erosivity R in SI units (MJ·mm/(ha·h·year))
         storm_intensity_mm_h    intensity of the storm the infiltration is compared with (mm/h)
-        soil_saturation         relative saturation of the surface soil, 0 (dry) to 1 (saturated),
-                                from SMAP; None when unknown
+        soil_saturation         relative saturation of the surface soil, 0 (dry) to 1 (saturated)
     """
 
-    slope_pct: float = DEFAULT_SLOPE_PCT
-    slope_length_m: float = DEFAULT_SLOPE_LENGTH_M
-    sand_pct: float = DEFAULT_SAND_PCT
-    clay_pct: float = DEFAULT_CLAY_PCT
-    organic_matter_pct: float = DEFAULT_ORGANIC_MATTER_PCT
-    ksat_mm_h: float = DEFAULT_KSAT_MM_H
-    k_factor: float | None = None
-    support_practice_factor: float = 1.0
-    ndvi: float | None = None
-    root_activity: float | None = None
-    annual_rain_mm: float = DEFAULT_ANNUAL_RAIN_MM
-    r_factor: float | None = None
-    storm_intensity_mm_h: float = DEFAULT_STORM_INTENSITY_MM_H
-    soil_saturation: float | None = None
+    slope_pct: float
+    slope_length_m: float
+    sand_pct: float
+    clay_pct: float
+    organic_matter_pct: float
+    ksat_mm_h: float
+    k_factor: float
+    support_practice_factor: float
+    ndvi: float
+    root_activity: float
+    annual_rain_mm: float
+    r_factor: float
+    storm_intensity_mm_h: float
+    soil_saturation: float
 
     @property
     def silt_pct(self) -> float:
@@ -81,26 +69,21 @@ class SiteConditions:
 
     @property
     def canopy_vigour(self) -> float:
-        """How dense the canopy really is, from 0 (bare soil) to 1 (full vigour).
-
-        Linear between the NDVI of bare soil and the NDVI of a dense canopy. Without NDVI the
-        crops are taken at full vigour: the theoretical scores are kept.
-        """
-        if self.ndvi is None:
-            return 1.0
+        """How dense the canopy really is, from 0 (bare soil) to 1 (full vigour): linear between
+        the NDVI of bare soil and the NDVI of a dense canopy."""
         return clamp01((self.ndvi - NDVI_BARE_SOIL) / (NDVI_FULL_CANOPY - NDVI_BARE_SOIL))
 
     @property
     def root_vigour(self) -> float:
-        """How active the roots really are, from 0 to 1 (1 without ECOSTRESS measure)."""
-        return 1.0 if self.root_activity is None else clamp01(self.root_activity)
+        """How active the roots really are, from 0 to 1."""
+        return clamp01(self.root_activity)
 
 
 @dataclass(frozen=True)
 class SiteVariable:
     """One value of `SiteConditions` as the outside world sees it: its unit, the range a valid
-    value lies in (a section or a data source giving a value outside is refused or ignored) and a
-    label for the reports."""
+    value lies in (a section or a data source giving a value outside is refused) and a label for
+    the reports."""
 
     key: str
     label: str
@@ -113,8 +96,8 @@ class SiteVariable:
         return self.minimum <= value <= self.maximum
 
 
-#: Every value of `SiteConditions`, by field name. The keys are also the names used in the
-#: configuration of the data sources and in the `site` object of a section.
+#: Every value of `SiteConditions`, by field name. The keys are also the names used in the `site`
+#: object of a section.
 SITE_VARIABLES: dict[str, SiteVariable] = {
     variable.key: variable
     for variable in (
@@ -135,32 +118,54 @@ SITE_VARIABLES: dict[str, SiteVariable] = {
     )
 }
 
-#: Where a value comes from when nobody gave it.
-ORIGIN_DEFAULT = "valeur par défaut"
+if set(SITE_VARIABLES) != {field.name for field in fields(SiteConditions)}:
+    raise RuntimeError("SITE_VARIABLES and SiteConditions must name the same variables")
+
 #: Where a value comes from when the section gave it in the request.
 ORIGIN_SECTION = "section"
 
 
 @dataclass(frozen=True)
 class SiteReading:
-    """One value of the conditions of a section and where it comes from (the section itself, a
-    data source such as "SRTM", or the default)."""
+    """One value of the conditions of a section and where it comes from.
+
+    origin  "section", or the dataset or model it comes from ("SoilGrids 2.0 (ISRIC)")
+    method  how it was computed, when it is not the value of the dataset as read (a conversion,
+            a statistic, a model); empty for a value given or read as is
+    """
 
     key: str
     value: float
     origin: str
+    method: str = ""
+
+
+class MissingSiteDataError(ValueError):
+    """Some variables of a section are known neither from the request nor from a source."""
+
+    def __init__(self, missing: Iterable[str]) -> None:
+        self.missing = tuple(missing)
+        labels = ", ".join(SITE_VARIABLES[key].label for key in self.missing)
+        super().__init__(f"données de la section manquantes : {labels}")
 
 
 def site_from_readings(readings: Iterable[SiteReading]) -> SiteConditions:
-    """The conditions made of the readings; what no reading gives keeps its default."""
-    return SiteConditions(**{reading.key: reading.value for reading in readings})
+    """The conditions made of the readings (one per variable: a later reading of a variable
+    replaces an earlier one).
+
+    Raises MissingSiteDataError when a variable has no reading, ValueError when the texture adds
+    up to more than 100 %.
+    """
+    values = {reading.key: reading.value for reading in readings}
+    missing = [key for key in SITE_VARIABLES if key not in values]
+    if missing:
+        raise MissingSiteDataError(missing)
+    check_texture(values["sand_pct"], values["clay_pct"])
+    return SiteConditions(**{key: values[key] for key in SITE_VARIABLES})
 
 
-def default_readings() -> list[SiteReading]:
-    """The default value of every variable that has one (those the model always needs)."""
-    defaults = SiteConditions()
-    return [
-        SiteReading(key, getattr(defaults, key), ORIGIN_DEFAULT)
-        for key in SITE_VARIABLES
-        if getattr(defaults, key) is not None
-    ]
+def check_texture(sand_pct: float, clay_pct: float) -> None:
+    """Raises ValueError when sand and clay add up to more than 100 % (one may come from the
+    request and the other from a data service)."""
+    if sand_pct + clay_pct > 100:
+        raise ValueError("sable + argile ne peut pas dépasser 100 %")

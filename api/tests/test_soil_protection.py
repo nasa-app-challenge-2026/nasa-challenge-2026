@@ -32,12 +32,12 @@ from field_shift.algorithm.soil_protection.protection_index import (
     protection_class,
     protection_index,
 )
-from field_shift.algorithm.soil_protection.site_conditions import SiteConditions
 from field_shift.algorithm.soil_protection.soil_protection import evaluate_soil_protection
 from field_shift.reference.crops import CROP_NAMES
 from field_shift.reference.soil_protection import SOIL_PROTECTION_PROFILES
+from tests.helpers.site_stub import site
 
-SITE = SiteConditions()
+SITE = site()
 
 
 def rotation(*steps: str | tuple[str | None, float]) -> Rotation:
@@ -132,8 +132,8 @@ class TestProtectionIndex:
 
     def test_a_weak_canopy_lowers_the_adjusted_index_only(self):
         timeline = rotation("foin").timeline(12)
-        healthy = protection_index(timeline, SiteConditions(ndvi=0.85, root_activity=1))
-        weak = protection_index(timeline, SiteConditions(ndvi=0.3, root_activity=0.5))
+        healthy = protection_index(timeline, site(ndvi=0.85, root_activity=1))
+        weak = protection_index(timeline, site(ndvi=0.3, root_activity=0.5))
         assert healthy.adjusted_rpi == healthy.rpi == weak.rpi == 5
         assert 1 < weak.adjusted_rpi < 5
 
@@ -212,8 +212,8 @@ class TestErosion:
 
     def test_the_soil_loss_is_the_product_of_the_five_factors(self):
         timeline = rotation("mais", "soya").timeline(24)
-        site = SiteConditions(r_factor=2000, k_factor=0.03, support_practice_factor=0.5)
-        erosion = estimate_erosion(timeline, site)
+        conditions = site(r_factor=2000, k_factor=0.03, support_practice_factor=0.5)
+        erosion = estimate_erosion(timeline, conditions)
         assert (erosion.r_factor, erosion.k_factor, erosion.p_factor) == (2000, 0.03, 0.5)
         assert erosion.soil_loss_t_ha_year == pytest.approx(
             2000 * 0.03 * erosion.ls_factor * erosion.c_factor * 0.5
@@ -237,17 +237,17 @@ class TestInfiltration:
         assert rotation_multiplier(timeline, root_vigour=0.5) == pytest.approx(1 + 0.592 / 2)
 
     def test_a_saturated_soil_takes_almost_nothing(self):
-        assert moisture_factor(None) == moisture_factor(0) == 1
+        assert moisture_factor(0) == 1
         assert moisture_factor(1) == pytest.approx(0.1)
 
     def test_the_share_of_the_storm_that_enters_the_soil(self):
         timeline = rotation("foin").timeline(12)
-        loam = estimate_infiltration(timeline, SiteConditions(ksat_mm_h=10))
+        loam = estimate_infiltration(timeline, site(ksat_mm_h=10))
         assert loam.effective_mm_h == pytest.approx(15.92)
         assert loam.infiltrated_share == pytest.approx(15.92 / 25)
-        sand = estimate_infiltration(timeline, SiteConditions(ksat_mm_h=100))
+        sand = estimate_infiltration(timeline, site(ksat_mm_h=100))
         assert sand.infiltrated_share == 1  # the whole storm
-        wet = estimate_infiltration(timeline, SiteConditions(ksat_mm_h=10, soil_saturation=0.5))
+        wet = estimate_infiltration(timeline, site(ksat_mm_h=10, soil_saturation=0.5))
         assert wet.effective_mm_h == pytest.approx(15.92 * 0.55)
 
 
@@ -260,8 +260,8 @@ class TestSoilProtection:
 
     def test_the_same_rotation_is_worth_less_on_a_steeper_field(self):
         cycle = rotation("mais", "soya")
-        flat = evaluate_soil_protection(cycle, SiteConditions(slope_pct=1), 24)
-        steep = evaluate_soil_protection(cycle, SiteConditions(slope_pct=12), 24)
+        flat = evaluate_soil_protection(cycle, site(slope_pct=1), 24)
+        steep = evaluate_soil_protection(cycle, site(slope_pct=12), 24)
         assert steep.erosion.soil_loss_t_ha_year > flat.erosion.soil_loss_t_ha_year
         assert steep.score < flat.score
         assert steep.index.rpi == flat.index.rpi  # the theory does not see the field

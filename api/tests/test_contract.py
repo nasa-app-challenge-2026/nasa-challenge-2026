@@ -101,8 +101,8 @@ class TestSchemaRefusesWhatTheServerRefuses:
         assert errors(schema, "FarmInput", bad)
 
 
-def test_the_weights_of_the_plan_are_those_of_the_ranking(demo_client, example_inputs):
-    plan = demo_client.post("/plan", json=example_inputs["ferme-demo"]).json()
+def test_the_weights_of_the_plan_are_those_of_the_ranking(plan_client, example_inputs):
+    plan = plan_client.post("/plan", json=example_inputs["ferme-demo"]).json()
     ranking = example_inputs["ferme-demo"]["farm"]["priorities"]
     assert plan["settings"]["priorities"] == ranking
     assert plan["weights"] == pytest.approx(weights_from_ranking(ranking), abs=1e-3)

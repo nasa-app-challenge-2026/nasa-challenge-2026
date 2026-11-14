@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import json
 from copy import deepcopy
 
-import httpx
 import pytest
 from fastapi.testclient import TestClient
 
@@ -18,20 +16,15 @@ from field_shift.algorithm.ranking.measures import (
 )
 from field_shift.algorithm.ranking.rotation_ranker import rank_rotations
 from field_shift.algorithm.rotation.rotation import Rotation, RotationStep
-from field_shift.algorithm.soil_protection.site_conditions import SITE_VARIABLES, SiteConditions
 from field_shift.api.app import create_app
 from field_shift.api.settings import Settings
-from field_shift.data_access.data_source_config import (
-    DATA_SOURCES,
-    DataSourceConfig,
-    DataSourceConfigError,
-)
-from field_shift.data_access.site_data import RemoteSiteData, value_at
 from field_shift.reference.measures import MEASURE_IDS
+from field_shift.services.plan_service import PlanService
 from field_shift.services.ranking_service import RankingService
+from field_shift.tools.make_examples import ExampleWeatherProvider
+from tests.helpers.site_stub import TEST_ORIGIN, FixedSiteData, site, square
 
 REQUEST = {
-    "location": {"lat": 45.5, "lon": -73.0},
     "simulationYears": 6,
     "priorities": {"protection_sol": 2, "rendement": 1},
     "rotations": [
@@ -43,24 +36,55 @@ REQUEST = {
         },
     ],
     "sections": [
-        {"id": "A", "areaHa": 12, "site": {"slopePct": 2}},
-        {"id": "B", "site": {"slopePct": 9, "sandPct": 20, "clayPct": 15}},
+        {
+            "id": "A",
+            "geometry": square(45.5, -73.0, 300),
+            "site": {"slopePct": 2, "supportPracticeFactor": 1},
+        },
+        {
+            "id": "B",
+            "geometry": square(45.51, -73.0, 200),
+            "site": {"slopePct": 9, "sandPct": 20, "clayPct": 15, "supportPracticeFactor": 1},
+        },
     ],
 }
 
 
+def client_on(site_data: FixedSiteData) -> TestClient:
+    return TestClient(
+        create_app(Settings(), PlanService(ExampleWeatherProvider()), RankingService(site_data))
+    )
+
+
 @pytest.fixture
-def client() -> TestClient:
-    """The application without any data source (no network)."""
-    return TestClient(create_app(Settings(weather="demo")))
+def site_data() -> FixedSiteData:
+    return FixedSiteData()
+
+
+@pytest.fixture
+def client(site_data) -> TestClient:
+    """The application on the test site data (no network)."""
+    return client_on(site_data)
+
+
+P = {"supportPracticeFactor": 1}
+SECTION = {"id": "A", "geometry": square(), "site": P}
+OPEN_RING = {
+    "type": "Polygon",
+    "coordinates": [[[-73, 45.5], [-72.99, 45.5], [-72.99, 45.51], [-73, 45.51]]],
+}
+BOW_TIE = {
+    "type": "Polygon",
+    "coordinates": [[[-73, 45.5], [-72.99, 45.51], [-72.99, 45.5], [-73, 45.51], [-73, 45.5]]],
+}
 
 
 def rotation(rotation_id: str, *crops: str) -> Rotation:
     return Rotation.from_steps(rotation_id, [RotationStep(crop) for crop in crops])
 
 
-def context(**site: float) -> SectionContext:
-    return SectionContext("A", 45.5, -73.0, SiteConditions(**site), simulation_months=48)
+def context(**changes: float) -> SectionContext:
+    return SectionContext("A", 45.5, -73.0, site(**changes), simulation_months=48)
 
 
 class TestWeights:
@@ -189,44 +213,67 @@ class TestRankRoute:
         assert loss[1] > loss[0]
 
     def test_the_answer_says_where_each_site_value_comes_from(self, client):
-        site = client.post("/rotations/rank", json=REQUEST).json()["sections"][1]["site"]
-        origins = {value["key"]: (value["value"], value["origin"]) for value in site}
+        site_b = client.post("/rotations/rank", json=REQUEST).json()["sections"][1]["site"]
+        origins = {value["key"]: (value["value"], value["origin"]) for value in site_b}
         assert origins["slope_pct"] == (9, "section")
         assert origins["sand_pct"] == (20, "section")
-        assert origins["ksat_mm_h"] == (10, "valeur par défaut")
-        assert "ndvi" not in origins  # unknown and optional: the theory is kept
+        assert origins["ndvi"] == (0.85, TEST_ORIGIN)
+        assert origins["ksat_mm_h"][1] == "calcul : Saxton et Rawls (2006)"
+        assert origins["k_factor"][1] == "calcul : EPIC, Williams (1995)"
+        assert origins["r_factor"][1] == "calcul : Renard et Freimund (1994)"
+        assert "valeur par défaut" not in str(site_b)
 
-    def test_the_notes_list_every_value_the_model_supplied_itself(self, client):
+    def test_only_what_the_section_does_not_give_is_read(self, client, site_data):
+        client.post("/rotations/rank", json=REQUEST)
+        (_, needed_a), (_, needed_b) = site_data.calls
+        assert "slope_pct" not in needed_a and "sand_pct" in needed_a
+        assert not {"slope_pct", "sand_pct", "clay_pct", "support_practice_factor"} & needed_b
+        assert not {"ksat_mm_h", "k_factor", "r_factor"} & needed_a  # computed, not read
+
+    def test_the_section_gets_its_area_and_centre_from_its_outline(self, client):
+        section = client.post("/rotations/rank", json=REQUEST).json()["sections"][0]
+        assert section["areaHa"] == pytest.approx(9, rel=1e-3)  # 300 m × 300 m
+        assert section["centroid"] == pytest.approx({"lat": 45.5, "lon": -73.0}, abs=1e-6)
+
+    def test_the_notes_list_every_computed_value_with_its_method(self, client):
         section = client.post("/rotations/rank", json=REQUEST).json()["sections"][1]
         notes = "\n".join(section["notes"])
-        defaults = [v["label"] for v in section["site"] if v["origin"] == "valeur par défaut"]
-        given = [v["label"] for v in section["site"] if v["origin"] == "section"]
-        assert defaults and all(f"{label} :" in notes for label in defaults)
-        assert not any(
-            note.startswith(f"{label} :") for label in given for note in section["notes"]
-        )
-        for estimated in ("Érosivité des pluies (R)", "Érodibilité du sol (K)", "Limon", "NDVI"):
-            assert estimated in notes
+        for computed in ("Saxton et Rawls", "EPIC", "Renard et Freimund", "Limon : 65 %"):
+            assert computed in notes
         r_factor = section["rotations"][0]["soilProtection"]["erosion"]["factors"]["r"]
         assert f"{r_factor:.4g}".replace(".", ",") in notes  # the value the erosion really used
+        assert "Pente" not in notes and "NDVI" not in notes  # given or read as is
 
-    def test_a_value_given_by_the_section_is_not_in_the_notes(self, client):
+    def test_a_value_given_by_the_section_is_not_computed(self, client):
         request = deepcopy(REQUEST)
-        request["sections"][1]["site"].update({"rFactor": 2500, "kFactor": 0.03, "ndvi": 0.7})
-        notes = "\n".join(
-            client.post("/rotations/rank", json=request).json()["sections"][1]["notes"]
-        )
-        assert "Érosivité des pluies (R)" not in notes
-        assert "Érodibilité du sol (K)" not in notes
-        assert "NDVI" not in notes
+        request["sections"][1]["site"].update({"rFactor": 2500, "kFactor": 0.03, "ksatMmH": 20})
+        section = client.post("/rotations/rank", json=request).json()["sections"][1]
+        origins = {value["key"]: value["origin"] for value in section["site"]}
+        assert {origins[k] for k in ("r_factor", "k_factor", "ksat_mm_h")} == {"section"}
+        assert "Saxton" not in "\n".join(section["notes"])
+
+    def test_a_failed_data_service_fails_the_request_and_names_it(self):
+        client = client_on(FixedSiteData(failing=["SoilGrids 2.0 (ISRIC)", "MODIS (ORNL DAAC)"]))
+        response = client.post("/rotations/rank", json=REQUEST)
+        assert response.status_code == 502
+        assert response.json()["detail"][:2] == [
+            {"section": "A", "source": "SoilGrids 2.0 (ISRIC)", "msg": "le service a répondu 503"},
+            {"section": "A", "source": "MODIS (ORNL DAAC)", "msg": "le service a répondu 503"},
+        ]
+
+    def test_a_texture_over_100_pct_with_the_read_part_is_refused(self):
+        values = dict(FixedSiteData().values, clay_pct=60)
+        request = deepcopy(REQUEST)
+        request["sections"][0]["site"]["sandPct"] = 50
+        response = client_on(FixedSiteData(values)).post("/rotations/rank", json=request)
+        assert response.status_code == 422 and "100 %" in response.text
 
     def test_rotations_are_generated_from_the_crops_and_the_cycle(self, client):
         request = {
-            "location": REQUEST["location"],
             "simulationYears": 4,
             "crops": ["mais", "soya", "luzerne"],
             "cycleYears": 2,
-            "sections": [{"id": "A"}],
+            "sections": [REQUEST["sections"][0]],
         }
         body = client.post("/rotations/rank", json=request).json()
         names = [r["name"] for r in body["sections"][0]["rotations"]]
@@ -237,11 +284,6 @@ class TestRankRoute:
         request = REQUEST | {"priorities": ["protection_sol", "eau"]}
         weights = client.post("/rotations/rank", json=request).json()["meta"]["weights"]
         assert weights["protection_sol"] > weights["eau"] > weights["rendement"] > 0
-
-    def test_a_section_can_have_its_own_place(self, client):
-        request = deepcopy(REQUEST)
-        request["sections"][0]["location"] = {"lat": 46.0, "lon": -72.0}
-        assert client.post("/rotations/rank", json=request).status_code == 200
 
     @pytest.mark.parametrize(
         "change, where",
@@ -254,9 +296,17 @@ class TestRankRoute:
             ({"priorities": {"bonheur": 1}}, "mesure inconnue"),
             ({"priorities": {"eau": 0}}, "supérieur à zéro"),
             ({"sections": []}, "sections"),
-            ({"sections": [{"id": "A"}, {"id": "A"}]}, "même id"),
-            ({"sections": [{"id": "A", "site": {"slopePct": 250}}]}, "slopePct"),
-            ({"sections": [{"id": "A", "site": {"sandPct": 70, "clayPct": 50}}]}, "100 %"),
+            ({"sections": [SECTION, SECTION]}, "même id"),
+            ({"sections": [SECTION | {"site": P | {"slopePct": 250}}]}, "slopePct"),
+            ({"sections": [SECTION | {"site": P | {"sandPct": 70, "clayPct": 50}}]}, "100 %"),
+            ({"sections": [SECTION | {"site": {}}]}, "supportPracticeFactor"),
+            ({"sections": [{"id": "A", "site": P}]}, "geometry"),
+            ({"sections": [SECTION | {"geometry": OPEN_RING}]}, "fermé"),
+            ({"sections": [SECTION | {"geometry": BOW_TIE}]}, "se croise"),
+            (
+                {"sections": [SECTION | {"geometry": {"type": "Point", "coordinates": [0, 0]}}]},
+                "Polygon",
+            ),
             (
                 {
                     "rotations": [],
@@ -303,182 +353,16 @@ class TestMeasureRoutes:
         assert crops["luzerne"]["kind"] == "perenne" and crops["luzerne"]["infiltrationScore"] == 5
 
 
-def source_server(answers: dict[str, object]) -> tuple[httpx.Client, list[httpx.Request]]:
-    """A fake data server: answers the JSON of `answers` by host name, 500 for the others."""
-    requests: list[httpx.Request] = []
-
-    def handle(request: httpx.Request) -> httpx.Response:
-        requests.append(request)
-        if request.url.host in answers:
-            return httpx.Response(200, json=answers[request.url.host])
-        return httpx.Response(500)
-
-    return httpx.Client(transport=httpx.MockTransport(handle)), requests
-
-
-ENVIRONMENT = {
-    "FIELD_SHIFT_URL_SLOPE_PCT": "https://srtm.test/slope?lat={lat}&lon={lon}",
-    "FIELD_SHIFT_JSON_PATH_SLOPE_PCT": "data.0.slope",
-    "FIELD_SHIFT_URL_SOIL_SATURATION": "https://smap.test/{lat}/{lon}",
-    "FIELD_SHIFT_SCALE_SOIL_SATURATION": "0.01",
-    "FIELD_SHIFT_URL_NDVI": "https://ndvi.test/point",
-    "FIELD_SHIFT_URL_ANNUAL_RAIN_MM": "",  # switched off
-}
-
-
-class TestDataSources:
-    def test_every_point_source_fills_a_site_variable(self):
-        keys = {source.key for source in DATA_SOURCES} - {"power_daily"}
-        assert keys <= set(SITE_VARIABLES)
-
-    def test_by_default_only_nasa_power_is_configured(self):
-        config = DataSourceConfig.load({})
-        assert [s.key for s in config.point_sources] == ["annual_rain_mm"]
-        assert config.power_daily_url == "https://power.larc.nasa.gov/api/temporal/daily/point"
-
-    def test_addresses_come_from_the_environment(self):
-        config = DataSourceConfig.load(ENVIRONMENT)
-        assert [s.key for s in config.point_sources] == ["slope_pct", "ndvi", "soil_saturation"]
-        assert config.sources["slope_pct"].json_path == "data.0.slope"
-        assert config.sources["soil_saturation"].scale == 0.01
-
-    def test_addresses_come_from_a_file_and_the_environment_wins(self, tmp_path):
-        file = tmp_path / "sources.json"
-        file.write_text(
-            json.dumps(
-                {
-                    "slope_pct": "https://file.test/slope",
-                    "ksat_mm_h": {
-                        "url": "https://file.test/ksat",
-                        "jsonPath": "ksat",
-                        "scale": 3.6,
-                        "headers": {"Authorization": "Bearer secret"},
-                    },
-                    "power_daily": {"url": "https://power.test/daily"},
-                }
-            ),
-            encoding="utf-8",
-        )
-        environment = {
-            "FIELD_SHIFT_DATA_SOURCES": str(file),
-            "FIELD_SHIFT_URL_SLOPE_PCT": "https://env.test/slope",
-        }
-        config = DataSourceConfig.load(environment)
-        assert config.sources["slope_pct"].url == "https://env.test/slope"
-        ksat = config.sources["ksat_mm_h"]
-        assert (ksat.url, ksat.json_path, ksat.scale) == ("https://file.test/ksat", "ksat", 3.6)
-        assert ksat.headers == {"Authorization": "Bearer secret"}
-        assert config.power_daily_url == "https://power.test/daily"
-
-    @pytest.mark.parametrize(
-        "content, message",
-        [
-            ('{"pente": "https://x.test"}', "inconnue"),
-            ("pas du json", "n’a pas pu être lu"),
-            ('{"slope_pct": {"scale": "beaucoup"}}', "scale"),
-            ("[]", "objet JSON"),
-        ],
-    )
-    def test_a_wrong_file_is_refused_when_the_server_starts(self, tmp_path, content, message):
-        file = tmp_path / "sources.json"
-        file.write_text(content, encoding="utf-8")
-        with pytest.raises(DataSourceConfigError, match=message):
-            DataSourceConfig.load({"FIELD_SHIFT_DATA_SOURCES": str(file)})
-
-    def test_a_missing_file_is_refused(self, tmp_path):
-        with pytest.raises(DataSourceConfigError, match="introuvable"):
-            DataSourceConfig.load({"FIELD_SHIFT_DATA_SOURCES": str(tmp_path / "absent.json")})
-
-    def test_the_path_to_a_value(self):
-        document = {"results": [{"value": 4.2}], "properties": {"parameter": {"ANN": 3}}}
-        assert value_at(document, "results.0.value") == 4.2
-        assert value_at(document, "properties.parameter.ANN") == 3
-
-    def test_values_are_read_at_the_point_scaled_and_remembered(self):
-        http, requests = source_server(
-            {"srtm.test": {"data": [{"slope": 7.5}]}, "smap.test": {"value": 40}}
-        )
-        provider = RemoteSiteData(DataSourceConfig.load(ENVIRONMENT), http)
-        readings = {r.key: (r.value, r.origin) for r in provider.site_readings(45.5, -73.25)}
-        assert readings == {
-            "slope_pct": (7.5, "SRTM (NASA Earthdata)"),
-            "soil_saturation": (0.4, "SMAP"),
-        }  # the NDVI server failed: skipped
-        assert str(requests[0].url) == "https://srtm.test/slope?lat=45.50000&lon=-73.25000"
-        assert str(requests[2].url) == "https://smap.test/45.50000/-73.25000"
-        # A place with a failed source is read again; a complete one is remembered.
-        provider.site_readings(45.5, -73.25)
-        assert len(requests) == 6
-
-    def test_a_complete_place_is_read_once(self):
-        http, requests = source_server({"srtm.test": {"value": 3}})
-        # NASA POWER (configured by default) is not in the fake server: switch it off.
-        config = DataSourceConfig.load(
-            {
-                "FIELD_SHIFT_URL_SLOPE_PCT": "https://srtm.test/",
-                "FIELD_SHIFT_URL_ANNUAL_RAIN_MM": "",
-            }
-        )
-        provider = RemoteSiteData(config, http)
-        provider.site_readings(45.5, -73.0)
-        provider.site_readings(45.5004, -73.0004)  # the same place, about 50 m away
-        assert len(requests) == 1
-
-    @pytest.mark.parametrize("answer", [{"value": -999}, {"value": "n/a"}, {"other": 1}, [1]])
-    def test_a_fill_value_or_an_unexpected_answer_is_ignored(self, answer):
-        http, _ = source_server({"srtm.test": answer})
-        config = DataSourceConfig.load(
-            {
-                "FIELD_SHIFT_URL_SLOPE_PCT": "https://srtm.test/",
-                "FIELD_SHIFT_URL_ANNUAL_RAIN_MM": "",
-            }
-        )
-        assert RemoteSiteData(config, http).site_readings(45.5, -73.0) == []
-
-    def test_the_section_wins_over_the_sources_which_win_over_the_defaults(self):
-        http, _ = source_server(
-            {"srtm.test": {"data": [{"slope": 7.5}]}, "smap.test": {"value": 40}}
-        )
-        settings = Settings(weather="nasa", data_sources=DataSourceConfig.load(ENVIRONMENT))
-        service = RankingService(RemoteSiteData(settings.data_sources, http))
-        client = TestClient(create_app(Settings(weather="demo"), ranking_service=service))
-        request = deepcopy(REQUEST)
-        request["sections"] = [{"id": "A"}, {"id": "B", "site": {"slopePct": 1}}]
-        sections = client.post("/rotations/rank", json=request).json()["sections"]
-        site_a, site_b = (
-            {value["key"]: (value["value"], value["origin"]) for value in section["site"]}
-            for section in sections
-        )
-        assert site_a["slope_pct"] == (7.5, "SRTM (NASA Earthdata)")
-        assert site_a["soil_saturation"] == (0.4, "SMAP")
-        assert site_a["ksat_mm_h"] == (10, "valeur par défaut")
-        assert site_b["slope_pct"] == (1, "section")
-
-    def test_the_route_shows_the_configuration_without_its_secrets(self):
-        environment = ENVIRONMENT | {"FIELD_SHIFT_URL_NDVI": "https://ndvi.test/point?key=SECRET"}
-        settings = Settings(weather="nasa", data_sources=DataSourceConfig.load(environment))
-        client = TestClient(create_app(settings))
+class TestDataSourcesRoute:
+    def test_the_services_with_their_dataset_and_reference(self, client):
         sources = {source["key"]: source for source in client.get("/data-sources").json()}
-        assert set(sources) == {source.key for source in DATA_SOURCES}
-        assert sources["ndvi"]["configured"] and sources["ndvi"]["url"] == "https://ndvi.test/point"
-        assert sources["ksat_mm_h"] == {
-            "key": "ksat_mm_h",
-            "dataset": "USDA SSURGO",
-            "provides": "Conductivité hydraulique à saturation, en mm/h",
-            "configured": False,
-            "url": None,
-            "jsonPath": "value",
-            "scale": 1,
+        assert set(sources) == {
+            "power_daily",
+            "power_climatology",
+            "power_hourly",
+            "soilgrids",
+            "elevation",
+            "modis",
         }
-        assert "SECRET" not in client.get("/data-sources").text
-
-    def test_in_demo_mode_no_source_is_read(self, client):
-        assert not any(source["configured"] for source in client.get("/data-sources").json())
-
-    def test_the_weather_address_of_the_plan_comes_from_the_configuration(self):
-        config = DataSourceConfig.load({"FIELD_SHIFT_URL_POWER_DAILY": "https://power.test/daily"})
-        settings = Settings.from_environment(
-            {"FIELD_SHIFT_URL_POWER_DAILY": "https://power.test/daily"}
-        )
-        assert settings.data_sources == config
-        assert settings.data_sources.power_daily_url == "https://power.test/daily"
+        assert sources["soilgrids"]["reference"].startswith("Poggio et al.")
+        assert sources["elevation"]["url"] == "https://api.open-meteo.com/v1/elevation"

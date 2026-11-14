@@ -1,7 +1,8 @@
 """Wire format of the rotation ranking: `RankingInput` → `RotationRanking`.
 
 What the client sends (`POST /rotations/rank`):
-  - the place of the field and its sections (each with what is known of its soil and relief);
+  - the sections of the field, each with its outline (a GeoJSON polygon) and what is known of its
+    soil, relief and practices; what is not given is read from the data services;
   - the duration of the simulation;
   - the priorities: the weight of each of the four measures in the score;
   - the rotations to compare — or a selection of crops and a cycle length, from which the server
@@ -18,13 +19,14 @@ with a 422 that says which field is wrong.
 
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import AfterValidator, Field, model_validator
 
 from field_shift.algorithm.soil_protection.site_conditions import SITE_VARIABLES
+from field_shift.algorithm.terrain.section_shape import MAX_VERTICES, SectionShape
 from field_shift.contract.base import CamelModel
-from field_shift.contract.farm_input import MAX_SECTION_ID_LENGTH, CropId, Location
+from field_shift.contract.farm_input import MAX_SECTION_ID_LENGTH, CropId
 from field_shift.reference.measures import MEASURE_IDS
 from field_shift.reference.planning import MAX_CYCLE_YEARS
 
@@ -47,12 +49,14 @@ def _known_measure(value: str) -> str:
 MeasureId = Annotated[str, AfterValidator(_known_measure)]
 
 
-def _site_field(key: str):
-    """An optional field of `SiteInput` bounded to the valid range of its site variable."""
+def _site_field(key: str, required: bool = False):
+    """A field of `SiteInput` bounded to the valid range of its site variable (optional unless
+    `required`: what is not given is read from the data services)."""
     variable = SITE_VARIABLES[key]
     unit = f" ({variable.unit})" if variable.unit else ""
+    extra = {} if required else {"default": None}
     return Field(
-        default=None, ge=variable.minimum, le=variable.maximum, description=variable.label + unit
+        ge=variable.minimum, le=variable.maximum, description=variable.label + unit, **extra
     )
 
 
@@ -102,9 +106,13 @@ class RotationInput(CamelModel):
 
 
 class SiteInput(CamelModel):
-    """What is known of the soil, the relief and the climate of a section. Every field is
-    optional: what is absent is read from the data sources (SSURGO, SRTM, NASA POWER, GPM IMERG,
-    SMAP, Landsat, ECOSTRESS) when they are configured, or takes its default value."""
+    """What is known of the soil, the relief, the climate and the practices of a section.
+
+    `supportPracticeFactor` (RUSLE P: 1 without contouring, strips or terraces) is required: no
+    data service knows the practices of a farm. Every other field is optional: what is absent is
+    read from the data services (SoilGrids, Copernicus DEM, NASA POWER, MODIS) or computed by a
+    published model (Ksat, K, R). There is no default value: a service that fails gives a 502.
+    """
 
     slope_pct: float | None = _site_field("slope_pct")
     slope_length_m: float | None = _site_field("slope_length_m")
@@ -113,7 +121,7 @@ class SiteInput(CamelModel):
     organic_matter_pct: float | None = _site_field("organic_matter_pct")
     ksat_mm_h: float | None = _site_field("ksat_mm_h")
     k_factor: float | None = _site_field("k_factor")
-    support_practice_factor: float | None = _site_field("support_practice_factor")
+    support_practice_factor: float = _site_field("support_practice_factor", required=True)
     ndvi: float | None = _site_field("ndvi")
     root_activity: float | None = _site_field("root_activity")
     annual_rain_mm: float | None = _site_field("annual_rain_mm")
@@ -128,22 +136,44 @@ class SiteInput(CamelModel):
         return self
 
 
+Position = Annotated[list[float], Field(min_length=2, max_length=3)]
+Ring = Annotated[list[Position], Field(min_length=4, max_length=MAX_VERTICES + 1)]
+
+
+class PolygonInput(CamelModel):
+    """The outline of a section: a GeoJSON Polygon (RFC 7946) with one ring of [lon, lat]
+    positions (WGS84), closed (the last position repeats the first), without holes."""
+
+    type: Literal["Polygon"]
+    coordinates: list[Ring] = Field(
+        min_length=1, max_length=1, description="One ring: holes are not supported."
+    )
+
+    @model_validator(mode="after")
+    def is_a_usable_outline(self) -> PolygonInput:
+        SectionShape.from_coordinates(self.coordinates[0])  # ShapeError is a ValueError: 422
+        return self
+
+    @property
+    def shape(self) -> SectionShape:
+        return SectionShape.from_coordinates(self.coordinates[0])
+
+
 class RankingSectionInput(CamelModel):
-    """One section of the field."""
+    """One section of the field: its outline, and what is known of it."""
 
     id: str = Field(min_length=1, max_length=MAX_SECTION_ID_LENGTH)
-    area_ha: float | None = Field(default=None, gt=0)
-    location: Location | None = Field(
-        default=None, description="Centre of the section; the place of the field when absent."
+    geometry: PolygonInput = Field(
+        description="Outline of the section. Its area, centre, slope and slope length are "
+        "computed from it; the soil, rain and satellite measures are read at its centre."
     )
     irrigated: bool = False
-    site: SiteInput = Field(default_factory=SiteInput)
+    site: SiteInput
 
 
 class RankingInput(CamelModel):
     """The request of `POST /rotations/rank` and of the `POST /measures/…` routes."""
 
-    location: Location = Field(description="Place of the field.")
     simulation_years: float = Field(
         gt=0, le=MAX_SIMULATION_YEARS, description="Total duration of the simulation, in years."
     )
@@ -292,18 +322,30 @@ class SiteValueOut(CamelModel):
     label: str
     value: float
     unit: str
-    origin: str = Field(description='"section", the name of a dataset, or "valeur par défaut".')
+    origin: str = Field(
+        description='"section", the dataset it was read from, or the model that computed it '
+        '("calcul : …").'
+    )
+    method: str = Field(
+        default="", description="How it was computed, when it is not a value read as is."
+    )
+
+
+class PointOut(CamelModel):
+    lat: float
+    lon: float
 
 
 class SectionRankingOut(CamelModel):
     id: str
+    area_ha: float = Field(description="Area of the outline.")
+    centroid: PointOut = Field(description="Where the soil, rain and satellite data are read.")
     site: list[SiteValueOut]
     notes: list[str] = Field(
         default_factory=list,
         description=(
-            "Every value the model used that neither the request nor a data source gave: "
-            "default values, values estimated from other ones (R, K, silt), and assumptions made "
-            "for the missing satellite measures."
+            "Every value that is not a value given in the request or read as is from a data "
+            "service: conversions, statistics and published models, with their inputs."
         ),
     )
     rotations: list[RankedRotationOut] = Field(description="Best rotation first.")
@@ -339,12 +381,10 @@ class CropOut(CamelModel):
 
 
 class DataSourceOut(CamelModel):
-    """A data source as configured (`GET /data-sources`). Headers are never shown."""
+    """A data service as configured (`GET /data-sources`). Headers are never shown."""
 
     key: str
     dataset: str
     provides: str
-    configured: bool
-    url: str | None
-    json_path: str
-    scale: float
+    reference: str = Field(description="The publication that describes the dataset.")
+    url: str

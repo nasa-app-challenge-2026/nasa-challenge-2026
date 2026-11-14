@@ -267,10 +267,10 @@ Règles :
 
 ## Lancer le serveur et le brancher
 
-1. `cd backend/server`, installer (`pip install -e ".[dev]"`) puis `python -m uvicorn field_shift.api.main:app --port 8000` : voir [`backend/server/README.md`](../backend/server/README.md).
+1. `cd api`, installer (`pip install -e ".[dev]"`) puis `python -m uvicorn field_shift.api.main:app --port 8000` : voir [`api/README.md`](../api/README.md).
 2. `npm run check:algo -- http://localhost:8000` doit afficher « Tout respecte le contrat ».
 3. `npm run dev` : le front appelle `http://localhost:8000` par défaut. Ailleurs, `VITE_ALGO_URL` donne l'adresse du serveur (dans `.env.local`, ou dans les variables du dépôt GitHub pour le site publié).
 
-Sans réseau, `FIELD_SHIFT_WEATHER=demo` lance le serveur avec la météo fictive de la référence.
+Le serveur n'a pas de mode démo : il lit toujours NASA POWER, et répond `502` (avec la source en cause) quand elle ne répond pas.
 
 Un autre serveur (dans un autre langage) peut remplacer celui-ci : il lui suffit de répondre à `POST /plan` selon ce schéma.

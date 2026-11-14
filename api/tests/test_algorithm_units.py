@@ -22,8 +22,8 @@ from field_shift.algorithm.sources.field_data import (
 from field_shift.algorithm.timeline import month_time
 from field_shift.algorithm.twins.soil_comparison import Soil
 from field_shift.algorithm.weather.daily_weather import DailyWeather
-from field_shift.data_access.weather_providers import DemoWeatherProvider
 from field_shift.services.plan_service import MAX_PLACES, PlanService
+from field_shift.tools.make_examples import ExampleWeatherProvider
 
 
 class TestDeliberateDifferences:
@@ -163,7 +163,7 @@ class TestPlacesAreKept:
     ):
         reads = []
 
-        class CountingWeather(DemoWeatherProvider):
+        class CountingWeather(ExampleWeatherProvider):
             def farm_weather(self, lat, lon):
                 reads.append((lat, lon))
                 return super().farm_weather(lat, lon)

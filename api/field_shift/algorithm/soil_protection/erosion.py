@@ -2,9 +2,9 @@
 
     A = R × K × LS × C × P          (t/ha/year)
 
-    R   erosivity of the rain          from GPM IMERG, or estimated from the annual rain
-    K   erodibility of the soil        from SSURGO, or estimated from texture and organic matter
-    LS  slope length and steepness     from SRTM
+    R   erosivity of the rain          given, or estimated from the annual rain (NASA POWER)
+    K   erodibility of the soil        given, or estimated from texture and organic matter
+    LS  slope length and steepness     from the elevation model and the shape of the section
     C   cover and management           from the rotation: this is what the ranking compares
     P   support practices              contouring, strips, terraces (1 without any)
 
@@ -96,7 +96,7 @@ def erosivity_from_annual_rain(annual_rain_mm: float) -> float:
         R = 587.8 − 1.219 P + 0.004105 P²         P > 850 mm
 
     A rough estimate (it ignores how intense the storms are): the R computed from the 30-minute
-    intensities of GPM IMERG replaces it as soon as that source is configured.
+    intensities of a rain gauge or of GPM IMERG can be given in the request instead.
     """
     rain = max(annual_rain_mm, 0.0)
     if rain <= EROSIVITY_RAIN_BREAK_MM:
@@ -108,7 +108,7 @@ def erodibility_from_texture(
     sand_pct: float, silt_pct: float, clay_pct: float, organic_matter_pct: float
 ) -> float:
     """K (t·ha·h/(ha·MJ·mm)) estimated from the texture and the organic matter (EPIC equation,
-    Williams 1995), for the soils SSURGO does not describe:
+    Williams 1995), when the request does not give K:
 
         K_US = f_sand × f_clay-silt × f_organic-carbon × f_high-sand
 
@@ -281,34 +281,13 @@ class ErosionEstimate:
         return 1 / (1 + self.tolerance_ratio)
 
 
-def site_r_factor(site: SiteConditions) -> float:
-    """R of the section: given by the site (GPM IMERG or the request), else estimated from the
-    annual rain (see `erosivity_from_annual_rain`)."""
-    if site.r_factor is not None:
-        return site.r_factor
-    return erosivity_from_annual_rain(site.annual_rain_mm)
-
-
-def site_k_factor(site: SiteConditions) -> float:
-    """K of the section: given by the site (SSURGO or the request), else estimated from the
-    texture and the organic matter (see `erodibility_from_texture`)."""
-    if site.k_factor is not None:
-        return site.k_factor
-    return erodibility_from_texture(
-        site.sand_pct, site.silt_pct, site.clay_pct, site.organic_matter_pct
-    )
-
-
 def estimate_erosion(
     timeline: Sequence[RotationPhase], site: SiteConditions, initial_residue_pct: float = 0.0
 ) -> ErosionEstimate:
-    """The RUSLE factors of a rotation timeline on a section.
-
-    R and K are taken from the site when a data source gave them, estimated otherwise.
-    """
+    """The RUSLE factors of a rotation timeline on a section."""
     return ErosionEstimate(
-        r_factor=site_r_factor(site),
-        k_factor=site_k_factor(site),
+        r_factor=site.r_factor,
+        k_factor=site.k_factor,
         ls_factor=topographic_factor(site.slope_pct, site.slope_length_m),
         c_factor=cover_management_factor(timeline, site.canopy_vigour, initial_residue_pct),
         p_factor=site.support_practice_factor,

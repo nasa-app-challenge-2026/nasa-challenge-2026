@@ -1,18 +1,8 @@
 {
-  "slope_pct": {
-    "url": "https://exemple.org/srtm/pente?lat={lat}&lon={lon}",
-    "jsonPath": "pente_pct"
-  },
-  "ksat_mm_h": {
-    "url": "https://exemple.org/ssurgo/ksat?lat={lat}&lon={lon}",
-    "jsonPath": "resultats.0.ksat_um_s",
-    "scale": 3.6
-  },
-  "soil_saturation": {
-    "url": "https://exemple.org/smap/humidite?latitude={lat}&longitude={lon}",
-    "jsonPath": "saturation_pct",
-    "scale": 0.01,
-    "headers": { "Authorization": "Bearer <jeton Earthdata>" }
-  },
-  "ndvi": "https://exemple.org/landsat/ndvi?lat={lat}&lon={lon}"
+  "soilgrids": "https://rest.isric.org/soilgrids/v2.0/properties/query",
+  "elevation": "https://api.open-meteo.com/v1/elevation",
+  "modis": {
+    "url": "https://modis.ornl.gov/rst/api/v1",
+    "headers": { "X-Exemple": "en-tête envoyé à chaque requête (un jeton, une clé)" }
+  }
 }

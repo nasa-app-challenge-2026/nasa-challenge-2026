@@ -11,9 +11,9 @@ Bare soil and fallow count as a phase with the lowest score (1), so the RPI goes
     4.0 to 5.0   excellent protection, the soil structure regenerates
 
 The *adjusted* RPI is the same sum with the scores brought down to what the satellites see on the
-field (step 3 of the pipeline): the cover score follows the vigour of the canopy (NDVI), the
-infiltration score follows the activity of the roots (ECOSTRESS). A score of 1 cannot go lower: a
-crop without vigour protects like bare soil. Without satellite measure both indices are equal.
+field (step 3 of the pipeline): the cover score follows the vigour of the canopy (MODIS NDVI),
+the infiltration score follows the activity of the roots (MODIS ET / PET). A score of 1 cannot go
+lower: a crop without vigour protects like bare soil. At full vigour both indices are equal.
 """
 
 from __future__ import annotations

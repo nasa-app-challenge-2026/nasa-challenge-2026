@@ -1,119 +1,201 @@
-"""Reads the conditions of a place (slope, soil, rain, satellite measures) from the configured
-data sources.
+"""Reads the conditions of a section (slope, soil, rain, satellite measures) from the data
+services, at the place and over the shape of the section.
 
-Each configured source is one HTTP GET at the point (see `data_source_config` for the format).
-A source that fails is skipped and logged: the model then keeps its default value, and the
-answer of the server says where each value came from.
+Only the services that give a variable the request did not give are called, in parallel. A
+service that fails makes the whole section fail (`SiteDataUnavailableError`, with every failed
+service and its reason): the model has no default value to fall back on. What a service answered
+for a place is remembered, so a farmer editing his field does not read it again.
 """
 
 from __future__ import annotations
 
-import logging
-import math
 import threading
 from collections import OrderedDict
-from typing import Any, Final, Protocol
+from collections.abc import Callable, Collection
+from concurrent.futures import ThreadPoolExecutor
+from datetime import date
+from typing import Final, Protocol, TypeVar
 
 import httpx
 
-from field_shift.algorithm.soil_protection.site_conditions import SITE_VARIABLES, SiteReading
-from field_shift.data_access.data_source_config import DataEndpoint, DataSourceConfig
+from field_shift.algorithm.soil_protection.forcing import last_growing_season
+from field_shift.algorithm.soil_protection.site_conditions import SiteReading
+from field_shift.algorithm.terrain.section_shape import SectionShape
+from field_shift.algorithm.terrain.slope import terrain_of, terrain_sample
+from field_shift.data_access.data_source_config import (
+    ELEVATION,
+    MODIS,
+    POWER_CLIMATOLOGY,
+    POWER_HOURLY,
+    SOILGRIDS,
+    DataSourceConfig,
+)
+from field_shift.data_access.site_readers import (
+    SourceError,
+    read_climatology,
+    read_elevations,
+    read_et_ratio,
+    read_ndvi,
+    read_soil,
+    read_storm,
+)
 
-logger = logging.getLogger(__name__)
+T = TypeVar("T")
 
-TIMEOUT_S: Final = 15.0
-#: Points closer than 0.01° (about 1 km) share the same readings.
-CACHE_PRECISION: Final = 100
-#: Places kept in memory.
-MAX_CACHED_PLACES: Final = 256
-COORDINATE_DECIMALS: Final = 5
+TIMEOUT_S: Final = 30.0
+#: Points closer than 0.001° (about 100 m) share the same readings.
+CACHE_PRECISION: Final = 1000
+MAX_CACHED: Final = 512
+MAX_PARALLEL_REQUESTS: Final = 6
+ORIGIN_SHAPE: Final = "calcul : forme de la section"
+
+TERRAIN_KEYS: Final = frozenset({"slope_pct", "slope_length_m"})
+SOIL_KEYS: Final = frozenset({"sand_pct", "clay_pct", "organic_matter_pct"})
+CLIMATOLOGY_KEYS: Final = frozenset({"annual_rain_mm", "soil_saturation"})
 
 
-class SiteDataError(RuntimeError):
-    """A data source could not give its value (network, error answer, unexpected content)."""
+class SiteDataUnavailableError(RuntimeError):
+    """One or more data services could not give the values a section needs."""
+
+    def __init__(self, failures: Collection[SourceError]) -> None:
+        self.failures = tuple(failures)
+        super().__init__(" ; ".join(str(failure) for failure in self.failures))
 
 
 class SiteDataProvider(Protocol):
-    """Gives what the data sources know about a place."""
+    """Gives what the data services know about a section."""
 
-    def site_readings(self, lat: float, lon: float) -> list[SiteReading]:
-        """The readings available at the point (possibly none); never raises."""
+    def site_readings(self, shape: SectionShape, needed: Collection[str]) -> list[SiteReading]:
+        """The readings of the `needed` variables. Raises SiteDataUnavailableError."""
         ...
 
 
-class NoSiteData:
-    """No data source at all: the model runs on what the sections give and on its defaults
-    (demo mode, tests)."""
+class _Cache:
+    """A small thread-safe memory of the last answers, by key."""
 
-    def site_readings(self, lat: float, lon: float) -> list[SiteReading]:
-        return []
+    def __init__(self) -> None:
+        self._items: OrderedDict[object, object] = OrderedDict()
+        self._lock = threading.Lock()
 
-
-def value_at(document: Any, json_path: str) -> Any:
-    """The value at a dotted path of a JSON document ("results.0.value").
-
-    A segment is a key of an object or a position in a list. Raises SiteDataError when the path
-    does not exist.
-    """
-    current = document
-    for segment in filter(None, json_path.split(".")):
-        try:
-            current = current[int(segment)] if isinstance(current, list) else current[segment]
-        except (KeyError, IndexError, ValueError, TypeError):
-            raise SiteDataError(f"chemin {json_path!r} absent de la réponse") from None
-    return current
+    def get_or_compute(self, key: object, compute: Callable[[], T]) -> T:
+        with self._lock:
+            if key in self._items:
+                self._items.move_to_end(key)
+                return self._items[key]  # type: ignore[return-value]
+        value = compute()  # outside the lock: services are read in parallel; failures not kept
+        with self._lock:
+            self._items[key] = value
+            while len(self._items) > MAX_CACHED:
+                self._items.popitem(last=False)
+        return value
 
 
 class RemoteSiteData:
-    """Reads the configured point sources over HTTP, and remembers the places already read."""
+    """Reads the configured data services over HTTP."""
 
-    def __init__(self, config: DataSourceConfig, http: httpx.Client | None = None) -> None:
-        self._sources = config.point_sources
+    def __init__(
+        self,
+        config: DataSourceConfig,
+        http: httpx.Client | None = None,
+        today: Callable[[], date] = date.today,
+    ) -> None:
+        self._config = config
         self._http = http or httpx.Client(timeout=TIMEOUT_S)
-        self._cache: OrderedDict[tuple[int, int], list[SiteReading]] = OrderedDict()
-        self._lock = threading.Lock()
+        self._today = today
+        self._cache = _Cache()
 
-    def site_readings(self, lat: float, lon: float) -> list[SiteReading]:
-        key = (round(lat * CACHE_PRECISION), round(lon * CACHE_PRECISION))
-        with self._lock:
-            if key in self._cache:
-                self._cache.move_to_end(key)
-                return self._cache[key]
-        readings, complete = self._read_all(lat, lon)
-        if complete:  # a place with a failed source is not kept: the source is tried again
-            with self._lock:
-                self._cache[key] = readings
-                while len(self._cache) > MAX_CACHED_PLACES:
-                    self._cache.popitem(last=False)
-        return readings
+    def site_readings(self, shape: SectionShape, needed: Collection[str]) -> list[SiteReading]:
+        needed = set(needed)
+        lon, lat = shape.centroid
+        place = (round(lat * CACHE_PRECISION), round(lon * CACHE_PRECISION))
+        jobs: list[tuple[object, Callable[[], list[SiteReading]]]] = []
+        if needed & TERRAIN_KEYS:
+            jobs.append((("terrain", shape.ring), lambda: self._terrain(shape)))
+        if needed & SOIL_KEYS:
+            jobs.append(
+                (("soil", place), lambda: read_soil(self._http, self._config[SOILGRIDS], lat, lon))
+            )
+        if needed & CLIMATOLOGY_KEYS:
+            jobs.append(
+                (
+                    ("climatology", place),
+                    lambda: read_climatology(self._http, self._config[POWER_CLIMATOLOGY], lat, lon),
+                )
+            )
+        today = self._today()
+        if "storm_intensity_mm_h" in needed:
+            jobs.append(
+                (
+                    ("storm", place, today.year),
+                    lambda: [read_storm(self._http, self._config[POWER_HOURLY], lat, lon, today)],
+                )
+            )
+        season = last_growing_season(lat, today)
+        if "ndvi" in needed:
+            jobs.append(
+                (
+                    ("ndvi", place, season),
+                    lambda: [read_ndvi(self._http, self._config[MODIS], lat, lon, season)],
+                )
+            )
+        if "root_activity" in needed:
+            jobs.append(
+                (
+                    ("et", place, season),
+                    lambda: [read_et_ratio(self._http, self._config[MODIS], lat, lon, season)],
+                )
+            )
+        return [reading for reading in self._run(jobs) if reading.key in needed]
 
-    def _read_all(self, lat: float, lon: float) -> tuple[list[SiteReading], bool]:
-        """The readings of every source, and whether all of them answered."""
-        readings: list[SiteReading] = []
-        complete = True
-        for source in self._sources:
+    def _run(self, jobs: list[tuple[object, Callable[[], list[SiteReading]]]]) -> list[SiteReading]:
+        """Every job in parallel; all the failures together."""
+        if not jobs:
+            return []
+
+        def attempt(
+            job: tuple[object, Callable[[], list[SiteReading]]],
+        ) -> list[SiteReading] | SourceError:
+            key, compute = job
             try:
-                value = self._read(source, lat, lon)
-                readings.append(SiteReading(source.key, value, source.dataset))
-            except SiteDataError as error:
-                complete = False
-                logger.warning("%s (%s): %s; default value used", source.key, source.dataset, error)
-        return readings, complete
+                return self._cache.get_or_compute(key, compute)
+            except SourceError as error:
+                return error
 
-    def _read(self, source: DataEndpoint, lat: float, lon: float) -> float:
-        """The value of one source at the point, in the unit of its site variable."""
-        url = source.url.replace("{lat}", f"{lat:.{COORDINATE_DECIMALS}f}").replace(
-            "{lon}", f"{lon:.{COORDINATE_DECIMALS}f}"
+        with ThreadPoolExecutor(max_workers=min(MAX_PARALLEL_REQUESTS, len(jobs))) as pool:
+            results = list(pool.map(attempt, jobs))
+        failures = [result for result in results if isinstance(result, SourceError)]
+        if failures:
+            raise SiteDataUnavailableError(failures)
+        return [
+            reading
+            for result in results
+            if not isinstance(result, SourceError)
+            for reading in result
+        ]
+
+    def _terrain(self, shape: SectionShape) -> list[SiteReading]:
+        endpoint = self._config[ELEVATION]
+        sample = terrain_sample(shape)
+        terrain = terrain_of(
+            shape, sample, read_elevations(self._http, endpoint, sample.geographic)
         )
-        try:
-            response = self._http.get(url, headers=dict(source.headers))
-            response.raise_for_status()
-            raw = value_at(response.json(), source.json_path)
-            value = float(raw) * source.scale
-        except httpx.HTTPError as error:
-            raise SiteDataError(f"la source n’a pas répondu : {error}") from error
-        except (TypeError, ValueError) as error:
-            raise SiteDataError(f"réponse illisible : {error}") from error
-        if math.isnan(value) or not SITE_VARIABLES[source.key].accepts(value):
-            raise SiteDataError(f"valeur hors limites : {value}")
-        return value
+        where = (
+            "dans la section"
+            if terrain.inside
+            else "sur une fenêtre de 270 m autour de la section (plus petite que la grille)"
+        )
+        return [
+            SiteReading(
+                "slope_pct",
+                terrain.slope_pct,
+                endpoint.dataset,
+                f"plan ajusté par moindres carrés sur {terrain.points} altitudes {where}",
+            ),
+            SiteReading(
+                "slope_length_m",
+                terrain.slope_length_m,
+                ORIGIN_SHAPE,
+                "longueur de la section dans le sens de la plus grande pente (RUSLE la borne à "
+                "305 m)",
+            ),
+        ]

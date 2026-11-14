@@ -8,7 +8,7 @@
     "sources": {
       "farmWeather": {
         "real": false,
-        "label": "Météo fictive (mode démonstration)"
+        "label": "Météo fictive de field_shift.py (plans d’exemple du contrat)"
       },
       "climateModels": {
         "real": false,

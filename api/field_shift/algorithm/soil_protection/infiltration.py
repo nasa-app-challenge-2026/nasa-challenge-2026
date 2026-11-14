@@ -1,14 +1,14 @@
 """Effective infiltration of a rotation: how much of a storm the soil of the section takes in.
 
-    baseline     Ksat of the soil (SSURGO): the infiltration it can reach
+    baseline     Ksat of the soil: the infiltration it can reach
     × rotation   the roots and the cover of the rotation open the soil (meta-analysis below)
-    × moisture   a soil already wet (SMAP) takes less, whatever its roots
-    = effective infiltration rate (mm/h), compared with the intensity of a storm (GPM IMERG)
+    × moisture   a soil already wet takes less, whatever its roots
+    = effective infiltration rate (mm/h), compared with the intensity of a storm
 
 Effect of the rotation (Basche and DeLonge, PLOS ONE 2019, 89 field studies, 391 comparisons):
 perennials raise the infiltration rate by 59.2 % (± 20.9) against annual crops, cover crops by
 34.8 % (± 7.7) against bare soil. The gain is applied during the months the perennial or the cover
-crop is in place, in proportion to the activity of its roots (ECOSTRESS). The other practices of
+crop is in place, in proportion to the activity of its roots (ET / PET). The other practices of
 the meta-analysis had no significant effect (no-till, crop rotation) and are not counted; annual
 crops and bare soil are the control (no gain).
 
@@ -46,7 +46,7 @@ class InfiltrationEstimate:
 
     baseline_mm_h         Ksat of the soil
     rotation_multiplier   mean effect of the rotation over the simulation (1 = annual crops only)
-    moisture_factor       what the soil moisture leaves of it (1 = dry or unknown)
+    moisture_factor       what the soil moisture leaves of it (1 = dry)
     storm_intensity_mm_h  the storm the infiltration is compared with
     """
 
@@ -97,11 +97,9 @@ def rotation_multiplier(timeline: Sequence[RotationPhase], root_vigour: float = 
     return weighted / total_months
 
 
-def moisture_factor(soil_saturation: float | None) -> float:
-    """What the soil moisture leaves of the infiltration: 1 on a dry soil (or without SMAP
-    measure), down to 0.1 on a saturated one."""
-    if soil_saturation is None:
-        return 1.0
+def moisture_factor(soil_saturation: float) -> float:
+    """What the soil moisture leaves of the infiltration: 1 on a dry soil, down to 0.1 on a
+    saturated one."""
     return 1 - SATURATION_INFILTRATION_LOSS * clamp01(soil_saturation)
 
 

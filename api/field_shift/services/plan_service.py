@@ -66,8 +66,7 @@ class PlanService:
             algorithm = FieldShiftAlgorithm(
                 farm_weather.weather, farm_weather.source, lat, lon, current_year
             )
-            if not farm_weather.is_fallback:  # a fallback is not kept: NASA POWER is tried again
-                self._places[key] = algorithm
-                while len(self._places) > MAX_PLACES:
-                    self._places.popitem(last=False)
+            self._places[key] = algorithm
+            while len(self._places) > MAX_PLACES:
+                self._places.popitem(last=False)
             return algorithm

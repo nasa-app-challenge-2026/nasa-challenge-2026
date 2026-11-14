@@ -1,47 +1,25 @@
-"""THE place where the addresses of the NASA and partner data sources are configured.
+"""THE place where the addresses of the data services are configured.
 
-Every value the server reads from the outside has one entry in `DATA_SOURCES` below: the dataset
-it comes from, its default address (None while the team has not chosen a service) and how to read
-the value in the answer. An address can be set or replaced WITHOUT TOUCHING THE CODE, in two ways:
+Every service the server reads from has one entry in `DATA_SOURCES` below, with its default
+address. All of them are public and need no key; an address (a mirror, a proxy) or HTTP headers (a
+token) can be set WITHOUT TOUCHING THE CODE, in two ways:
 
-1. A JSON file (easiest: copy `data_sources.example.json` to `data_sources.json` in
-   `backend/server` and paste the addresses):
+1. A JSON file (copy `data_sources.example.json` to `data_sources.json` in `api/`):
 
        {
-         "slope_pct": {
-           "url": "https://example.org/srtm/slope?lat={lat}&lon={lon}",
-           "jsonPath": "data.slope_percent"
-         },
-         "soil_saturation": {
-           "url": "https://example.org/smap?latitude={lat}&longitude={lon}",
-           "jsonPath": "results.0.sm_surface_wetness",
-           "scale": 0.01,
-           "headers": {"Authorization": "Bearer <jeton Earthdata>"}
-         }
+         "soilgrids": "https://rest.isric.org/soilgrids/v2.0/properties/query",
+         "modis": {"url": "https://modis.ornl.gov/rst/api/v1", "headers": {"Authorization": "…"}}
        }
 
    The file read is `data_sources.json` in the folder the server is started from, or the one
    named by the environment variable `FIELD_SHIFT_DATA_SOURCES`.
 
-2. Environment variables, which win over the file (KEY is the key of the source in capitals):
+2. Environment variables, which win over the file: `FIELD_SHIFT_URL_<KEY>` (KEY is the key of
+   the service in capitals), e.g. `FIELD_SHIFT_URL_SOILGRIDS=https://…`.
 
-       FIELD_SHIFT_URL_<KEY>         the address          FIELD_SHIFT_URL_SLOPE_PCT=https://…
-       FIELD_SHIFT_JSON_PATH_<KEY>   where the value is   FIELD_SHIFT_JSON_PATH_SLOPE_PCT=data.slope
-       FIELD_SHIFT_SCALE_<KEY>       unit conversion      FIELD_SHIFT_SCALE_SOIL_SATURATION=0.01
-
-   An empty address (`FIELD_SHIFT_URL_<KEY>=`) switches a source off.
-
-What an address must be, for the sources read "at a point" (all but `power_daily`):
-  - an HTTP GET address where `{lat}` and `{lon}` are replaced by the coordinates of the section
-    (decimal degrees, WGS84);
-  - that answers JSON; `jsonPath` is the path to the number in it, with dots between the keys and
-    list positions ("properties.parameter.PRECTOTCORR.ANN", "results.0.value");
-  - the number, multiplied by `scale`, must be in the unit of the variable (see
-    `SITE_VARIABLES`); a value outside the valid range of the variable is ignored.
-
-A source that is not configured, does not answer or gives a wrong value never fails a request:
-the model uses its default value and the answer says so (`origin` of each site value).
-`GET /data-sources` shows the configuration the server is running with.
+A service cannot be switched off: the model has no default value, every variable it needs comes
+from the request or from these services. A service that fails makes the request fail (502), with
+the name of the service.
 """
 
 from __future__ import annotations
@@ -53,89 +31,90 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Final
 
-from field_shift.algorithm.soil_protection.site_conditions import SITE_VARIABLES
-
 #: Environment variable naming the JSON file of the data sources.
 CONFIG_FILE_ENV: Final = "FIELD_SHIFT_DATA_SOURCES"
 #: File read when the variable is not set, if it exists in the working directory.
 DEFAULT_CONFIG_FILE: Final = "data_sources.json"
 URL_ENV_PREFIX: Final = "FIELD_SHIFT_URL_"
-JSON_PATH_ENV_PREFIX: Final = "FIELD_SHIFT_JSON_PATH_"
-SCALE_ENV_PREFIX: Final = "FIELD_SHIFT_SCALE_"
 
-#: Key of the daily weather of the farm (NASA POWER), read by the plan with its own parser.
 POWER_DAILY: Final = "power_daily"
-#: Mean days in a year: NASA POWER gives the climatology of the rain in mm/day.
-DAYS_PER_YEAR: Final = 365.25
+POWER_CLIMATOLOGY: Final = "power_climatology"
+POWER_HOURLY: Final = "power_hourly"
+SOILGRIDS: Final = "soilgrids"
+ELEVATION: Final = "elevation"
+MODIS: Final = "modis"
 
 
 @dataclass(frozen=True)
 class DataEndpoint:
-    """One value read from the outside and where to read it.
+    """One data service and where to reach it.
 
-    key        name of the source in the configuration; for the point sources, the name of the
-               site variable it fills (a field of `SiteConditions`)
-    dataset    the NASA or partner dataset the value comes from (shown as its origin)
-    provides   what the value is, in a few words
-    url        address of the service; None: the source is not configured
-    json_path  path to the number in the JSON answer (point sources)
-    scale      the number read × scale = the value in the unit of the variable
-    headers    HTTP headers sent with the request (an Earthdata token, an API key)
+    key        name of the service in the configuration
+    dataset    the dataset it serves (shown as the origin of the values)
+    provides   what the server reads from it, in a few words
+    reference  the publication that describes the dataset
+    url        address of the service
+    headers    HTTP headers sent with every request (a token, an API key)
     """
 
     key: str
     dataset: str
     provides: str
-    url: str | None = None
-    json_path: str = "value"
-    scale: float = 1.0
+    reference: str
+    url: str
     headers: Mapping[str, str] = field(default_factory=dict)
 
-    @property
-    def is_configured(self) -> bool:
-        return bool(self.url)
 
-
-#: Every data source of the server with its default configuration. The team fills the addresses
-#: in `data_sources.json` or in the environment (see the module documentation).
+#: Every data service of the server with its default address.
 DATA_SOURCES: Final[tuple[DataEndpoint, ...]] = (
     DataEndpoint(
         POWER_DAILY,
-        dataset="NASA POWER",
+        dataset="NASA POWER (MERRA-2)",
         provides="Météo quotidienne de la ferme (plan des rotations, POST /plan)",
+        reference="Stackhouse et al., NASA POWER, https://power.larc.nasa.gov/docs/",
         url="https://power.larc.nasa.gov/api/temporal/daily/point",
     ),
-    # Step 1 — static properties of the soil and of the relief
-    DataEndpoint("slope_pct", "SRTM (NASA Earthdata)", "Pente du terrain, en %"),
-    DataEndpoint("slope_length_m", "SRTM (NASA Earthdata)", "Longueur de pente, en m"),
-    DataEndpoint("sand_pct", "USDA SSURGO", "Teneur en sable, en %"),
-    DataEndpoint("clay_pct", "USDA SSURGO", "Teneur en argile, en %"),
-    DataEndpoint("organic_matter_pct", "USDA SSURGO", "Matière organique, en %"),
-    DataEndpoint("ksat_mm_h", "USDA SSURGO", "Conductivité hydraulique à saturation, en mm/h"),
-    DataEndpoint("k_factor", "USDA SSURGO", "Érodibilité K de RUSLE, en unités SI"),
-    # Step 3 — vigour of the vegetation
-    DataEndpoint("ndvi", "Landsat 8/9, MODIS / VIIRS", "NDVI moyen de la saison de croissance"),
-    DataEndpoint("root_activity", "ECOSTRESS", "Évapotranspiration réelle / potentielle, 0 à 1"),
-    # Step 4 — rain and soil moisture
     DataEndpoint(
-        "annual_rain_mm",
-        dataset="NASA POWER",
-        provides="Pluie annuelle moyenne, en mm",
-        url=(
-            "https://power.larc.nasa.gov/api/temporal/climatology/point"
-            "?parameters=PRECTOTCORR&community=AG&latitude={lat}&longitude={lon}&format=JSON"
-        ),
-        json_path="properties.parameter.PRECTOTCORR.ANN",
-        scale=DAYS_PER_YEAR,
+        POWER_CLIMATOLOGY,
+        dataset="NASA POWER (MERRA-2)",
+        provides="Pluie annuelle moyenne (PRECTOTCORR) et humidité du sol de surface (GWETTOP)",
+        reference="Gelaro et al., J. Climate 30(14), 2017 (MERRA-2)",
+        url="https://power.larc.nasa.gov/api/temporal/climatology/point",
     ),
-    DataEndpoint("r_factor", "GPM IMERG", "Érosivité R de RUSLE, en MJ·mm/(ha·h·an)"),
-    DataEndpoint("storm_intensity_mm_h", "GPM IMERG", "Intensité d’une forte averse, en mm/h"),
-    DataEndpoint("soil_saturation", "SMAP", "Saturation du sol en surface, 0 (sec) à 1 (saturé)"),
+    DataEndpoint(
+        POWER_HOURLY,
+        dataset="NASA POWER (MERRA-2)",
+        provides="Pluie horaire (PRECTOTCORR) : intensité de l’averse de référence",
+        reference="Gelaro et al., J. Climate 30(14), 2017 (MERRA-2)",
+        url="https://power.larc.nasa.gov/api/temporal/hourly/point",
+    ),
+    DataEndpoint(
+        SOILGRIDS,
+        dataset="SoilGrids 2.0 (ISRIC)",
+        provides="Sable, argile et carbone organique du sol, 0 à 15 cm",
+        reference="Poggio et al., SOIL 7, 217–240, 2021",
+        url="https://rest.isric.org/soilgrids/v2.0/properties/query",
+    ),
+    DataEndpoint(
+        ELEVATION,
+        dataset="Copernicus DEM GLO-90 (Open-Meteo)",
+        provides="Altitudes sur la section : pente et longueur de pente",
+        reference="ESA, Copernicus DEM, https://doi.org/10.5270/ESA-c5d3d65",
+        url="https://api.open-meteo.com/v1/elevation",
+    ),
+    DataEndpoint(
+        MODIS,
+        dataset="MODIS (NASA, ORNL DAAC)",
+        provides="NDVI (MOD13Q1) et ET / ET potentielle (MOD16A2) de la saison de croissance",
+        reference=(
+            "Didan, MOD13Q1 v061, 2021, doi:10.5067/MODIS/MOD13Q1.061 ; Running et al., "
+            "MOD16A2 v061, 2021, doi:10.5067/MODIS/MOD16A2.061 ; Mu et al., RSE 115, 2011"
+        ),
+        url="https://modis.ornl.gov/rst/api/v1",
+    ),
 )
 
-_point_keys = {source.key for source in DATA_SOURCES} - {POWER_DAILY}
-if not _point_keys <= set(SITE_VARIABLES):  # a point source must fill a known site variable
-    raise RuntimeError(f"Unknown site variables: {sorted(_point_keys - set(SITE_VARIABLES))}")
+_DEFAULTS: Final = {source.key: source for source in DATA_SOURCES}
 
 
 class DataSourceConfigError(ValueError):
@@ -144,21 +123,22 @@ class DataSourceConfigError(ValueError):
 
 @dataclass(frozen=True)
 class DataSourceConfig:
-    """The data sources as configured for this run of the server."""
+    """The data services as configured for this run of the server."""
 
-    sources: Mapping[str, DataEndpoint] = field(
-        default_factory=lambda: {source.key: source for source in DATA_SOURCES}
-    )
+    sources: Mapping[str, DataEndpoint] = field(default_factory=lambda: dict(_DEFAULTS))
+
+    def __getitem__(self, key: str) -> DataEndpoint:
+        return self.sources[key]
 
     @classmethod
     def load(cls, environment: Mapping[str, str] | None = None) -> DataSourceConfig:
         """The defaults, then the JSON file, then the environment variables.
 
         Raises DataSourceConfigError when the file named by FIELD_SHIFT_DATA_SOURCES is missing,
-        is not valid JSON, names an unknown source, or when a scale is not a number.
+        is not valid JSON, names an unknown service, or empties an address.
         """
         env = os.environ if environment is None else environment
-        sources = {source.key: source for source in DATA_SOURCES}
+        sources = dict(_DEFAULTS)
         for key, entry in _read_file(env).items():
             if key not in sources:
                 raise DataSourceConfigError(
@@ -173,22 +153,7 @@ class DataSourceConfig:
     @property
     def power_daily_url(self) -> str:
         """Address of the NASA POWER daily point service (the weather of the farm)."""
-        configured = self.sources[POWER_DAILY].url
-        default = next(source.url for source in DATA_SOURCES if source.key == POWER_DAILY)
-        return configured or default
-
-    @property
-    def point_sources(self) -> tuple[DataEndpoint, ...]:
-        """The configured sources that fill a site variable at a point."""
-        return tuple(
-            source
-            for key, source in self.sources.items()
-            if key != POWER_DAILY and source.is_configured
-        )
-
-    def without_network(self) -> DataSourceConfig:
-        """The same configuration with every address removed (demo mode: nothing is fetched)."""
-        return DataSourceConfig({key: replace(s, url=None) for key, s in self.sources.items()})
+        return self.sources[POWER_DAILY].url
 
 
 def _read_file(env: Mapping[str, str]) -> dict[str, Any]:
@@ -208,40 +173,32 @@ def _read_file(env: Mapping[str, str]) -> dict[str, Any]:
     return content
 
 
-def _scale(value: Any, where: str) -> float:
-    try:
-        return float(value)
-    except (TypeError, ValueError):
-        raise DataSourceConfigError(f"{where} : scale doit être un nombre, pas {value!r}") from None
+def _address(value: Any, where: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise DataSourceConfigError(
+            f"{where} : une adresse non vide est obligatoire (une source ne peut pas être coupée)"
+        )
+    return value.strip()
 
 
 def _with_file_entry(source: DataEndpoint, entry: Any) -> DataEndpoint:
     """A source with the fields of its entry in the file: an address alone ("key": "https://…")
-    or an object {url, jsonPath, scale, headers}."""
-    if entry is None or isinstance(entry, str):
-        return replace(source, url=entry or None)
+    or an object {url, headers}."""
+    if isinstance(entry, str) or entry is None:
+        return replace(source, url=_address(entry, source.key))
     if not isinstance(entry, dict):
-        raise DataSourceConfigError(f"{source.key} : une adresse ou un objet {{url, jsonPath…}}")
+        raise DataSourceConfigError(f"{source.key} : une adresse ou un objet {{url, headers}}")
     changes: dict[str, Any] = {}
     if "url" in entry:
-        changes["url"] = entry["url"] or None
-    if "jsonPath" in entry:
-        changes["json_path"] = str(entry["jsonPath"])
-    if "scale" in entry:
-        changes["scale"] = _scale(entry["scale"], source.key)
+        changes["url"] = _address(entry["url"], source.key)
     if "headers" in entry:
         changes["headers"] = {str(k): str(v) for k, v in dict(entry["headers"]).items()}
     return replace(source, **changes)
 
 
 def _with_environment(source: DataEndpoint, env: Mapping[str, str]) -> DataEndpoint:
-    """A source with the fields its environment variables give."""
-    suffix = source.key.upper()
-    changes: dict[str, Any] = {}
-    if URL_ENV_PREFIX + suffix in env:
-        changes["url"] = env[URL_ENV_PREFIX + suffix].strip() or None
-    if JSON_PATH_ENV_PREFIX + suffix in env:
-        changes["json_path"] = env[JSON_PATH_ENV_PREFIX + suffix].strip()
-    if SCALE_ENV_PREFIX + suffix in env:
-        changes["scale"] = _scale(env[SCALE_ENV_PREFIX + suffix], SCALE_ENV_PREFIX + suffix)
-    return replace(source, **changes) if changes else source
+    """A source with the address its environment variable gives."""
+    name = URL_ENV_PREFIX + source.key.upper()
+    if name in env:
+        return replace(source, url=_address(env[name], name))
+    return source

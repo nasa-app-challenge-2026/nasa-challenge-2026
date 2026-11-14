@@ -68,8 +68,6 @@ STEEPNESS_BREAK_PCT: Final = 9.0
 MAX_SLOPE_LENGTH_M: Final = 304.8
 #: The steepest slope RUSLE2 accepts.
 MAX_SLOPE_PCT: Final = 100.0
-#: "Slope lengths on many landscapes generally are less than 200 ft" ([RUSLE2]): 60 m by default.
-DEFAULT_SLOPE_LENGTH_M: Final = 60.0
 
 # --- RUSLE: erosivity R and erodibility K ---------------------------------------------------------
 
@@ -92,9 +90,6 @@ COVER_CROP_INFILTRATION_GAIN: Final = 0.348
 #: A saturated soil (SMAP) takes almost no more water: share of the infiltration lost at
 #: saturation.
 SATURATION_INFILTRATION_LOSS: Final = 0.9
-#: Rain intensity (mm/h) of the storm the infiltration is compared with, when GPM IMERG does not
-#: give one: a heavy shower.
-DEFAULT_STORM_INTENSITY_MM_H: Final = 25.0
 
 # --- Score of the measure -------------------------------------------------------------------------
 
@@ -103,15 +98,45 @@ SCORE_SHARE_RPI: Final = 0.3
 SCORE_SHARE_EROSION: Final = 0.4
 SCORE_SHARE_INFILTRATION: Final = 0.3
 
-# --- Site: values used when neither the section nor a data source gives them ----------------------
+# --- Pedotransfer: Ksat from texture and organic matter ------------------------------------------
+#  [SR06]  Saxton and Rawls, "Soil water characteristic estimates by texture and organic matter
+#          for hydrologic solutions", Soil Sci. Soc. Am. J. 70(5), 2006.
 
-#: A gentle slope (%), the middle of the range where RUSLE2 "works best" starts at 3 %.
-DEFAULT_SLOPE_PCT: Final = 3.0
-#: Texture of a loam (%); silt is what remains.
-DEFAULT_SAND_PCT: Final = 40.0
-DEFAULT_CLAY_PCT: Final = 20.0
-DEFAULT_ORGANIC_MATTER_PCT: Final = 3.0
-#: Saturated hydraulic conductivity of a loam (mm/h).
-DEFAULT_KSAT_MM_H: Final = 10.0
-#: Annual rain (mm) of southern Quebec, where the demo farm is.
-DEFAULT_ANNUAL_RAIN_MM: Final = 1000.0
+#: The equations of [SR06] were fitted on soils with at most 8 % organic matter (by weight).
+PEDOTRANSFER_MAX_ORGANIC_MATTER_PCT: Final = 8.0
+#: Ks = 1930 (θS − θ33)^(3 − λ), in mm/h ([SR06], equation 16).
+KSAT_COEFFICIENT_MM_H: Final = 1930.0
+
+# --- Soil organic carbon → organic matter ---------------------------------------------------------
+
+#: Depth of soil the texture and the organic matter are averaged over (cm): the surface layer the
+#: rain detaches and the water enters first.
+TOPSOIL_DEPTH_CM: Final = 15.0
+
+# --- Terrain: slope of a section from a digital elevation model -----------------------------------
+
+#: Mean radius of the Earth (m), to project the coordinates of a section on a plane.
+EARTH_RADIUS_M: Final = 6_371_008.8
+#: Cell size of the Copernicus DEM GLO-90 (m): the elevation model behind Open-Meteo.
+DEM_CELL_M: Final = 90.0
+#: The elevations are sampled on a square window at least three cells wide, so that a plane can
+#: be fitted even on a section smaller than one cell.
+MIN_TERRAIN_WINDOW_M: Final = 3 * DEM_CELL_M
+#: Points of the sampling grid on each side (9 × 9 = 81 points: one request to Open-Meteo, which
+#: accepts 100 coordinates).
+TERRAIN_GRID_SIDE: Final = 9
+#: Fewer points than this inside the section: the plane is fitted on the whole window.
+MIN_POINTS_INSIDE: Final = 9
+
+# --- Rain and soil moisture from NASA POWER -------------------------------------------------------
+
+#: Complete years of hourly rain the storm intensity is computed from.
+STORM_YEARS: Final = 10
+#: A year with fewer valid hours than this share is left out of the annual maxima.
+MIN_VALID_HOURS_SHARE: Final = 0.8
+#: Fewer valid years than this: the storm intensity cannot be computed.
+MIN_STORM_YEARS: Final = 5
+#: Growing season (months) of the northern and southern hemispheres: the NDVI, the ET/PET ratio
+#: and the soil moisture are averaged over it.
+GROWING_SEASON_NORTH: Final = (5, 6, 7, 8, 9)
+GROWING_SEASON_SOUTH: Final = (11, 12, 1, 2, 3)

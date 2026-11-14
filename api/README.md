@@ -2,15 +2,15 @@
 
 L'algorithme de rotations (_Field Shift — pipeline v5.1_) servi par **FastAPI**. Le front end lui envoie une ferme (`POST /plan`) et reçoit, pour chaque section, un plan cycle par cycle.
 
-- Le fonctionnement de l'algorithme, étape par étape : [`docs/ALGORITHME.md`](../../docs/ALGORITHME.md)
-- Le contrat avec le front end : [`docs/ALGO_CONTRACT.md`](../../docs/ALGO_CONTRACT.md) et [`../contract/field-shift.schema.json`](../contract/field-shift.schema.json)
+- Le fonctionnement de l'algorithme, étape par étape : [`docs/ALGORITHME.md`](../docs/ALGORITHME.md)
+- Le contrat avec le front end : [`docs/ALGO_CONTRACT.md`](../docs/ALGO_CONTRACT.md) et [`backend/contract/field-shift.schema.json`](../backend/contract/field-shift.schema.json)
 
 ## Lancer le serveur
 
 Il faut Python 3.11 ou plus.
 
 ```bash
-cd backend/server
+cd api
 python -m venv .venv
 .venv\Scripts\activate          # Windows ; sous Linux et macOS : source .venv/bin/activate
 pip install -e ".[dev]"
@@ -27,15 +27,13 @@ Le front lit son adresse dans `VITE_ALGO_URL` (par défaut `http://localhost:800
 
 ## Réglages (variables d'environnement)
 
-| Variable                   | Valeur                                                                                                                                | Par défaut                                          |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `FIELD_SHIFT_WEATHER`      | `nasa` : météo réelle de NASA POWER ; `demo` : météo fictive, sans réseau                                                             | `nasa`                                              |
-| `FIELD_SHIFT_CORS_ORIGINS` | adresses des sites autorisés à appeler le serveur, séparées par des virgules (ex. `https://equipe.github.io`)                           | les serveurs de développement du front (`localhost:5173` et `4173`) |
+| Variable                   | Valeur                                                                                                                  | Par défaut                                                          |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `FIELD_SHIFT_CORS_ORIGINS` | adresses des sites autorisés à appeler le serveur, séparées par des virgules (ex. `https://equipe.github.io`)           | les serveurs de développement du front (`localhost:5173` et `4173`) |
+| `FIELD_SHIFT_DATA_SOURCES` | chemin du fichier JSON des adresses des services de données (voir [Sources de données](#sources-de-données))           | `data_sources.json` s'il existe dans le dossier de lancement        |
+| `FIELD_SHIFT_URL_<SOURCE>` | adresse d'un service de données ; l'emporte sur le fichier                                                              | voir `GET /data-sources`                                            |
 
-| `FIELD_SHIFT_DATA_SOURCES` | chemin du fichier JSON des adresses des sources de données (voir [Sources de données](#sources-de-données-nasa-et-partenaires)) | `data_sources.json` s'il existe dans le dossier de lancement |
-| `FIELD_SHIFT_URL_<SOURCE>` | adresse d'une source de données ; l'emporte sur le fichier | voir `GET /data-sources` |
-
-Si NASA POWER ne répond pas, le serveur utilise la météo fictive et le plan le dit (`meta.sources.farmWeather`). Il retente NASA POWER à la requête suivante.
+**Il n'y a pas de mode démo ni de valeur de repli.** Le serveur lit toujours les données réelles. Quand un service ne répond pas (NASA POWER pour `POST /plan` ; SoilGrids, Open-Meteo, NASA POWER ou MODIS pour le classement), la demande échoue avec un **`502`** dont le `detail` nomme la section et le service en cause ; le service est retenté à la demande suivante (un échec n'est jamais gardé en mémoire).
 
 ## Les routes
 
@@ -49,7 +47,7 @@ Si NASA POWER ne répond pas, le serveur utilise la météo fictive et le plan l
 | `POST /measures/rendement` · `/measures/eau` · `/measures/ravageurs` | la même demande, sur une seule mesure. **Routes prêtes, logique à écrire : elles répondent `501`.** |
 | `GET /measures` | les quatre mesures, et lesquelles sont calculées. |
 | `GET /crops` | les cultures qu'une rotation peut contenir, avec leurs notes de protection du sol. |
-| `GET /data-sources` | les sources de données et les adresses avec lesquelles le serveur tourne. |
+| `GET /data-sources` | les services de données, leur jeu de données, leur publication de référence et leur adresse. |
 
 Un plan de 4 sections sur 12 ans prend environ 0,3 s (plus le premier téléchargement de la météo d'un lieu, une fois : 0,7 Mo, gardé en mémoire).
 
@@ -63,9 +61,11 @@ field_shift/
                    rotation_ranking.py et ranking_mapper.py : la même chose pour le classement
   services/        RankingService : réunit les conditions de chaque section, lance le classement
                    PlanService : lit la requête, obtient la météo, lance l'algorithme, garde les lieux en mémoire
-  data_access/     l'accès au réseau : NASA POWER et les sources de météo (réelle, fictive, repli)
-                     data_source_config.py  TOUTES les adresses des sources, au même endroit
-                     site_data.py           pente, sol, pluie, mesures satellites d'une section
+  data_access/     l'accès au réseau (aucune valeur de repli : un service en panne est une erreur)
+                     data_source_config.py  TOUTES les adresses des services, au même endroit
+                     nasa_power.py          la météo quotidienne de la ferme (POST /plan)
+                     site_readers.py        un lecteur par service : SoilGrids, Open-Meteo, NASA POWER, MODIS
+                     site_data.py           appelle en parallèle les services dont une section a besoin
   algorithm/       L'ALGORITHME, sans aucun code web (voir docs/ALGORITHME.md)
     config/          toutes les constantes, nommées et commentées
     timeline/        les dates (mois décimaux depuis janvier 2000)
@@ -80,7 +80,10 @@ field_shift/
     report/          les messages en français et le libellé des chaînes
     sources/         d'où viennent les données (aujourd'hui des données d'exemple, voir ALGORITHME.md)
     rotation/        classement : une rotation candidate, ses phases mois par mois
-    soil_protection/ classement : la mesure protection du sol (indice RPI, érosion RUSLE, infiltration)
+    soil_protection/ classement : la mesure protection du sol (indice RPI, érosion RUSLE, infiltration),
+                     les modèles publiés (Ksat de Saxton et Rawls, K d'EPIC, R de Renard et Freimund),
+                     les statistiques de pluie et de saison (forcing.py)
+    terrain/         classement : le contour d'une section (surface, centre), sa pente et sa longueur de pente
     ranking/         classement : les quatre mesures, les poids des priorités, le tri
   reference/       les données fixes : fiches des cultures, délais de retour et maladies, critères, limites
                    notes de protection du sol des cultures (soil_protection.py), les quatre mesures
@@ -95,7 +98,7 @@ Plus généralement, les paquets ne s'importent que dans un sens : `api → serv
 ## Tests et qualité
 
 ```bash
-pytest                   # plus de 230 tests, environ 15 s, sans réseau
+pytest                   # plus de 260 tests, environ 15 s, sans réseau (services simulés)
 ruff check .             # lint
 ruff format --check .    # formatage
 ```
@@ -114,7 +117,7 @@ python -m field_shift.tools.make_examples
 
 ## Classement des rotations
 
-`POST /rotations/rank` reçoit le lieu du champ et ses sections, la durée de la simulation, les priorités, et les rotations à comparer. Pour chaque section, chaque rotation reçoit **quatre mesures** ; elles sont additionnées avec les priorités comme poids, et les rotations reviennent classées, la meilleure d'abord, avec leurs mesures.
+`POST /rotations/rank` reçoit les sections du champ (chacune avec son contour), la durée de la simulation, les priorités, et les rotations à comparer. Pour chaque section, chaque rotation reçoit **quatre mesures** ; elles sont additionnées avec les priorités comme poids, et les rotations reviennent classées, la meilleure d'abord, avec leurs mesures.
 
 | Mesure (`id`)    | Ce qu'elle mesure                | État                          |
 | ---------------- | -------------------------------- | ----------------------------- |
@@ -133,7 +136,6 @@ Une mesure pas encore calculée revient avec `available: false` et reste hors du
 
 ```json
 {
-  "location": { "lat": 45.5, "lon": -73.0 },
   "simulationYears": 6,
   "priorities": { "protection_sol": 2, "rendement": 1, "eau": 1, "ravageurs": 1 },
   "rotations": [
@@ -142,16 +144,31 @@ Une mesure pas encore calculée revient avec `available: false` et reste hors du
     { "id": "prairie", "phases": ["luzerne-3", "mais", "ble-automne"] }
   ],
   "sections": [
-    { "id": "A", "areaHa": 12, "site": { "slopePct": 2 } },
-    { "id": "B", "site": { "slopePct": 9, "sandPct": 20, "clayPct": 15 } }
+    {
+      "id": "A",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-73.002, 45.499], [-72.998, 45.499], [-72.998, 45.5015], [-73.002, 45.5015], [-73.002, 45.499]]]
+      },
+      "site": { "supportPracticeFactor": 1 }
+    },
+    {
+      "id": "B",
+      "geometry": { "type": "Polygon", "coordinates": [[[-73.01, 45.51], [-73.005, 45.51], [-73.005, 45.513], [-73.01, 45.51]]] },
+      "site": { "supportPracticeFactor": 0.75, "slopePct": 9, "sandPct": 20, "clayPct": 15 }
+    }
   ]
 }
 ```
 
+- **`sections[].geometry`** (obligatoire) : le contour de la section, un `Polygon` GeoJSON (RFC 7946) en `[longitude, latitude]` WGS84, fermé (la dernière position répète la première), sans trou, sans croisement, 500 sommets au plus. Le serveur en tire la **surface** et le **centre** (rendus dans `areaHa` et `centroid`), la **pente** (plan ajusté sur les altitudes de la section) et la **longueur de pente** (longueur de la section dans le sens de la pente). Le sol, la pluie et les mesures satellites sont lus au centre.
+- **`sections[].site.supportPracticeFactor`** (obligatoire) : le facteur `P` de RUSLE (1 sans pratique de conservation ; plus bas avec courbes de niveau, bandes ou terrasses). Aucun service ne connaît les pratiques d'une ferme.
+- **`sections[].site`, le reste** : ce qu'on sait déjà de la section (pente, texture, Ksat, NDVI…). Ce qui est donné l'emporte ; le reste est lu dans les services, et **seuls les services nécessaires sont appelés**. Ksat, K et R sont calculés par un modèle publié s'ils ne sont pas donnés.
 - **`priorities`** : des poids (`{mesure: nombre}`, seules les proportions comptent) ou un classement (`["protection_sol", "rendement"]`, la plus importante d'abord). Absent : poids égaux.
 - **`rotations`** : chaque phase est une culture seule (`"mais"` : elle prend sa saison habituelle, puis le sol reste nu jusqu'à la fin de l'année) ou une culture avec sa durée (`{"crop": "seigle", "months": 6}` ; `"crop": null` pour un sol nu). Le cycle se répète pendant toute la simulation. Les identifiants de cultures sont ceux de `GET /crops` ; les fiches du plan (`luzerne-3`) sont acceptées.
 - **Sans `rotations`** : donnez `crops` (la sélection de cultures) et `cycleYears` ; le serveur construit toutes les rotations d'une culture par an (200 au plus, sinon `422`).
-- **`sections[].site`** : ce qu'on sait de la section (pente, texture, Ksat, NDVI…). Tout est facultatif : ce qui manque est lu dans les sources de données configurées, sinon prend la valeur par défaut. La réponse dit, valeur par valeur, d'où elle vient (`site[].origin`).
+
+La réponse dit, pour chaque section et chaque valeur, d'où elle vient (`site[].origin` : `section`, le jeu de données, ou `calcul : <modèle>`) et comment elle a été calculée (`site[].method`). `sections[].notes` reprend, en phrases, toutes les valeurs qui ne sont pas lues telles quelles : conversions, statistiques et modèles, avec leurs entrées.
 
 La documentation interactive (<http://localhost:8000/docs>) décrit chaque champ de la demande et de la réponse.
 
@@ -159,56 +176,40 @@ La documentation interactive (<http://localhost:8000/docs>) décrit chaque champ
 
 Le code est dans `field_shift/algorithm/soil_protection/`, les constantes (toutes nommées et sourcées) dans `algorithm/config/soil_protection.py`, les notes des cultures dans `reference/soil_protection.py`. Trois résultats, puis une note :
 
-1. **Indice de protection de la rotation (RPI)**, de 1 à 5. Chaque culture a trois notes de 1 à 5 (racines → infiltration, résidus → érosion, durée de la canopée → couverture) ; `SC` est leur moyenne, pondérée par les mois d'occupation ; le sol nu compte pour 1. Moins de 2,5 : risque élevé ; de 2,5 à 3,9 : protection modérée ; 4 et plus : excellente. Le RPI _ajusté_ ramène les notes de couverture et d'infiltration à la vigueur réelle (NDVI, ECOSTRESS) quand elle est connue.
+1. **Indice de protection de la rotation (RPI)**, de 1 à 5. Chaque culture a trois notes de 1 à 5 (racines → infiltration, résidus → érosion, durée de la canopée → couverture) ; `SC` est leur moyenne, pondérée par les mois d'occupation ; le sol nu compte pour 1. Moins de 2,5 : risque élevé ; de 2,5 à 3,9 : protection modérée ; 4 et plus : excellente. Le RPI _ajusté_ ramène les notes de couverture et d'infiltration à la vigueur réelle (NDVI MODIS, ET / ET potentielle MODIS).
 2. **Perte de sol** `A = R × K × LS × C × P` (structure de RUSLE, en t/ha/an) : `LS` vient de la pente, `K` de la texture et de la matière organique, `R` de la pluie, et `C` de la rotation (canopée, résidus qui restent au sol après la récolte et se décomposent, sol non travaillé sous les pérennes). Note d'érosion : `1 / (1 + A / T)`, avec `T` = 11,2 t/ha/an, la perte tolérable.
-3. **Infiltration effective** : Ksat du sol × effet de la rotation (+59,2 % sous une pérenne, +34,8 % sous un couvert, d'après la méta-analyse de Basche et DeLonge, 2019) × humidité du sol (SMAP), comparée à l'intensité d'une forte averse.
+3. **Infiltration effective** : Ksat du sol × effet de la rotation (+59,2 % sous une pérenne, +34,8 % sous un couvert, d'après la méta-analyse de Basche et DeLonge, 2019) × humidité du sol (GWETTOP de NASA POWER), comparée à l'intensité de l'averse de référence.
 
 ```
 note = 0,3 × (RPI ajusté − 1) / 4  +  0,4 × note d'érosion  +  0,3 × part de l'averse infiltrée
 ```
 
-**Limites à connaître.** Les notes des cultures sont indicatives (les exemples de la matrice sont repris tels quels, les autres cultures sont classées par analogie) : un agronome doit les vérifier. La perte de sol sert à _comparer_ des rotations sur un champ, pas à prédire des tonnes : `C` est pondéré par le temps et non par la répartition de l'érosivité dans l'année, `K` ne varie pas avec les saisons, la rugosité et les billons sont ignorés, et les paramètres de `C` (couverture par les résidus, canopée, demi-vie des résidus) ne sont pas calés sur des mesures. Sans source GPM IMERG, `R` est estimé à partir de la pluie annuelle (Renard et Freimund, 1994, calé sur les États-Unis). Les parts 0,3 / 0,4 / 0,3 de la note sont un choix à valider par l'équipe.
+**Limites à connaître.** Les notes des cultures sont indicatives (les exemples de la matrice sont repris tels quels, les autres cultures sont classées par analogie) : un agronome doit les vérifier. La perte de sol sert à _comparer_ des rotations sur un champ, pas à prédire des tonnes : `C` est pondéré par le temps et non par la répartition de l'érosivité dans l'année, `K` ne varie pas avec les saisons, la rugosité et les billons sont ignorés, et les paramètres de `C` (couverture par les résidus, canopée, demi-vie des résidus) ne sont pas calés sur des mesures. `R` est estimé à partir de la pluie annuelle (Renard et Freimund, 1994, calé sur les États-Unis) s'il n'est pas donné. La pluie horaire de MERRA-2 est une moyenne sur une maille d'environ 50 km : elle sous-estime les averses locales, donc l'intensité de l'averse de référence. La pente vient d'un modèle d'altitudes à 90 m arrondies au mètre : sur un terrain très plat, une pente de moins de 0,3 % n'est pas vue. Les parts 0,3 / 0,4 / 0,3 de la note sont un choix à valider par l'équipe.
 
 ### Écrire une des trois autres mesures
 
 Tout est déjà branché (routes, contrat, poids, classement). Il reste à remplir la méthode `evaluate` de la classe de la mesure dans `field_shift/algorithm/ranking/measures.py` (`YieldMeasure`, `WaterDemandMeasure`, `PestsMeasure`) : elle reçoit la rotation et le contexte de la section, et rend un `MeasureResult` avec une note de 0 à 1 et sa valeur (kg/ha pour le rendement). Puis passer `implemented = True` : la route `/measures/…` cesse de répondre `501` et la mesure entre dans le score.
 
-## Sources de données (NASA et partenaires)
+## Sources de données
 
-**Toutes les adresses sont au même endroit** : `field_shift/data_access/data_source_config.py`. Pour en donner ou en changer une, sans toucher au code :
+Toutes les sources sont des **API publiques, documentées, sans clé**, et chaque jeu de données est décrit par une publication. Les adresses sont **au même endroit** : `field_shift/data_access/data_source_config.py`.
 
-1. copier `data_sources.example.json` en `data_sources.json` (dans `backend/server` ; ignoré par git, car il peut contenir des jetons) et y coller les adresses ;
-2. ou définir une variable d'environnement `FIELD_SHIFT_URL_<SOURCE>`, par exemple `FIELD_SHIFT_URL_SLOPE_PCT` (elle l'emporte sur le fichier ; `FIELD_SHIFT_JSON_PATH_<SOURCE>` et `FIELD_SHIFT_SCALE_<SOURCE>` existent aussi).
+| Clé (`GET /data-sources`) | Service et jeu de données | Ce que le serveur en tire | Référence |
+| --- | --- | --- | --- |
+| `power_daily` | NASA POWER, API quotidienne (MERRA-2) | météo quotidienne de la ferme (`POST /plan`) | [docs NASA POWER](https://power.larc.nasa.gov/docs/) |
+| `power_climatology` | NASA POWER, climatologie (MERRA-2) | pluie annuelle (`PRECTOTCORR` × 365,25) ; humidité relative du sol de surface (`GWETTOP`, moyenne de la saison de croissance) | Gelaro et al., *J. Climate* 30(14), 2017 |
+| `power_hourly` | NASA POWER, API horaire (MERRA-2) | intensité de l'averse de référence : moyenne des maxima annuels de la pluie horaire des 10 dernières années complètes | Gelaro et al., 2017 |
+| `soilgrids` | SoilGrids 2.0 (ISRIC) | sable, argile, carbone organique, moyenne 0–15 cm ; matière organique = carbone × 1,724 | Poggio et al., *SOIL* 7, 217–240, 2021 |
+| `elevation` | Copernicus DEM GLO-90 via Open-Meteo | 81 altitudes sur la section : pente (plan des moindres carrés) et longueur de pente | ESA, doi:10.5270/ESA-c5d3d65 |
+| `modis` | MODIS, service de sous-ensembles de l'ORNL DAAC (NASA) | NDVI de la saison de croissance (MOD13Q1, 250 m) ; ET / ET potentielle (MOD16A2, 500 m) | Didan, doi:10.5067/MODIS/MOD13Q1.061 ; Running et al., doi:10.5067/MODIS/MOD16A2.061 ; Mu et al., *Remote Sens. Environ.* 115, 2011 |
 
-```json
-{
-  "slope_pct": { "url": "https://…/pente?lat={lat}&lon={lon}", "jsonPath": "data.slope" },
-  "soil_saturation": {
-    "url": "https://…/smap?lat={lat}&lon={lon}",
-    "jsonPath": "value",
-    "scale": 0.01,
-    "headers": { "Authorization": "Bearer <jeton>" }
-  }
-}
-```
+Trois valeurs sont **calculées par un modèle publié** quand la section ne les donne pas : Ksat (Saxton et Rawls, *Soil Sci. Soc. Am. J.* 70(5), 2006, matière organique bornée à 8 %), K (EPIC, Williams, 1995) et R (Renard et Freimund, *J. Hydrol.* 157, 1994).
 
-Une source est une adresse HTTP GET où `{lat}` et `{lon}` sont remplacés par le point de la section et qui répond en JSON ; `jsonPath` est le chemin du nombre dans la réponse (`resultats.0.valeur`), `scale` le convertit dans l'unité attendue. Si une source demande un autre format (fichier raster, requête SQL SSURGO…), il faut lui écrire un lecteur dans `data_access/`, sur le modèle de `nasa_power.py`.
+Deux substitutions, faute d'API synchrone : **SMAP** est remplacé par `GWETTOP` de NASA POWER et **ECOSTRESS** par le rapport ET / ET potentielle de MODIS MOD16A2. SMAP et ECOSTRESS ne sont servis au point que par AppEEARS, dont les tâches prennent plusieurs minutes.
 
-| Clé                                          | Jeu de données             | Valeur attendue                                   | Sans adresse                       |
-| -------------------------------------------- | -------------------------- | ------------------------------------------------- | ---------------------------------- |
-| `power_daily`                                | NASA POWER                 | météo quotidienne de la ferme (pour `POST /plan`) | configurée : l'API publique        |
-| `annual_rain_mm`                             | NASA POWER                 | pluie annuelle, mm                                | configurée : l'API publique        |
-| `slope_pct`, `slope_length_m`                | SRTM                       | pente en %, longueur de pente en m                | 3 %, 60 m                          |
-| `sand_pct`, `clay_pct`, `organic_matter_pct` | USDA SSURGO                | texture et matière organique, %                   | un limon : 40 / 20 / 3             |
-| `ksat_mm_h`                                  | USDA SSURGO                | conductivité hydraulique à saturation, mm/h       | 10                                 |
-| `k_factor`                                   | USDA SSURGO                | érodibilité K, unités SI                          | estimée à partir de la texture     |
-| `ndvi`                                       | Landsat 8/9, MODIS / VIIRS | NDVI moyen de la saison de croissance             | pleine vigueur (notes théoriques)  |
-| `root_activity`                              | ECOSTRESS                  | ET réelle / ET potentielle, 0 à 1                 | pleine activité (notes théoriques) |
-| `r_factor`                                   | GPM IMERG                  | érosivité R, MJ·mm/(ha·h·an)                      | estimée à partir de la pluie       |
-| `storm_intensity_mm_h`                       | GPM IMERG                  | intensité d'une forte averse, mm/h                | 25                                 |
-| `soil_saturation`                            | SMAP                       | saturation du sol en surface, 0 à 1               | sol non saturé                     |
+Les **notes de protection du sol des cultures** (`reference/soil_protection.py`) ne viennent d'aucune API : il n'existe pas d'API évaluée par des pairs qui les fournisse. La base de cultures de RUSLE2 (USDA NRCS) s'exporte depuis les outils du NRCS mais ne se consulte pas en REST.
 
-Une source absente, en panne ou qui rend une valeur hors limites ne fait jamais échouer une demande : le modèle prend sa valeur par défaut et la réponse le dit. `GET /data-sources` montre la configuration en cours (sans les paramètres des adresses ni les en-têtes, qui peuvent contenir une clé). En mode `FIELD_SHIFT_WEATHER=demo`, aucune source n'est lue.
+Pour changer une adresse (un miroir, un proxy) ou ajouter des en-têtes (un jeton), sans toucher au code : copier `data_sources.example.json` en `data_sources.json` dans `api/` (ignoré par git, car il peut contenir des jetons), ou définir `FIELD_SHIFT_URL_<CLÉ>` (par exemple `FIELD_SHIFT_URL_SOILGRIDS`), qui l'emporte sur le fichier. Un service ne peut pas être coupé : une adresse vide est refusée au démarrage.
 
 ## Héberger le serveur
 
@@ -218,4 +219,4 @@ Le front publié sur GitHub Pages appelle le serveur depuis le navigateur de cha
 FIELD_SHIFT_CORS_ORIGINS=https://<compte>.github.io python -m uvicorn field_shift.api.main:app --host 0.0.0.0 --port 8000
 ```
 
-Puis, dans les variables du dépôt GitHub (_Settings → Secrets and variables → Actions → Variables_), `VITE_ALGO_URL` = l'adresse publique du serveur. Aucun secret n'est nécessaire : NASA POWER est public.
+Puis, dans les variables du dépôt GitHub (_Settings → Secrets and variables → Actions → Variables_), `VITE_ALGO_URL` = l'adresse publique du serveur. Aucun secret n'est nécessaire : tous les services sont publics.

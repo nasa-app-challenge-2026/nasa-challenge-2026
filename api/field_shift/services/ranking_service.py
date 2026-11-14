@@ -1,11 +1,13 @@
 """What the web layer calls to rank rotations: reads the request, gathers the conditions of each
 section, runs the ranking and writes the answer.
 
-The conditions of a section come from three places, the first that knows a value wins:
-    1. the section itself (the `site` object of the request);
-    2. the data sources configured for the server (SRTM, SSURGO, NASA POWER, GPM IMERG, SMAP…);
-    3. the default of the model.
-The answer says, value by value, which of the three was used.
+The conditions of a section come from three places:
+    1. the section itself (the `site` object of the request), which always wins;
+    2. the data services, called only for what the section does not give (SoilGrids, Copernicus
+       DEM, NASA POWER, MODIS), at the centre and over the outline of the section;
+    3. a published model, for Ksat, K and R when neither gives them (see `site_estimates`).
+There is no default value: a service that fails makes the request fail (502, `SectionDataError`).
+The answer says, value by value, where it came from and how it was computed.
 """
 
 from __future__ import annotations
@@ -15,10 +17,11 @@ from collections.abc import Sequence
 from field_shift.algorithm.ranking.measures import Measure, SectionContext, all_measures
 from field_shift.algorithm.ranking.rotation_ranker import rank_rotations
 from field_shift.algorithm.soil_protection.site_conditions import (
+    SITE_VARIABLES,
     SiteReading,
-    default_readings,
     site_from_readings,
 )
+from field_shift.algorithm.soil_protection.site_estimates import ESTIMATED_FROM, with_estimates
 from field_shift.contract.ranking_mapper import (
     RankingRequest,
     ranked_rotation_out,
@@ -28,18 +31,31 @@ from field_shift.contract.ranking_mapper import (
     site_out,
 )
 from field_shift.contract.rotation_ranking import (
+    PointOut,
     RankingInput,
     RankingMetaOut,
     RankingSectionInput,
     RotationRanking,
     SectionRankingOut,
 )
-from field_shift.data_access.site_data import SiteDataProvider
+from field_shift.data_access.site_data import SiteDataProvider, SiteDataUnavailableError
 from field_shift.reference.measures import MEASURE_IDS, MEASURE_NAMES
+
+COORDINATE_DECIMALS = 6
+AREA_DECIMALS = 4
 
 
 class RankingInputError(ValueError):
     """The request is well formed but cannot be ranked (the route answers 422 with the message)."""
+
+
+class SectionDataError(RuntimeError):
+    """The data services could not give what a section needs (the route answers 502)."""
+
+    def __init__(self, section_id: str, error: SiteDataUnavailableError) -> None:
+        super().__init__(f"section {section_id} : {error}")
+        self.section_id = section_id
+        self.failures = error.failures
 
 
 def merged_readings(*layers: Sequence[SiteReading]) -> list[SiteReading]:
@@ -81,8 +97,7 @@ class RankingService:
         if only_measure is not None:
             weights = {measure: float(measure == only_measure) for measure in MEASURE_IDS}
         sections = [
-            self._rank_section(section, ranking_input, request, weights)
-            for section in ranking_input.sections
+            self._rank_section(section, request, weights) for section in ranking_input.sections
         ]
         return RotationRanking(
             meta=RankingMetaOut(
@@ -100,29 +115,39 @@ class RankingService:
     def _rank_section(
         self,
         section: RankingSectionInput,
-        ranking_input: RankingInput,
         request: RankingRequest,
         weights: dict[str, float],
     ) -> SectionRankingOut:
-        location = section.location or ranking_input.location
-        readings = merged_readings(
-            default_readings(),
-            self._site_data.site_readings(location.lat, location.lon),
-            section_readings(section),
-        )
-        site = site_from_readings(readings)
+        shape = section.geometry.shape
+        given = section_readings(section)
+        given_keys = {reading.key for reading in given}
+        needed = [key for key in SITE_VARIABLES if key not in given_keys | set(ESTIMATED_FROM)]
+        try:
+            read = self._site_data.site_readings(shape, needed)
+        except SiteDataUnavailableError as error:
+            raise SectionDataError(section.id, error) from error
+        try:
+            readings = with_estimates(merged_readings(read, given))
+            site = site_from_readings(readings)
+        except ValueError as error:  # e.g. the sand of the request + the clay of SoilGrids > 100 %
+            raise RankingInputError(f"section {section.id} : {error}") from error
+        lon, lat = shape.centroid
         context = SectionContext(
             section_id=section.id,
-            lat=location.lat,
-            lon=location.lon,
+            lat=lat,
+            lon=lon,
             site=site,
             simulation_months=request.simulation_months,
-            area_ha=section.area_ha,
+            area_ha=shape.area_ha,
             irrigated=section.irrigated,
         )
         ranked = rank_rotations(request.rotations, context, weights, self._measures)
         return SectionRankingOut(
             id=section.id,
+            area_ha=round(shape.area_ha, AREA_DECIMALS),
+            centroid=PointOut(
+                lat=round(lat, COORDINATE_DECIMALS), lon=round(lon, COORDINATE_DECIMALS)
+            ),
             site=site_out(readings),
             notes=site_notes(readings, site),
             rotations=[ranked_rotation_out(rotation) for rotation in ranked],
