@@ -281,6 +281,24 @@ class ErosionEstimate:
         return 1 / (1 + self.tolerance_ratio)
 
 
+def site_r_factor(site: SiteConditions) -> float:
+    """R of the section: given by the site (GPM IMERG or the request), else estimated from the
+    annual rain (see `erosivity_from_annual_rain`)."""
+    if site.r_factor is not None:
+        return site.r_factor
+    return erosivity_from_annual_rain(site.annual_rain_mm)
+
+
+def site_k_factor(site: SiteConditions) -> float:
+    """K of the section: given by the site (SSURGO or the request), else estimated from the
+    texture and the organic matter (see `erodibility_from_texture`)."""
+    if site.k_factor is not None:
+        return site.k_factor
+    return erodibility_from_texture(
+        site.sand_pct, site.silt_pct, site.clay_pct, site.organic_matter_pct
+    )
+
+
 def estimate_erosion(
     timeline: Sequence[RotationPhase], site: SiteConditions, initial_residue_pct: float = 0.0
 ) -> ErosionEstimate:
@@ -288,17 +306,9 @@ def estimate_erosion(
 
     R and K are taken from the site when a data source gave them, estimated otherwise.
     """
-    r_factor = site.r_factor
-    if r_factor is None:
-        r_factor = erosivity_from_annual_rain(site.annual_rain_mm)
-    k_factor = site.k_factor
-    if k_factor is None:
-        k_factor = erodibility_from_texture(
-            site.sand_pct, site.silt_pct, site.clay_pct, site.organic_matter_pct
-        )
     return ErosionEstimate(
-        r_factor=r_factor,
-        k_factor=k_factor,
+        r_factor=site_r_factor(site),
+        k_factor=site_k_factor(site),
         ls_factor=topographic_factor(site.slope_pct, site.slope_length_m),
         c_factor=cover_management_factor(timeline, site.canopy_vigour, initial_residue_pct),
         p_factor=site.support_practice_factor,

@@ -298,6 +298,14 @@ class SiteValueOut(CamelModel):
 class SectionRankingOut(CamelModel):
     id: str
     site: list[SiteValueOut]
+    notes: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Every value the model used that neither the request nor a data source gave: "
+            "default values, values estimated from other ones (R, K, silt), and assumptions made "
+            "for the missing satellite measures."
+        ),
+    )
     rotations: list[RankedRotationOut] = Field(description="Best rotation first.")
 
 

@@ -24,6 +24,7 @@ from field_shift.contract.ranking_mapper import (
     ranked_rotation_out,
     read_ranking_input,
     section_readings,
+    site_notes,
     site_out,
 )
 from field_shift.contract.rotation_ranking import (
@@ -109,11 +110,12 @@ class RankingService:
             self._site_data.site_readings(location.lat, location.lon),
             section_readings(section),
         )
+        site = site_from_readings(readings)
         context = SectionContext(
             section_id=section.id,
             lat=location.lat,
             lon=location.lon,
-            site=site_from_readings(readings),
+            site=site,
             simulation_months=request.simulation_months,
             area_ha=section.area_ha,
             irrigated=section.irrigated,
@@ -122,6 +124,7 @@ class RankingService:
         return SectionRankingOut(
             id=section.id,
             site=site_out(readings),
+            notes=site_notes(readings, site),
             rotations=[ranked_rotation_out(rotation) for rotation in ranked],
         )
 

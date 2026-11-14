@@ -196,6 +196,30 @@ class TestRankRoute:
         assert origins["ksat_mm_h"] == (10, "valeur par défaut")
         assert "ndvi" not in origins  # unknown and optional: the theory is kept
 
+    def test_the_notes_list_every_value_the_model_supplied_itself(self, client):
+        section = client.post("/rotations/rank", json=REQUEST).json()["sections"][1]
+        notes = "\n".join(section["notes"])
+        defaults = [v["label"] for v in section["site"] if v["origin"] == "valeur par défaut"]
+        given = [v["label"] for v in section["site"] if v["origin"] == "section"]
+        assert defaults and all(f"{label} :" in notes for label in defaults)
+        assert not any(
+            note.startswith(f"{label} :") for label in given for note in section["notes"]
+        )
+        for estimated in ("Érosivité des pluies (R)", "Érodibilité du sol (K)", "Limon", "NDVI"):
+            assert estimated in notes
+        r_factor = section["rotations"][0]["soilProtection"]["erosion"]["factors"]["r"]
+        assert f"{r_factor:.4g}".replace(".", ",") in notes  # the value the erosion really used
+
+    def test_a_value_given_by_the_section_is_not_in_the_notes(self, client):
+        request = deepcopy(REQUEST)
+        request["sections"][1]["site"].update({"rFactor": 2500, "kFactor": 0.03, "ndvi": 0.7})
+        notes = "\n".join(
+            client.post("/rotations/rank", json=request).json()["sections"][1]["notes"]
+        )
+        assert "Érosivité des pluies (R)" not in notes
+        assert "Érodibilité du sol (K)" not in notes
+        assert "NDVI" not in notes
+
     def test_rotations_are_generated_from_the_crops_and_the_cycle(self, client):
         request = {
             "location": REQUEST["location"],

@@ -20,10 +20,13 @@ from field_shift.algorithm.rotation.rotation import (
     RotationStep,
     generate_rotations,
 )
+from field_shift.algorithm.soil_protection.erosion import site_k_factor, site_r_factor
 from field_shift.algorithm.soil_protection.protection_index import ProtectionClass
 from field_shift.algorithm.soil_protection.site_conditions import (
+    ORIGIN_DEFAULT,
     ORIGIN_SECTION,
     SITE_VARIABLES,
+    SiteConditions,
     SiteReading,
 )
 from field_shift.algorithm.soil_protection.soil_protection import SoilProtection
@@ -254,6 +257,73 @@ def site_out(readings: Sequence[SiteReading]) -> list[SiteValueOut]:
         for key, variable in SITE_VARIABLES.items()
         if key in by_key
     ]
+
+
+def _number(value: float) -> str:
+    """A value for a French sentence: at most 4 significant digits, decimal comma."""
+    return f"{value:.4g}".replace(".", ",")
+
+
+def _quantity(key: str, value: float) -> str:
+    unit = SITE_VARIABLES[key].unit
+    return f"{_number(value)} {unit}" if unit else _number(value)
+
+
+def _origin_phrase(reading: SiteReading | None) -> str:
+    if reading is None or reading.origin == ORIGIN_DEFAULT:
+        return "valeur par défaut"
+    if reading.origin == ORIGIN_SECTION:
+        return "donnée par la section"
+    return f"lue dans {reading.origin}"
+
+
+def site_notes(readings: Sequence[SiteReading], site: SiteConditions) -> list[str]:
+    """Every value of a section the model used that neither the request nor a data source gave:
+    the defaults, the values estimated from other values, and the assumptions taken for the
+    satellite measures that are missing."""
+    by_key = {reading.key: reading for reading in readings}
+    notes = [
+        f"{SITE_VARIABLES[key].label} : {_quantity(key, by_key[key].value)} — valeur par défaut "
+        "(ni donnée par la section, ni lue dans une source de données)."
+        for key in SITE_VARIABLES
+        if key in by_key and by_key[key].origin == ORIGIN_DEFAULT
+    ]
+    sand, clay = by_key.get("sand_pct"), by_key.get("clay_pct")
+    notes.append(
+        f"Limon : {_number(site.silt_pct)} % — calculé comme le reste de la texture "
+        f"(100 − sable ({_origin_phrase(sand)}) − argile ({_origin_phrase(clay)}))."
+    )
+    if "r_factor" not in by_key:
+        rain = by_key.get("annual_rain_mm")
+        rain_mm = _quantity("annual_rain_mm", site.annual_rain_mm)
+        notes.append(
+            f"{SITE_VARIABLES['r_factor'].label} : {_quantity('r_factor', site_r_factor(site))} "
+            f"— estimée à partir de la pluie annuelle ({rain_mm}, {_origin_phrase(rain)}) "
+            "par la relation de Renard et Freimund (1994), faute de "
+            "source GPM IMERG."
+        )
+    if "k_factor" not in by_key:
+        notes.append(
+            f"{SITE_VARIABLES['k_factor'].label} : {_quantity('k_factor', site_k_factor(site))} "
+            "— estimée à partir de la texture et de la matière organique (équation EPIC, "
+            "Williams 1995), faute de valeur SSURGO."
+        )
+    if "ndvi" not in by_key:
+        notes.append(
+            f"{SITE_VARIABLES['ndvi'].label} : inconnu — canopée supposée en pleine vigueur "
+            "(notes théoriques de couverture gardées, RPI ajusté = RPI)."
+        )
+    if "root_activity" not in by_key:
+        notes.append(
+            f"{SITE_VARIABLES['root_activity'].label} : inconnue — racines supposées pleinement "
+            "actives (notes théoriques d’infiltration gardées)."
+        )
+    if "soil_saturation" not in by_key:
+        notes.append(
+            f"{SITE_VARIABLES['soil_saturation'].label} : inconnue — sol supposé non saturé "
+            "(l’humidité ne réduit pas l’infiltration)."
+        )
+    return notes
 
 
 def crops_out() -> list[CropOut]:
