@@ -27,7 +27,9 @@ from field_shift.algorithm.twins.sigma_dissimilarity import (
 )
 from field_shift.algorithm.twins.soil_comparison import Soil, SoilFilter, soil_distance
 from field_shift.algorithm.twins.twin_evidence_builder import TwinField, build_twin_evidence
+from field_shift.algorithm.water.water_model import WaterPressure
 from tests.helpers.reference_names import fixture, infinite
+from tests.helpers.reference_water import reference_water_risk
 
 TWINS = fixture("twins.json")
 STEPS = fixture("steps-5-to-8.json")
@@ -174,15 +176,21 @@ class TestDiagnostic:
                     slope_pct=m["pente_pct"],
                     heavy_rain_days=m["jours_pluie_intense"],
                     bare_soil_days=m["jours_sol_nu"],
-                    summer_stress_index=m["esi_ete"],
-                    root_zone_drought=m["smap_secheresse"],
-                    groundwater_trend_cm_per_year=m["grace_tendance_cm_an"],
                 ),
                 irrigated=case["irrigation"],
             )
             assert diagnostic.erosion_risk == pytest.approx(
                 case["result"]["risque_erosion"], rel=1e-12
             )
-            assert diagnostic.water_risk(case["rain"]) == pytest.approx(
+            # The water risk of the reference, given as the pressure of its water model.
+            pressure = reference_water_risk(m, case["rain"])
+            assert diagnostic.water_risk(pressure) == pytest.approx(
                 case["result"]["risque_eau"], rel=1e-12
             )
+
+    def test_the_water_risk_is_the_water_pressure_and_irrigation_keeps_40_percent_of_it(self):
+        measures = FieldMeasures(slope_pct=2, heavy_rain_days=3, bare_soil_days=100)
+        pressure = WaterPressure(pressure=0.5, worst=0.7)
+        assert ParcelDiagnostic(measures).risks_for(pressure).water == pytest.approx(0.5)
+        irrigated = ParcelDiagnostic(measures, irrigated=True)
+        assert irrigated.risks_for(pressure).water == pytest.approx(0.2)

@@ -23,7 +23,7 @@ from field_shift.algorithm.timeline import month_time
 from field_shift.algorithm.twins.soil_comparison import Soil
 from field_shift.algorithm.weather.daily_weather import DailyWeather
 from field_shift.services.plan_service import MAX_PLACES, PlanService
-from field_shift.tools.make_examples import ExampleWeatherProvider
+from field_shift.tools.make_examples import ExampleWeatherProvider, example_water_model
 
 
 class TestDeliberateDifferences:
@@ -172,7 +172,7 @@ class TestPlacesAreKept:
 
         from field_shift.contract.farm_input import FarmInput
 
-        service = PlanService(CountingWeather())
+        service = PlanService(CountingWeather(), example_water_model)
         farm = deepcopy(example_inputs["cycle-5-ans"])
         farm["sections"] = farm["sections"][:1]
 

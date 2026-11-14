@@ -10,6 +10,10 @@
         "real": false,
         "label": "Météo fictive de field_shift.py (plans d’exemple du contrat)"
       },
+      "water": {
+        "real": false,
+        "label": "water_use, bilan d’eau du sol jour par jour — sol : sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)"
+      },
       "climateModels": {
         "real": false,
         "label": "3 modèles climatiques fictifs (à la place de NEX-GDDP-CMIP6)"
@@ -20,7 +24,7 @@
       },
       "fieldMeasures": {
         "real": false,
-        "label": "Mesures satellites et sol fictifs"
+        "label": "Mesures satellites de l’érosion et sol fictifs"
       }
     }
   },
@@ -84,10 +88,7 @@
         "measures": {
           "slopePct": 4.6,
           "heavyRainDays": 8.0,
-          "bareSoilDays": 98.0,
-          "summerStressIndex": 0.67,
-          "rootZoneDrought": 0.4,
-          "groundwaterTrendCmPerYear": -1.0
+          "bareSoilDays": 98.0
         },
         "soil": {
           "clayPct": 28.0,
@@ -98,7 +99,26 @@
         },
         "risksToday": {
           "erosion": 0.718,
-          "water": 0.3
+          "water": 0.011
+        },
+        "waterPressure": {
+          "pressure": 0.011,
+          "worst": 0.011,
+          "components": {
+            "aridite": 0.0,
+            "pluie_ete": 0.032
+          },
+          "missing": [
+            "nappes",
+            "stress_mesure"
+          ],
+          "sources": {
+            "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+            "et0": "Hargreaves, températures seules",
+            "pente": "non lue : tables NRCS"
+          },
+          "aridityIndex": 1.16,
+          "aridityClass": "humide"
         }
       },
       "cycles": [
@@ -224,11 +244,30 @@
           },
           "risks": {
             "erosion": 0.718,
-            "water": 0.3
+            "water": 0.011
+          },
+          "waterPressure": {
+            "pressure": 0.011,
+            "worst": 0.011,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.032
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.142,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.009,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.702,
@@ -238,24 +277,23 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 60.964,
+            "score": 61.079,
             "criteria": {
-              "rendement": 0.656,
-              "erosion": 0.579,
-              "eau": 0.597,
-              "fourrage": 0.197,
-              "azote": 0.441,
-              "matiere_org": 0.461,
-              "marche": 0.75,
-              "ravageurs": 1.0,
-              "reserve": 1.0
+              "rendement": 0.594,
+              "erosion": 0.575,
+              "eau": 0.772,
+              "fourrage": 0.735,
+              "azote": 0.689,
+              "matiere_org": 0.757,
+              "marche": 0.567,
+              "ravageurs": 0.875,
+              "reserve": 0.667
             },
-            "label": "(seigle) → Jachère → Soya (+ seigle) → Jachère → Blé d’automne",
+            "label": "(seigle) → Jachère → Luzerne ×2 [2 pos.] → Maïs",
             "sheets": [
               "jachere",
-              "soya",
-              "jachere",
-              "ble-automne"
+              "luzerne-2",
+              "mais"
             ],
             "steps": [
               {
@@ -278,57 +316,68 @@
                 "positions": null
               },
               {
-                "sheet": "soya",
-                "crop": "soya",
+                "sheet": "luzerne-2",
+                "crop": "luzerne",
                 "kind": "culture",
-                "sowing": "2028-05-16",
-                "harvest": "2028-08-29",
+                "sowing": "2028-04-23",
+                "harvest": "2029-09-22",
                 "positions": [
                   2,
-                  2
-                ]
-              },
-              {
-                "sheet": "jachere",
-                "crop": "jachere",
-                "kind": "jachere",
-                "sowing": null,
-                "harvest": null,
-                "positions": [
-                  3,
                   3
                 ]
               },
               {
-                "sheet": "seigle-couvert",
-                "crop": "seigle",
-                "kind": "couvert",
-                "sowing": "2028-09-16",
-                "harvest": "2029-05-08",
-                "positions": null
-              },
-              {
-                "sheet": "ble-automne",
-                "crop": "ble-automne",
+                "sheet": "mais",
+                "crop": "mais",
                 "kind": "culture",
-                "sowing": "2029-09-16",
-                "harvest": "2030-07-19",
+                "sowing": "2030-05-08",
+                "harvest": "2030-09-13",
                 "positions": [
                   4,
                   4
                 ]
               }
             ],
-            "gaps": [],
-            "seedsToBuy": [],
-            "warnings": []
+            "gaps": [
+              {
+                "previous": "mais",
+                "next": "luzerne",
+                "message": "Maïs → Luzerne"
+              }
+            ],
+            "seedsToBuy": [
+              "luzerne"
+            ],
+            "warnings": [],
+            "water": {
+              "note": 0.772,
+              "worst": 0.772,
+              "subScores": {
+                "A": 0.472,
+                "B": 0.866,
+                "C": 0.786,
+                "D": 0.966
+              },
+              "demandMmPerYear": 481.359,
+              "shortfallMmPerYear": 39.297,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 78.618,
+              "waterAtSowingMm": 210.149,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.772
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 46.348,
+            "score": 46.522,
             "criteria": {
               "rendement": 0.694,
               "erosion": 0.317,
-              "eau": 0.447,
+              "eau": 0.767,
               "fourrage": 0.259,
               "azote": 0.381,
               "matiere_org": 0.359,
@@ -391,7 +440,29 @@
             ],
             "gaps": [],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.767,
+              "worst": 0.767,
+              "subScores": {
+                "A": 0.471,
+                "B": 0.878,
+                "C": 0.761,
+                "D": 0.957
+              },
+              "demandMmPerYear": 481.364,
+              "shortfallMmPerYear": 38.737,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 76.076,
+              "waterAtSowingMm": 208.133,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.767
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -457,23 +528,24 @@
           ],
           "alternatives": [
             {
-              "score": 60.95,
+              "score": 61.074,
               "criteria": {
-                "rendement": 0.594,
-                "erosion": 0.575,
-                "eau": 0.55,
-                "fourrage": 0.735,
-                "azote": 0.689,
-                "matiere_org": 0.757,
-                "marche": 0.567,
-                "ravageurs": 0.875,
-                "reserve": 0.667
+                "rendement": 0.656,
+                "erosion": 0.579,
+                "eau": 0.798,
+                "fourrage": 0.197,
+                "azote": 0.441,
+                "matiere_org": 0.461,
+                "marche": 0.75,
+                "ravageurs": 1.0,
+                "reserve": 1.0
               },
-              "label": "(seigle) → Jachère → Luzerne ×2 [2 pos.] → Maïs",
+              "label": "(seigle) → Jachère → Soya (+ seigle) → Jachère → Blé d’automne",
               "sheets": [
                 "jachere",
-                "luzerne-2",
-                "mais"
+                "soya",
+                "jachere",
+                "ble-automne"
               ],
               "steps": [
                 {
@@ -496,46 +568,79 @@
                   "positions": null
                 },
                 {
-                  "sheet": "luzerne-2",
-                  "crop": "luzerne",
+                  "sheet": "soya",
+                  "crop": "soya",
                   "kind": "culture",
-                  "sowing": "2028-04-23",
-                  "harvest": "2029-09-22",
+                  "sowing": "2028-05-16",
+                  "harvest": "2028-08-29",
                   "positions": [
                     2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "jachere",
+                  "crop": "jachere",
+                  "kind": "jachere",
+                  "sowing": null,
+                  "harvest": null,
+                  "positions": [
+                    3,
                     3
                   ]
                 },
                 {
-                  "sheet": "mais",
-                  "crop": "mais",
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2028-09-16",
+                  "harvest": "2029-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
                   "kind": "culture",
-                  "sowing": "2030-05-08",
-                  "harvest": "2030-09-13",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-07-19",
                   "positions": [
                     4,
                     4
                   ]
                 }
               ],
-              "gaps": [
-                {
-                  "previous": "mais",
-                  "next": "luzerne",
-                  "message": "Maïs → Luzerne"
-                }
-              ],
-              "seedsToBuy": [
-                "luzerne"
-              ],
-              "warnings": []
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": [],
+              "water": {
+                "note": 0.798,
+                "worst": 0.798,
+                "subScores": {
+                  "A": 0.684,
+                  "B": 0.902,
+                  "C": 0.657,
+                  "D": 0.949
+                },
+                "demandMmPerYear": 288.246,
+                "shortfallMmPerYear": 17.122,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 65.704,
+                "waterAtSowingMm": 206.41,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.798
+                  }
+                ]
+              }
             },
             {
-              "score": 60.436,
+              "score": 60.577,
               "criteria": {
                 "rendement": 0.594,
                 "erosion": 0.592,
-                "eau": 0.531,
+                "eau": 0.773,
                 "fourrage": 0.665,
                 "azote": 0.594,
                 "matiere_org": 0.714,
@@ -602,7 +707,29 @@
               "seedsToBuy": [
                 "luzerne"
               ],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.773,
+                "worst": 0.773,
+                "subScores": {
+                  "A": 0.467,
+                  "B": 0.866,
+                  "C": 0.791,
+                  "D": 0.966
+                },
+                "demandMmPerYear": 485.579,
+                "shortfallMmPerYear": 39.297,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 79.121,
+                "waterAtSowingMm": 210.259,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.773
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -614,7 +741,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 58.6,
+          "robustness": 59.574,
           "becomesInfeasibleLater": false
         },
         {
@@ -739,11 +866,30 @@
           },
           "risks": {
             "erosion": 0.718,
-            "water": 0.3
+            "water": 0.011
+          },
+          "waterPressure": {
+            "pressure": 0.011,
+            "worst": 0.011,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.032
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.137,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.009,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.702,
@@ -753,16 +899,16 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 70.708,
+            "score": 70.616,
             "criteria": {
-              "rendement": 0.588,
-              "erosion": 0.852,
-              "eau": 0.638,
-              "fourrage": 0.225,
-              "azote": 0.319,
-              "matiere_org": 0.557,
+              "rendement": 0.594,
+              "erosion": 0.849,
+              "eau": 0.725,
+              "fourrage": 0.226,
+              "azote": 0.315,
+              "matiere_org": 0.555,
               "marche": 0.65,
-              "ravageurs": 0.833,
+              "ravageurs": 0.75,
               "reserve": null
             },
             "label": "(seigle) → Soya → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
@@ -777,7 +923,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2030-09-16",
+                "sowing": "2030-09-20",
                 "harvest": "2031-05-08",
                 "positions": null
               },
@@ -847,14 +993,36 @@
               }
             ],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.725,
+              "worst": 0.725,
+              "subScores": {
+                "A": 0.492,
+                "B": 0.918,
+                "C": 0.788,
+                "D": 0.702
+              },
+              "demandMmPerYear": 464.896,
+              "shortfallMmPerYear": 26.496,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 78.798,
+              "waterAtSowingMm": 152.706,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.725
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 59.392,
+            "score": 59.566,
             "criteria": {
               "rendement": 0.694,
               "erosion": 0.629,
-              "eau": 0.481,
+              "eau": 0.747,
               "fourrage": 0.288,
               "azote": 0.291,
               "matiere_org": 0.487,
@@ -933,7 +1101,29 @@
             ],
             "gaps": [],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.747,
+              "worst": 0.747,
+              "subScores": {
+                "A": 0.409,
+                "B": 0.868,
+                "C": 0.79,
+                "D": 0.923
+              },
+              "demandMmPerYear": 540.991,
+              "shortfallMmPerYear": 42.461,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 79.012,
+              "waterAtSowingMm": 200.736,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.747
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -999,113 +1189,16 @@
           ],
           "alternatives": [
             {
-              "score": 70.208,
+              "score": 69.062,
               "criteria": {
-                "rendement": 0.562,
-                "erosion": 0.852,
-                "eau": 0.638,
-                "fourrage": 0.225,
-                "azote": 0.319,
-                "matiere_org": 0.557,
-                "marche": 0.65,
-                "ravageurs": 0.833,
-                "reserve": null
-              },
-              "label": "(seigle) → Sarrasin → Blé d’automne (+ seigle) → Soya → Blé d’automne",
-              "sheets": [
-                "sarrasin",
-                "ble-automne",
-                "soya",
-                "ble-automne"
-              ],
-              "steps": [
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "couvert",
-                  "sowing": "2030-09-16",
-                  "harvest": "2031-05-08",
-                  "positions": null
-                },
-                {
-                  "sheet": "sarrasin",
-                  "crop": "sarrasin",
-                  "kind": "culture",
-                  "sowing": "2031-06-16",
-                  "harvest": "2031-08-11",
-                  "positions": [
-                    1,
-                    1
-                  ]
-                },
-                {
-                  "sheet": "ble-automne",
-                  "crop": "ble-automne",
-                  "kind": "culture",
-                  "sowing": "2031-09-16",
-                  "harvest": "2032-07-19",
-                  "positions": [
-                    2,
-                    2
-                  ]
-                },
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "couvert",
-                  "sowing": "2032-09-16",
-                  "harvest": "2033-05-08",
-                  "positions": null
-                },
-                {
-                  "sheet": "soya",
-                  "crop": "soya",
-                  "kind": "culture",
-                  "sowing": "2033-05-16",
-                  "harvest": "2033-08-28",
-                  "positions": [
-                    3,
-                    3
-                  ]
-                },
-                {
-                  "sheet": "ble-automne",
-                  "crop": "ble-automne",
-                  "kind": "culture",
-                  "sowing": "2033-09-16",
-                  "harvest": "2034-07-19",
-                  "positions": [
-                    4,
-                    4
-                  ]
-                }
-              ],
-              "gaps": [
-                {
-                  "previous": "ble-automne",
-                  "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
-                },
-                {
-                  "previous": "sarrasin",
-                  "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
-                }
-              ],
-              "seedsToBuy": [],
-              "warnings": []
-            },
-            {
-              "score": 69.142,
-              "criteria": {
-                "rendement": 0.609,
-                "erosion": 0.814,
-                "eau": 0.645,
-                "fourrage": 0.245,
-                "azote": 0.319,
-                "matiere_org": 0.57,
+                "rendement": 0.617,
+                "erosion": 0.811,
+                "eau": 0.729,
+                "fourrage": 0.246,
+                "azote": 0.315,
+                "matiere_org": 0.568,
                 "marche": 0.733,
-                "ravageurs": 0.778,
+                "ravageurs": 0.667,
                 "reserve": null
               },
               "label": "(seigle) → Soya → Blé d’automne (+ seigle) → Jachère → Blé d’automne",
@@ -1120,7 +1213,7 @@
                   "sheet": "seigle-couvert",
                   "crop": "seigle",
                   "kind": "couvert",
-                  "sowing": "2030-09-16",
+                  "sowing": "2030-09-20",
                   "harvest": "2031-05-08",
                   "positions": null
                 },
@@ -1179,7 +1272,156 @@
               ],
               "gaps": [],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.729,
+                "worst": 0.729,
+                "subScores": {
+                  "A": 0.548,
+                  "B": 0.89,
+                  "C": 0.754,
+                  "D": 0.722
+                },
+                "demandMmPerYear": 413.741,
+                "shortfallMmPerYear": 26.481,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 75.43,
+                "waterAtSowingMm": 157.157,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.729
+                  }
+                ]
+              }
+            },
+            {
+              "score": 67.802,
+              "criteria": {
+                "rendement": 0.57,
+                "erosion": 0.8,
+                "eau": 0.781,
+                "fourrage": 0.21,
+                "azote": 0.348,
+                "matiere_org": 0.555,
+                "marche": 0.633,
+                "ravageurs": 0.889,
+                "reserve": null
+              },
+              "label": "(seigle) → Soya (+ seigle) → Sarrasin (+ seigle) → Jachère → Blé d’automne",
+              "sheets": [
+                "soya",
+                "sarrasin",
+                "jachere",
+                "ble-automne"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2030-09-20",
+                  "harvest": "2031-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2031-05-16",
+                  "harvest": "2031-08-28",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2031-09-16",
+                  "harvest": "2032-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "sarrasin",
+                  "crop": "sarrasin",
+                  "kind": "culture",
+                  "sowing": "2032-06-16",
+                  "harvest": "2032-08-11",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "jachere",
+                  "crop": "jachere",
+                  "kind": "jachere",
+                  "sowing": null,
+                  "harvest": null,
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2032-09-16",
+                  "harvest": "2033-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
+                  "kind": "culture",
+                  "sowing": "2033-09-16",
+                  "harvest": "2034-07-19",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                }
+              ],
+              "gaps": [
+                {
+                  "previous": "soya",
+                  "next": "sarrasin",
+                  "message": "Soya → Sarrasin"
+                },
+                {
+                  "previous": "sarrasin",
+                  "next": "ble-automne",
+                  "message": "Sarrasin → Blé d’automne"
+                }
+              ],
+              "seedsToBuy": [],
+              "warnings": [],
+              "water": {
+                "note": 0.781,
+                "worst": 0.781,
+                "subScores": {
+                  "A": 0.585,
+                  "B": 0.925,
+                  "C": 0.713,
+                  "D": 0.904
+                },
+                "demandMmPerYear": 380.151,
+                "shortfallMmPerYear": 19.339,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 71.264,
+                "waterAtSowingMm": 196.616,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.781
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -1191,7 +1433,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 70.411,
+          "robustness": 70.47,
           "becomesInfeasibleLater": false
         },
         {
@@ -1424,11 +1666,30 @@
           },
           "risks": {
             "erosion": 0.718,
-            "water": 0.338
+            "water": 0.0
+          },
+          "waterPressure": {
+            "pressure": 0.0,
+            "worst": 0.0,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.0
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.109,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.009,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.702,
@@ -1438,11 +1699,11 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 70.411,
+            "score": 70.47,
             "criteria": {
               "rendement": 0.588,
               "erosion": 0.847,
-              "eau": 0.638,
+              "eau": 0.719,
               "fourrage": 0.225,
               "azote": 0.318,
               "matiere_org": 0.557,
@@ -1532,14 +1793,44 @@
               }
             ],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.719,
+              "worst": 0.7,
+              "subScores": {
+                "A": 0.496,
+                "B": 0.921,
+                "C": 0.781,
+                "D": 0.677
+              },
+              "demandMmPerYear": 466.035,
+              "shortfallMmPerYear": 25.787,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 78.128,
+              "waterAtSowingMm": 147.294,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "modèle A (fictif)",
+                  "note": 0.735
+                },
+                {
+                  "model": "modèle B (fictif)",
+                  "note": 0.722
+                },
+                {
+                  "model": "modèle C (fictif)",
+                  "note": 0.7
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 58.885,
+            "score": 59.057,
             "criteria": {
               "rendement": 0.694,
               "erosion": 0.62,
-              "eau": 0.482,
+              "eau": 0.744,
               "fourrage": 0.288,
               "azote": 0.29,
               "matiere_org": 0.488,
@@ -1618,7 +1909,37 @@
             ],
             "gaps": [],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.744,
+              "worst": 0.729,
+              "subScores": {
+                "A": 0.422,
+                "B": 0.864,
+                "C": 0.774,
+                "D": 0.918
+              },
+              "demandMmPerYear": 534.696,
+              "shortfallMmPerYear": 47.907,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 77.403,
+              "waterAtSowingMm": 199.747,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "modèle A (fictif)",
+                  "note": 0.757
+                },
+                {
+                  "model": "modèle B (fictif)",
+                  "note": 0.747
+                },
+                {
+                  "model": "modèle C (fictif)",
+                  "note": 0.729
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -1684,11 +2005,11 @@
           ],
           "alternatives": [
             {
-              "score": 69.911,
+              "score": 69.969,
               "criteria": {
                 "rendement": 0.562,
                 "erosion": 0.847,
-                "eau": 0.638,
+                "eau": 0.719,
                 "fourrage": 0.225,
                 "azote": 0.318,
                 "matiere_org": 0.557,
@@ -1778,14 +2099,44 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.719,
+                "worst": 0.7,
+                "subScores": {
+                  "A": 0.496,
+                  "B": 0.921,
+                  "C": 0.781,
+                  "D": 0.677
+                },
+                "demandMmPerYear": 466.035,
+                "shortfallMmPerYear": 25.787,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 78.128,
+                "waterAtSowingMm": 147.294,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "modèle A (fictif)",
+                    "note": 0.735
+                  },
+                  {
+                    "model": "modèle B (fictif)",
+                    "note": 0.722
+                  },
+                  {
+                    "model": "modèle C (fictif)",
+                    "note": 0.7
+                  }
+                ]
+              }
             },
             {
-              "score": 68.845,
+              "score": 68.9,
               "criteria": {
                 "rendement": 0.609,
                 "erosion": 0.809,
-                "eau": 0.645,
+                "eau": 0.725,
                 "fourrage": 0.245,
                 "azote": 0.318,
                 "matiere_org": 0.57,
@@ -1864,7 +2215,37 @@
               ],
               "gaps": [],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.725,
+                "worst": 0.708,
+                "subScores": {
+                  "A": 0.552,
+                  "B": 0.895,
+                  "C": 0.748,
+                  "D": 0.705
+                },
+                "demandMmPerYear": 414.577,
+                "shortfallMmPerYear": 25.685,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 74.776,
+                "waterAtSowingMm": 153.291,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "modèle A (fictif)",
+                    "note": 0.739
+                  },
+                  {
+                    "model": "modèle B (fictif)",
+                    "note": 0.727
+                  },
+                  {
+                    "model": "modèle C (fictif)",
+                    "note": 0.708
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -1909,10 +2290,7 @@
         "measures": {
           "slopePct": 3.2,
           "heavyRainDays": 5.0,
-          "bareSoilDays": 127.0,
-          "summerStressIndex": 0.6,
-          "rootZoneDrought": 0.43,
-          "groundwaterTrendCmPerYear": -0.6
+          "bareSoilDays": 127.0
         },
         "soil": {
           "clayPct": 34.0,
@@ -1923,7 +2301,26 @@
         },
         "risksToday": {
           "erosion": 0.557,
-          "water": 0.359
+          "water": 0.011
+        },
+        "waterPressure": {
+          "pressure": 0.011,
+          "worst": 0.011,
+          "components": {
+            "aridite": 0.0,
+            "pluie_ete": 0.032
+          },
+          "missing": [
+            "nappes",
+            "stress_mesure"
+          ],
+          "sources": {
+            "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+            "et0": "Hargreaves, températures seules",
+            "pente": "non lue : tables NRCS"
+          },
+          "aridityIndex": 1.16,
+          "aridityClass": "humide"
         }
       },
       "cycles": [
@@ -2049,11 +2446,30 @@
           },
           "risks": {
             "erosion": 0.557,
-            "water": 0.359
+            "water": 0.011
+          },
+          "waterPressure": {
+            "pressure": 0.011,
+            "worst": 0.011,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.032
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.14,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.009,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.636,
@@ -2063,11 +2479,11 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 63.761,
+            "score": 63.903,
             "criteria": {
               "rendement": 0.688,
               "erosion": 0.594,
-              "eau": 0.551,
+              "eau": 0.772,
               "fourrage": 0.721,
               "azote": 0.68,
               "matiere_org": 0.752,
@@ -2134,14 +2550,36 @@
             "seedsToBuy": [
               "luzerne"
             ],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.772,
+              "worst": 0.772,
+              "subScores": {
+                "A": 0.465,
+                "B": 0.865,
+                "C": 0.792,
+                "D": 0.966
+              },
+              "demandMmPerYear": 487.896,
+              "shortfallMmPerYear": 39.52,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 79.223,
+              "waterAtSowingMm": 210.139,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.772
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 58.765,
+            "score": 58.91,
             "criteria": {
               "rendement": 0.68,
               "erosion": 0.505,
-              "eau": 0.527,
+              "eau": 0.762,
               "fourrage": 0.637,
               "azote": 0.707,
               "matiere_org": 0.634,
@@ -2200,7 +2638,29 @@
             "seedsToBuy": [
               "luzerne"
             ],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.762,
+              "worst": 0.762,
+              "subScores": {
+                "A": 0.373,
+                "B": 0.874,
+                "C": 0.84,
+                "D": 0.962
+              },
+              "demandMmPerYear": 572.103,
+              "shortfallMmPerYear": 49.677,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 83.987,
+              "waterAtSowingMm": 209.309,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.762
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -2226,11 +2686,11 @@
           ],
           "alternatives": [
             {
-              "score": 62.427,
+              "score": 62.58,
               "criteria": {
                 "rendement": 0.688,
                 "erosion": 0.591,
-                "eau": 0.533,
+                "eau": 0.772,
                 "fourrage": 0.671,
                 "azote": 0.603,
                 "matiere_org": 0.718,
@@ -2297,14 +2757,36 @@
               "seedsToBuy": [
                 "luzerne"
               ],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.772,
+                "worst": 0.772,
+                "subScores": {
+                  "A": 0.467,
+                  "B": 0.865,
+                  "C": 0.792,
+                  "D": 0.966
+                },
+                "demandMmPerYear": 486.756,
+                "shortfallMmPerYear": 39.52,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 79.192,
+                "waterAtSowingMm": 210.248,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.772
+                  }
+                ]
+              }
             },
             {
-              "score": 58.481,
+              "score": 58.603,
               "criteria": {
                 "rendement": 0.703,
                 "erosion": 0.526,
-                "eau": 0.538,
+                "eau": 0.737,
                 "fourrage": 0.241,
                 "azote": 0.378,
                 "matiere_org": 0.439,
@@ -2375,7 +2857,29 @@
               ],
               "gaps": [],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.737,
+                "worst": 0.737,
+                "subScores": {
+                  "A": 0.576,
+                  "B": 0.893,
+                  "C": 0.725,
+                  "D": 0.754
+                },
+                "demandMmPerYear": 386.468,
+                "shortfallMmPerYear": 25.965,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 72.534,
+                "waterAtSowingMm": 164.054,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.737
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -2387,7 +2891,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 63.503,
+          "robustness": 63.654,
           "becomesInfeasibleLater": false
         },
         {
@@ -2512,11 +3016,30 @@
           },
           "risks": {
             "erosion": 0.557,
-            "water": 0.359
+            "water": 0.011
+          },
+          "waterPressure": {
+            "pressure": 0.011,
+            "worst": 0.011,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.032
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.135,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.009,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.636,
@@ -2526,11 +3049,11 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 63.749,
+            "score": 63.903,
             "criteria": {
               "rendement": 0.688,
               "erosion": 0.597,
-              "eau": 0.552,
+              "eau": 0.771,
               "fourrage": 0.723,
               "azote": 0.683,
               "matiere_org": 0.754,
@@ -2595,14 +3118,36 @@
               }
             ],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.771,
+              "worst": 0.771,
+              "subScores": {
+                "A": 0.465,
+                "B": 0.863,
+                "C": 0.79,
+                "D": 0.965
+              },
+              "demandMmPerYear": 489.983,
+              "shortfallMmPerYear": 40.576,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 79.048,
+              "waterAtSowingMm": 210.007,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.771
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 66.85,
+            "score": 67.003,
             "criteria": {
               "rendement": 0.68,
               "erosion": 0.668,
-              "eau": 0.544,
+              "eau": 0.75,
               "fourrage": 0.654,
               "azote": 0.66,
               "matiere_org": 0.7,
@@ -2667,7 +3212,29 @@
               }
             ],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.75,
+              "worst": 0.75,
+              "subScores": {
+                "A": 0.339,
+                "B": 0.866,
+                "C": 0.855,
+                "D": 0.939
+              },
+              "demandMmPerYear": 605.688,
+              "shortfallMmPerYear": 52.853,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 85.529,
+              "waterAtSowingMm": 204.283,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.75
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -2693,11 +3260,11 @@
           ],
           "alternatives": [
             {
-              "score": 63.568,
+              "score": 63.687,
               "criteria": {
                 "rendement": 0.644,
                 "erosion": 0.725,
-                "eau": 0.565,
+                "eau": 0.734,
                 "fourrage": 0.251,
                 "azote": 0.29,
                 "matiere_org": 0.53,
@@ -2782,14 +3349,36 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.734,
+                "worst": 0.734,
+                "subScores": {
+                  "A": 0.486,
+                  "B": 0.912,
+                  "C": 0.772,
+                  "D": 0.767
+                },
+                "demandMmPerYear": 471.006,
+                "shortfallMmPerYear": 28.192,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 77.204,
+                "waterAtSowingMm": 166.77,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.734
+                  }
+                ]
+              }
             },
             {
-              "score": 63.108,
+              "score": 63.239,
               "criteria": {
                 "rendement": 0.625,
                 "erosion": 0.725,
-                "eau": 0.566,
+                "eau": 0.757,
                 "fourrage": 0.254,
                 "azote": 0.286,
                 "matiere_org": 0.529,
@@ -2879,7 +3468,29 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.757,
+                "worst": 0.757,
+                "subScores": {
+                  "A": 0.486,
+                  "B": 0.912,
+                  "C": 0.774,
+                  "D": 0.856
+                },
+                "demandMmPerYear": 471.006,
+                "shortfallMmPerYear": 28.141,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 77.426,
+                "waterAtSowingMm": 186.323,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.757
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -3117,11 +3728,30 @@
           },
           "risks": {
             "erosion": 0.557,
-            "water": 0.397
+            "water": 0.0
+          },
+          "waterPressure": {
+            "pressure": 0.0,
+            "worst": 0.0,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.0
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.106,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.01,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.636,
@@ -3131,11 +3761,11 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 63.503,
+            "score": 63.654,
             "criteria": {
               "rendement": 0.688,
               "erosion": 0.593,
-              "eau": 0.552,
+              "eau": 0.768,
               "fourrage": 0.722,
               "azote": 0.685,
               "matiere_org": 0.754,
@@ -3200,14 +3830,44 @@
               }
             ],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.768,
+              "worst": 0.754,
+              "subScores": {
+                "A": 0.469,
+                "B": 0.861,
+                "C": 0.779,
+                "D": 0.963
+              },
+              "demandMmPerYear": 492.667,
+              "shortfallMmPerYear": 48.301,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 77.945,
+              "waterAtSowingMm": 209.452,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "modèle A (fictif)",
+                  "note": 0.78
+                },
+                {
+                  "model": "modèle B (fictif)",
+                  "note": 0.77
+                },
+                {
+                  "model": "modèle C (fictif)",
+                  "note": 0.754
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 66.497,
+            "score": 66.649,
             "criteria": {
               "rendement": 0.68,
               "erosion": 0.661,
-              "eau": 0.545,
+              "eau": 0.747,
               "fourrage": 0.655,
               "azote": 0.662,
               "matiere_org": 0.702,
@@ -3272,7 +3932,37 @@
               }
             ],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.747,
+              "worst": 0.733,
+              "subScores": {
+                "A": 0.346,
+                "B": 0.864,
+                "C": 0.843,
+                "D": 0.935
+              },
+              "demandMmPerYear": 606.439,
+              "shortfallMmPerYear": 61.649,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 84.298,
+              "waterAtSowingMm": 203.449,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "modèle A (fictif)",
+                  "note": 0.759
+                },
+                {
+                  "model": "modèle B (fictif)",
+                  "note": 0.749
+                },
+                {
+                  "model": "modèle C (fictif)",
+                  "note": 0.733
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -3298,11 +3988,11 @@
           ],
           "alternatives": [
             {
-              "score": 63.093,
+              "score": 63.208,
               "criteria": {
                 "rendement": 0.644,
                 "erosion": 0.717,
-                "eau": 0.566,
+                "eau": 0.729,
                 "fourrage": 0.251,
                 "azote": 0.29,
                 "matiere_org": 0.531,
@@ -3387,14 +4077,44 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.729,
+                "worst": 0.713,
+                "subScores": {
+                  "A": 0.494,
+                  "B": 0.908,
+                  "C": 0.759,
+                  "D": 0.753
+                },
+                "demandMmPerYear": 469.645,
+                "shortfallMmPerYear": 30.736,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 75.916,
+                "waterAtSowingMm": 163.923,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "modèle A (fictif)",
+                    "note": 0.742
+                  },
+                  {
+                    "model": "modèle B (fictif)",
+                    "note": 0.731
+                  },
+                  {
+                    "model": "modèle C (fictif)",
+                    "note": 0.713
+                  }
+                ]
+              }
             },
             {
-              "score": 62.637,
+              "score": 62.763,
               "criteria": {
                 "rendement": 0.625,
                 "erosion": 0.717,
-                "eau": 0.567,
+                "eau": 0.751,
                 "fourrage": 0.253,
                 "azote": 0.286,
                 "matiere_org": 0.53,
@@ -3484,7 +4204,37 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.751,
+                "worst": 0.733,
+                "subScores": {
+                  "A": 0.494,
+                  "B": 0.908,
+                  "C": 0.761,
+                  "D": 0.84
+                },
+                "demandMmPerYear": 469.645,
+                "shortfallMmPerYear": 30.718,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 76.126,
+                "waterAtSowingMm": 182.792,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "modèle A (fictif)",
+                    "note": 0.766
+                  },
+                  {
+                    "model": "modèle B (fictif)",
+                    "note": 0.754
+                  },
+                  {
+                    "model": "modèle C (fictif)",
+                    "note": 0.733
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -3534,10 +4284,7 @@
         "measures": {
           "slopePct": 5.2,
           "heavyRainDays": 7.0,
-          "bareSoilDays": 95.0,
-          "summerStressIndex": 0.53,
-          "rootZoneDrought": 0.45,
-          "groundwaterTrendCmPerYear": -1.3
+          "bareSoilDays": 95.0
         },
         "soil": {
           "clayPct": 24.0,
@@ -3548,7 +4295,26 @@
         },
         "risksToday": {
           "erosion": 0.714,
-          "water": 0.47
+          "water": 0.011
+        },
+        "waterPressure": {
+          "pressure": 0.011,
+          "worst": 0.011,
+          "components": {
+            "aridite": 0.0,
+            "pluie_ete": 0.032
+          },
+          "missing": [
+            "nappes",
+            "stress_mesure"
+          ],
+          "sources": {
+            "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+            "et0": "Hargreaves, températures seules",
+            "pente": "non lue : tables NRCS"
+          },
+          "aridityIndex": 1.16,
+          "aridityClass": "humide"
         }
       },
       "cycles": [
@@ -3674,11 +4440,30 @@
           },
           "risks": {
             "erosion": 0.714,
-            "water": 0.47
+            "water": 0.011
+          },
+          "waterPressure": {
+            "pressure": 0.011,
+            "worst": 0.011,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.032
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.142,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.01,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.7,
@@ -3688,11 +4473,11 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 67.045,
+            "score": 67.116,
             "criteria": {
               "rendement": 0.537,
               "erosion": 0.818,
-              "eau": 0.645,
+              "eau": 0.766,
               "fourrage": 0.219,
               "azote": 0.282,
               "matiere_org": 0.573,
@@ -3784,14 +4569,36 @@
             "seedsToBuy": [
               "sarrasin"
             ],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.766,
+              "worst": 0.766,
+              "subScores": {
+                "A": 0.562,
+                "B": 0.948,
+                "C": 0.757,
+                "D": 0.797
+              },
+              "demandMmPerYear": 399.765,
+              "shortfallMmPerYear": 13.792,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 75.699,
+              "waterAtSowingMm": 173.424,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.766
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 58.644,
+            "score": 58.732,
             "criteria": {
               "rendement": 0.644,
               "erosion": 0.574,
-              "eau": 0.56,
+              "eau": 0.713,
               "fourrage": 0.28,
               "azote": 0.295,
               "matiere_org": 0.47,
@@ -3854,7 +4661,29 @@
             ],
             "gaps": [],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.713,
+              "worst": 0.713,
+              "subScores": {
+                "A": 0.483,
+                "B": 0.895,
+                "C": 0.796,
+                "D": 0.679
+              },
+              "demandMmPerYear": 471.419,
+              "shortfallMmPerYear": 33.155,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 79.571,
+              "waterAtSowingMm": 147.762,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.713
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -3880,11 +4709,11 @@
           ],
           "alternatives": [
             {
-              "score": 66.297,
+              "score": 66.369,
               "criteria": {
                 "rendement": 0.547,
                 "erosion": 0.778,
-                "eau": 0.652,
+                "eau": 0.78,
                 "fourrage": 0.239,
                 "azote": 0.282,
                 "matiere_org": 0.587,
@@ -3976,14 +4805,36 @@
               "seedsToBuy": [
                 "sarrasin"
               ],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.78,
+                "worst": 0.78,
+                "subScores": {
+                  "A": 0.619,
+                  "B": 0.931,
+                  "C": 0.722,
+                  "D": 0.849
+                },
+                "demandMmPerYear": 347.163,
+                "shortfallMmPerYear": 13.775,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 72.193,
+                "waterAtSowingMm": 184.671,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.78
+                  }
+                ]
+              }
             },
             {
-              "score": 66.272,
+              "score": 66.338,
               "criteria": {
                 "rendement": 0.5,
                 "erosion": 0.818,
-                "eau": 0.649,
+                "eau": 0.765,
                 "fourrage": 0.221,
                 "azote": 0.276,
                 "matiere_org": 0.573,
@@ -4080,7 +4931,29 @@
               "seedsToBuy": [
                 "sarrasin"
               ],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.765,
+                "worst": 0.765,
+                "subScores": {
+                  "A": 0.562,
+                  "B": 0.949,
+                  "C": 0.759,
+                  "D": 0.791
+                },
+                "demandMmPerYear": 399.765,
+                "shortfallMmPerYear": 13.792,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 75.905,
+                "waterAtSowingMm": 172.189,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.765
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -4092,7 +4965,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 66.257,
+          "robustness": 66.326,
           "becomesInfeasibleLater": false
         },
         {
@@ -4217,11 +5090,30 @@
           },
           "risks": {
             "erosion": 0.714,
-            "water": 0.47
+            "water": 0.011
+          },
+          "waterPressure": {
+            "pressure": 0.011,
+            "worst": 0.011,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.032
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.137,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.01,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.7,
@@ -4231,11 +5123,11 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 66.428,
+            "score": 66.501,
             "criteria": {
               "rendement": 0.5,
               "erosion": 0.82,
-              "eau": 0.647,
+              "eau": 0.764,
               "fourrage": 0.221,
               "azote": 0.281,
               "matiere_org": 0.574,
@@ -4325,14 +5217,36 @@
               }
             ],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.764,
+              "worst": 0.764,
+              "subScores": {
+                "A": 0.562,
+                "B": 0.948,
+                "C": 0.757,
+                "D": 0.79
+              },
+              "demandMmPerYear": 401.638,
+              "shortfallMmPerYear": 14.314,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 75.684,
+              "waterAtSowingMm": 171.896,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.764
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 54.442,
+            "score": 54.583,
             "criteria": {
               "rendement": 0.644,
               "erosion": 0.575,
-              "eau": 0.504,
+              "eau": 0.727,
               "fourrage": 0.324,
               "azote": 0.214,
               "matiere_org": 0.515,
@@ -4403,7 +5317,29 @@
             ],
             "gaps": [],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.727,
+              "worst": 0.727,
+              "subScores": {
+                "A": 0.441,
+                "B": 0.877,
+                "C": 0.803,
+                "D": 0.786
+              },
+              "demandMmPerYear": 511.323,
+              "shortfallMmPerYear": 37.407,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 80.251,
+              "waterAtSowingMm": 171.042,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.727
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -4429,11 +5365,11 @@
           ],
           "alternatives": [
             {
-              "score": 70.184,
+              "score": 70.251,
               "criteria": {
                 "rendement": 0.562,
                 "erosion": 0.852,
-                "eau": 0.638,
+                "eau": 0.725,
                 "fourrage": 0.225,
                 "azote": 0.319,
                 "matiere_org": 0.557,
@@ -4523,14 +5459,36 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.725,
+                "worst": 0.725,
+                "subScores": {
+                  "A": 0.491,
+                  "B": 0.918,
+                  "C": 0.789,
+                  "D": 0.702
+                },
+                "demandMmPerYear": 466.09,
+                "shortfallMmPerYear": 26.496,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 78.904,
+                "waterAtSowingMm": 152.706,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.725
+                  }
+                ]
+              }
             },
             {
-              "score": 69.566,
+              "score": 69.631,
               "criteria": {
                 "rendement": 0.562,
                 "erosion": 0.842,
-                "eau": 0.639,
+                "eau": 0.725,
                 "fourrage": 0.226,
                 "azote": 0.317,
                 "matiere_org": 0.557,
@@ -4620,7 +5578,29 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.725,
+                "worst": 0.725,
+                "subScores": {
+                  "A": 0.491,
+                  "B": 0.918,
+                  "C": 0.789,
+                  "D": 0.702
+                },
+                "demandMmPerYear": 466.09,
+                "shortfallMmPerYear": 26.496,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 78.904,
+                "waterAtSowingMm": 152.706,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.725
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -4865,11 +5845,30 @@
           },
           "risks": {
             "erosion": 0.714,
-            "water": 0.508
+            "water": 0.0
+          },
+          "waterPressure": {
+            "pressure": 0.0,
+            "worst": 0.0,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.0
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.109,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.01,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.7,
@@ -4879,11 +5878,11 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 66.257,
+            "score": 66.326,
             "criteria": {
               "rendement": 0.5,
               "erosion": 0.817,
-              "eau": 0.647,
+              "eau": 0.757,
               "fourrage": 0.221,
               "azote": 0.28,
               "matiere_org": 0.574,
@@ -4973,14 +5972,44 @@
               }
             ],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.757,
+              "worst": 0.738,
+              "subScores": {
+                "A": 0.563,
+                "B": 0.954,
+                "C": 0.75,
+                "D": 0.762
+              },
+              "demandMmPerYear": 403.962,
+              "shortfallMmPerYear": 12.753,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 75.025,
+              "waterAtSowingMm": 165.791,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "modèle A (fictif)",
+                  "note": 0.774
+                },
+                {
+                  "model": "modèle B (fictif)",
+                  "note": 0.761
+                },
+                {
+                  "model": "modèle C (fictif)",
+                  "note": 0.738
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 65.64,
+            "score": 65.765,
             "criteria": {
               "rendement": 0.637,
               "erosion": 0.748,
-              "eau": 0.55,
+              "eau": 0.713,
               "fourrage": 0.265,
               "azote": 0.314,
               "matiere_org": 0.511,
@@ -5059,7 +6088,37 @@
             ],
             "gaps": [],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.713,
+              "worst": 0.696,
+              "subScores": {
+                "A": 0.426,
+                "B": 0.877,
+                "C": 0.794,
+                "D": 0.755
+              },
+              "demandMmPerYear": 531.255,
+              "shortfallMmPerYear": 43.364,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 79.405,
+              "waterAtSowingMm": 164.366,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "modèle A (fictif)",
+                  "note": 0.727
+                },
+                {
+                  "model": "modèle B (fictif)",
+                  "note": 0.715
+                },
+                {
+                  "model": "modèle C (fictif)",
+                  "note": 0.696
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -5085,11 +6144,11 @@
           ],
           "alternatives": [
             {
-              "score": 69.886,
+              "score": 69.95,
               "criteria": {
                 "rendement": 0.562,
                 "erosion": 0.847,
-                "eau": 0.638,
+                "eau": 0.719,
                 "fourrage": 0.225,
                 "azote": 0.318,
                 "matiere_org": 0.557,
@@ -5179,14 +6238,44 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.719,
+                "worst": 0.7,
+                "subScores": {
+                  "A": 0.496,
+                  "B": 0.921,
+                  "C": 0.781,
+                  "D": 0.677
+                },
+                "demandMmPerYear": 466.035,
+                "shortfallMmPerYear": 25.787,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 78.128,
+                "waterAtSowingMm": 147.294,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "modèle A (fictif)",
+                    "note": 0.735
+                  },
+                  {
+                    "model": "modèle B (fictif)",
+                    "note": 0.722
+                  },
+                  {
+                    "model": "modèle C (fictif)",
+                    "note": 0.7
+                  }
+                ]
+              }
             },
             {
-              "score": 69.331,
+              "score": 69.393,
               "criteria": {
                 "rendement": 0.562,
                 "erosion": 0.838,
-                "eau": 0.639,
+                "eau": 0.719,
                 "fourrage": 0.226,
                 "azote": 0.317,
                 "matiere_org": 0.557,
@@ -5276,7 +6365,37 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.719,
+                "worst": 0.7,
+                "subScores": {
+                  "A": 0.496,
+                  "B": 0.921,
+                  "C": 0.781,
+                  "D": 0.677
+                },
+                "demandMmPerYear": 466.035,
+                "shortfallMmPerYear": 25.787,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 78.128,
+                "waterAtSowingMm": 147.294,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "modèle A (fictif)",
+                    "note": 0.735
+                  },
+                  {
+                    "model": "modèle B (fictif)",
+                    "note": 0.722
+                  },
+                  {
+                    "model": "modèle C (fictif)",
+                    "note": 0.7
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -5326,10 +6445,7 @@
         "measures": {
           "slopePct": 7.3,
           "heavyRainDays": 6.0,
-          "bareSoilDays": 124.0,
-          "summerStressIndex": 0.66,
-          "rootZoneDrought": 0.47,
-          "groundwaterTrendCmPerYear": -1.0
+          "bareSoilDays": 124.0
         },
         "soil": {
           "clayPct": 29.0,
@@ -5340,7 +6456,26 @@
         },
         "risksToday": {
           "erosion": 0.847,
-          "water": 0.331
+          "water": 0.011
+        },
+        "waterPressure": {
+          "pressure": 0.011,
+          "worst": 0.011,
+          "components": {
+            "aridite": 0.0,
+            "pluie_ete": 0.032
+          },
+          "missing": [
+            "nappes",
+            "stress_mesure"
+          ],
+          "sources": {
+            "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+            "et0": "Hargreaves, températures seules",
+            "pente": "non lue : tables NRCS"
+          },
+          "aridityIndex": 1.16,
+          "aridityClass": "humide"
         }
       },
       "cycles": [
@@ -5466,11 +6601,30 @@
           },
           "risks": {
             "erosion": 0.847,
-            "water": 0.331
+            "water": 0.011
+          },
+          "waterPressure": {
+            "pressure": 0.011,
+            "worst": 0.011,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.032
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.142,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.009,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.754,
@@ -5480,11 +6634,11 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 67.121,
+            "score": 67.186,
             "criteria": {
               "rendement": 0.5,
               "erosion": 0.821,
-              "eau": 0.647,
+              "eau": 0.765,
               "fourrage": 0.22,
               "azote": 0.281,
               "matiere_org": 0.574,
@@ -5576,14 +6730,36 @@
             "seedsToBuy": [
               "sarrasin"
             ],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.765,
+              "worst": 0.765,
+              "subScores": {
+                "A": 0.559,
+                "B": 0.949,
+                "C": 0.761,
+                "D": 0.791
+              },
+              "demandMmPerYear": 401.806,
+              "shortfallMmPerYear": 13.792,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 76.084,
+              "waterAtSowingMm": 172.189,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.765
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 49.45,
+            "score": 49.58,
             "criteria": {
               "rendement": 0.644,
               "erosion": 0.416,
-              "eau": 0.487,
+              "eau": 0.737,
               "fourrage": 0.309,
               "azote": 0.26,
               "matiere_org": 0.452,
@@ -5655,7 +6831,29 @@
                 "advised": 5,
                 "message": "Soya 2 an(s) après Pomme de terre : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
               }
-            ]
+            ],
+            "water": {
+              "note": 0.737,
+              "worst": 0.737,
+              "subScores": {
+                "A": 0.471,
+                "B": 0.884,
+                "C": 0.788,
+                "D": 0.805
+              },
+              "demandMmPerYear": 481.676,
+              "shortfallMmPerYear": 35.255,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 78.805,
+              "waterAtSowingMm": 175.055,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.737
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -5681,11 +6879,11 @@
           ],
           "alternatives": [
             {
-              "score": 66.077,
+              "score": 66.143,
               "criteria": {
                 "rendement": 0.5,
                 "erosion": 0.782,
-                "eau": 0.653,
+                "eau": 0.779,
                 "fourrage": 0.24,
                 "azote": 0.281,
                 "matiere_org": 0.587,
@@ -5777,14 +6975,36 @@
               "seedsToBuy": [
                 "sarrasin"
               ],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.779,
+                "worst": 0.779,
+                "subScores": {
+                  "A": 0.617,
+                  "B": 0.932,
+                  "C": 0.726,
+                  "D": 0.841
+                },
+                "demandMmPerYear": 349.203,
+                "shortfallMmPerYear": 13.775,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 72.578,
+                "waterAtSowingMm": 183.024,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.779
+                  }
+                ]
+              }
             },
             {
-              "score": 66.077,
+              "score": 66.143,
               "criteria": {
                 "rendement": 0.5,
                 "erosion": 0.782,
-                "eau": 0.653,
+                "eau": 0.779,
                 "fourrage": 0.24,
                 "azote": 0.281,
                 "matiere_org": 0.587,
@@ -5876,7 +7096,29 @@
               "seedsToBuy": [
                 "sarrasin"
               ],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.779,
+                "worst": 0.779,
+                "subScores": {
+                  "A": 0.617,
+                  "B": 0.932,
+                  "C": 0.726,
+                  "D": 0.841
+                },
+                "demandMmPerYear": 349.203,
+                "shortfallMmPerYear": 13.775,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 72.578,
+                "waterAtSowingMm": 183.024,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.779
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -5888,7 +7130,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 66.92,
+          "robustness": 66.986,
           "becomesInfeasibleLater": false
         },
         {
@@ -6013,11 +7255,30 @@
           },
           "risks": {
             "erosion": 0.847,
-            "water": 0.331
+            "water": 0.011
+          },
+          "waterPressure": {
+            "pressure": 0.011,
+            "worst": 0.011,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.032
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.137,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.009,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.754,
@@ -6027,11 +7288,11 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 67.096,
+            "score": 67.166,
             "criteria": {
               "rendement": 0.5,
               "erosion": 0.82,
-              "eau": 0.647,
+              "eau": 0.764,
               "fourrage": 0.221,
               "azote": 0.28,
               "matiere_org": 0.574,
@@ -6121,14 +7382,36 @@
               }
             ],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.764,
+              "worst": 0.764,
+              "subScores": {
+                "A": 0.562,
+                "B": 0.948,
+                "C": 0.757,
+                "D": 0.79
+              },
+              "demandMmPerYear": 401.638,
+              "shortfallMmPerYear": 14.314,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 75.684,
+              "waterAtSowingMm": 171.896,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.764
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 66.421,
+            "score": 66.535,
             "criteria": {
               "rendement": 0.637,
               "erosion": 0.755,
-              "eau": 0.549,
+              "eau": 0.717,
               "fourrage": 0.265,
               "azote": 0.315,
               "matiere_org": 0.51,
@@ -6207,7 +7490,29 @@
             ],
             "gaps": [],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.717,
+              "worst": 0.717,
+              "subScores": {
+                "A": 0.416,
+                "B": 0.878,
+                "C": 0.806,
+                "D": 0.769
+              },
+              "demandMmPerYear": 535.018,
+              "shortfallMmPerYear": 40.569,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 80.61,
+              "waterAtSowingMm": 167.22,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "tendance NASA POWER",
+                  "note": 0.717
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -6233,11 +7538,11 @@
           ],
           "alternatives": [
             {
-              "score": 71.311,
+              "score": 71.373,
               "criteria": {
                 "rendement": 0.588,
                 "erosion": 0.852,
-                "eau": 0.638,
+                "eau": 0.725,
                 "fourrage": 0.225,
                 "azote": 0.319,
                 "matiere_org": 0.557,
@@ -6327,14 +7632,36 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.725,
+                "worst": 0.725,
+                "subScores": {
+                  "A": 0.491,
+                  "B": 0.918,
+                  "C": 0.789,
+                  "D": 0.702
+                },
+                "demandMmPerYear": 466.09,
+                "shortfallMmPerYear": 26.496,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 78.904,
+                "waterAtSowingMm": 152.706,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.725
+                  }
+                ]
+              }
             },
             {
-              "score": 70.832,
+              "score": 70.893,
               "criteria": {
                 "rendement": 0.562,
                 "erosion": 0.852,
-                "eau": 0.638,
+                "eau": 0.725,
                 "fourrage": 0.225,
                 "azote": 0.319,
                 "matiere_org": 0.557,
@@ -6424,7 +7751,29 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.725,
+                "worst": 0.725,
+                "subScores": {
+                  "A": 0.491,
+                  "B": 0.918,
+                  "C": 0.789,
+                  "D": 0.702
+                },
+                "demandMmPerYear": 466.09,
+                "shortfallMmPerYear": 26.496,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 78.904,
+                "waterAtSowingMm": 152.706,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.725
+                  }
+                ]
+              }
             }
           ],
           "removed": [
@@ -6669,11 +8018,30 @@
           },
           "risks": {
             "erosion": 0.847,
-            "water": 0.369
+            "water": 0.0
+          },
+          "waterPressure": {
+            "pressure": 0.0,
+            "worst": 0.0,
+            "components": {
+              "aridite": 0.0,
+              "pluie_ete": 0.0
+            },
+            "missing": [
+              "nappes",
+              "stress_mesure"
+            ],
+            "sources": {
+              "sol": "sol FICTIF (40 % sable, 20 % argile, 3 % matière organique)",
+              "et0": "Hargreaves, températures seules",
+              "pente": "non lue : tables NRCS"
+            },
+            "aridityIndex": 1.109,
+            "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.01,
+            "eau": 0.007,
             "fourrage": 0.002,
             "azote": 0.158,
             "erosion": 0.754,
@@ -6683,11 +8051,11 @@
             "reserve": 0.103
           },
           "chosen": {
-            "score": 66.92,
+            "score": 66.986,
             "criteria": {
               "rendement": 0.5,
               "erosion": 0.817,
-              "eau": 0.647,
+              "eau": 0.757,
               "fourrage": 0.221,
               "azote": 0.28,
               "matiere_org": 0.574,
@@ -6777,14 +8145,44 @@
               }
             ],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.757,
+              "worst": 0.738,
+              "subScores": {
+                "A": 0.563,
+                "B": 0.954,
+                "C": 0.75,
+                "D": 0.762
+              },
+              "demandMmPerYear": 403.962,
+              "shortfallMmPerYear": 12.753,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 75.025,
+              "waterAtSowingMm": 165.791,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "modèle A (fictif)",
+                  "note": 0.774
+                },
+                {
+                  "model": "modèle B (fictif)",
+                  "note": 0.761
+                },
+                {
+                  "model": "modèle C (fictif)",
+                  "note": 0.738
+                }
+              ]
+            }
           },
           "reference": {
-            "score": 64.273,
+            "score": 64.349,
             "criteria": {
               "rendement": 0.644,
               "erosion": 0.73,
-              "eau": 0.58,
+              "eau": 0.695,
               "fourrage": 0.296,
               "azote": 0.244,
               "matiere_org": 0.54,
@@ -6855,7 +8253,37 @@
             ],
             "gaps": [],
             "seedsToBuy": [],
-            "warnings": []
+            "warnings": [],
+            "water": {
+              "note": 0.695,
+              "worst": 0.678,
+              "subScores": {
+                "A": 0.457,
+                "B": 0.886,
+                "C": 0.807,
+                "D": 0.63
+              },
+              "demandMmPerYear": 501.803,
+              "shortfallMmPerYear": 36.502,
+              "irrigationMmPerYear": null,
+              "rainKeptPct": 80.72,
+              "waterAtSowingMm": 137.076,
+              "alerts": [],
+              "byModel": [
+                {
+                  "model": "modèle A (fictif)",
+                  "note": 0.711
+                },
+                {
+                  "model": "modèle B (fictif)",
+                  "note": 0.698
+                },
+                {
+                  "model": "modèle C (fictif)",
+                  "note": 0.678
+                }
+              ]
+            }
           },
           "referenceAlerts": [
             {
@@ -6881,11 +8309,11 @@
           ],
           "alternatives": [
             {
-              "score": 71.005,
+              "score": 71.064,
               "criteria": {
                 "rendement": 0.588,
                 "erosion": 0.847,
-                "eau": 0.638,
+                "eau": 0.719,
                 "fourrage": 0.225,
                 "azote": 0.318,
                 "matiere_org": 0.557,
@@ -6975,14 +8403,44 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.719,
+                "worst": 0.7,
+                "subScores": {
+                  "A": 0.496,
+                  "B": 0.921,
+                  "C": 0.781,
+                  "D": 0.677
+                },
+                "demandMmPerYear": 466.035,
+                "shortfallMmPerYear": 25.787,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 78.128,
+                "waterAtSowingMm": 147.294,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "modèle A (fictif)",
+                    "note": 0.735
+                  },
+                  {
+                    "model": "modèle B (fictif)",
+                    "note": 0.722
+                  },
+                  {
+                    "model": "modèle C (fictif)",
+                    "note": 0.7
+                  }
+                ]
+              }
             },
             {
-              "score": 70.526,
+              "score": 70.584,
               "criteria": {
                 "rendement": 0.562,
                 "erosion": 0.847,
-                "eau": 0.638,
+                "eau": 0.719,
                 "fourrage": 0.225,
                 "azote": 0.318,
                 "matiere_org": 0.557,
@@ -7072,7 +8530,37 @@
                 }
               ],
               "seedsToBuy": [],
-              "warnings": []
+              "warnings": [],
+              "water": {
+                "note": 0.719,
+                "worst": 0.7,
+                "subScores": {
+                  "A": 0.496,
+                  "B": 0.921,
+                  "C": 0.781,
+                  "D": 0.677
+                },
+                "demandMmPerYear": 466.035,
+                "shortfallMmPerYear": 25.787,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 78.128,
+                "waterAtSowingMm": 147.294,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "modèle A (fictif)",
+                    "note": 0.735
+                  },
+                  {
+                    "model": "modèle B (fictif)",
+                    "note": 0.722
+                  },
+                  {
+                    "model": "modèle C (fictif)",
+                    "note": 0.7
+                  }
+                ]
+              }
             }
           ],
           "removed": [

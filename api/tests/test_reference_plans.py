@@ -2,6 +2,10 @@
 
 For every scenario exported from field_shift.py v5.1 (same climate, same twins), the planner must
 choose the same chains, with the same scores, decisions, alternatives and robustness.
+
+The water of these tests is the one of the reference (a fixed value per crop, a risk made of
+satellite measures: `tests/helpers/reference_water.py`), given to the planner as its water model.
+The water of the server (`water_use`) has its own tests: `test_field_shift_eau.py`.
 """
 
 from __future__ import annotations

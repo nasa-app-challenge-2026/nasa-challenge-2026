@@ -19,9 +19,8 @@ from field_shift.algorithm.rotation.rotation import Rotation, RotationStep
 from field_shift.api.app import create_app
 from field_shift.api.settings import Settings
 from field_shift.reference.measures import MEASURE_IDS
-from field_shift.services.plan_service import PlanService
 from field_shift.services.ranking_service import RankingService
-from field_shift.tools.make_examples import ExampleWeatherProvider
+from field_shift.tools.make_examples import example_plan_service
 from tests.helpers.site_stub import TEST_ORIGIN, FixedSiteData, site, square
 
 REQUEST = {
@@ -51,9 +50,7 @@ REQUEST = {
 
 
 def client_on(site_data: FixedSiteData) -> TestClient:
-    return TestClient(
-        create_app(Settings(), PlanService(ExampleWeatherProvider()), RankingService(site_data))
-    )
+    return TestClient(create_app(Settings(), example_plan_service(), RankingService(site_data)))
 
 
 @pytest.fixture

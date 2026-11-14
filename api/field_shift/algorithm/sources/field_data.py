@@ -1,9 +1,9 @@
-"""The satellite measures (step 8) and the soil (step 5) of a field.
+"""The satellite measures of the erosion (step 8) and the soil (step 5) of a field.
 
 Real values: SRTM / NASADEM slope, GPM IMERG heavy rain days, MODIS / HLS bare soil days,
-ECOSTRESS ESI, SMAP L4 root-zone drought, GRACE-FO, SoilGrids 2.0. The demo source gives FICTITIOUS
-values: the ones of the demo field of field_shift.py, varying a little from one section to the
-next so that two sections do not look identical.
+SoilGrids 2.0. The demo source gives FICTITIOUS values: the ones of the demo field of
+field_shift.py, varying a little from one section to the next so that two sections do not look
+identical. Nothing about water is here: it comes from the water model (`algorithm/water`).
 """
 
 from __future__ import annotations
@@ -44,19 +44,13 @@ REFERENCE_DEMO_MEASURES: Final = FieldMeasures(
     slope_pct=6,
     heavy_rain_days=6,
     bare_soil_days=120,
-    summer_stress_index=0.6,
-    root_zone_drought=0.4,
-    groundwater_trend_cm_per_year=-1,
 )
 _MEASURE_VARIATION: Final = FieldMeasures(
     slope_pct=3,
     heavy_rain_days=2,
     bare_soil_days=30,
-    summer_stress_index=0.1,
-    root_zone_drought=0.15,
-    groundwater_trend_cm_per_year=0.5,
 )
-_MEASURE_DECIMALS: Final = FieldMeasures(1, 0, 0, 2, 2, 1)
+_MEASURE_DECIMALS: Final = FieldMeasures(1, 0, 0)
 _BASE_SOIL: Final = Soil(clay_pct=30, sand_pct=25, organic_carbon=25, ph=6.5)
 _SOIL_VARIATION: Final = Soil(clay_pct=8, sand_pct=12, organic_carbon=6, ph=0.4)
 _SOIL_DECIMALS: Final = Soil(0, 0, 1, 1)

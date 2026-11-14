@@ -5,6 +5,9 @@
 A package imports only the ones on its right, never the ones on its left. `algorithm/` is the heart
 of the project: it uses the standard library, numpy and scipy and nothing else, so it can be read,
 tested and reused without a web server.
+
+`water_use` (api/water_use, the water score of a rotation) is a module of its own, beside
+field_shift. One file only may import it: the adapter `data_access/field_shift_eau.py`.
 """
 
 import ast
@@ -32,13 +35,16 @@ ALLOWED_LIBRARIES = {
     "reference": set(),
     "algorithm": {"numpy", "scipy"},
     "contract": {"pydantic"},
-    "data_access": {"httpx", "numpy"},
+    "data_access": {"httpx", "numpy", "water_use"},
     "services": set(),
     "api": {"fastapi"},
     "tools": set(),
 }
 
 PACKAGE_NAMES = sorted(ALLOWED_PACKAGES)
+
+#: The only file of field_shift that knows `water_use`.
+WATER_USE_ADAPTER = Path("data_access") / "field_shift_eau.py"
 
 
 def imported_modules(path: Path) -> set[str]:
@@ -108,3 +114,13 @@ def test_a_package_uses_only_its_libraries(package: str) -> None:
         if library is not None and library not in ALLOWED_LIBRARIES[package]:
             violations.append(f"{path} imports {module}")
     assert not violations, "\n".join(violations)
+
+
+def test_water_use_is_only_reached_through_its_adapter() -> None:
+    importers = {
+        path
+        for package in PACKAGE_NAMES
+        for path, module in imports_of_package(package)
+        if library_of(module) == "water_use"
+    }
+    assert importers == {WATER_USE_ADAPTER}

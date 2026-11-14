@@ -4,7 +4,9 @@
                 to the start of the cycle; same crop twice = 0 %; unknown value = 0 % and a gap is
                 reported. −16 %…+16 % become 0…1.
   erosion       share of the time the soil is covered by a living crop (covers included)
-  eau, fourrage, azote, matiere_org   sheet values weighted by the time each crop holds the field
+  eau           water score of the whole chain, covers included: a daily soil water balance on
+                the weather of the cycle (`CycleContext.water`); unknown for a partial chain
+  fourrage, azote, matiere_org   sheet values weighted by the time each crop holds the field
   marche        mean of the sold crops (a perennial counts once per year)
   ravageurs     return delays (see ReturnDelayChecker.pest_score)
   reserve       share of the sowings of the 1st cycle made with seeds the farmer owns; the other
@@ -14,7 +16,7 @@ An unknown criterion is left out of the mean.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from itertools import pairwise
 from statistics import fmean
@@ -30,7 +32,12 @@ from field_shift.algorithm.config.scoring import (
 from field_shift.algorithm.delays.return_delay_checker import SharedDiseaseWarning
 from field_shift.algorithm.numerics.ratios import clamp01
 from field_shift.algorithm.twins.twin_evidence import TwinEvidence
-from field_shift.reference.criteria import CRITERIA_IDS, TIME_WEIGHTED_CRITERIA
+from field_shift.algorithm.water.water_model import WaterScore
+from field_shift.reference.criteria import (
+    CRITERIA_IDS,
+    TIME_WEIGHTED_CRITERIA,
+    WATER_CRITERION,
+)
 from field_shift.reference.crops import CropSheet, Role
 
 
@@ -43,6 +50,7 @@ class ScoredChain:
     gaps          successions whose precrop value is unknown
     seeds_to_buy  seeds the farmer does not own yet
     covers        cover steps placed automatically between the crops
+    water         the water score behind the criterion `eau`, with its readable numbers
     warnings      soil diseases shared by two crops (complete chains only)
     """
 
@@ -53,6 +61,7 @@ class ScoredChain:
     seeds_to_buy: list[str]
     covers: list[ChainStep]
     warnings: list[SharedDiseaseWarning]
+    water: WaterScore | None = None
 
 
 def yield_criterion(
@@ -147,8 +156,24 @@ def _reserve_share(
     return (fmean(owned) if owned else None), to_buy
 
 
-def score_chain(chain: Chain, ctx: CycleContext, partial: bool = False) -> ScoredChain:
-    """Score a chain. A partial chain is scored up to its last harvest."""
+def best_possible_score(scored: ScoredChain, weights: Mapping[str, float]) -> float:
+    """The highest score a chain scored without its water can reach once the water is known
+    (a water score of 1). Equal to its score when the water is already in it."""
+    if scored.criteria.get(WATER_CRITERION) is not None:
+        return scored.score
+    known = sum(weights[c] for c in CRITERIA_IDS if scored.criteria.get(c) is not None)
+    water = weights[WATER_CRITERION]
+    return (scored.score * known + SCORE_SCALE * water) / (known + water)
+
+
+def score_chain(
+    chain: Chain, ctx: CycleContext, partial: bool = False, with_water: bool = True
+) -> ScoredChain:
+    """Score a chain. A partial chain is scored up to its last harvest.
+
+    `with_water=False` leaves the water criterion out (unknown): the water score is a long
+    simulation, and the search only asks for it when a chain can still be among the best (see
+    `best_possible_score`)."""
     covers = cover_crops(chain, ctx.entry_harvest, ctx.climate, ctx.covers_enabled)
     steps = _in_harvest_order([*chain, *covers])
     start = ctx.entry_harvest
@@ -163,9 +188,15 @@ def score_chain(chain: Chain, ctx: CycleContext, partial: bool = False) -> Score
         _reserve_share(steps, ctx.reserve) if ctx.reserve is not None else (None, [])
     )
 
+    water = (
+        ctx.water.score(steps, start, end, irrigated=ctx.irrigated, partial=partial)
+        if with_water
+        else None
+    )
     criteria: dict[str, float | None] = {
         "rendement": yield_criterion(values),
         "erosion": min(1.0, _living_cover_months(steps, end) / duration),
+        WATER_CRITERION: None if water is None else water.note,
         **_time_weighted_values(steps, start),
         "marche": _market_value([step.sheet for step in sold]),
         "ravageurs": ctx.delays.pest_score(occupations, closed=not partial),
@@ -182,4 +213,5 @@ def score_chain(chain: Chain, ctx: CycleContext, partial: bool = False) -> Score
         seeds_to_buy=seeds_to_buy,
         covers=covers,
         warnings=[] if partial else ctx.delays.shared_disease_warnings(occupations),
+        water=water,
     )

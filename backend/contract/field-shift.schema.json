@@ -405,6 +405,119 @@
         }
       }
     },
+    "WaterPressure": {
+      "description": "Pression sur l'eau de la ferme (water_use) : 0 = l'eau ne manque pas, 1 = très sec. C'est le risque eau avant la prise en compte de l'irrigation.",
+      "type": "object",
+      "required": [
+        "pressure",
+        "worst",
+        "components",
+        "missing",
+        "sources",
+        "aridityIndex",
+        "aridityClass"
+      ],
+      "properties": {
+        "pressure": {
+          "$ref": "#/definitions/Ratio"
+        },
+        "worst": {
+          "$ref": "#/definitions/Ratio"
+        },
+        "components": {
+          "description": "aridite, pluie_ete, nappes, stress_mesure : chacune de 0 à 1.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "missing": {
+          "description": "Composantes qu'aucune source n'a pu donner.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sources": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "aridityIndex": {
+          "type": ["number", "null"]
+        },
+        "aridityClass": {
+          "type": "string"
+        }
+      }
+    },
+    "Water": {
+      "description": "Note eau d'une chaîne (critère eau) et ses chiffres lisibles ; null quand elle n'est pas connue.",
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "note",
+            "worst",
+            "subScores",
+            "demandMmPerYear",
+            "shortfallMmPerYear",
+            "irrigationMmPerYear",
+            "rainKeptPct",
+            "waterAtSowingMm",
+            "alerts",
+            "byModel"
+          ],
+          "properties": {
+            "note": {
+              "type": "number"
+            },
+            "worst": {
+              "description": "Note avec le pire modèle climatique.",
+              "type": "number"
+            },
+            "subScores": {
+              "description": "A sobriété, B résistance au manque, C pluie gardée, D eau laissée au semis.",
+              "type": "object",
+              "required": ["A", "B", "C", "D"]
+            },
+            "demandMmPerYear": {
+              "type": "number"
+            },
+            "shortfallMmPerYear": {
+              "type": "number"
+            },
+            "irrigationMmPerYear": {
+              "description": "Irrigation nécessaire ; null quand la section n'est pas irriguée.",
+              "type": ["number", "null"]
+            },
+            "rainKeptPct": {
+              "type": "number"
+            },
+            "waterAtSowingMm": {
+              "type": ["number", "null"]
+            },
+            "alerts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "byModel": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["model", "note"]
+              }
+            }
+          }
+        }
+      ]
+    },
     "Chain": {
       "anyOf": [
         {
@@ -420,7 +533,8 @@
             "steps",
             "gaps",
             "seedsToBuy",
-            "warnings"
+            "warnings",
+            "water"
           ],
           "properties": {
             "score": {
@@ -466,6 +580,9 @@
                 "type": "object",
                 "required": ["message"]
               }
+            },
+            "water": {
+              "$ref": "#/definitions/Water"
             }
           }
         }
@@ -503,6 +620,7 @@
         "climate",
         "twins",
         "risks",
+        "waterPressure",
         "chosen",
         "reference",
         "referenceAlerts",
@@ -617,6 +735,9 @@
             }
           }
         },
+        "waterPressure": {
+          "$ref": "#/definitions/WaterPressure"
+        },
         "weights": {
           "type": "object"
         },
@@ -707,10 +828,14 @@
         },
         "field": {
           "type": "object",
-          "required": ["measures", "soil", "risksToday"],
+          "required": ["measures", "soil", "risksToday", "waterPressure"],
           "properties": {
             "measures": {
-              "type": "object"
+              "type": "object",
+              "required": ["slopePct", "heavyRainDays", "bareSoilDays"]
+            },
+            "waterPressure": {
+              "$ref": "#/definitions/WaterPressure"
             },
             "soil": {
               "type": "object",

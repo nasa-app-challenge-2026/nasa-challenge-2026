@@ -24,6 +24,7 @@ from field_shift.api.ranking_routes import ranking_router
 from field_shift.api.settings import Settings
 from field_shift.contract.farm_input import FarmInput
 from field_shift.contract.farm_plan import FarmPlan
+from field_shift.data_access.field_shift_eau import WaterDataUnavailableError
 from field_shift.data_access.nasa_power import NasaPowerClient, WeatherUnavailableError
 from field_shift.data_access.site_data import RemoteSiteData
 from field_shift.data_access.weather_providers import NasaPowerWeatherProvider
@@ -91,6 +92,13 @@ def create_app(
             content={"detail": [{"source": "NASA POWER (MERRA-2)", "msg": str(error)}]},
         )
 
+    @app.exception_handler(WaterDataUnavailableError)
+    def water_unavailable(request: Request, error: WaterDataUnavailableError) -> JSONResponse:
+        return JSONResponse(
+            status_code=BAD_GATEWAY,
+            content={"detail": [{"source": "Sol (SSURGO / SoilGrids)", "msg": str(error)}]},
+        )
+
     router = APIRouter()
 
     @router.get("/health", summary="Is the server up?")
@@ -101,7 +109,7 @@ def create_app(
         "/plan",
         response_model=FarmPlan,
         summary="Plan every section of a farm",
-        responses={BAD_GATEWAY: {"description": "NASA POWER could not be read."}},
+        responses={BAD_GATEWAY: {"description": "NASA POWER or the soil could not be read."}},
     )
     def plan(farm_input: FarmInput, service: PlanService = Depends(get_plan_service)) -> FarmPlan:
         return service.plan_farm(farm_input)

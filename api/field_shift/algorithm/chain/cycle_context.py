@@ -20,6 +20,7 @@ from field_shift.algorithm.delays.return_delay_catalog import (
 from field_shift.algorithm.delays.return_delay_checker import ReturnDelayChecker
 from field_shift.algorithm.planning.time_settings import TimeSettings
 from field_shift.algorithm.twins.twin_evidence import TwinEvidence
+from field_shift.algorithm.water.water_model import CycleWater
 from field_shift.reference.crops import SHEETS
 
 
@@ -36,6 +37,8 @@ class CycleContext:
     diseases         declared soil diseases
     candidates       sheets that may fill a position
     covers_enabled   rye is sown automatically between two crops
+    water            the water model on the weather of the cycle (criterion `eau`)
+    irrigated        the field is irrigated
     """
 
     time: TimeSettings
@@ -50,6 +53,8 @@ class CycleContext:
     diseases: tuple[str, ...]
     candidates: tuple[str, ...]
     covers_enabled: bool
+    water: CycleWater
+    irrigated: bool = False
     catalog: ReturnDelayCatalog = DEFAULT_DELAY_CATALOG
 
     def with_changes(self, **changes) -> CycleContext:

@@ -22,4 +22,6 @@ CRITERIA_IDS: Final[tuple[str, ...]] = (
 )
 
 #: Criteria computed from the sheet values, weighted by the time each crop holds the field.
-TIME_WEIGHTED_CRITERIA: Final[tuple[str, ...]] = ("eau", "fourrage", "azote", "matiere_org")
+#: The water criterion: the water score of the whole chain (`algorithm/water`).
+WATER_CRITERION: Final = "eau"
+TIME_WEIGHTED_CRITERIA: Final[tuple[str, ...]] = ("fourrage", "azote", "matiere_org")

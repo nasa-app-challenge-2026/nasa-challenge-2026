@@ -5,7 +5,7 @@ at the next position. The history (crop in place and previous years) checks the 
 cycle 1. The reference is the farmer's current rotation, continued on its own path and scored with
 the same rules; it is never discarded (its broken delays become alerts).
 
-For each cycle, in order: years → climate and twins (steps 3 to 7) → risks and weights (step 8) →
+For each cycle, in order: years → climate, twins and water (steps 3 to 7) → risks and weights (8) →
 the 3 best chains (9b) → keep or change. The chain in place (the farmer's rotation in cycle 1, then
 the chain kept at the previous cycle) is kept if it respects the return delays, its crops are still
 grown in the twins and its score is at most 5 points below the best chain; otherwise the best chain
@@ -148,7 +148,8 @@ class ParcelPlanner:
         )
         years = (first_year, first_year + time.cycle_years - 1)
         data = self._data.cycle_data(*years)
-        risks = parcel.diagnostic.risks_for(data.climate)
+        water_pressure = data.water.pressure
+        risks = parcel.diagnostic.risks_for(water_pressure)
         candidates = candidate_sheets(
             data.evidence,
             farmer,
@@ -170,6 +171,8 @@ class ParcelPlanner:
             diseases=parcel.diseases,
             candidates=candidates.sheet_ids,
             covers_enabled=time.frequency_months >= MONTHS_PER_YEAR and farmer.covers_allowed(),
+            water=data.water,
+            irrigated=parcel.diagnostic.irrigated,
             catalog=self._catalog,
         )
 
@@ -201,6 +204,7 @@ class ParcelPlanner:
                 c for c in top if chosen is None or sheet_ids(c.chain) != sheet_ids(chosen.chain)
             ][:2],
             context=ctx,
+            water_pressure=water_pressure,
         )
         if chosen is not None:
             state.in_place = chosen.chain

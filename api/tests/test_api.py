@@ -14,6 +14,7 @@ from field_shift.api.settings import DEFAULT_CORS_ORIGINS, Settings
 from field_shift.data_access.nasa_power import FILL_VALUE
 from field_shift.data_access.weather_providers import NasaPowerWeatherProvider
 from field_shift.services.plan_service import PlanService
+from field_shift.tools.make_examples import example_water_model
 from tests.helpers.nasa_power_stub import StubbedPower, power_body
 from tests.test_contract import errors
 
@@ -61,7 +62,9 @@ def test_today_comes_from_the_request_or_from_the_server_clock(example_inputs):
     farm = deepcopy(example_inputs["ferme-demo"])
     del farm["today"]
     service = PlanService(
-        NasaPowerWeatherProvider(StubbedPower().client), clock=lambda: date(2026, 11, 13)
+        NasaPowerWeatherProvider(StubbedPower().client),
+        example_water_model,
+        clock=lambda: date(2026, 11, 13),
     )
     client = TestClient(create_app(Settings(), service))
     assert client.post("/plan", json=farm).json()["settings"]["currentYear"] == 2026
@@ -158,7 +161,7 @@ class TestCors:
 
 class TestWeatherSource:
     def client_for(self, power: StubbedPower) -> TestClient:
-        service = PlanService(NasaPowerWeatherProvider(power.client))
+        service = PlanService(NasaPowerWeatherProvider(power.client), example_water_model)
         return TestClient(create_app(Settings(), service))
 
     def test_nasa_power_is_read_once_per_place_and_the_plan_says_so(self, example_inputs):

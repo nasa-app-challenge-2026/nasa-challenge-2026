@@ -84,7 +84,9 @@ class CropSheet:
     production_years    perennials: years of production
     january_minimum_c   coldest mean January minimum the crop survives
     only_after          double crop: allowed only right after one of these sheets
-    values              criteria values between 0 and 1 (eau, fourrage, azote, matiere_org, marche)
+    values              criteria values between 0 and 1 (fourrage, azote, matiere_org, marche); the
+                        water criterion is not a sheet value: it is simulated for the whole
+                        chain (`algorithm/water`)
     """
 
     id: str
@@ -117,11 +119,8 @@ class CropSheet:
         return max(self.production_years, 1)
 
 
-def _values(
-    eau: float, fourrage: float, azote: float, matiere_org: float, marche: float
-) -> dict[str, float]:
+def _values(fourrage: float, azote: float, matiere_org: float, marche: float) -> dict[str, float]:
     return {
-        "eau": eau,
         "fourrage": fourrage,
         "azote": azote,
         "matiere_org": matiere_org,
@@ -137,7 +136,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         sowing_window=(4.25, 5.5),
         degree_days=1150,
         frost_sensitive=True,
-        values=_values(0.4, 0.4, 0.1, 0.5, 0.9),
+        values=_values(0.4, 0.1, 0.5, 0.9),
     ),
     CropSheet(
         id="soya",
@@ -146,7 +145,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         sowing_window=(4.5, 5.75),
         degree_days=1000,
         frost_sensitive=True,
-        values=_values(0.5, 0.1, 0.7, 0.2, 0.8),
+        values=_values(0.1, 0.7, 0.2, 0.8),
     ),
     CropSheet(
         id="soya-2e",
@@ -157,7 +156,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         degree_days=800,
         only_after=("ble-automne",),
         frost_sensitive=True,
-        values=_values(0.5, 0.1, 0.6, 0.2, 0.75),
+        values=_values(0.1, 0.6, 0.2, 0.75),
     ),
     CropSheet(
         id="ble-automne",
@@ -166,7 +165,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         sowing_window=(8.5, 9.75),
         harvest_month=6.65,
         january_minimum_c=-16,
-        values=_values(0.7, 0.3, 0.2, 0.6, 0.7),
+        values=_values(0.3, 0.2, 0.6, 0.7),
     ),
     CropSheet(
         id="orge",
@@ -174,7 +173,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         crop_id="orge",
         sowing_window=(3.75, 4.75),
         degree_days=800,
-        values=_values(0.6, 0.4, 0.2, 0.5, 0.5),
+        values=_values(0.4, 0.2, 0.5, 0.5),
     ),
     CropSheet(
         id="canola",
@@ -182,7 +181,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         crop_id="canola",
         sowing_window=(4.25, 5.25),
         degree_days=900,
-        values=_values(0.4, 0.0, 0.1, 0.3, 0.7),
+        values=_values(0.0, 0.1, 0.3, 0.7),
     ),
     CropSheet(
         id="sarrasin",
@@ -191,7 +190,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         sowing_window=(5.5, 7.0),
         degree_days=600,
         frost_sensitive=True,
-        values=_values(0.6, 0.0, 0.2, 0.4, 0.4),
+        values=_values(0.0, 0.2, 0.4, 0.4),
     ),
     CropSheet(
         id="luzerne-2",
@@ -202,7 +201,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         production_years=2,
         january_minimum_c=-22,
         equipment=EQUIPMENT_FORAGE,
-        values=_values(0.6, 1.0, 1.0, 0.9, 0.4),
+        values=_values(1.0, 1.0, 0.9, 0.4),
     ),
     CropSheet(
         id="luzerne-3",
@@ -213,7 +212,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         production_years=3,
         january_minimum_c=-22,
         equipment=EQUIPMENT_FORAGE,
-        values=_values(0.6, 1.0, 1.0, 0.9, 0.4),
+        values=_values(1.0, 1.0, 0.9, 0.4),
     ),
     CropSheet(
         id="foin-2",
@@ -224,7 +223,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         production_years=2,
         january_minimum_c=-28,
         equipment=EQUIPMENT_FORAGE,
-        values=_values(0.7, 1.0, 0.6, 0.9, 0.35),
+        values=_values(1.0, 0.6, 0.9, 0.35),
     ),
     CropSheet(
         id="foin-3",
@@ -235,7 +234,7 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         production_years=3,
         january_minimum_c=-28,
         equipment=EQUIPMENT_FORAGE,
-        values=_values(0.7, 1.0, 0.6, 0.9, 0.35),
+        values=_values(1.0, 0.6, 0.9, 0.35),
     ),
     CropSheet(
         id="seigle-couvert",
@@ -245,14 +244,14 @@ CROP_SHEETS: Final[tuple[CropSheet, ...]] = (
         sowing_window=(8.5, 10.5),
         harvest_month=4.3,
         january_minimum_c=-30,
-        values=_values(0.6, 0.2, 0.4, 0.6, 0.0),
+        values=_values(0.2, 0.4, 0.6, 0.0),
     ),
     CropSheet(
         id=FALLOW_SHEET_ID,
         name="Jachère",
         crop_id="jachere",
         role=Role.FALLOW,
-        values=_values(1.0, 0.0, 0.0, 0.0, 0.0),
+        values=_values(0.0, 0.0, 0.0, 0.0),
     ),
 )
 

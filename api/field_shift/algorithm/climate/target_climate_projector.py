@@ -65,10 +65,13 @@ class ClimateTarget:
 
 @dataclass(frozen=True)
 class ProjectedClimate:
-    """What step 3 gives for one cycle: the targets for step 4, the calendar for step 9b."""
+    """What step 3 gives for one cycle: the targets for step 4, the calendar for step 9b, and
+    the daily weather itself for the water model (one weather in case 1, one per model in
+    case 2, each with its name)."""
 
     targets: tuple[ClimateTarget, ...]
     climate: CycleClimate
+    weathers: tuple[tuple[str, DailyWeather], ...] = ()
 
 
 class TargetClimateProjector:
@@ -107,6 +110,7 @@ class TargetClimateProjector:
             climate=climate_from_weather(
                 weather, warming_c=shift_c, method=ClimateMethod.TREND, source=TREND_SOURCE
             ),
+            weathers=((TREND_SOURCE, weather),),
         )
 
     def _from_models(self, first_year: int, last_year: int) -> ProjectedClimate:
@@ -120,13 +124,14 @@ class TargetClimateProjector:
         recent_temperature = mean_temperature(recent)
         recent_summer_rain = mean_summer_rain(recent)
         centre = round((first_year + last_year) / 2)
-        targets, climates = [], []
+        targets, climates, weathers = [], [], []
         for model in self._models:
             simulation = model.simulate(
                 centre - CLIMATE_WINDOW_BEFORE_YEARS, centre + CLIMATE_WINDOW_AFTER_YEARS
             )
             weather = apply_deltas(observed, simulation.historical, simulation.future)
             targets.append(ClimateTarget(model.name, IndicatorTable.from_weather(weather)))
+            weathers.append((model.name, weather))
             climates.append(
                 climate_from_weather(
                     weather,
@@ -143,4 +148,5 @@ class TargetClimateProjector:
         return ProjectedClimate(
             targets=tuple(targets),
             climate=average_climates(climates, method=ClimateMethod.MODELS, source=source),
+            weathers=tuple(weathers),
         )
