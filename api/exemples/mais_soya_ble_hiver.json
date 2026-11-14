@@ -1,0 +1,11 @@
+{
+  "nom": "Maïs - Soya - Blé d'hiver + trèfle",
+  "duree_ans": 3,
+  "travail_sol": "semis_direct",
+  "cultures": [
+    {"culture": "mais", "annee": 1, "semis": "05-10", "fin": "10-15"},
+    {"culture": "soya", "annee": 2, "semis": "05-20", "fin": "09-25"},
+    {"culture": "ble_hiver", "annee": 2, "semis": "10-01", "fin": "07-25", "reprise": "04-05"},
+    {"culture": "trefle_couvert", "annee": 3, "semis": "08-05", "fin": "05-01"}
+  ]
+}

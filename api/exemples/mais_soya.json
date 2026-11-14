@@ -1,0 +1,9 @@
+{
+  "nom": "Maïs - Soya",
+  "duree_ans": 2,
+  "travail_sol": "travail_reduit",
+  "cultures": [
+    {"culture": "mais", "annee": 1, "semis": "05-10", "fin": "10-15"},
+    {"culture": "soya", "annee": 2, "semis": "05-20", "fin": "10-01"}
+  ]
+}

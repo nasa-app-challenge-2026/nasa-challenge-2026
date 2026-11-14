@@ -1,0 +1,9 @@
+{
+  "nom": "Luzerne 3 ans - Maïs",
+  "duree_ans": 4,
+  "travail_sol": "travail_reduit",
+  "cultures": [
+    {"culture": "luzerne", "annee": 1, "semis": "05-01", "fin": "09-15", "duree_annees": 3},
+    {"culture": "mais", "annee": 4, "semis": "05-10", "fin": "10-15"}
+  ]
+}

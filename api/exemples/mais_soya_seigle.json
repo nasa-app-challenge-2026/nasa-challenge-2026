@@ -1,0 +1,11 @@
+{
+  "nom": "Maïs - Soya + seigle de couverture",
+  "duree_ans": 2,
+  "travail_sol": "semis_direct",
+  "cultures": [
+    {"culture": "mais", "annee": 1, "semis": "05-10", "fin": "10-15"},
+    {"culture": "seigle_couvert", "annee": 1, "semis": "10-20", "fin": "05-05"},
+    {"culture": "soya", "annee": 2, "semis": "05-20", "fin": "10-01"},
+    {"culture": "seigle_couvert", "annee": 2, "semis": "10-05", "fin": "05-01"}
+  ]
+}

@@ -14,6 +14,8 @@ dependencies = [
     "numpy>=2.0",
     "scipy>=1.13",
     "httpx>=0.27",
+    # water_use (the water score) reads its data bases with requests.
+    "requests>=2.25",
 ]
 
 [project.optional-dependencies]
@@ -24,10 +26,13 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["field_shift*"]
+include = ["field_shift*", "water_use*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "reseau: test qui interroge les vraies bases (internet), activé par WATER_USE_RESEAU=1",
+]
 filterwarnings = [
     "error::DeprecationWarning:field_shift.*",
     # Starlette's test client wants httpx2 from now on; the server itself only needs httpx.
@@ -37,7 +42,8 @@ filterwarnings = [
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-exclude = ["tests/fixtures"]
+# water_use is the water team's module, copied as is: its code is not reformatted here.
+extend-exclude = ["tests/fixtures", "water_use", "tests/water_use"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "SIM", "RUF"]

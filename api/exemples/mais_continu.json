@@ -1,0 +1,8 @@
+{
+  "nom": "Maïs continu",
+  "duree_ans": 1,
+  "travail_sol": "conventionnel",
+  "cultures": [
+    {"culture": "mais", "annee": 1, "semis": "05-10", "fin": "10-15"}
+  ]
+}
