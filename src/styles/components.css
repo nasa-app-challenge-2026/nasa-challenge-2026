@@ -15,18 +15,15 @@
   color: var(--c-text);
   text-decoration: none;
 }
-.brand__name {
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: 19px;
-}
-.brand-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  background: var(--c-brand);
+.brand-logo {
+  display: block;
   flex: none;
+}
+@media (max-width: 720px) {
+  .app-header .brand-logo {
+    width: auto;
+    height: 28px;
+  }
 }
 .main-nav {
   display: flex;
