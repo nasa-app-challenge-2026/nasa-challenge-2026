@@ -11,7 +11,16 @@ Thumbs.db
 !.vscode/extensions.json
 .idea/
 
-# Python (apps/api)
+# Python (backend/server)
 __pycache__/
 *.pyc
 .venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+
+# Adresses (et jetons) des sources de données du serveur : copie locale de data_sources.example.json
+data_sources.json

@@ -1,0 +1,5435 @@
+{
+  "version": "2.0",
+  "meta": {
+    "engine": "field-shift-server",
+    "algorithm": "field_shift v5.1",
+    "demo": true,
+    "generatedAt": "2026-11-13T00:00:00Z",
+    "sources": {
+      "farmWeather": {
+        "real": false,
+        "label": "Météo fictive (mode démonstration)"
+      },
+      "climateModels": {
+        "real": false,
+        "label": "3 modèles climatiques fictifs (à la place de NEX-GDDP-CMIP6)"
+      },
+      "twins": {
+        "real": false,
+        "label": "Grille de climats et cultures des jumeaux fictive"
+      },
+      "fieldMeasures": {
+        "real": false,
+        "label": "Mesures satellites et sol fictifs"
+      }
+    }
+  },
+  "settings": {
+    "cycleYears": 4,
+    "frequencyMonths": 6,
+    "positionsPerCycle": 8,
+    "horizonYears": 8,
+    "currentYear": 2026,
+    "priorities": [
+      "erosion",
+      "rendement",
+      "azote",
+      "reserve",
+      "matiere_org",
+      "marche"
+    ]
+  },
+  "weights": {
+    "rendement": 0.242,
+    "eau": 0.007,
+    "fourrage": 0.007,
+    "azote": 0.158,
+    "erosion": 0.408,
+    "matiere_org": 0.061,
+    "marche": 0.028,
+    "ravageurs": 0.007,
+    "reserve": 0.103
+  },
+  "sections": [
+    {
+      "id": "A",
+      "freeAt": "2026-10-16",
+      "firstYear": 2027,
+      "lastYear": 2034,
+      "repeatsCurrentCrop": false,
+      "historyYears": 4,
+      "history": [
+        {
+          "crop": "soya",
+          "from": 2023,
+          "to": 2023
+        },
+        {
+          "crop": "mais",
+          "from": 2024,
+          "to": 2024
+        },
+        {
+          "crop": "soya",
+          "from": 2025,
+          "to": 2025
+        },
+        {
+          "crop": "mais",
+          "from": 2026,
+          "to": 2026
+        }
+      ],
+      "field": {
+        "measures": {
+          "slopePct": 4.6,
+          "heavyRainDays": 8.0,
+          "bareSoilDays": 98.0,
+          "summerStressIndex": 0.67,
+          "rootZoneDrought": 0.4,
+          "groundwaterTrendCmPerYear": -1.0
+        },
+        "soil": {
+          "clayPct": 28.0,
+          "sandPct": 28.0,
+          "organicCarbon": 20.1,
+          "ph": 6.4,
+          "source": "SoilGrids 2.0 (fictif)"
+        },
+        "risksToday": {
+          "erosion": 0.718,
+          "water": 0.3
+        }
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "years": [
+            2027,
+            2030
+          ],
+          "decision": "changer",
+          "climate": {
+            "method": "tendance",
+            "source": "tendance NASA POWER",
+            "models": [],
+            "lastSpringFrost": {
+              "month": 4,
+              "day": 23
+            },
+            "firstFallFrost": {
+              "month": 10,
+              "day": 8
+            },
+            "januaryMinimumC": -14.59,
+            "warmingC": 0.455,
+            "summerRainChangePct": 0.0,
+            "harvestAdvanceDays": 1
+          },
+          "twins": {
+            "sigmaMean": 0.008,
+            "reliable": true,
+            "cells": [
+              {
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.448,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.006,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
+                "sigma": 0.008,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -70.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.016,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -69.948,
+                "sigma": 0.016,
+                "sources": [
+                  "NASA POWER"
+                ]
+              }
+            ],
+            "crops": [
+              "mais",
+              "soya",
+              "ble-automne",
+              "orge",
+              "canola",
+              "sarrasin",
+              "luzerne",
+              "foin"
+            ]
+          },
+          "risks": {
+            "erosion": 0.718,
+            "water": 0.3
+          },
+          "weights": {
+            "rendement": 0.242,
+            "eau": 0.009,
+            "fourrage": 0.002,
+            "azote": 0.158,
+            "erosion": 0.702,
+            "matiere_org": 0.061,
+            "marche": 0.028,
+            "ravageurs": 0.007,
+            "reserve": 0.103
+          },
+          "chosen": {
+            "score": 76.998,
+            "criteria": {
+              "rendement": 0.65,
+              "erosion": 0.913,
+              "eau": 0.555,
+              "fourrage": 0.242,
+              "azote": 0.355,
+              "matiere_org": 0.544,
+              "marche": 0.775,
+              "ravageurs": 0.833,
+              "reserve": 0.875
+            },
+            "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
+            "sheets": [
+              "seigle-couvert",
+              "orge",
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "soya",
+              "seigle-couvert",
+              "mais"
+            ],
+            "steps": [
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2026-10-23",
+                "harvest": "2027-05-08",
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "orge",
+                "crop": "orge",
+                "kind": "culture",
+                "sowing": "2027-05-16",
+                "harvest": "2027-08-10",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2027-09-16",
+                "harvest": "2028-05-08",
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2028-05-16",
+                "harvest": "2028-09-19",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2028-09-27",
+                "harvest": "2029-05-08",
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2029-05-16",
+                "harvest": "2029-08-28",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2029-09-16",
+                "harvest": "2030-05-08",
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2030-05-16",
+                "harvest": "2030-09-19",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [
+              "orge"
+            ],
+            "warnings": []
+          },
+          "reference": {
+            "score": 46.348,
+            "criteria": {
+              "rendement": 0.694,
+              "erosion": 0.317,
+              "eau": 0.447,
+              "fourrage": 0.259,
+              "azote": 0.381,
+              "matiere_org": 0.359,
+              "marche": 0.85,
+              "ravageurs": 0.667,
+              "reserve": 1.0
+            },
+            "label": "Jachère → Soya → Jachère → Maïs → Jachère → Soya → Jachère → Maïs",
+            "sheets": [
+              "jachere",
+              "soya",
+              "jachere",
+              "mais",
+              "jachere",
+              "soya",
+              "jachere",
+              "mais"
+            ],
+            "steps": [
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2027-05-16",
+                "harvest": "2027-08-29",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2028-05-08",
+                "harvest": "2028-09-13",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2029-05-16",
+                "harvest": "2029-08-29",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2030-05-08",
+                "harvest": "2030-09-13",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": []
+          },
+          "referenceAlerts": [
+            {
+              "reason": {
+                "kind": "meme-culture",
+                "previous": "soya",
+                "next": "soya",
+                "family": null,
+                "disease": null
+              },
+              "yearsWithout": 1,
+              "minimum": 2,
+              "from": {
+                "year": 2025,
+                "source": "historique"
+              },
+              "to": {
+                "year": 2027,
+                "source": "chaîne"
+              },
+              "message": "Soya après Soya : 2025 puis 2027, 1 an(s) sans, minimum 2"
+            },
+            {
+              "reason": {
+                "kind": "meme-culture",
+                "previous": "soya",
+                "next": "soya",
+                "family": null,
+                "disease": null
+              },
+              "yearsWithout": 1,
+              "minimum": 2,
+              "from": {
+                "year": 2027,
+                "source": "chaîne"
+              },
+              "to": {
+                "year": 2029,
+                "source": "chaîne"
+              },
+              "message": "Soya après Soya : 2027 puis 2029, 1 an(s) sans, minimum 2"
+            },
+            {
+              "reason": {
+                "kind": "meme-culture",
+                "previous": "soya",
+                "next": "soya",
+                "family": null,
+                "disease": null
+              },
+              "yearsWithout": 1,
+              "minimum": 2,
+              "from": {
+                "year": 2029,
+                "source": "chaîne"
+              },
+              "to": {
+                "year": 2031,
+                "source": "cycle suivant"
+              },
+              "message": "Soya après Soya : 2029 puis 2031, 1 an(s) sans, minimum 2"
+            }
+          ],
+          "alternatives": [
+            {
+              "score": 74.313,
+              "criteria": {
+                "rendement": 0.602,
+                "erosion": 0.854,
+                "eau": 0.555,
+                "fourrage": 0.229,
+                "azote": 0.368,
+                "matiere_org": 0.551,
+                "marche": 0.867,
+                "ravageurs": 0.778,
+                "reserve": 1.0
+              },
+              "label": "Seigle (couvert) → Seigle (couvert) [2 pos.] → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
+              "sheets": [
+                "seigle-couvert",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "mais"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2026-10-23",
+                  "harvest": "2027-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2027-09-16",
+                  "harvest": "2028-05-08",
+                  "positions": [
+                    2,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2028-05-16",
+                  "harvest": "2028-09-19",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2028-09-27",
+                  "harvest": "2029-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2029-05-16",
+                  "harvest": "2029-08-28",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2030-05-16",
+                  "harvest": "2030-09-19",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": []
+            },
+            {
+              "score": 74.313,
+              "criteria": {
+                "rendement": 0.602,
+                "erosion": 0.854,
+                "eau": 0.555,
+                "fourrage": 0.229,
+                "azote": 0.368,
+                "matiere_org": 0.551,
+                "marche": 0.867,
+                "ravageurs": 0.778,
+                "reserve": 1.0
+              },
+              "label": "Seigle (couvert) → Jachère → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
+              "sheets": [
+                "seigle-couvert",
+                "jachere",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "mais"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2026-10-23",
+                  "harvest": "2027-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "jachere",
+                  "crop": "jachere",
+                  "kind": "jachere",
+                  "sowing": null,
+                  "harvest": null,
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2027-09-16",
+                  "harvest": "2028-05-08",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2028-05-16",
+                  "harvest": "2028-09-19",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2028-09-27",
+                  "harvest": "2029-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2029-05-16",
+                  "harvest": "2029-08-28",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2030-05-16",
+                  "harvest": "2030-09-19",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": []
+            }
+          ],
+          "removed": [
+            {
+              "sheet": "luzerne-3",
+              "required": 2,
+              "possible": 1,
+              "occupiedYears": 3,
+              "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
+            }
+          ],
+          "robustness": 76.998,
+          "becomesInfeasibleLater": false
+        },
+        {
+          "index": 2,
+          "years": [
+            2031,
+            2034
+          ],
+          "decision": "garder",
+          "climate": {
+            "method": "tendance",
+            "source": "tendance NASA POWER",
+            "models": [],
+            "lastSpringFrost": {
+              "month": 4,
+              "day": 21
+            },
+            "firstFallFrost": {
+              "month": 10,
+              "day": 8
+            },
+            "januaryMinimumC": -14.46,
+            "warmingC": 0.586,
+            "summerRainChangePct": 0.0,
+            "harvestAdvanceDays": 2
+          },
+          "twins": {
+            "sigmaMean": 0.008,
+            "reliable": true,
+            "cells": [
+              {
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.0,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.448,
+                "sigma": 0.0,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.002,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.005,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.008,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.012,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
+                "sigma": 0.012,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -70.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.948,
+                "sigma": 0.017,
+                "sources": [
+                  "NASA POWER"
+                ]
+              }
+            ],
+            "crops": [
+              "mais",
+              "soya",
+              "ble-automne",
+              "orge",
+              "canola",
+              "sarrasin",
+              "luzerne",
+              "foin"
+            ]
+          },
+          "risks": {
+            "erosion": 0.718,
+            "water": 0.3
+          },
+          "weights": {
+            "rendement": 0.242,
+            "eau": 0.009,
+            "fourrage": 0.002,
+            "azote": 0.158,
+            "erosion": 0.702,
+            "matiere_org": 0.061,
+            "marche": 0.028,
+            "ravageurs": 0.007,
+            "reserve": 0.103
+          },
+          "chosen": {
+            "score": 77.054,
+            "criteria": {
+              "rendement": 0.65,
+              "erosion": 0.929,
+              "eau": 0.557,
+              "fourrage": 0.241,
+              "azote": 0.357,
+              "matiere_org": 0.545,
+              "marche": 0.775,
+              "ravageurs": 0.833,
+              "reserve": null
+            },
+            "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
+            "sheets": [
+              "seigle-couvert",
+              "orge",
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "soya",
+              "seigle-couvert",
+              "mais"
+            ],
+            "steps": [
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2030-09-27",
+                "harvest": "2031-05-08",
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "orge",
+                "crop": "orge",
+                "kind": "culture",
+                "sowing": "2031-05-15",
+                "harvest": "2031-08-09",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2031-09-16",
+                "harvest": "2032-05-08",
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2032-05-15",
+                "harvest": "2032-09-15",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2032-09-23",
+                "harvest": "2033-05-08",
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2033-05-16",
+                "harvest": "2033-08-28",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2033-09-16",
+                "harvest": "2034-05-08",
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2034-05-15",
+                "harvest": "2034-09-15",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": []
+          },
+          "reference": {
+            "score": 41.507,
+            "criteria": {
+              "rendement": 0.694,
+              "erosion": 0.31,
+              "eau": 0.448,
+              "fourrage": 0.255,
+              "azote": 0.389,
+              "matiere_org": 0.355,
+              "marche": 0.85,
+              "ravageurs": 0.667,
+              "reserve": null
+            },
+            "label": "Jachère → Soya → Jachère → Maïs → Jachère → Soya → Jachère → Maïs",
+            "sheets": [
+              "jachere",
+              "soya",
+              "jachere",
+              "mais",
+              "jachere",
+              "soya",
+              "jachere",
+              "mais"
+            ],
+            "steps": [
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2031-05-16",
+                "harvest": "2031-08-28",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2032-05-08",
+                "harvest": "2032-09-10",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2033-05-16",
+                "harvest": "2033-08-28",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2034-05-08",
+                "harvest": "2034-09-10",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": []
+          },
+          "referenceAlerts": [
+            {
+              "reason": {
+                "kind": "meme-culture",
+                "previous": "soya",
+                "next": "soya",
+                "family": null,
+                "disease": null
+              },
+              "yearsWithout": 1,
+              "minimum": 2,
+              "from": {
+                "year": 2029,
+                "source": "historique"
+              },
+              "to": {
+                "year": 2031,
+                "source": "chaîne"
+              },
+              "message": "Soya après Soya : 2029 puis 2031, 1 an(s) sans, minimum 2"
+            },
+            {
+              "reason": {
+                "kind": "meme-culture",
+                "previous": "soya",
+                "next": "soya",
+                "family": null,
+                "disease": null
+              },
+              "yearsWithout": 1,
+              "minimum": 2,
+              "from": {
+                "year": 2031,
+                "source": "chaîne"
+              },
+              "to": {
+                "year": 2033,
+                "source": "chaîne"
+              },
+              "message": "Soya après Soya : 2031 puis 2033, 1 an(s) sans, minimum 2"
+            },
+            {
+              "reason": {
+                "kind": "meme-culture",
+                "previous": "soya",
+                "next": "soya",
+                "family": null,
+                "disease": null
+              },
+              "yearsWithout": 1,
+              "minimum": 2,
+              "from": {
+                "year": 2033,
+                "source": "chaîne"
+              },
+              "to": {
+                "year": 2035,
+                "source": "cycle suivant"
+              },
+              "message": "Soya après Soya : 2033 puis 2035, 1 an(s) sans, minimum 2"
+            }
+          ],
+          "alternatives": [
+            {
+              "score": 75.099,
+              "criteria": {
+                "rendement": 0.619,
+                "erosion": 0.916,
+                "eau": 0.564,
+                "fourrage": 0.261,
+                "azote": 0.321,
+                "matiere_org": 0.57,
+                "marche": 0.7,
+                "ravageurs": 0.667,
+                "reserve": null
+              },
+              "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs",
+              "sheets": [
+                "seigle-couvert",
+                "orge",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "orge",
+                "seigle-couvert",
+                "mais"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2030-09-27",
+                  "harvest": "2031-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2031-05-15",
+                  "harvest": "2031-08-09",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2031-09-16",
+                  "harvest": "2032-05-08",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2032-05-15",
+                  "harvest": "2032-09-15",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2032-09-23",
+                  "harvest": "2033-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2033-05-15",
+                  "harvest": "2033-08-09",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2033-09-16",
+                  "harvest": "2034-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2034-05-15",
+                  "harvest": "2034-09-15",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": []
+            },
+            {
+              "score": 74.917,
+              "criteria": {
+                "rendement": 0.6,
+                "erosion": 0.91,
+                "eau": 0.56,
+                "fourrage": 0.209,
+                "azote": 0.362,
+                "matiere_org": 0.532,
+                "marche": 0.725,
+                "ravageurs": 0.95,
+                "reserve": null
+              },
+              "label": "Seigle (couvert) → Orge → Seigle (couvert) → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
+              "sheets": [
+                "seigle-couvert",
+                "orge",
+                "seigle-couvert",
+                "canola",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2030-09-27",
+                  "harvest": "2031-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2031-05-15",
+                  "harvest": "2031-08-09",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2031-09-16",
+                  "harvest": "2032-05-08",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "canola",
+                  "crop": "canola",
+                  "kind": "culture",
+                  "sowing": "2032-05-15",
+                  "harvest": "2032-08-19",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2032-09-16",
+                  "harvest": "2033-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2033-05-15",
+                  "harvest": "2033-09-15",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2033-09-23",
+                  "harvest": "2034-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2034-05-16",
+                  "harvest": "2034-08-28",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [
+                {
+                  "previous": "orge",
+                  "next": "canola",
+                  "message": "Orge → Canola"
+                }
+              ],
+              "seedsToBuy": [],
+              "warnings": [
+                {
+                  "disease": "moisissure-blanche",
+                  "previous": "canola",
+                  "next": "soya",
+                  "yearsWithout": 1,
+                  "advised": 5,
+                  "message": "Soya 1 an(s) après Canola : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
+                }
+              ]
+            }
+          ],
+          "removed": [
+            {
+              "sheet": "luzerne-3",
+              "required": 2,
+              "possible": 1,
+              "occupiedYears": 3,
+              "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
+            }
+          ],
+          "robustness": null,
+          "becomesInfeasibleLater": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "freeAt": "2027-09-16",
+      "firstYear": 2028,
+      "lastYear": 2035,
+      "repeatsCurrentCrop": false,
+      "historyYears": 4,
+      "history": [
+        {
+          "crop": "soya",
+          "from": 2023,
+          "to": 2023
+        },
+        {
+          "crop": "mais",
+          "from": 2024,
+          "to": 2024
+        },
+        {
+          "crop": "luzerne",
+          "from": 2025,
+          "to": 2027
+        }
+      ],
+      "field": {
+        "measures": {
+          "slopePct": 3.2,
+          "heavyRainDays": 5.0,
+          "bareSoilDays": 127.0,
+          "summerStressIndex": 0.6,
+          "rootZoneDrought": 0.43,
+          "groundwaterTrendCmPerYear": -0.6
+        },
+        "soil": {
+          "clayPct": 34.0,
+          "sandPct": 37.0,
+          "organicCarbon": 25.9,
+          "ph": 6.3,
+          "source": "SoilGrids 2.0 (fictif)"
+        },
+        "risksToday": {
+          "erosion": 0.557,
+          "water": 0.359
+        }
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "years": [
+            2028,
+            2031
+          ],
+          "decision": "changer",
+          "climate": {
+            "method": "tendance",
+            "source": "tendance NASA POWER",
+            "models": [],
+            "lastSpringFrost": {
+              "month": 4,
+              "day": 23
+            },
+            "firstFallFrost": {
+              "month": 10,
+              "day": 8
+            },
+            "januaryMinimumC": -14.557,
+            "warmingC": 0.488,
+            "summerRainChangePct": 0.0,
+            "harvestAdvanceDays": 1
+          },
+          "twins": {
+            "sigmaMean": 0.009,
+            "reliable": true,
+            "cells": [
+              {
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.448,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.006,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
+                "sigma": 0.008,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -70.948,
+                "sigma": 0.012,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.014,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -69.948,
+                "sigma": 0.017,
+                "sources": [
+                  "NASA POWER"
+                ]
+              }
+            ],
+            "crops": [
+              "mais",
+              "soya",
+              "ble-automne",
+              "orge",
+              "canola",
+              "sarrasin",
+              "luzerne",
+              "foin"
+            ]
+          },
+          "risks": {
+            "erosion": 0.557,
+            "water": 0.359
+          },
+          "weights": {
+            "rendement": 0.242,
+            "eau": 0.009,
+            "fourrage": 0.002,
+            "azote": 0.158,
+            "erosion": 0.636,
+            "matiere_org": 0.061,
+            "marche": 0.028,
+            "ravageurs": 0.007,
+            "reserve": 0.103
+          },
+          "chosen": {
+            "score": 77.607,
+            "criteria": {
+              "rendement": 0.688,
+              "erosion": 0.925,
+              "eau": 0.556,
+              "fourrage": 0.241,
+              "azote": 0.356,
+              "matiere_org": 0.545,
+              "marche": 0.775,
+              "ravageurs": 0.833,
+              "reserve": 0.875
+            },
+            "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
+            "sheets": [
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "orge",
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "soya"
+            ],
+            "steps": [
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2027-09-23",
+                "harvest": "2028-05-08",
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2028-05-16",
+                "harvest": "2028-09-17",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2028-09-25",
+                "harvest": "2029-05-08",
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "orge",
+                "crop": "orge",
+                "kind": "culture",
+                "sowing": "2029-05-16",
+                "harvest": "2029-08-08",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2029-09-16",
+                "harvest": "2030-05-08",
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2030-05-16",
+                "harvest": "2030-09-17",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2030-09-25",
+                "harvest": "2031-05-08",
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2031-05-16",
+                "harvest": "2031-08-28",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [
+              "orge"
+            ],
+            "warnings": []
+          },
+          "reference": {
+            "score": 58.765,
+            "criteria": {
+              "rendement": 0.68,
+              "erosion": 0.505,
+              "eau": 0.527,
+              "fourrage": 0.637,
+              "azote": 0.707,
+              "matiere_org": 0.634,
+              "marche": 0.625,
+              "ravageurs": 0.556,
+              "reserve": 0.667
+            },
+            "label": "Jachère → Maïs → Jachère → Soya → Luzerne ×2 [4 pos.]",
+            "sheets": [
+              "jachere",
+              "mais",
+              "jachere",
+              "soya",
+              "luzerne-2"
+            ],
+            "steps": [
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2028-05-08",
+                "harvest": "2028-09-11",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2029-05-16",
+                "harvest": "2029-08-28",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "luzerne-2",
+                "crop": "luzerne",
+                "kind": "culture",
+                "sowing": "2030-04-23",
+                "harvest": "2031-09-22",
+                "positions": [
+                  5,
+                  8
+                ]
+              }
+            ],
+            "gaps": [
+              {
+                "previous": "soya",
+                "next": "luzerne",
+                "message": "Soya → Luzerne"
+              }
+            ],
+            "seedsToBuy": [
+              "luzerne"
+            ],
+            "warnings": []
+          },
+          "referenceAlerts": [
+            {
+              "reason": {
+                "kind": "meme-famille",
+                "previous": "soya",
+                "next": "luzerne",
+                "family": "Fabacées",
+                "disease": null
+              },
+              "yearsWithout": 0,
+              "minimum": 1,
+              "from": {
+                "year": 2029,
+                "source": "chaîne"
+              },
+              "to": {
+                "year": 2030,
+                "source": "chaîne"
+              },
+              "message": "même famille (Fabacées) : Luzerne après Soya : 2029 puis 2030, 0 an(s) sans, minimum 1"
+            }
+          ],
+          "alternatives": [
+            {
+              "score": 77.549,
+              "criteria": {
+                "rendement": 0.688,
+                "erosion": 0.925,
+                "eau": 0.555,
+                "fourrage": 0.242,
+                "azote": 0.355,
+                "matiere_org": 0.544,
+                "marche": 0.775,
+                "ravageurs": 0.75,
+                "reserve": 0.875
+              },
+              "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs → Seigle (couvert) → Orge",
+              "sheets": [
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "orge"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2027-09-23",
+                  "harvest": "2028-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2028-05-16",
+                  "harvest": "2028-09-17",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2028-09-25",
+                  "harvest": "2029-05-08",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2029-05-16",
+                  "harvest": "2029-08-28",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2030-05-16",
+                  "harvest": "2030-09-17",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2030-09-25",
+                  "harvest": "2031-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2031-05-16",
+                  "harvest": "2031-08-08",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [
+                "orge"
+              ],
+              "warnings": []
+            },
+            {
+              "score": 76.05,
+              "criteria": {
+                "rendement": 0.672,
+                "erosion": 0.873,
+                "eau": 0.557,
+                "fourrage": 0.228,
+                "azote": 0.369,
+                "matiere_org": 0.552,
+                "marche": 0.867,
+                "ravageurs": 0.778,
+                "reserve": 1.0
+              },
+              "label": "Seigle (couvert) → Seigle (couvert) [2 pos.] → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
+              "sheets": [
+                "seigle-couvert",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "mais"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2027-09-23",
+                  "harvest": "2028-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2028-09-16",
+                  "harvest": "2029-05-08",
+                  "positions": [
+                    2,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2029-05-16",
+                  "harvest": "2029-09-17",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2029-09-25",
+                  "harvest": "2030-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2030-05-16",
+                  "harvest": "2030-08-28",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2030-09-16",
+                  "harvest": "2031-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2031-05-16",
+                  "harvest": "2031-09-17",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": []
+            }
+          ],
+          "removed": [
+            {
+              "sheet": "luzerne-3",
+              "required": 2,
+              "possible": 1,
+              "occupiedYears": 3,
+              "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
+            }
+          ],
+          "robustness": 76.867,
+          "becomesInfeasibleLater": false
+        },
+        {
+          "index": 2,
+          "years": [
+            2032,
+            2035
+          ],
+          "decision": "garder",
+          "climate": {
+            "method": "tendance",
+            "source": "tendance NASA POWER",
+            "models": [],
+            "lastSpringFrost": {
+              "month": 4,
+              "day": 21
+            },
+            "firstFallFrost": {
+              "month": 10,
+              "day": 8
+            },
+            "januaryMinimumC": -14.427,
+            "warmingC": 0.618,
+            "summerRainChangePct": 0.0,
+            "harvestAdvanceDays": 2
+          },
+          "twins": {
+            "sigmaMean": 0.008,
+            "reliable": true,
+            "cells": [
+              {
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.0,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.448,
+                "sigma": 0.0,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.002,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.005,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.008,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.01,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -70.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.948,
+                "sigma": 0.018,
+                "sources": [
+                  "NASA POWER"
+                ]
+              }
+            ],
+            "crops": [
+              "mais",
+              "soya",
+              "ble-automne",
+              "orge",
+              "canola",
+              "sarrasin",
+              "luzerne",
+              "foin"
+            ]
+          },
+          "risks": {
+            "erosion": 0.557,
+            "water": 0.359
+          },
+          "weights": {
+            "rendement": 0.242,
+            "eau": 0.009,
+            "fourrage": 0.002,
+            "azote": 0.158,
+            "erosion": 0.636,
+            "matiere_org": 0.061,
+            "marche": 0.028,
+            "ravageurs": 0.007,
+            "reserve": 0.103
+          },
+          "chosen": {
+            "score": 76.867,
+            "criteria": {
+              "rendement": 0.681,
+              "erosion": 0.93,
+              "eau": 0.557,
+              "fourrage": 0.24,
+              "azote": 0.357,
+              "matiere_org": 0.546,
+              "marche": 0.775,
+              "ravageurs": 0.833,
+              "reserve": null
+            },
+            "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
+            "sheets": [
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "orge",
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "soya"
+            ],
+            "steps": [
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2031-09-16",
+                "harvest": "2032-05-08",
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2032-05-15",
+                "harvest": "2032-09-15",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2032-09-23",
+                "harvest": "2033-05-08",
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "orge",
+                "crop": "orge",
+                "kind": "culture",
+                "sowing": "2033-05-15",
+                "harvest": "2033-08-08",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2033-09-16",
+                "harvest": "2034-05-08",
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2034-05-15",
+                "harvest": "2034-09-15",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2034-09-23",
+                "harvest": "2035-05-08",
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2035-05-16",
+                "harvest": "2035-08-28",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": []
+          },
+          "reference": {
+            "score": 58.259,
+            "criteria": {
+              "rendement": 0.68,
+              "erosion": 0.508,
+              "eau": 0.527,
+              "fourrage": 0.637,
+              "azote": 0.71,
+              "matiere_org": 0.634,
+              "marche": 0.625,
+              "ravageurs": 0.556,
+              "reserve": null
+            },
+            "label": "Jachère → Maïs → Jachère → Soya → Luzerne ×2 [4 pos.]",
+            "sheets": [
+              "jachere",
+              "mais",
+              "jachere",
+              "soya",
+              "luzerne-2"
+            ],
+            "steps": [
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2032-05-08",
+                "harvest": "2032-09-10",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2033-05-16",
+                "harvest": "2033-08-28",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "luzerne-2",
+                "crop": "luzerne",
+                "kind": "culture",
+                "sowing": "2034-04-23",
+                "harvest": "2035-09-21",
+                "positions": [
+                  5,
+                  8
+                ]
+              }
+            ],
+            "gaps": [
+              {
+                "previous": "soya",
+                "next": "luzerne",
+                "message": "Soya → Luzerne"
+              }
+            ],
+            "seedsToBuy": [],
+            "warnings": []
+          },
+          "referenceAlerts": [
+            {
+              "reason": {
+                "kind": "meme-famille",
+                "previous": "soya",
+                "next": "luzerne",
+                "family": "Fabacées",
+                "disease": null
+              },
+              "yearsWithout": 0,
+              "minimum": 1,
+              "from": {
+                "year": 2033,
+                "source": "chaîne"
+              },
+              "to": {
+                "year": 2034,
+                "source": "chaîne"
+              },
+              "message": "même famille (Fabacées) : Luzerne après Soya : 2033 puis 2034, 0 an(s) sans, minimum 1"
+            }
+          ],
+          "alternatives": [
+            {
+              "score": 75.945,
+              "criteria": {
+                "rendement": 0.656,
+                "erosion": 0.922,
+                "eau": 0.557,
+                "fourrage": 0.24,
+                "azote": 0.358,
+                "matiere_org": 0.546,
+                "marche": 0.775,
+                "ravageurs": 0.833,
+                "reserve": null
+              },
+              "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
+              "sheets": [
+                "seigle-couvert",
+                "orge",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "mais"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2031-09-16",
+                  "harvest": "2032-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2032-05-15",
+                  "harvest": "2032-08-08",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2032-09-16",
+                  "harvest": "2033-05-08",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2033-05-15",
+                  "harvest": "2033-09-15",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2033-09-23",
+                  "harvest": "2034-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2034-05-16",
+                  "harvest": "2034-08-28",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2034-09-16",
+                  "harvest": "2035-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2035-05-15",
+                  "harvest": "2035-09-15",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": []
+            },
+            {
+              "score": 74.802,
+              "criteria": {
+                "rendement": 0.65,
+                "erosion": 0.916,
+                "eau": 0.564,
+                "fourrage": 0.261,
+                "azote": 0.321,
+                "matiere_org": 0.569,
+                "marche": 0.7,
+                "ravageurs": 0.667,
+                "reserve": null
+              },
+              "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Orge",
+              "sheets": [
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "orge",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "orge"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2031-09-16",
+                  "harvest": "2032-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2032-05-15",
+                  "harvest": "2032-09-15",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2032-09-23",
+                  "harvest": "2033-05-08",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2033-05-15",
+                  "harvest": "2033-08-08",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2033-09-16",
+                  "harvest": "2034-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2034-05-15",
+                  "harvest": "2034-09-15",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2034-09-23",
+                  "harvest": "2035-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2035-05-15",
+                  "harvest": "2035-08-08",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": []
+            }
+          ],
+          "removed": [
+            {
+              "sheet": "luzerne-3",
+              "required": 2,
+              "possible": 1,
+              "occupiedYears": 3,
+              "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
+            }
+          ],
+          "robustness": null,
+          "becomesInfeasibleLater": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "freeAt": "2026-09-16",
+      "firstYear": 2027,
+      "lastYear": 2034,
+      "repeatsCurrentCrop": false,
+      "historyYears": 4,
+      "history": [
+        {
+          "crop": "soya",
+          "from": 2023,
+          "to": 2023
+        },
+        {
+          "crop": "mais",
+          "from": 2024,
+          "to": 2024
+        },
+        {
+          "crop": "ble-automne",
+          "from": 2025,
+          "to": 2025
+        },
+        {
+          "crop": "soya",
+          "from": 2026,
+          "to": 2026
+        }
+      ],
+      "field": {
+        "measures": {
+          "slopePct": 5.2,
+          "heavyRainDays": 7.0,
+          "bareSoilDays": 95.0,
+          "summerStressIndex": 0.53,
+          "rootZoneDrought": 0.45,
+          "groundwaterTrendCmPerYear": -1.3
+        },
+        "soil": {
+          "clayPct": 24.0,
+          "sandPct": 32.0,
+          "organicCarbon": 19.7,
+          "ph": 6.2,
+          "source": "SoilGrids 2.0 (fictif)"
+        },
+        "risksToday": {
+          "erosion": 0.714,
+          "water": 0.47
+        }
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "years": [
+            2027,
+            2030
+          ],
+          "decision": "changer",
+          "climate": {
+            "method": "tendance",
+            "source": "tendance NASA POWER",
+            "models": [],
+            "lastSpringFrost": {
+              "month": 4,
+              "day": 23
+            },
+            "firstFallFrost": {
+              "month": 10,
+              "day": 8
+            },
+            "januaryMinimumC": -14.59,
+            "warmingC": 0.455,
+            "summerRainChangePct": 0.0,
+            "harvestAdvanceDays": 1
+          },
+          "twins": {
+            "sigmaMean": 0.008,
+            "reliable": true,
+            "cells": [
+              {
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.448,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.006,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
+                "sigma": 0.008,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -70.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.016,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -69.948,
+                "sigma": 0.016,
+                "sources": [
+                  "NASA POWER"
+                ]
+              }
+            ],
+            "crops": [
+              "mais",
+              "soya",
+              "ble-automne",
+              "orge",
+              "canola",
+              "sarrasin",
+              "luzerne",
+              "foin"
+            ]
+          },
+          "risks": {
+            "erosion": 0.714,
+            "water": 0.47
+          },
+          "weights": {
+            "rendement": 0.242,
+            "eau": 0.01,
+            "fourrage": 0.002,
+            "azote": 0.158,
+            "erosion": 0.7,
+            "matiere_org": 0.061,
+            "marche": 0.028,
+            "ravageurs": 0.007,
+            "reserve": 0.103
+          },
+          "chosen": {
+            "score": 78.26,
+            "criteria": {
+              "rendement": 0.681,
+              "erosion": 0.926,
+              "eau": 0.556,
+              "fourrage": 0.242,
+              "azote": 0.355,
+              "matiere_org": 0.544,
+              "marche": 0.775,
+              "ravageurs": 0.833,
+              "reserve": 0.875
+            },
+            "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
+            "sheets": [
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "orge",
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "soya"
+            ],
+            "steps": [
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2026-09-23",
+                "harvest": "2027-05-08",
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2027-05-16",
+                "harvest": "2027-09-19",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2027-09-27",
+                "harvest": "2028-05-08",
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "orge",
+                "crop": "orge",
+                "kind": "culture",
+                "sowing": "2028-05-16",
+                "harvest": "2028-08-10",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2028-09-16",
+                "harvest": "2029-05-08",
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2029-05-16",
+                "harvest": "2029-09-19",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2029-09-27",
+                "harvest": "2030-05-08",
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2030-05-16",
+                "harvest": "2030-08-28",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [
+              "orge"
+            ],
+            "warnings": []
+          },
+          "reference": {
+            "score": 58.644,
+            "criteria": {
+              "rendement": 0.644,
+              "erosion": 0.574,
+              "eau": 0.56,
+              "fourrage": 0.28,
+              "azote": 0.295,
+              "matiere_org": 0.47,
+              "marche": 0.775,
+              "ravageurs": 0.75,
+              "reserve": 1.0
+            },
+            "label": "Blé d’automne → Jachère → Jachère → Maïs → Jachère → Soya → Blé d’automne → Jachère",
+            "sheets": [
+              "ble-automne",
+              "jachere",
+              "jachere",
+              "mais",
+              "jachere",
+              "soya",
+              "ble-automne",
+              "jachere"
+            ],
+            "steps": [
+              {
+                "sheet": "ble-automne",
+                "crop": "ble-automne",
+                "kind": "culture",
+                "sowing": "2026-09-23",
+                "harvest": "2027-07-19",
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2028-05-08",
+                "harvest": "2028-09-13",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2029-05-16",
+                "harvest": "2029-08-29",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "ble-automne",
+                "crop": "ble-automne",
+                "kind": "culture",
+                "sowing": "2029-09-16",
+                "harvest": "2030-07-19",
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": []
+          },
+          "referenceAlerts": [
+            {
+              "reason": {
+                "kind": "meme-culture",
+                "previous": "ble-automne",
+                "next": "ble-automne",
+                "family": null,
+                "disease": null
+              },
+              "yearsWithout": 0,
+              "minimum": 1,
+              "from": {
+                "year": 2030,
+                "source": "chaîne"
+              },
+              "to": {
+                "year": 2031,
+                "source": "cycle suivant"
+              },
+              "message": "Blé d’automne après Blé d’automne : 2030 puis 2031, 0 an(s) sans, minimum 1"
+            }
+          ],
+          "alternatives": [
+            {
+              "score": 78.089,
+              "criteria": {
+                "rendement": 0.656,
+                "erosion": 0.931,
+                "eau": 0.556,
+                "fourrage": 0.241,
+                "azote": 0.356,
+                "matiere_org": 0.545,
+                "marche": 0.775,
+                "ravageurs": 0.833,
+                "reserve": 0.875
+              },
+              "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
+              "sheets": [
+                "seigle-couvert",
+                "orge",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "mais"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2026-09-23",
+                  "harvest": "2027-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2027-05-16",
+                  "harvest": "2027-08-10",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2027-09-16",
+                  "harvest": "2028-05-08",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2028-05-16",
+                  "harvest": "2028-09-19",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2028-09-27",
+                  "harvest": "2029-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2029-05-16",
+                  "harvest": "2029-08-28",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2030-05-16",
+                  "harvest": "2030-09-19",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [
+                "orge"
+              ],
+              "warnings": []
+            },
+            {
+              "score": 76.444,
+              "criteria": {
+                "rendement": 0.664,
+                "erosion": 0.873,
+                "eau": 0.556,
+                "fourrage": 0.229,
+                "azote": 0.369,
+                "matiere_org": 0.552,
+                "marche": 0.867,
+                "ravageurs": 0.778,
+                "reserve": 1.0
+              },
+              "label": "Seigle (couvert) → Seigle (couvert) [2 pos.] → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
+              "sheets": [
+                "seigle-couvert",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "mais"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2026-09-23",
+                  "harvest": "2027-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2027-09-16",
+                  "harvest": "2028-05-08",
+                  "positions": [
+                    2,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2028-05-16",
+                  "harvest": "2028-09-19",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2028-09-27",
+                  "harvest": "2029-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2029-05-16",
+                  "harvest": "2029-08-28",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2030-05-16",
+                  "harvest": "2030-09-19",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": []
+            }
+          ],
+          "removed": [
+            {
+              "sheet": "luzerne-3",
+              "required": 2,
+              "possible": 1,
+              "occupiedYears": 3,
+              "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
+            }
+          ],
+          "robustness": 77.775,
+          "becomesInfeasibleLater": false
+        },
+        {
+          "index": 2,
+          "years": [
+            2031,
+            2034
+          ],
+          "decision": "garder",
+          "climate": {
+            "method": "tendance",
+            "source": "tendance NASA POWER",
+            "models": [],
+            "lastSpringFrost": {
+              "month": 4,
+              "day": 21
+            },
+            "firstFallFrost": {
+              "month": 10,
+              "day": 8
+            },
+            "januaryMinimumC": -14.46,
+            "warmingC": 0.586,
+            "summerRainChangePct": 0.0,
+            "harvestAdvanceDays": 2
+          },
+          "twins": {
+            "sigmaMean": 0.008,
+            "reliable": true,
+            "cells": [
+              {
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.0,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.448,
+                "sigma": 0.0,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.002,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.005,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.008,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.012,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
+                "sigma": 0.012,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -70.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.948,
+                "sigma": 0.017,
+                "sources": [
+                  "NASA POWER"
+                ]
+              }
+            ],
+            "crops": [
+              "mais",
+              "soya",
+              "ble-automne",
+              "orge",
+              "canola",
+              "sarrasin",
+              "luzerne",
+              "foin"
+            ]
+          },
+          "risks": {
+            "erosion": 0.714,
+            "water": 0.47
+          },
+          "weights": {
+            "rendement": 0.242,
+            "eau": 0.01,
+            "fourrage": 0.002,
+            "azote": 0.158,
+            "erosion": 0.7,
+            "matiere_org": 0.061,
+            "marche": 0.028,
+            "ravageurs": 0.007,
+            "reserve": 0.103
+          },
+          "chosen": {
+            "score": 77.775,
+            "criteria": {
+              "rendement": 0.681,
+              "erosion": 0.931,
+              "eau": 0.557,
+              "fourrage": 0.241,
+              "azote": 0.357,
+              "matiere_org": 0.545,
+              "marche": 0.775,
+              "ravageurs": 0.833,
+              "reserve": null
+            },
+            "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
+            "sheets": [
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "orge",
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "soya"
+            ],
+            "steps": [
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2030-09-16",
+                "harvest": "2031-05-08",
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2031-05-15",
+                "harvest": "2031-09-15",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2031-09-23",
+                "harvest": "2032-05-08",
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "orge",
+                "crop": "orge",
+                "kind": "culture",
+                "sowing": "2032-05-15",
+                "harvest": "2032-08-09",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2032-09-16",
+                "harvest": "2033-05-08",
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2033-05-15",
+                "harvest": "2033-09-15",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2033-09-23",
+                "harvest": "2034-05-08",
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2034-05-16",
+                "harvest": "2034-08-28",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": []
+          },
+          "reference": {
+            "score": 45.447,
+            "criteria": {
+              "rendement": 0.644,
+              "erosion": 0.414,
+              "eau": 0.488,
+              "fourrage": 0.308,
+              "azote": 0.262,
+              "matiere_org": 0.451,
+              "marche": 0.825,
+              "ravageurs": 0.833,
+              "reserve": null
+            },
+            "label": "Jachère → Maïs → Jachère → Soya → Blé d’automne → Jachère → Jachère → Maïs",
+            "sheets": [
+              "jachere",
+              "mais",
+              "jachere",
+              "soya",
+              "ble-automne",
+              "jachere",
+              "jachere",
+              "mais"
+            ],
+            "steps": [
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2031-05-08",
+                "harvest": "2031-09-10",
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2032-05-16",
+                "harvest": "2032-08-28",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "ble-automne",
+                "crop": "ble-automne",
+                "kind": "culture",
+                "sowing": "2032-09-16",
+                "harvest": "2033-07-19",
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2034-05-08",
+                "harvest": "2034-09-10",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": []
+          },
+          "referenceAlerts": [
+            {
+              "reason": {
+                "kind": "meme-culture",
+                "previous": "mais",
+                "next": "mais",
+                "family": null,
+                "disease": null
+              },
+              "yearsWithout": 0,
+              "minimum": 1,
+              "from": {
+                "year": 2034,
+                "source": "chaîne"
+              },
+              "to": {
+                "year": 2035,
+                "source": "cycle suivant"
+              },
+              "message": "Maïs après Maïs : 2034 puis 2035, 0 an(s) sans, minimum 1"
+            }
+          ],
+          "alternatives": [
+            {
+              "score": 76.868,
+              "criteria": {
+                "rendement": 0.656,
+                "erosion": 0.924,
+                "eau": 0.557,
+                "fourrage": 0.24,
+                "azote": 0.358,
+                "matiere_org": 0.546,
+                "marche": 0.775,
+                "ravageurs": 0.833,
+                "reserve": null
+              },
+              "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
+              "sheets": [
+                "seigle-couvert",
+                "orge",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "mais"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2030-09-16",
+                  "harvest": "2031-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2031-05-15",
+                  "harvest": "2031-08-09",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2031-09-16",
+                  "harvest": "2032-05-08",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2032-05-15",
+                  "harvest": "2032-09-15",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2032-09-23",
+                  "harvest": "2033-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2033-05-16",
+                  "harvest": "2033-08-28",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2033-09-16",
+                  "harvest": "2034-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2034-05-15",
+                  "harvest": "2034-09-15",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": []
+            },
+            {
+              "score": 75.807,
+              "criteria": {
+                "rendement": 0.65,
+                "erosion": 0.918,
+                "eau": 0.564,
+                "fourrage": 0.262,
+                "azote": 0.32,
+                "matiere_org": 0.569,
+                "marche": 0.7,
+                "ravageurs": 0.667,
+                "reserve": null
+              },
+              "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Orge",
+              "sheets": [
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "orge",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "orge"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2030-09-16",
+                  "harvest": "2031-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2031-05-15",
+                  "harvest": "2031-09-15",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2031-09-23",
+                  "harvest": "2032-05-08",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2032-05-15",
+                  "harvest": "2032-08-09",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2032-09-16",
+                  "harvest": "2033-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2033-05-15",
+                  "harvest": "2033-09-15",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2033-09-23",
+                  "harvest": "2034-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2034-05-15",
+                  "harvest": "2034-08-09",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": []
+            }
+          ],
+          "removed": [
+            {
+              "sheet": "luzerne-3",
+              "required": 2,
+              "possible": 1,
+              "occupiedYears": 3,
+              "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
+            }
+          ],
+          "robustness": null,
+          "becomesInfeasibleLater": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "freeAt": "2026-07-16",
+      "firstYear": 2026,
+      "lastYear": 2033,
+      "repeatsCurrentCrop": false,
+      "historyYears": 4,
+      "history": [
+        {
+          "crop": "mais",
+          "from": 2023,
+          "to": 2023
+        },
+        {
+          "crop": "soya",
+          "from": 2024,
+          "to": 2024
+        },
+        {
+          "crop": "pomme-de-terre",
+          "from": 2025,
+          "to": 2025
+        },
+        {
+          "crop": "ble-automne",
+          "from": 2026,
+          "to": 2026
+        }
+      ],
+      "field": {
+        "measures": {
+          "slopePct": 7.3,
+          "heavyRainDays": 6.0,
+          "bareSoilDays": 124.0,
+          "summerStressIndex": 0.66,
+          "rootZoneDrought": 0.47,
+          "groundwaterTrendCmPerYear": -1.0
+        },
+        "soil": {
+          "clayPct": 29.0,
+          "sandPct": 16.0,
+          "organicCarbon": 25.5,
+          "ph": 6.1,
+          "source": "SoilGrids 2.0 (fictif)"
+        },
+        "risksToday": {
+          "erosion": 0.847,
+          "water": 0.331
+        }
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "years": [
+            2026,
+            2029
+          ],
+          "decision": "changer",
+          "climate": {
+            "method": "tendance",
+            "source": "tendance NASA POWER",
+            "models": [],
+            "lastSpringFrost": {
+              "month": 4,
+              "day": 24
+            },
+            "firstFallFrost": {
+              "month": 10,
+              "day": 8
+            },
+            "januaryMinimumC": -14.622,
+            "warmingC": 0.423,
+            "summerRainChangePct": 0.0,
+            "harvestAdvanceDays": 1
+          },
+          "twins": {
+            "sigmaMean": 0.009,
+            "reliable": true,
+            "cells": [
+              {
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.448,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.007,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
+                "sigma": 0.008,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.01,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -70.948,
+                "sigma": 0.012,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -69.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -75.948,
+                "sigma": 0.018,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.019,
+                "sources": [
+                  "NASA POWER"
+                ]
+              }
+            ],
+            "crops": [
+              "mais",
+              "soya",
+              "ble-automne",
+              "orge",
+              "canola",
+              "sarrasin",
+              "luzerne",
+              "foin"
+            ]
+          },
+          "risks": {
+            "erosion": 0.847,
+            "water": 0.331
+          },
+          "weights": {
+            "rendement": 0.242,
+            "eau": 0.009,
+            "fourrage": 0.002,
+            "azote": 0.158,
+            "erosion": 0.754,
+            "matiere_org": 0.061,
+            "marche": 0.028,
+            "ravageurs": 0.007,
+            "reserve": 0.103
+          },
+          "chosen": {
+            "score": 76.589,
+            "criteria": {
+              "rendement": 0.648,
+              "erosion": 0.873,
+              "eau": 0.554,
+              "fourrage": 0.23,
+              "azote": 0.367,
+              "matiere_org": 0.549,
+              "marche": 0.867,
+              "ravageurs": 0.778,
+              "reserve": 1.0
+            },
+            "label": "Seigle (couvert) [2 pos.] → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs → Seigle (couvert)",
+            "sheets": [
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "soya",
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert"
+            ],
+            "steps": [
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2026-09-16",
+                "harvest": "2027-05-08",
+                "positions": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2027-05-16",
+                "harvest": "2027-09-19",
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2027-09-27",
+                "harvest": "2028-05-08",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2028-05-16",
+                "harvest": "2028-08-28",
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2028-09-16",
+                "harvest": "2029-05-08",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2029-05-16",
+                "harvest": "2029-09-19",
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2029-09-27",
+                "harvest": "2030-05-08",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": [
+              {
+                "disease": "moisissure-blanche",
+                "previous": "pomme-de-terre",
+                "next": "soya",
+                "yearsWithout": 2,
+                "advised": 5,
+                "message": "Soya 2 an(s) après Pomme de terre : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
+              }
+            ]
+          },
+          "reference": {
+            "score": 48.179,
+            "criteria": {
+              "rendement": 0.68,
+              "erosion": 0.369,
+              "eau": 0.521,
+              "fourrage": 0.275,
+              "azote": 0.321,
+              "matiere_org": 0.434,
+              "marche": 0.8,
+              "ravageurs": 1.0,
+              "reserve": 1.0
+            },
+            "label": "Jachère → Jachère → Maïs → Jachère → Soya → Blé d’automne → Jachère → Jachère",
+            "sheets": [
+              "jachere",
+              "jachere",
+              "mais",
+              "jachere",
+              "soya",
+              "ble-automne",
+              "jachere",
+              "jachere"
+            ],
+            "steps": [
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2027-05-08",
+                "harvest": "2027-09-13",
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2028-05-16",
+                "harvest": "2028-08-29",
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "ble-automne",
+                "crop": "ble-automne",
+                "kind": "culture",
+                "sowing": "2028-09-16",
+                "harvest": "2029-07-19",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": [
+              {
+                "disease": "moisissure-blanche",
+                "previous": "pomme-de-terre",
+                "next": "soya",
+                "yearsWithout": 2,
+                "advised": 5,
+                "message": "Soya 2 an(s) après Pomme de terre : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
+              }
+            ]
+          },
+          "referenceAlerts": [],
+          "alternatives": [
+            {
+              "score": 76.589,
+              "criteria": {
+                "rendement": 0.648,
+                "erosion": 0.873,
+                "eau": 0.554,
+                "fourrage": 0.23,
+                "azote": 0.367,
+                "matiere_org": 0.549,
+                "marche": 0.867,
+                "ravageurs": 0.778,
+                "reserve": 1.0
+              },
+              "label": "Jachère → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs → Seigle (couvert)",
+              "sheets": [
+                "jachere",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert"
+              ],
+              "steps": [
+                {
+                  "sheet": "jachere",
+                  "crop": "jachere",
+                  "kind": "jachere",
+                  "sowing": null,
+                  "harvest": null,
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2026-09-16",
+                  "harvest": "2027-05-08",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2027-05-16",
+                  "harvest": "2027-09-19",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2027-09-27",
+                  "harvest": "2028-05-08",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2028-05-16",
+                  "harvest": "2028-08-28",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2028-09-16",
+                  "harvest": "2029-05-08",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2029-05-16",
+                  "harvest": "2029-09-19",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2029-09-27",
+                  "harvest": "2030-05-08",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": [
+                {
+                  "disease": "moisissure-blanche",
+                  "previous": "pomme-de-terre",
+                  "next": "soya",
+                  "yearsWithout": 2,
+                  "advised": 5,
+                  "message": "Soya 2 an(s) après Pomme de terre : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
+                }
+              ]
+            },
+            {
+              "score": 75.838,
+              "criteria": {
+                "rendement": 0.594,
+                "erosion": 0.907,
+                "eau": 0.583,
+                "fourrage": 0.219,
+                "azote": 0.33,
+                "matiere_org": 0.54,
+                "marche": 0.775,
+                "ravageurs": 0.95,
+                "reserve": 0.857
+              },
+              "label": "Seigle (couvert) [2 pos.] → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Blé d’automne",
+              "sheets": [
+                "seigle-couvert",
+                "canola",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "ble-automne"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2026-09-16",
+                  "harvest": "2027-05-08",
+                  "positions": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "canola",
+                  "crop": "canola",
+                  "kind": "culture",
+                  "sowing": "2027-05-16",
+                  "harvest": "2027-08-19",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2027-09-16",
+                  "harvest": "2028-05-08",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2028-05-16",
+                  "harvest": "2028-09-19",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2028-09-27",
+                  "harvest": "2029-05-08",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2029-05-16",
+                  "harvest": "2029-08-28",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
+                  "kind": "culture",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-07-19",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [
+                {
+                  "previous": "ble-automne",
+                  "next": "canola",
+                  "message": "Blé d’automne → Canola"
+                }
+              ],
+              "seedsToBuy": [
+                "canola"
+              ],
+              "warnings": [
+                {
+                  "disease": "moisissure-blanche",
+                  "previous": "canola",
+                  "next": "soya",
+                  "yearsWithout": 1,
+                  "advised": 5,
+                  "message": "Soya 1 an(s) après Canola : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
+                },
+                {
+                  "disease": "moisissure-blanche",
+                  "previous": "pomme-de-terre",
+                  "next": "canola",
+                  "yearsWithout": 1,
+                  "advised": 5,
+                  "message": "Canola 1 an(s) après Pomme de terre : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
+                },
+                {
+                  "disease": "moisissure-blanche",
+                  "previous": "pomme-de-terre",
+                  "next": "soya",
+                  "yearsWithout": 3,
+                  "advised": 5,
+                  "message": "Soya 3 an(s) après Pomme de terre : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
+                }
+              ]
+            }
+          ],
+          "removed": [
+            {
+              "sheet": "luzerne-3",
+              "required": 2,
+              "possible": 1,
+              "occupiedYears": 3,
+              "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
+            }
+          ],
+          "robustness": 73.792,
+          "becomesInfeasibleLater": false
+        },
+        {
+          "index": 2,
+          "years": [
+            2030,
+            2033
+          ],
+          "decision": "garder",
+          "climate": {
+            "method": "tendance",
+            "source": "tendance NASA POWER",
+            "models": [],
+            "lastSpringFrost": {
+              "month": 4,
+              "day": 21
+            },
+            "firstFallFrost": {
+              "month": 10,
+              "day": 8
+            },
+            "januaryMinimumC": -14.492,
+            "warmingC": 0.553,
+            "summerRainChangePct": 0.0,
+            "harvestAdvanceDays": 2
+          },
+          "twins": {
+            "sigmaMean": 0.008,
+            "reliable": true,
+            "cells": [
+              {
+                "lat": 45.129,
+                "lon": -71.448,
+                "sigma": 0.0,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.0,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.005,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.006,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -70.948,
+                "sigma": 0.012,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
+                "sigma": 0.013,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.948,
+                "sigma": 0.019,
+                "sources": [
+                  "NASA POWER"
+                ]
+              }
+            ],
+            "crops": [
+              "mais",
+              "soya",
+              "ble-automne",
+              "orge",
+              "canola",
+              "sarrasin",
+              "luzerne",
+              "foin"
+            ]
+          },
+          "risks": {
+            "erosion": 0.847,
+            "water": 0.331
+          },
+          "weights": {
+            "rendement": 0.242,
+            "eau": 0.009,
+            "fourrage": 0.002,
+            "azote": 0.158,
+            "erosion": 0.754,
+            "matiere_org": 0.061,
+            "marche": 0.028,
+            "ravageurs": 0.007,
+            "reserve": 0.103
+          },
+          "chosen": {
+            "score": 73.792,
+            "criteria": {
+              "rendement": 0.602,
+              "erosion": 0.873,
+              "eau": 0.557,
+              "fourrage": 0.228,
+              "azote": 0.369,
+              "matiere_org": 0.552,
+              "marche": 0.867,
+              "ravageurs": 0.778,
+              "reserve": null
+            },
+            "label": "Seigle (couvert) [2 pos.] → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs → Seigle (couvert)",
+            "sheets": [
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert",
+              "soya",
+              "seigle-couvert",
+              "mais",
+              "seigle-couvert"
+            ],
+            "steps": [
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2030-09-16",
+                "harvest": "2031-05-08",
+                "positions": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2031-05-16",
+                "harvest": "2031-09-17",
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2031-09-25",
+                "harvest": "2032-05-08",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2032-05-16",
+                "harvest": "2032-08-28",
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2032-09-16",
+                "harvest": "2033-05-08",
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2033-05-16",
+                "harvest": "2033-09-17",
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "culture",
+                "sowing": "2033-09-25",
+                "harvest": "2034-05-08",
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": []
+          },
+          "reference": {
+            "score": 45.336,
+            "criteria": {
+              "rendement": 0.644,
+              "erosion": 0.416,
+              "eau": 0.488,
+              "fourrage": 0.309,
+              "azote": 0.261,
+              "matiere_org": 0.452,
+              "marche": 0.825,
+              "ravageurs": 0.833,
+              "reserve": null
+            },
+            "label": "Maïs → Jachère → Soya → Blé d’automne → Jachère → Jachère → Maïs → Jachère",
+            "sheets": [
+              "mais",
+              "jachere",
+              "soya",
+              "ble-automne",
+              "jachere",
+              "jachere",
+              "mais",
+              "jachere"
+            ],
+            "steps": [
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2030-05-08",
+                "harvest": "2030-09-11",
+                "positions": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "sheet": "soya",
+                "crop": "soya",
+                "kind": "culture",
+                "sowing": "2031-05-16",
+                "harvest": "2031-08-28",
+                "positions": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "sheet": "ble-automne",
+                "crop": "ble-automne",
+                "kind": "culture",
+                "sowing": "2031-09-16",
+                "harvest": "2032-07-19",
+                "positions": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  6,
+                  6
+                ]
+              },
+              {
+                "sheet": "mais",
+                "crop": "mais",
+                "kind": "culture",
+                "sowing": "2033-05-08",
+                "harvest": "2033-09-11",
+                "positions": [
+                  7,
+                  7
+                ]
+              },
+              {
+                "sheet": "jachere",
+                "crop": "jachere",
+                "kind": "jachere",
+                "sowing": null,
+                "harvest": null,
+                "positions": [
+                  8,
+                  8
+                ]
+              }
+            ],
+            "gaps": [],
+            "seedsToBuy": [],
+            "warnings": []
+          },
+          "referenceAlerts": [
+            {
+              "reason": {
+                "kind": "meme-culture",
+                "previous": "mais",
+                "next": "mais",
+                "family": null,
+                "disease": null
+              },
+              "yearsWithout": 0,
+              "minimum": 1,
+              "from": {
+                "year": 2033,
+                "source": "chaîne"
+              },
+              "to": {
+                "year": 2034,
+                "source": "cycle suivant"
+              },
+              "message": "Maïs après Maïs : 2033 puis 2034, 0 an(s) sans, minimum 1"
+            }
+          ],
+          "alternatives": [
+            {
+              "score": 77.789,
+              "criteria": {
+                "rendement": 0.65,
+                "erosion": 0.93,
+                "eau": 0.557,
+                "fourrage": 0.241,
+                "azote": 0.357,
+                "matiere_org": 0.545,
+                "marche": 0.775,
+                "ravageurs": 0.833,
+                "reserve": null
+              },
+              "label": "Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs → Seigle (couvert)",
+              "sheets": [
+                "orge",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert"
+              ],
+              "steps": [
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2030-05-16",
+                  "harvest": "2030-08-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2030-09-16",
+                  "harvest": "2031-05-08",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2031-05-16",
+                  "harvest": "2031-09-17",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2031-09-25",
+                  "harvest": "2032-05-08",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2032-05-16",
+                  "harvest": "2032-08-28",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2032-09-16",
+                  "harvest": "2033-05-08",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2033-05-16",
+                  "harvest": "2033-09-17",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2033-09-25",
+                  "harvest": "2034-05-08",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": []
+            },
+            {
+              "score": 75.983,
+              "criteria": {
+                "rendement": 0.6,
+                "erosion": 0.916,
+                "eau": 0.56,
+                "fourrage": 0.209,
+                "azote": 0.363,
+                "matiere_org": 0.533,
+                "marche": 0.725,
+                "ravageurs": 0.95,
+                "reserve": null
+              },
+              "label": "Orge → Seigle (couvert) → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert)",
+              "sheets": [
+                "orge",
+                "seigle-couvert",
+                "canola",
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert"
+              ],
+              "steps": [
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2030-05-16",
+                  "harvest": "2030-08-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2030-09-16",
+                  "harvest": "2031-05-08",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "canola",
+                  "crop": "canola",
+                  "kind": "culture",
+                  "sowing": "2031-05-16",
+                  "harvest": "2031-08-19",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2031-09-16",
+                  "harvest": "2032-05-08",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2032-05-16",
+                  "harvest": "2032-09-17",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2032-09-25",
+                  "harvest": "2033-05-08",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2033-05-16",
+                  "harvest": "2033-08-28",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2033-09-16",
+                  "harvest": "2034-05-08",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
+              "gaps": [
+                {
+                  "previous": "orge",
+                  "next": "canola",
+                  "message": "Orge → Canola"
+                }
+              ],
+              "seedsToBuy": [],
+              "warnings": [
+                {
+                  "disease": "moisissure-blanche",
+                  "previous": "canola",
+                  "next": "soya",
+                  "yearsWithout": 1,
+                  "advised": 5,
+                  "message": "Soya 1 an(s) après Canola : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
+                }
+              ]
+            }
+          ],
+          "removed": [
+            {
+              "sheet": "luzerne-3",
+              "required": 2,
+              "possible": 1,
+              "occupiedYears": 3,
+              "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
+            }
+          ],
+          "robustness": null,
+          "becomesInfeasibleLater": false
+        }
+      ]
+    }
+  ]
+}

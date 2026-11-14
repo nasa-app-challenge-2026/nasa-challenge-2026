@@ -37,8 +37,9 @@ import {
   soilFromSoilGrids,
   splitByAge,
   textureOf,
-} from '../src/lib/wildfire.js';
-import { aciClass } from '../src/data/cropInventory.js';
+} from '../application/rules/wildfire.js';
+import { aciClass } from '../data/reference/cropInventory.js';
+import { FIRE_EXAMPLE } from '../data/reference/fireExample.js';
 
 const SQUARE = [
   [45.01, -73.01],
@@ -59,12 +60,9 @@ const farm = {
         [44.99, -73.0],
         [44.99, -73.01],
       ],
-      rotation: [
-        { crop: 'mais', years: 1, cover: null },
-        { crop: 'soya', years: 1, cover: null },
-        { crop: 'ble', years: 1, cover: null },
-      ],
-      offset: 0,
+      currentCrop: 'mais',
+      currentRotation: ['mais', 'soya', 'ble-automne'],
+      rotationPosition: 0,
     },
     {
       id: 'B',
@@ -74,12 +72,9 @@ const farm = {
         [44.99, -72.99],
         [44.99, -73.0],
       ],
-      rotation: [
-        { crop: 'ble', years: 1, cover: null },
-        { crop: 'mais', years: 1, cover: null },
-        { crop: 'soya', years: 1, cover: null },
-      ],
-      offset: 0,
+      currentCrop: 'ble-automne',
+      currentRotation: ['ble-automne', 'mais', 'soya'],
+      rotationPosition: 0,
     },
   ],
 };
@@ -416,32 +411,52 @@ describe('impact and rotation', () => {
     expect(assessSection({ burnt: true }).level).toBe(1);
   });
 
-  it('adds a winter cover after a light burn', () => {
-    const adv = rotationAdvice(farm.sections[1], 1);
-    expect(adv.changes).toEqual([{ kind: 'cover', to: 'seigle' }]);
-    expect(adv.rotation[0]).toMatchObject({ crop: 'ble', cover: 'seigle' });
+  it('leaves the rotation alone after a light burn: a cover crop is enough', () => {
+    expect(rotationAdvice(farm.sections[1], 1)).toBeNull();
+    expect(assessSection({ burnt: true }).actions.join(' ')).toMatch(/seigle d’automne/);
   });
 
-  it('swaps a demanding crop for a lighter one after a moderate burn (legume if the delay allows)', () => {
-    const adv = rotationAdvice(farm.sections[0], 2);
-    expect(adv.changes[0]).toEqual({ kind: 'crop', from: 'mais', to: 'orge' });
-    expect(adv.changes[1]).toEqual({ kind: 'cover', to: 'trefle' });
+  it('swaps a demanding next crop after a moderate burn, never twice the same crop in a row', () => {
+    // B: winter wheat in place, then corn, then soybean: corn becomes barley (soybean follows).
+    const adv = rotationAdvice(farm.sections[1], 2);
+    expect(adv).toMatchObject({ index: 1, missingSeeds: [] });
+    expect(adv.changes).toEqual([{ kind: 'crop', from: 'mais', to: 'orge' }]);
+    expect(adv.rotation).toEqual(['ble-automne', 'orge', 'soya']);
+    // A: corn in place, soybean next: nothing demanding to replace.
+    expect(rotationAdvice(farm.sections[0], 2)).toBeNull();
   });
 
-  it('respects return delays and the section offset', () => {
+  it('puts a legume after a severe burn, alfalfa when the farm can harvest it', () => {
+    const adv = rotationAdvice(farm.sections[1], 3, { seeds: { crops: ['mais', 'soya'] } });
+    expect(adv.rotation).toEqual(['ble-automne', 'luzerne-3', 'soya']);
+    expect(adv.missingSeeds).toEqual(['luzerne']);
+    const noHarvester = rotationAdvice(farm.sections[1], 3, { missingEquipment: ['fourragere'] });
+    expect(noHarvester.changes[0].to).toBe('orge');
+    expect(rotationAdvice(farm.sections[0], 3)).toBeNull(); // soybean next: already a legume
+  });
+
+  it('follows the position in the rotation, and gives a one-crop rotation a second crop', () => {
     const sec = {
-      rotation: [
-        { crop: 'ble', years: 1, cover: null },
-        { crop: 'mais', years: 1, cover: null },
-        { crop: 'orge', years: 1, cover: null },
-        { crop: 'patate', years: 1, cover: null },
-      ],
-      offset: 1,
+      currentCrop: 'orge',
+      currentRotation: ['ble-automne', 'mais', 'orge', 'pomme-de-terre'],
+      rotationPosition: 2,
     };
     const adv = rotationAdvice(sec, 2);
-    expect(adv.index).toBe(1);
-    expect(adv.changes[0]).toEqual({ kind: 'crop', from: 'mais', to: 'soya' });
+    expect(adv.index).toBe(3);
+    expect(adv.changes[0]).toEqual({ kind: 'crop', from: 'pomme-de-terre', to: 'soya' });
+    expect(rotationAdvice({ ...sec, rotationPosition: 1, currentCrop: 'mais' }, 2)).toBeNull();
     expect(rotationAdvice(sec, 0)).toBeNull();
+    const mono = { currentCrop: 'mais', currentRotation: ['mais'], rotationPosition: 0 };
+    expect(rotationAdvice(mono, 2).rotation).toEqual(['mais', 'soya']);
+  });
+
+  it('works on the real example: alfalfa after the wheat that followed the fire', () => {
+    const [a] = FIRE_EXAMPLE.sections;
+    expect(rotationAdvice(a, 3).changes[0]).toEqual({
+      kind: 'crop',
+      from: 'ble-automne',
+      to: 'luzerne-3',
+    });
   });
 });
 
@@ -467,8 +482,10 @@ describe('active fire nearby: advice per section', () => {
     expect(fieldSeason(Date.parse('2026-07-15'))).toBe('pousse');
     expect(fieldSeason(august)).toBe('recolte');
     expect(fieldSeason(Date.parse('2026-11-14'))).toBe('dormance');
-    expect(fieldFuel('ble', 'recolte').level).toBe('eleve');
+    expect(fieldFuel('ble-automne', 'recolte').level).toBe('eleve');
     expect(fieldFuel('soya', 'pousse').level).toBe('faible');
+    expect(fieldFuel('soya-2e', 'recolte').level).toBe('moyen');
+    expect(fieldFuel('luzerne-3', 'pousse').level).toBe('faible');
     expect(fieldFuel('inconnue', 'pousse')).toBeNull();
   });
 
@@ -480,7 +497,7 @@ describe('active fire nearby: advice per section', () => {
   });
 
   it('puts the section on the fire side first, with field work and a winter cover', () => {
-    const adv = alertAdvice(fire, withCrops('ble', 'soya'), { now: august });
+    const adv = alertAdvice(fire, withCrops('ble-automne', 'soya'), { now: august });
     expect(adv.season).toBe('recolte');
     expect(adv.sections.map((r) => [r.id, r.front])).toEqual([
       ['A', true],
@@ -490,55 +507,47 @@ describe('active fire nearby: advice per section', () => {
     expect(a.fuel.level).toBe('eleve');
     expect(a.tips.join(' ')).toMatch(/récoltez cette section en premier/);
     expect(a.tips.join(' ')).toMatch(/disque/);
-    // First year of A's plan is corn: rye after it, return delays untouched.
-    expect(a.change.changes).toEqual([{ kind: 'cover', to: 'seigle' }]);
-    expect(a.change.rotation[0]).toMatchObject({ crop: 'mais', cover: 'seigle' });
-    expect(a.change.rotation.map((e) => e.crop)).toEqual(['mais', 'soya', 'ble']);
+    // Rye after the wheat in place; the current rotation does not change.
+    expect(a.crop).toBe('ble-automne');
+    expect(a.change).toEqual({
+      crop: 'ble-automne',
+      changes: [{ kind: 'cover', to: 'seigle' }],
+      missingSeeds: [],
+    });
     expect(b.change).toBeNull();
     expect(b.tips.join(' ')).toMatch(/Plus loin du feu/);
     expect(adv.general.join(' ')).toMatch(/moissonneuse/);
-    expect(adv.general.join(' ')).toMatch(/Le reste de la rotation ne change pas/);
+    expect(adv.general.join(' ')).toMatch(/La rotation ne change pas/);
   });
 
   it('takes the cover from the farmer’s seed reserve, and says when it is missing', () => {
-    const sections = withCrops('ble', 'soya');
-    const clover = alertAdvice(fire, sections, { now: august, seeds: { covers: ['trefle'] } });
-    expect(clover.sections[0].change.changes[0].to).toBe('trefle');
-    expect(clover.sections[0].change.missingSeeds).toEqual([]);
-    const none = fireCoverAdvice(sections[0], { covers: ['radis'] });
+    const sections = withCrops('ble-automne', 'soya');
+    const rye = alertAdvice(fire, sections, { now: august, seeds: { crops: ['seigle'] } });
+    expect(rye.sections[0].change.missingSeeds).toEqual([]);
+    const none = fireCoverAdvice(sections[0], { crops: ['mais'] });
     expect(none.changes[0].to).toBe('seigle');
     expect(none.missingSeeds).toEqual(['seigle']);
+    expect(fireCoverAdvice({ currentCrop: 'luzerne-3' })).toBeNull();
+    expect(fireCoverAdvice({ currentCrop: null })).toBeNull();
   });
 
-  it('leaves green crops alone and keeps a cover or alfalfa already planned', () => {
+  it('leaves green crops alone and keeps alfalfa in place', () => {
     const july = Date.parse('2026-07-10');
     const green = alertAdvice(fire, withCrops('soya', 'mais'), { now: july }).sections[0];
     expect(green.tips).toEqual([
       'Culture verte ou peu de résidus : elle brûle mal, pas de travail du sol à faire.',
     ]);
-    const covered = {
-      ...farm.sections[0],
-      rotation: [
-        { crop: 'mais', years: 1, cover: 'seigle' },
-        ...farm.sections[0].rotation.slice(1),
-      ],
-    };
-    expect(alertAdvice(fire, [covered], { now: july }).sections[0]).toMatchObject({
+    const alfalfa = { ...farm.sections[0], currentCrop: 'luzerne-3' };
+    expect(alertAdvice(fire, [alfalfa], { now: july }).sections[0]).toMatchObject({
       change: null,
-      keep: 'cover',
+      keep: 'luzerne',
     });
-    const alfalfa = {
-      ...farm.sections[0],
-      rotation: [
-        { crop: 'luzerne', years: 3, cover: null },
-        { crop: 'mais', years: 1, cover: null },
-      ],
-    };
-    expect(alertAdvice(fire, [alfalfa], { now: july }).sections[0].keep).toBe('luzerne');
   });
 
   it('leaves a section on fire to the burn measurement; the next one is on the fire side', () => {
-    const adv = alertAdvice({ ...fire, sections: ['A'] }, withCrops('ble', 'ble'), { now: august });
+    const adv = alertAdvice({ ...fire, sections: ['A'] }, withCrops('ble-automne', 'ble-automne'), {
+      now: august,
+    });
     const [a, b] = adv.sections;
     expect(a).toMatchObject({ id: 'A', km: 0, onFire: true, change: null });
     expect(a.tips.join(' ')).toMatch(/pompiers/);

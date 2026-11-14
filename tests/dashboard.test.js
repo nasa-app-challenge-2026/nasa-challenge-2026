@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { dashboardOrder, defaultOrder, isDefaultOrder, moveBlock } from '../src/lib/dashboard.js';
+import {
+  dashboardOrder,
+  defaultOrder,
+  isDefaultOrder,
+  moveBlock,
+} from '../frontend/lib/dashboard.js';
 
 describe('dashboard order', () => {
   it('has a default layout: weather + A B, 3D + C D, mix, fires, then more sections', () => {
