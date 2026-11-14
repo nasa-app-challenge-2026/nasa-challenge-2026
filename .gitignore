@@ -10,8 +10,3 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .idea/
-
-# Python (apps/api)
-__pycache__/
-*.pyc
-.venv/

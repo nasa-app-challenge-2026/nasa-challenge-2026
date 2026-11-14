@@ -4,15 +4,3 @@ coverage
 package-lock.json
 contract/examples
 docs/screenshots
-
-# Monorepo: the API and the other web app have their own tooling and CI jobs.
-apps
-data
-PROMPT_ALGO.md
-docs/adr
-docs/ai-usage.md
-docs/api.md
-docs/architecture.md
-docs/data-sources.md
-docs/methodology.md
-docs/roadmap.md
