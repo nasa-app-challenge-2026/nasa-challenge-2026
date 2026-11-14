@@ -2,14 +2,19 @@
 
 FIELD_SHIFT_WEATHER        "nasa" (default: real NASA POWER weather) or "demo" (fictitious, offline)
 FIELD_SHIFT_CORS_ORIGINS   web origins allowed to call the server, separated by commas
+
+The addresses of the NASA and partner data sources (FIELD_SHIFT_DATA_SOURCES, FIELD_SHIFT_URL_…)
+are read by `data_access/data_source_config.py`, which documents them.
 """
 
 from __future__ import annotations
 
 import os
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Final, Literal
+
+from field_shift.data_access.data_source_config import DataSourceConfig
 
 WEATHER_ENV: Final = "FIELD_SHIFT_WEATHER"
 CORS_ENV: Final = "FIELD_SHIFT_CORS_ORIGINS"
@@ -29,6 +34,8 @@ WeatherMode = Literal["nasa", "demo"]
 class Settings:
     weather: WeatherMode = "nasa"
     cors_origins: tuple[str, ...] = DEFAULT_CORS_ORIGINS
+    #: Addresses of the data sources (the defaults of the code unless read from the environment).
+    data_sources: DataSourceConfig = field(default_factory=DataSourceConfig)
 
     @classmethod
     def from_environment(cls, environment: Mapping[str, str] | None = None) -> Settings:
@@ -39,4 +46,8 @@ class Settings:
                 f"{WEATHER_ENV} doit valoir {' ou '.join(WEATHER_MODES)}, pas {weather!r}"
             )
         origins = tuple(o.strip() for o in env.get(CORS_ENV, "").split(",") if o.strip())
-        return cls(weather=weather, cors_origins=origins or DEFAULT_CORS_ORIGINS)
+        return cls(
+            weather=weather,
+            cors_origins=origins or DEFAULT_CORS_ORIGINS,
+            data_sources=DataSourceConfig.load(env),
+        )

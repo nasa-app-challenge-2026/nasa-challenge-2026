@@ -21,3 +21,6 @@ venv/
 .mypy_cache/
 *.egg-info/
 build/
+
+# Adresses (et jetons) des sources de données du serveur : copie locale de data_sources.example.json
+data_sources.json
