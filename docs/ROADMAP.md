@@ -2,11 +2,12 @@
 
 ## Avant et pendant le hackathon
 
-- [x] **Coder l'algorithme** _Field Shift v5.1_ dans l'appli (`backend/algorithm/`), vérifié contre `field_shift.py` (`tests/algorithm/`)
+- [x] **Coder l'algorithme** _Field Shift v5.1_ en serveur Python FastAPI (`backend/server/`), vérifié contre `field_shift.py` (`backend/server/tests/`)
 - [x] Adapter l'interface à l'algorithme : entrées par parcelle, réserve sans quantités, cycle / fréquence / horizon, 9 critères, plan par cycle, jumeaux climatiques
-- [x] Météo réelle de la ferme : NASA POWER, lue dans le navigateur
+- [x] Météo réelle de la ferme : NASA POWER, lue par le serveur (météo fictive en repli, signalée dans le plan)
 - [x] **Vraie carte** dans Localisation et Tracer : Leaflet (satellite Esri + plan OSM)
 - [x] Recherche d'adresse réelle (Nominatim ; 1 requête par seconde, pas d'usage massif)
+- [ ] **Héberger le serveur** de l'algorithme (HTTPS) et renseigner `VITE_ALGO_URL` pour le site GitHub Pages (voir `backend/server/README.md`)
 - [ ] Relire les fiches des cultures avec un agronome (valeurs des critères, calendrier) ; revoir la préférence pour la jachère couverte
 - [ ] Relire les réponses de RotaAI avec l'équipe algo
 - [ ] Captures et parcours de la vidéo

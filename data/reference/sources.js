@@ -2,7 +2,7 @@
  * Every data set and method used by the algorithm (field_shift.py v5.1, section
  * "Les données sont-elles toutes accessibles ?"). Study names never appear in the
  * advice (team rule): they are listed only on the "Détail et sources" page.
- * `status`: 'reel' = read live by the app, 'fictif' = replaced by example data for
+ * `status`: 'reel' = read live by the algorithm server, 'fictif' = replaced by example data for
  * now, 'methode' = a method, not data.
  */
 const EARTHDATA = 'https://urs.earthdata.nasa.gov/users/new';
@@ -13,7 +13,7 @@ export const SOURCES = [
     status: 'reel',
     title: 'NASA POWER',
     use: 'Météo quotidienne de la ferme depuis 1985',
-    what: 'Température maximale et minimale, pluie, jour par jour, au point de la ferme. La tendance des 40 dernières années donne le climat des cycles des 10 prochaines années ; la même série sert de base aux modèles climatiques au-delà. API publique, sans compte.',
+    what: 'Température maximale et minimale, pluie, jour par jour, au point de la ferme. La tendance des 40 dernières années donne le climat des cycles des 10 prochaines années ; la même série sert de base aux modèles climatiques au-delà. API publique, sans compte ; le serveur de l’algorithme la télécharge pour le lieu de la ferme.',
     where: 'Étapes 2 à 4 · Climat et jumeaux',
     href: 'https://power.larc.nasa.gov/docs/services/api/',
     linkLabel: 'Documentation',
@@ -23,7 +23,7 @@ export const SOURCES = [
     status: 'fictif',
     title: 'NEX-GDDP-CMIP6',
     use: 'Climat des cycles qui finissent dans plus de 10 ans',
-    what: 'Projections climatiques de la NASA, réduites à 25 km. Le changement que prévoit chaque modèle, mois par mois, est appliqué à la vraie météo NASA POWER (méthode des deltas). Les fichiers (AWS, sans compte) sont trop gros pour un navigateur : trois modèles fictifs les remplacent pour l’instant.',
+    what: 'Projections climatiques de la NASA, réduites à 25 km. Le changement que prévoit chaque modèle, mois par mois, est appliqué à la vraie météo NASA POWER (méthode des deltas). Les fichiers (AWS, sans compte) sont lourds : leurs changements mensuels seront pré-calculés, et trois modèles fictifs les remplacent pour l’instant.',
     where: 'Étape 3 · Climat et jumeaux',
     href: 'https://registry.opendata.aws/nex-gddp-cmip6',
     linkLabel: 'Données (AWS)',

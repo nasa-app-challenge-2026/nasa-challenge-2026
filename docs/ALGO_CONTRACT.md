@@ -3,14 +3,18 @@
 Ce document dit **exactement** ce que l'interface envoie à l'algorithme et ce qu'elle reçoit. La version 2.0 suit l'algorithme _Field Shift — pipeline v5.1_ ; la version 1.0 (scores eau / sol / résilience / revenu, stress test, rotation éditée à la main) n'existe plus.
 
 - **Source de vérité :** [`backend/contract/field-shift.schema.json`](../backend/contract/field-shift.schema.json) (JSON Schema, draft-07)
-- **Exemples :** [`backend/contract/examples/`](../backend/contract/examples/) : une entrée par cas de référence et le plan que l'algorithme renvoie (météo fictive, pour que les fichiers ne dépendent pas du réseau). `npm run fixtures` les régénère.
-- **Moteur par défaut :** l'algorithme lui-même, dans le navigateur ([`ALGORITHME.md`](ALGORITHME.md)).
+- **Exemples :** [`backend/contract/examples/`](../backend/contract/examples/) : une entrée par cas de référence (écrite à la main) et le plan que le serveur renvoie (avec la météo fictive, pour que les fichiers ne dépendent pas du réseau). `python -m field_shift.tools.make_examples`, dans `backend/server`, les régénère.
+- **Qui l'implémente :** le serveur FastAPI [`backend/server`](../backend/server/) ([`ALGORITHME.md`](ALGORITHME.md)). Ses modèles Pydantic suivent ce schéma, et ses tests le vérifient.
+- **Qui l'appelle :** [`backend/remoteEngine.js`](../backend/remoteEngine.js), le client HTTP du front.
 
-## Une seule opération
+## Les routes
 
-| Opération          | Moteur local                 | Moteur distant | Entrée      | Sortie     |
-| ------------------ | ---------------------------- | -------------- | ----------- | ---------- |
-| Planifier la ferme | `engine.planFarm(farmInput)` | `POST /plan`   | `FarmInput` | `FarmPlan` |
+| Route         | Entrée      | Sortie                             | Rôle                                                                                 |
+| ------------- | ----------- | ---------------------------------- | ------------------------------------------------------------------------------------ |
+| `POST /plan`  | `FarmInput` | `FarmPlan`                         | planifie toutes les sections de la ferme (côté front : `engine.planFarm(farmInput)`) |
+| `GET /health` |             | `{ "status": "ok", "version", … }` | le serveur répond                                                                    |
+
+Une entrée invalide est refusée avec un `422` : `{ "detail": [{ "loc": ["body", "farm", "time"], "msg": "…" }] }`. Le client du front en fait une phrase (« farm › time : Le cycle doit durer de 2 à 6 ans. »). Le serveur autorise le CORS pour les adresses de `FIELD_SHIFT_CORS_ORIGINS`.
 
 Le tableau de bord, « Ma parcelle », « Mon champ », « Plan par cycle » et « Climat et jumeaux » lisent tous le même `FarmPlan`. Le plan est recalculé à chaque changement des entrées (250 ms après le dernier).
 
@@ -106,7 +110,8 @@ Un plan par section, **dans le même ordre et avec le même `id`** que l'entrée
     "frequencyMonths": 12,
     "positionsPerCycle": 4,
     "horizonYears": 12,
-    "currentYear": 2026
+    "currentYear": 2026,
+    "priorities": ["erosion", "rendement", "azote", "reserve", "matiere_org", "marche"]
   },
   "weights": { "erosion": 0.408, "rendement": 0.242, "...": 0 },
   "sections": [
@@ -250,20 +255,22 @@ Un plan par section, **dans le même ordre et avec le même `id`** que l'entrée
 
 Règles :
 
+- **`settings.priorities` et `weights`** : le classement dont les poids (rank order centroid) ont été calculés, et ces poids. L'écran des priorités affiche les parts de chaque critère seulement quand `settings.priorities` est le classement en cours : le front ne recalcule aucun poids.
 - **Notes** : de 0 à 100 (décimales gardées, les écrans arrondissent). **Critères** : de 0 à 1, `null` = inconnu (laissé de côté dans la moyenne).
 - **`decision`** : `garder`, `changer`, ou `aucune` quand aucune chaîne ne respecte les contraintes ; dans ce cas `chosen` vaut `null` et les cycles suivants ne sont pas renvoyés.
 - **`steps`** : les cultures de la chaîne et les couverts (`kind: "couvert"`, sans position) dans l'ordre du calendrier ; dates ISO ; positions comptées à partir de 1. Une jachère n'a ni semis ni récolte.
 - **`robustness`** : pire note de la chaîne adoptée dans les cycles suivants ; `null` pour une chaîne gardée du cycle précédent ou qui devient infaisable (`becomesInfeasibleLater`).
 - **`twins.reliable`** : σ moyen ≤ 2. Sinon, l'écran prévient que la recommandation est moins fiable.
-- **`meta.demo`** : `true` tant qu'une source est fictive (badge « Données d'exemple ») ; `meta.sources` dit lesquelles.
+- **`meta.demo`** : `true` tant qu'une source est fictive (badge « Données d'exemple ») ; `meta.sources` dit lesquelles (`farmWeather`, `climateModels`, `twins`, `fieldMeasures`).
+- **Valeurs manquantes** : toujours un `null` explicite, jamais une clé absente (`robustness`, `sowing`, `positions`, `sigma`…). Un nombre que JSON ne sait pas écrire (infini) devient `null`.
 - **Messages** : en français, prêts à afficher, **sans nom d'étude** (règle de l'équipe ; les études sont seulement dans la page Sources).
 
-## Brancher un algorithme distant
+## Lancer le serveur et le brancher
 
-Pour une version serveur (qui lirait les vrais fichiers NEX-GDDP-CMIP6, les cartes de cultures et NASA HLS) :
-
-1. Le serveur répond à `POST /plan` avec ce contrat et autorise le CORS du site (en-tête `Content-Type`).
+1. `cd backend/server`, installer (`pip install -e ".[dev]"`) puis `python -m uvicorn field_shift.api.main:app --port 8000` : voir [`backend/server/README.md`](../backend/server/README.md).
 2. `npm run check:algo -- http://localhost:8000` doit afficher « Tout respecte le contrat ».
-3. Dans `.env.local` : `VITE_ALGO_MODE=remote` et `VITE_ALGO_URL=http://localhost:8000`, puis `npm run dev`. En ligne : les mêmes valeurs dans les variables du dépôt GitHub.
+3. `npm run dev` : le front appelle `http://localhost:8000` par défaut. Ailleurs, `VITE_ALGO_URL` donne l'adresse du serveur (dans `.env.local`, ou dans les variables du dépôt GitHub pour le site publié).
 
-Sans serveur, `VITE_FARM_WEATHER=demo` fait tourner l'algorithme du navigateur sans réseau (météo fictive).
+Sans réseau, `FIELD_SHIFT_WEATHER=demo` lance le serveur avec la météo fictive de la référence.
+
+Un autre serveur (dans un autre langage) peut remplacer celui-ci : il lui suffit de répondre à `POST /plan` selon ce schéma.

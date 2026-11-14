@@ -5,16 +5,16 @@
  *   npm run check:algo -- http://localhost:8000
  *   (or set VITE_ALGO_URL)
  *
- * Sends every reference input to POST /plan and validates each answer against
- * backend/contract/field-shift.schema.json. Exit code 1 if anything fails.
+ * Sends every reference input (backend/contract/examples/*.input.json) to POST /plan and validates
+ * each answer against backend/contract/field-shift.schema.json. Exit code 1 if anything fails.
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import Ajv from 'ajv';
-import { CASES } from '../contract/cases.js';
 
-const schema = JSON.parse(
-  readFileSync(new URL('../contract/field-shift.schema.json', import.meta.url), 'utf8'),
-);
+const CONTRACT = new URL('../contract/', import.meta.url);
+const INPUT_SUFFIX = '.input.json';
+
+const schema = JSON.parse(readFileSync(new URL('field-shift.schema.json', CONTRACT), 'utf8'));
 const ajv = new Ajv({ allErrors: true, strict: false });
 ajv.addSchema(schema);
 const check = (def, data) => {
@@ -28,9 +28,14 @@ if (!baseUrl) {
   process.exit(1);
 }
 
+const examples = readdirSync(new URL('examples/', CONTRACT)).filter((f) =>
+  f.endsWith(INPUT_SUFFIX),
+);
 let failures = 0;
 console.log(`Vérification de ${baseUrl}\n`);
-for (const [name, input] of Object.entries(CASES)) {
+for (const file of examples) {
+  const name = file.slice(0, -INPUT_SUFFIX.length);
+  const input = JSON.parse(readFileSync(new URL(`examples/${file}`, CONTRACT), 'utf8'));
   const errors = [];
   try {
     const res = await fetch(`${baseUrl}/plan`, {
@@ -43,11 +48,14 @@ for (const [name, input] of Object.entries(CASES)) {
     errors.push(...check('FarmPlan', plan));
     if (plan.sections?.map((s) => s.id).join() !== input.sections.map((s) => s.id).join())
       errors.push('sections : il faut un plan par section, dans le même ordre');
-    const cycles = input.farm.time.horizonYears / input.farm.time.cycleYears;
-    plan.sections?.forEach((s) => {
-      if (s.cycles.length !== cycles && s.cycles.at(-1)?.decision !== 'aucune')
-        errors.push(`section ${s.id} : ${s.cycles.length} cycles au lieu de ${cycles}`);
-    });
+    const { cycleYears, horizonYears } = input.farm.time;
+    for (const s of plan.sections ?? []) {
+      const infeasible = s.cycles.at(-1)?.decision === 'aucune';
+      if (s.cycles.length !== horizonYears / cycleYears && !infeasible)
+        errors.push(
+          `section ${s.id} : ${s.cycles.length} cycles au lieu de ${horizonYears / cycleYears}`,
+        );
+    }
   } catch (e) {
     errors.push(e.message);
   }
@@ -58,4 +66,4 @@ for (const [name, input] of Object.entries(CASES)) {
   } else console.log(`  ✓ /plan · ${name}`);
 }
 console.log(failures ? `\n${failures} vérification(s) en échec.` : '\nTout respecte le contrat.');
-process.exit(failures ? 1 : 0);
+process.exitCode = failures ? 1 : 0; // not process.exit(): it crashes Node on Windows while the fetch sockets close

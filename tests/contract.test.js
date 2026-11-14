@@ -1,82 +1,149 @@
 /**
- * The engine of the app (the algorithm in the browser) must respect the contract
- * 2.0 exactly: it is what any other engine (a server) is compared to.
+ * The front end and the algorithm server agree on the contract 2.0: the example files respect the
+ * schema, the ids of the screens are the ids of the schema, and the HTTP client reads the server's
+ * answers (and refusals) the right way. The server proves its own side in backend/server/tests.
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 import Ajv from 'ajv';
-import { CASES } from '../backend/contract/cases.js';
-import { createAlgorithmEngine, WEATHER_YEARS } from '../backend/algorithmEngine.js';
-import { demoFarmWeather } from '../backend/algorithm/sources/DemoFarmWeather.js';
+import { createRemoteEngine, EngineError } from '../backend/remoteEngine.js';
+import { createEngine } from '../backend/index.js';
+import { CRITERIA_IDS } from '../data/reference/criteria.js';
+import { CROPS, SHEETS } from '../data/reference/crops.js';
+import { DEMO_FARM } from '../data/reference/demoFarm.js';
+import { SOIL_DISEASES } from '../data/reference/diseases.js';
+import { CYCLE_YEARS, FREQUENCIES, RESERVE_MODES } from '../data/reference/planning.js';
 
-const schema = JSON.parse(
-  readFileSync(new URL('../backend/contract/field-shift.schema.json', import.meta.url), 'utf8'),
-);
+const CONTRACT = new URL('../backend/contract/', import.meta.url);
+const read = (path) => JSON.parse(readFileSync(new URL(path, CONTRACT), 'utf8'));
+const schema = read('field-shift.schema.json');
 const ajv = new Ajv({ allErrors: true, strict: false });
 ajv.addSchema(schema);
-const validator = (def) => ajv.getSchema(`field-shift#/definitions/${def}`);
-const expectValid = (def, data) => {
-  const v = validator(def);
-  expect(v(data), JSON.stringify(v.errors?.slice(0, 5), null, 2)).toBe(true);
+const check = (def, data) => {
+  const validate = ajv.getSchema(`field-shift#/definitions/${def}`);
+  return validate(data) ? [] : validate.errors.map((e) => `${e.instancePath} ${e.message}`);
 };
 
-const offline = createAlgorithmEngine({ useRealWeather: false });
+const examples = readdirSync(new URL('examples/', CONTRACT));
+const inputs = examples.filter((f) => f.endsWith('.input.json'));
+const plans = examples.filter((f) => f.endsWith('.plan.json'));
+const enumOf = (def) => schema.definitions[def].enum;
 
-describe('contract 2.0', () => {
-  for (const [name, input] of Object.entries(CASES)) {
-    it(`"${name}": valid input, valid plan, one plan per section`, async () => {
-      expectValid('FarmInput', input);
-      const plan = await offline.planFarm(input);
-      expectValid('FarmPlan', plan);
-      expect(plan.sections.map((s) => s.id)).toEqual(input.sections.map((s) => s.id));
-      const cycles = input.farm.time.horizonYears / input.farm.time.cycleYears;
-      for (const s of plan.sections) expect(s.cycles).toHaveLength(cycles);
-      expect(plan.meta.demo).toBe(true);
-    });
-  }
-
-  it('demo farm: sections A and B follow the worked example of the algorithm', async () => {
-    const plan = await offline.planFarm(CASES['ferme-demo']);
-    const [a, b] = plan.sections;
-    expect(a.cycles[0]).toMatchObject({ years: [2027, 2030], decision: 'changer' });
-    expect(a.cycles[0].chosen.sheets).toEqual(['jachere', 'soya', 'jachere', 'ble-automne']);
-    expect(a.cycles[0].referenceAlerts[0].message).toMatch(/Soya après Soya/);
-    expect(a.cycles[2].decision).toBe('garder');
-    expect(b.cycles[0].years).toEqual([2028, 2031]);
-    expect(b.cycles[0].chosen.label).toBe('Maïs (+ seigle) → Jachère → Luzerne ×2 [2 pos.]');
-    expect(b.cycles[0].removed.map((r) => r.sheet)).toEqual(['luzerne-3']);
+describe('examples of the contract', () => {
+  it('there are inputs and plans', () => {
+    expect(inputs.length).toBeGreaterThanOrEqual(3);
+    expect(plans.length).toBe(inputs.length);
   });
 
-  it('uses NASA POWER when it answers, and says so', async () => {
-    const demo = demoFarmWeather();
-    const fetchWeather = vi.fn(async () => ({
-      firstYear: WEATHER_YEARS.first,
-      lastYear: WEATHER_YEARS.last,
-      tmax: demo.tmax,
-      tmin: demo.tmin,
-      rain: demo.rain,
-    }));
-    const engine = createAlgorithmEngine({ fetchWeather });
-    const plan = await engine.planFarm(CASES['ferme-demo']);
-    expect(fetchWeather).toHaveBeenCalledWith(45.6287, -72.94815, {
-      firstYear: 1985,
-      lastYear: 2024,
-    });
-    expect(plan.meta.sources.farmWeather.real).toBe(true);
+  for (const file of inputs)
+    it(`${file} is a valid FarmInput`, () =>
+      expect(check('FarmInput', read(`examples/${file}`))).toEqual([]));
+
+  for (const file of plans)
+    it(`${file} is a valid FarmPlan`, () =>
+      expect(check('FarmPlan', read(`examples/${file}`))).toEqual([]));
+
+  it('the demo farm of the app is the "ferme-demo" example', () => {
+    const example = read('examples/ferme-demo.input.json');
+    delete example.today; // the example fixes the date of the plan; the app lets the server choose it
+    expect(DEMO_FARM).toEqual(example);
   });
 
-  it('falls back to the fictitious weather when NASA POWER fails', async () => {
-    const engine = createAlgorithmEngine({
-      fetchWeather: vi.fn(async () => Promise.reject(new Error('offline'))),
-    });
-    const plan = await engine.planFarm(CASES['ferme-demo']);
-    expect(plan.meta.sources.farmWeather.real).toBe(false);
-    expect(plan.sections).toHaveLength(4);
-  });
-
-  it('rejects an invalid input (unknown crop)', () => {
-    const bad = structuredClone(CASES['ferme-demo']);
+  it('the schema refuses an unknown crop and a cycle that is too long', () => {
+    const bad = structuredClone(DEMO_FARM);
     bad.sections[0].currentRotation = ['riz'];
-    expect(validator('FarmInput')(bad)).toBe(false);
+    expect(check('FarmInput', bad)).not.toEqual([]);
+    const long = structuredClone(DEMO_FARM);
+    long.farm.time.cycleYears = 7;
+    expect(check('FarmInput', long)).not.toEqual([]);
+  });
+});
+
+describe('the screens use the ids of the schema', () => {
+  it('crops, sheets, criteria and soil diseases', () => {
+    expect(Object.keys(CROPS).sort()).toEqual([...enumOf('CropId')].sort());
+    expect(Object.keys(SHEETS).sort()).toEqual([...enumOf('SheetId')].sort());
+    expect([...CRITERIA_IDS]).toEqual(enumOf('CriterionId'));
+    expect(Object.keys(SOIL_DISEASES).sort()).toEqual([...enumOf('DiseaseId')].sort());
+  });
+
+  it('cycle, frequencies and reserve modes', () => {
+    const farm = schema.definitions.FarmInput.properties.farm.properties;
+    const { cycleYears, frequencyMonths } = farm.time.properties;
+    expect([cycleYears.minimum, cycleYears.maximum]).toEqual([CYCLE_YEARS.min, CYCLE_YEARS.max]);
+    expect(FREQUENCIES.map((f) => f.months)).toEqual(frequencyMonths.enum);
+    expect(Object.keys(RESERVE_MODES).sort()).toEqual([...farm.seeds.properties.mode.enum].sort());
+  });
+});
+
+describe('the client of the algorithm server', () => {
+  const answer = (status, body) =>
+    vi.fn(async () => ({
+      ok: status < 400,
+      status,
+      json: async () => body,
+      text: async () => (typeof body === 'string' ? body : JSON.stringify(body)),
+    }));
+  const engine = (fetchMock) => {
+    vi.stubGlobal('fetch', fetchMock);
+    return createRemoteEngine({ baseUrl: 'http://serveur:8000/' });
+  };
+
+  it('posts the farm to /plan and returns the plan', async () => {
+    const plan = read('examples/ferme-demo.plan.json');
+    const fetchMock = answer(200, plan);
+    expect(await engine(fetchMock).planFarm(DEMO_FARM)).toEqual(plan);
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toBe('http://serveur:8000/plan');
+    expect(init).toMatchObject({ method: 'POST', headers: { 'Content-Type': 'application/json' } });
+    expect(JSON.parse(init.body)).toEqual(DEMO_FARM);
+  });
+
+  it('turns a refusal of the server into a readable sentence', async () => {
+    const refusal = {
+      detail: [
+        { loc: ['body', 'farm', 'time'], msg: 'Value error, Le cycle doit durer de 2 à 6 ans.' },
+        { loc: ['body', 'sections', 0, 'currentCrop'], msg: 'culture inconnue : riz' },
+      ],
+    };
+    const error = await engine(answer(422, refusal))
+      .planFarm(DEMO_FARM)
+      .catch((e) => e);
+    expect(error).toBeInstanceOf(EngineError);
+    expect(error.status).toBe(422);
+    expect(error.message).toContain('farm › time : Le cycle doit durer de 2 à 6 ans.');
+    expect(error.message).toContain('sections › 0 › currentCrop : culture inconnue : riz');
+  });
+
+  it('says so when the server cannot be reached', async () => {
+    const down = vi.fn(async () => Promise.reject(new TypeError('fetch failed')));
+    const error = await engine(down)
+      .planFarm(DEMO_FARM)
+      .catch((e) => e);
+    expect(error.message).toMatch(
+      /Impossible de joindre l’algorithme \(http:\/\/serveur:8000\/plan\)/,
+    );
+  });
+
+  it('says so when no server is configured, without breaking the app at start', async () => {
+    const error = await createRemoteEngine({ baseUrl: '' })
+      .planFarm(DEMO_FARM)
+      .catch((e) => e);
+    expect(error.message).toMatch(/VITE_ALGO_URL/);
+  });
+
+  it('uses VITE_ALGO_URL, the local server in development, nothing in production', async () => {
+    const fetchMock = answer(200, {});
+    vi.stubGlobal('fetch', fetchMock);
+    await createEngine({ VITE_ALGO_URL: 'https://api.exemple.org' }).planFarm({});
+    await createEngine({ DEV: true }).planFarm({});
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+      'https://api.exemple.org/plan',
+      'http://localhost:8000/plan',
+    ]);
+    const error = await createEngine({ DEV: false })
+      .planFarm({})
+      .catch((e) => e);
+    expect(error.message).toMatch(/VITE_ALGO_URL/);
   });
 });

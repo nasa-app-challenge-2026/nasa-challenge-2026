@@ -1,14 +1,14 @@
 {
   "version": "2.0",
   "meta": {
-    "engine": "field-shift-js",
+    "engine": "field-shift-server",
     "algorithm": "field_shift v5.1",
     "demo": true,
-    "generatedAt": "2026-11-13T00:00:00.000Z",
+    "generatedAt": "2026-11-13T00:00:00Z",
     "sources": {
       "farmWeather": {
         "real": false,
-        "label": "Météo fictive (NASA POWER n’a pas pu être joint)"
+        "label": "Météo fictive (mode démonstration)"
       },
       "climateModels": {
         "real": false,
@@ -29,7 +29,15 @@
     "frequencyMonths": 12,
     "positionsPerCycle": 5,
     "horizonYears": 10,
-    "currentYear": 2026
+    "currentYear": 2026,
+    "priorities": [
+      "erosion",
+      "rendement",
+      "azote",
+      "reserve",
+      "matiere_org",
+      "marche"
+    ]
   },
   "weights": {
     "rendement": 0.242,
@@ -74,23 +82,23 @@
       ],
       "field": {
         "measures": {
-          "slopePct": 4.9,
-          "heavyRainDays": 6,
-          "bareSoilDays": 140,
-          "summerStressIndex": 0.62,
-          "rootZoneDrought": 0.32,
-          "groundwaterTrendCmPerYear": -0.7
+          "slopePct": 4.6,
+          "heavyRainDays": 8.0,
+          "bareSoilDays": 98.0,
+          "summerStressIndex": 0.67,
+          "rootZoneDrought": 0.4,
+          "groundwaterTrendCmPerYear": -1.0
         },
         "soil": {
-          "clayPct": 28,
-          "sandPct": 33,
-          "organicCarbon": 25.1,
+          "clayPct": 28.0,
+          "sandPct": 28.0,
+          "organicCarbon": 20.1,
           "ph": 6.4,
           "source": "SoilGrids 2.0 (fictif)"
         },
         "risksToday": {
           "erosion": 0.718,
-          "water": 0.311
+          "water": 0.3
         }
       },
       "cycles": [
@@ -107,89 +115,73 @@
             "models": [],
             "lastSpringFrost": {
               "month": 4,
-              "day": 26
+              "day": 23
             },
             "firstFallFrost": {
               "month": 10,
-              "day": 10
+              "day": 8
             },
-            "januaryMinimumC": -13.935,
-            "warmingC": 0.422,
-            "summerRainChangePct": 0,
+            "januaryMinimumC": -14.574,
+            "warmingC": 0.472,
+            "summerRainChangePct": 0.0,
             "harvestAdvanceDays": 1
           },
           "twins": {
-            "sigmaMean": 0.01,
+            "sigmaMean": 0.008,
             "reliable": true,
             "cells": [
               {
-                "lat": 46.129,
-                "lon": -69.948,
-                "sigma": 0.003,
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
                 "lat": 45.129,
-                "lon": -74.448,
-                "sigma": 0.003,
+                "lon": -71.448,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -71.948,
-                "sigma": 0.007,
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
-                "sigma": 0.007,
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.006,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -72.948,
+                "lat": 45.129,
+                "lon": -74.948,
                 "sigma": 0.009,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 46.129,
+                "lon": -71.948,
                 "sigma": 0.01,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -70.948,
-                "sigma": 0.014,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 44.129,
-                "lon": -76.448,
-                "sigma": 0.014,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
                 "lat": 45.629,
-                "lon": -72.448,
-                "sigma": 0.017,
+                "lon": -70.948,
+                "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -197,7 +189,23 @@
               {
                 "lat": 45.129,
                 "lon": -73.948,
-                "sigma": 0.02,
+                "sigma": 0.013,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -69.948,
+                "sigma": 0.017,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -216,28 +224,28 @@
           },
           "risks": {
             "erosion": 0.718,
-            "water": 0.311
+            "water": 0.3
           },
           "weights": {
             "rendement": 0.242,
             "eau": 0.009,
             "fourrage": 0.002,
             "azote": 0.158,
-            "erosion": 0.701,
+            "erosion": 0.702,
             "matiere_org": 0.061,
             "marche": 0.028,
             "ravageurs": 0.007,
             "reserve": 0.103
           },
           "chosen": {
-            "score": 66.22,
+            "score": 66.284,
             "criteria": {
               "rendement": 0.594,
-              "erosion": 0.658,
-              "eau": 0.561,
-              "fourrage": 0.79,
-              "azote": 0.754,
-              "matiere_org": 0.787,
+              "erosion": 0.659,
+              "eau": 0.56,
+              "fourrage": 0.789,
+              "azote": 0.753,
+              "matiere_org": 0.786,
               "marche": 0.525,
               "ravageurs": 0.875,
               "reserve": 0.667
@@ -284,7 +292,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2031-05-08",
-                "harvest": "2031-09-08",
+                "harvest": "2031-09-11",
                 "positions": [
                   5,
                   5
@@ -304,17 +312,17 @@
             "warnings": []
           },
           "reference": {
-            "score": 45.472,
+            "score": 45.921,
             "criteria": {
               "rendement": 0.661,
-              "erosion": 0.301,
-              "eau": 0.457,
-              "fourrage": 0.228,
+              "erosion": 0.309,
+              "eau": 0.458,
+              "fourrage": 0.227,
               "azote": 0.445,
-              "matiere_org": 0.328,
+              "matiere_org": 0.327,
               "marche": 0.84,
               "ravageurs": 0.6,
-              "reserve": 1
+              "reserve": 1.0
             },
             "label": "Soya → Maïs → Soya → Maïs → Soya",
             "sheets": [
@@ -330,7 +338,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2027-05-16",
-                "harvest": "2027-08-26",
+                "harvest": "2027-08-29",
                 "positions": [
                   1,
                   1
@@ -341,7 +349,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2028-05-08",
-                "harvest": "2028-09-08",
+                "harvest": "2028-09-11",
                 "positions": [
                   2,
                   2
@@ -352,7 +360,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2029-05-16",
-                "harvest": "2029-08-26",
+                "harvest": "2029-08-29",
                 "positions": [
                   3,
                   3
@@ -363,7 +371,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2030-05-08",
-                "harvest": "2030-09-08",
+                "harvest": "2030-09-11",
                 "positions": [
                   4,
                   4
@@ -374,7 +382,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2031-05-16",
-                "harvest": "2031-08-26",
+                "harvest": "2031-08-29",
                 "positions": [
                   5,
                   5
@@ -390,7 +398,9 @@
               "reason": {
                 "kind": "meme-culture",
                 "previous": "soya",
-                "next": "soya"
+                "next": "soya",
+                "family": null,
+                "disease": null
               },
               "yearsWithout": 1,
               "minimum": 2,
@@ -408,7 +418,9 @@
               "reason": {
                 "kind": "meme-culture",
                 "previous": "soya",
-                "next": "soya"
+                "next": "soya",
+                "family": null,
+                "disease": null
               },
               "yearsWithout": 1,
               "minimum": 2,
@@ -426,7 +438,9 @@
               "reason": {
                 "kind": "meme-culture",
                 "previous": "soya",
-                "next": "soya"
+                "next": "soya",
+                "family": null,
+                "disease": null
               },
               "yearsWithout": 1,
               "minimum": 2,
@@ -444,7 +458,9 @@
               "reason": {
                 "kind": "meme-culture",
                 "previous": "soya",
-                "next": "soya"
+                "next": "soya",
+                "family": null,
+                "disease": null
               },
               "yearsWithout": 0,
               "minimum": 2,
@@ -461,14 +477,14 @@
           ],
           "alternatives": [
             {
-              "score": 65.803,
+              "score": 65.874,
               "criteria": {
                 "rendement": 0.594,
-                "erosion": 0.671,
-                "eau": 0.546,
-                "fourrage": 0.734,
-                "azote": 0.678,
-                "matiere_org": 0.753,
+                "erosion": 0.673,
+                "eau": 0.545,
+                "fourrage": 0.733,
+                "azote": 0.677,
+                "matiere_org": 0.752,
                 "marche": 0.525,
                 "ravageurs": 0.833,
                 "reserve": 0.667
@@ -515,7 +531,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2031-05-08",
-                  "harvest": "2031-09-08",
+                  "harvest": "2031-09-11",
                   "positions": [
                     5,
                     5
@@ -535,14 +551,14 @@
               "warnings": []
             },
             {
-              "score": 65.184,
+              "score": 65.243,
               "criteria": {
                 "rendement": 0.594,
-                "erosion": 0.658,
+                "erosion": 0.659,
                 "eau": 0.546,
-                "fourrage": 0.747,
-                "azote": 0.688,
-                "matiere_org": 0.758,
+                "fourrage": 0.746,
+                "azote": 0.687,
+                "matiere_org": 0.757,
                 "marche": 0.525,
                 "ravageurs": 0.708,
                 "reserve": 0.667
@@ -578,7 +594,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2028-05-08",
-                  "harvest": "2028-09-08",
+                  "harvest": "2028-09-11",
                   "positions": [
                     2,
                     2
@@ -610,7 +626,7 @@
             }
           ],
           "removed": [],
-          "robustness": 66.22,
+          "robustness": 66.284,
           "becomesInfeasibleLater": false
         },
         {
@@ -626,71 +642,87 @@
             "models": [],
             "lastSpringFrost": {
               "month": 4,
-              "day": 26
+              "day": 21
             },
             "firstFallFrost": {
               "month": 10,
-              "day": 10
+              "day": 8
             },
-            "januaryMinimumC": -13.79,
-            "warmingC": 0.568,
-            "summerRainChangePct": 0,
+            "januaryMinimumC": -14.411,
+            "warmingC": 0.634,
+            "summerRainChangePct": 0.0,
             "harvestAdvanceDays": 2
           },
           "twins": {
-            "sigmaMean": 0.013,
+            "sigmaMean": 0.009,
             "reliable": true,
             "cells": [
               {
-                "lat": 44.629,
-                "lon": -71.948,
-                "sigma": 0.005,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 44.129,
-                "lon": -76.448,
-                "sigma": 0.006,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 46.129,
-                "lon": -69.948,
-                "sigma": 0.006,
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
                 "lat": 45.129,
-                "lon": -74.448,
-                "sigma": 0.007,
+                "lon": -71.448,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 43.629,
-                "lon": -78.948,
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.002,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.005,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.009,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
                 "sigma": 0.012,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
-                "sigma": 0.014,
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
+                "lat": 45.129,
                 "lon": -71.948,
                 "sigma": 0.016,
                 "sources": [
@@ -698,25 +730,9 @@
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -72.948,
-                "sigma": 0.02,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
                 "lat": 45.629,
-                "lon": -72.448,
-                "sigma": 0.021,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 45.629,
-                "lon": -75.948,
-                "sigma": 0.024,
+                "lon": -70.948,
+                "sigma": 0.018,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -735,27 +751,27 @@
           },
           "risks": {
             "erosion": 0.718,
-            "water": 0.311
+            "water": 0.3
           },
           "weights": {
             "rendement": 0.242,
             "eau": 0.009,
             "fourrage": 0.002,
             "azote": 0.158,
-            "erosion": 0.701,
+            "erosion": 0.702,
             "matiere_org": 0.061,
             "marche": 0.028,
             "ravageurs": 0.007,
             "reserve": 0.103
           },
           "chosen": {
-            "score": 67.164,
+            "score": 67.183,
             "criteria": {
               "rendement": 0.594,
-              "erosion": 0.676,
-              "eau": 0.562,
-              "fourrage": 0.778,
-              "azote": 0.748,
+              "erosion": 0.677,
+              "eau": 0.561,
+              "fourrage": 0.779,
+              "azote": 0.747,
               "matiere_org": 0.783,
               "marche": 0.525,
               "ravageurs": 0.875,
@@ -783,7 +799,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2031-09-16",
+                "sowing": "2031-09-19",
                 "harvest": "2032-05-08",
                 "positions": null
               },
@@ -792,7 +808,7 @@
                 "crop": "luzerne",
                 "kind": "culture",
                 "sowing": "2033-04-23",
-                "harvest": "2035-09-22",
+                "harvest": "2035-09-21",
                 "positions": [
                   2,
                   4
@@ -803,7 +819,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2036-05-08",
-                "harvest": "2036-09-05",
+                "harvest": "2036-09-10",
                 "positions": [
                   5,
                   5
@@ -821,14 +837,14 @@
             "warnings": []
           },
           "reference": {
-            "score": 54.439,
+            "score": 54.908,
             "criteria": {
               "rendement": 0.677,
-              "erosion": 0.558,
+              "erosion": 0.566,
               "eau": 0.465,
               "fourrage": 0.311,
-              "azote": 0.251,
-              "matiere_org": 0.491,
+              "azote": 0.252,
+              "matiere_org": 0.49,
               "marche": 0.86,
               "ravageurs": 0.6,
               "reserve": null
@@ -847,7 +863,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2032-05-08",
-                "harvest": "2032-09-05",
+                "harvest": "2032-09-10",
                 "positions": [
                   1,
                   1
@@ -857,7 +873,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2032-09-16",
+                "sowing": "2032-09-17",
                 "harvest": "2033-05-08",
                 "positions": null
               },
@@ -866,7 +882,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2033-05-16",
-                "harvest": "2033-08-25",
+                "harvest": "2033-08-28",
                 "positions": [
                   2,
                   2
@@ -877,7 +893,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2034-05-08",
-                "harvest": "2034-09-05",
+                "harvest": "2034-09-10",
                 "positions": [
                   3,
                   3
@@ -887,7 +903,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2034-09-16",
+                "sowing": "2034-09-17",
                 "harvest": "2035-05-08",
                 "positions": null
               },
@@ -896,7 +912,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2035-05-16",
-                "harvest": "2035-08-25",
+                "harvest": "2035-08-28",
                 "positions": [
                   4,
                   4
@@ -907,7 +923,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2036-05-08",
-                "harvest": "2036-09-05",
+                "harvest": "2036-09-10",
                 "positions": [
                   5,
                   5
@@ -923,7 +939,9 @@
               "reason": {
                 "kind": "meme-culture",
                 "previous": "soya",
-                "next": "soya"
+                "next": "soya",
+                "family": null,
+                "disease": null
               },
               "yearsWithout": 1,
               "minimum": 2,
@@ -941,7 +959,9 @@
               "reason": {
                 "kind": "meme-culture",
                 "previous": "soya",
-                "next": "soya"
+                "next": "soya",
+                "family": null,
+                "disease": null
               },
               "yearsWithout": 1,
               "minimum": 2,
@@ -959,7 +979,9 @@
               "reason": {
                 "kind": "meme-culture",
                 "previous": "mais",
-                "next": "mais"
+                "next": "mais",
+                "family": null,
+                "disease": null
               },
               "yearsWithout": 0,
               "minimum": 1,
@@ -976,14 +998,14 @@
           ],
           "alternatives": [
             {
-              "score": 68.961,
+              "score": 69.026,
               "criteria": {
                 "rendement": 0.547,
-                "erosion": 0.839,
-                "eau": 0.633,
-                "fourrage": 0.212,
+                "erosion": 0.84,
+                "eau": 0.632,
+                "fourrage": 0.211,
                 "azote": 0.32,
-                "matiere_org": 0.555,
+                "matiere_org": 0.553,
                 "marche": 0.6,
                 "ravageurs": 0.8,
                 "reserve": null
@@ -1001,7 +1023,7 @@
                   "sheet": "seigle-couvert",
                   "crop": "seigle",
                   "kind": "couvert",
-                  "sowing": "2031-09-16",
+                  "sowing": "2031-09-19",
                   "harvest": "2032-05-08",
                   "positions": null
                 },
@@ -1010,7 +1032,7 @@
                   "crop": "soya",
                   "kind": "culture",
                   "sowing": "2032-05-16",
-                  "harvest": "2032-08-25",
+                  "harvest": "2032-08-28",
                   "positions": [
                     1,
                     1
@@ -1029,7 +1051,7 @@
                   "crop": "sarrasin",
                   "kind": "culture",
                   "sowing": "2033-06-16",
-                  "harvest": "2033-08-10",
+                  "harvest": "2033-08-11",
                   "positions": [
                     2,
                     2
@@ -1040,7 +1062,7 @@
                   "crop": "ble-automne",
                   "kind": "culture",
                   "sowing": "2033-09-16",
-                  "harvest": "2034-07-19",
+                  "harvest": "2034-07-18",
                   "positions": [
                     3,
                     3
@@ -1059,7 +1081,7 @@
                   "crop": "sarrasin",
                   "kind": "culture",
                   "sowing": "2035-06-16",
-                  "harvest": "2035-08-10",
+                  "harvest": "2035-08-11",
                   "positions": [
                     4,
                     4
@@ -1070,7 +1092,7 @@
                   "crop": "ble-automne",
                   "kind": "culture",
                   "sowing": "2035-09-16",
-                  "harvest": "2036-07-19",
+                  "harvest": "2036-07-18",
                   "positions": [
                     5,
                     5
@@ -1098,14 +1120,14 @@
               "warnings": []
             },
             {
-              "score": 68.373,
+              "score": 68.392,
               "criteria": {
                 "rendement": 0.594,
                 "erosion": 0.809,
                 "eau": 0.637,
-                "fourrage": 0.227,
+                "fourrage": 0.226,
                 "azote": 0.322,
-                "matiere_org": 0.565,
+                "matiere_org": 0.564,
                 "marche": 0.65,
                 "ravageurs": 0.833,
                 "reserve": null
@@ -1123,7 +1145,7 @@
                   "sheet": "seigle-couvert",
                   "crop": "seigle",
                   "kind": "couvert",
-                  "sowing": "2031-09-16",
+                  "sowing": "2031-09-19",
                   "harvest": "2032-05-08",
                   "positions": null
                 },
@@ -1132,7 +1154,7 @@
                   "crop": "soya",
                   "kind": "culture",
                   "sowing": "2032-05-16",
-                  "harvest": "2032-08-25",
+                  "harvest": "2032-08-28",
                   "positions": [
                     1,
                     1
@@ -1143,7 +1165,7 @@
                   "crop": "ble-automne",
                   "kind": "culture",
                   "sowing": "2032-09-16",
-                  "harvest": "2033-07-19",
+                  "harvest": "2033-07-18",
                   "positions": [
                     2,
                     2
@@ -1162,7 +1184,7 @@
                   "crop": "sarrasin",
                   "kind": "culture",
                   "sowing": "2034-06-16",
-                  "harvest": "2034-08-10",
+                  "harvest": "2034-08-11",
                   "positions": [
                     3,
                     3
@@ -1192,7 +1214,7 @@
                   "crop": "ble-automne",
                   "kind": "culture",
                   "sowing": "2035-09-16",
-                  "harvest": "2036-07-19",
+                  "harvest": "2036-07-18",
                   "positions": [
                     5,
                     5
@@ -1247,23 +1269,23 @@
       ],
       "field": {
         "measures": {
-          "slopePct": 7,
-          "heavyRainDays": 7,
-          "bareSoilDays": 141,
-          "summerStressIndex": 0.63,
-          "rootZoneDrought": 0.53,
-          "groundwaterTrendCmPerYear": -1
+          "slopePct": 3.2,
+          "heavyRainDays": 5.0,
+          "bareSoilDays": 127.0,
+          "summerStressIndex": 0.6,
+          "rootZoneDrought": 0.43,
+          "groundwaterTrendCmPerYear": -0.6
         },
         "soil": {
-          "clayPct": 25,
-          "sandPct": 19,
-          "organicCarbon": 27.6,
+          "clayPct": 34.0,
+          "sandPct": 37.0,
+          "organicCarbon": 25.9,
           "ph": 6.3,
           "source": "SoilGrids 2.0 (fictif)"
         },
         "risksToday": {
-          "erosion": 0.888,
-          "water": 0.379
+          "erosion": 0.557,
+          "water": 0.359
         }
       },
       "cycles": [
@@ -1280,33 +1302,73 @@
             "models": [],
             "lastSpringFrost": {
               "month": 4,
-              "day": 26
+              "day": 23
             },
             "firstFallFrost": {
               "month": 10,
-              "day": 10
+              "day": 8
             },
-            "januaryMinimumC": -13.906,
-            "warmingC": 0.451,
-            "summerRainChangePct": 0,
-            "harvestAdvanceDays": 1
+            "januaryMinimumC": -14.541,
+            "warmingC": 0.504,
+            "summerRainChangePct": 0.0,
+            "harvestAdvanceDays": 2
           },
           "twins": {
-            "sigmaMean": 0.01,
+            "sigmaMean": 0.009,
             "reliable": true,
             "cells": [
               {
-                "lat": 46.129,
-                "lon": -69.948,
-                "sigma": 0.003,
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
                 "lat": 45.129,
-                "lon": -74.448,
-                "sigma": 0.003,
+                "lon": -71.448,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.001,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
+                "sigma": 0.006,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.006,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -70.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.014,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -1314,55 +1376,7 @@
               {
                 "lat": 44.629,
                 "lon": -71.948,
-                "sigma": 0.006,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 46.129,
-                "lon": -71.948,
-                "sigma": 0.009,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 45.629,
-                "lon": -70.948,
-                "sigma": 0.01,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 46.129,
-                "lon": -72.948,
-                "sigma": 0.01,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 44.129,
-                "lon": -76.448,
-                "sigma": 0.012,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 46.129,
-                "lon": -70.948,
-                "sigma": 0.016,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 45.629,
-                "lon": -72.448,
-                "sigma": 0.017,
+                "sigma": 0.014,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -1370,7 +1384,15 @@
               {
                 "lat": 45.129,
                 "lon": -73.948,
-                "sigma": 0.02,
+                "sigma": 0.017,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -75.948,
+                "sigma": 0.018,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -1388,28 +1410,28 @@
             ]
           },
           "risks": {
-            "erosion": 0.888,
-            "water": 0.379
+            "erosion": 0.557,
+            "water": 0.359
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.01,
+            "eau": 0.009,
             "fourrage": 0.002,
             "azote": 0.158,
-            "erosion": 0.771,
+            "erosion": 0.636,
             "matiere_org": 0.061,
             "marche": 0.028,
             "ravageurs": 0.007,
             "reserve": 0.103
           },
           "chosen": {
-            "score": 68.624,
+            "score": 68.783,
             "criteria": {
               "rendement": 0.688,
-              "erosion": 0.674,
+              "erosion": 0.675,
               "eau": 0.561,
-              "fourrage": 0.776,
-              "azote": 0.745,
+              "fourrage": 0.777,
+              "azote": 0.744,
               "matiere_org": 0.782,
               "marche": 0.525,
               "ravageurs": 0.875,
@@ -1427,7 +1449,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2028-05-08",
-                "harvest": "2028-09-07",
+                "harvest": "2028-09-11",
                 "positions": [
                   1,
                   1
@@ -1448,7 +1470,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2028-09-16",
+                "sowing": "2028-09-19",
                 "harvest": "2029-05-08",
                 "positions": null
               },
@@ -1477,19 +1499,19 @@
             "warnings": []
           },
           "reference": {
-            "score": 64.149,
+            "score": 71.702,
             "criteria": {
               "rendement": 0.68,
-              "erosion": 0.601,
-              "eau": 0.542,
-              "fourrage": 0.709,
-              "azote": 0.767,
-              "matiere_org": 0.687,
+              "erosion": 0.732,
+              "eau": 0.555,
+              "fourrage": 0.722,
+              "azote": 0.726,
+              "matiere_org": 0.739,
               "marche": 0.58,
               "ravageurs": 0.556,
-              "reserve": 0.667
+              "reserve": 0.75
             },
-            "label": "Maïs → Soya → Luzerne ×3 [3 pos.]",
+            "label": "Maïs (+ seigle) → Soya → Luzerne ×3 [3 pos.]",
             "sheets": [
               "mais",
               "soya",
@@ -1501,18 +1523,26 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2028-05-08",
-                "harvest": "2028-09-07",
+                "harvest": "2028-09-11",
                 "positions": [
                   1,
                   1
                 ]
               },
               {
+                "sheet": "seigle-couvert",
+                "crop": "seigle",
+                "kind": "couvert",
+                "sowing": "2028-09-19",
+                "harvest": "2029-05-08",
+                "positions": null
+              },
+              {
                 "sheet": "soya",
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2029-05-16",
-                "harvest": "2029-08-26",
+                "harvest": "2029-08-28",
                 "positions": [
                   2,
                   2
@@ -1548,7 +1578,8 @@
                 "kind": "meme-famille",
                 "previous": "soya",
                 "next": "luzerne",
-                "family": "Fabacées"
+                "family": "Fabacées",
+                "disease": null
               },
               "yearsWithout": 0,
               "minimum": 1,
@@ -1565,14 +1596,100 @@
           ],
           "alternatives": [
             {
-              "score": 67.565,
+              "score": 68.742,
+              "criteria": {
+                "rendement": 0.681,
+                "erosion": 0.7,
+                "eau": 0.572,
+                "fourrage": 0.598,
+                "azote": 0.584,
+                "matiere_org": 0.686,
+                "marche": 0.64,
+                "ravageurs": 0.833,
+                "reserve": 0.8
+              },
+              "label": "Maïs (+ seigle) → Soya → Blé d’automne → Luzerne ×2 [2 pos.]",
+              "sheets": [
+                "mais",
+                "soya",
+                "ble-automne",
+                "luzerne-2"
+              ],
+              "steps": [
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2028-05-08",
+                  "harvest": "2028-09-11",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2028-09-19",
+                  "harvest": "2029-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2029-05-16",
+                  "harvest": "2029-08-28",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
+                  "kind": "culture",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-07-19",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "luzerne-2",
+                  "crop": "luzerne",
+                  "kind": "culture",
+                  "sowing": "2031-04-23",
+                  "harvest": "2032-09-22",
+                  "positions": [
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "gaps": [
+                {
+                  "previous": "ble-automne",
+                  "next": "luzerne",
+                  "message": "Blé d’automne → Luzerne"
+                }
+              ],
+              "seedsToBuy": [
+                "luzerne"
+              ],
+              "warnings": []
+            },
+            {
+              "score": 67.715,
               "criteria": {
                 "rendement": 0.688,
-                "erosion": 0.67,
+                "erosion": 0.672,
                 "eau": 0.547,
-                "fourrage": 0.738,
-                "azote": 0.684,
-                "matiere_org": 0.755,
+                "fourrage": 0.737,
+                "azote": 0.682,
+                "matiere_org": 0.754,
                 "marche": 0.525,
                 "ravageurs": 0.875,
                 "reserve": 0.667
@@ -1608,7 +1725,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2029-05-08",
-                  "harvest": "2029-09-07",
+                  "harvest": "2029-09-11",
                   "positions": [
                     2,
                     2
@@ -1637,104 +1754,10 @@
                 "luzerne"
               ],
               "warnings": []
-            },
-            {
-              "score": 63.269,
-              "criteria": {
-                "rendement": 0.688,
-                "erosion": 0.599,
-                "eau": 0.547,
-                "fourrage": 0.631,
-                "azote": 0.604,
-                "matiere_org": 0.715,
-                "marche": 0.567,
-                "ravageurs": 1,
-                "reserve": 0.75
-              },
-              "label": "(seigle) → Jachère → Maïs (+ seigle) → Jachère → Luzerne ×2 [2 pos.]",
-              "sheets": [
-                "jachere",
-                "mais",
-                "jachere",
-                "luzerne-2"
-              ],
-              "steps": [
-                {
-                  "sheet": "jachere",
-                  "crop": "jachere",
-                  "kind": "jachere",
-                  "sowing": null,
-                  "harvest": null,
-                  "positions": [
-                    1,
-                    1
-                  ]
-                },
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "couvert",
-                  "sowing": "2027-09-23",
-                  "harvest": "2028-05-08",
-                  "positions": null
-                },
-                {
-                  "sheet": "mais",
-                  "crop": "mais",
-                  "kind": "culture",
-                  "sowing": "2029-05-08",
-                  "harvest": "2029-09-07",
-                  "positions": [
-                    2,
-                    2
-                  ]
-                },
-                {
-                  "sheet": "jachere",
-                  "crop": "jachere",
-                  "kind": "jachere",
-                  "sowing": null,
-                  "harvest": null,
-                  "positions": [
-                    3,
-                    3
-                  ]
-                },
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "couvert",
-                  "sowing": "2029-09-16",
-                  "harvest": "2030-05-08",
-                  "positions": null
-                },
-                {
-                  "sheet": "luzerne-2",
-                  "crop": "luzerne",
-                  "kind": "culture",
-                  "sowing": "2031-04-23",
-                  "harvest": "2032-09-22",
-                  "positions": [
-                    4,
-                    5
-                  ]
-                }
-              ],
-              "gaps": [
-                {
-                  "previous": "mais",
-                  "next": "luzerne",
-                  "message": "Maïs → Luzerne"
-                }
-              ],
-              "seedsToBuy": [
-                "luzerne"
-              ],
-              "warnings": []
             }
           ],
           "removed": [],
-          "robustness": 68.624,
+          "robustness": 68.783,
           "becomesInfeasibleLater": false
         },
         {
@@ -1754,45 +1777,86 @@
             ],
             "lastSpringFrost": {
               "month": 4,
-              "day": 23
+              "day": 21
             },
             "firstFallFrost": {
               "month": 10,
-              "day": 13
+              "day": 15
             },
-            "januaryMinimumC": -14.021,
-            "warmingC": 0.983,
-            "summerRainChangePct": -0.924,
+            "januaryMinimumC": -14.041,
+            "warmingC": 0.892,
+            "summerRainChangePct": -3.812,
             "harvestAdvanceDays": 3
           },
           "twins": {
-            "sigmaMean": 0.034,
+            "sigmaMean": 0.016,
             "reliable": true,
             "cells": [
               {
-                "lat": 43.629,
-                "lon": -78.948,
-                "sigma": 0.005,
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.0,
                 "sources": [
                   "modèle A (fictif)",
-                  "modèle B (fictif)",
-                  "modèle C (fictif)"
+                  "modèle B (fictif)"
                 ]
               },
               {
-                "lat": 44.129,
-                "lon": -76.448,
-                "sigma": 0.005,
+                "lat": 45.129,
+                "lon": -71.448,
+                "sigma": 0.001,
                 "sources": [
                   "modèle A (fictif)",
-                  "modèle B (fictif)",
+                  "modèle B (fictif)"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -71.948,
+                "sigma": 0.001,
+                "sources": [
+                  "modèle A (fictif)",
+                  "modèle B (fictif)"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.003,
+                "sources": [
+                  "modèle A (fictif)",
+                  "modèle B (fictif)"
+                ]
+              },
+              {
+                "lat": 43.629,
+                "lon": -77.448,
+                "sigma": 0.003,
+                "sources": [
                   "modèle C (fictif)"
                 ]
               },
               {
                 "lat": 44.629,
-                "lon": -76.448,
+                "lon": -76.948,
                 "sigma": 0.005,
+                "sources": [
+                  "modèle A (fictif)",
+                  "modèle B (fictif)"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.006,
+                "sources": [
+                  "modèle A (fictif)"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -74.948,
+                "sigma": 0.007,
                 "sources": [
                   "modèle A (fictif)",
                   "modèle B (fictif)",
@@ -1800,134 +1864,107 @@
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -74.448,
+                "lat": 43.629,
+                "lon": -73.448,
+                "sigma": 0.008,
+                "sources": [
+                  "modèle B (fictif)",
+                  "modèle C (fictif)"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -70.448,
+                "sigma": 0.008,
+                "sources": [
+                  "modèle A (fictif)"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.009,
+                "sources": [
+                  "modèle A (fictif)"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -77.448,
+                "sigma": 0.012,
+                "sources": [
+                  "modèle B (fictif)"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -70.948,
+                "sigma": 0.014,
+                "sources": [
+                  "modèle B (fictif)"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -71.448,
                 "sigma": 0.017,
                 "sources": [
-                  "modèle A (fictif)",
-                  "modèle B (fictif)"
-                ]
-              },
-              {
-                "lat": 45.129,
-                "lon": -75.448,
-                "sigma": 0.019,
-                "sources": [
-                  "modèle A (fictif)",
-                  "modèle B (fictif)"
+                  "modèle A (fictif)"
                 ]
               },
               {
                 "lat": 44.629,
-                "lon": -71.948,
-                "sigma": 0.024,
+                "lon": -73.448,
+                "sigma": 0.019,
                 "sources": [
-                  "modèle A (fictif)",
-                  "modèle B (fictif)"
+                  "modèle B (fictif)",
+                  "modèle C (fictif)"
                 ]
               },
               {
                 "lat": 45.629,
-                "lon": -70.948,
-                "sigma": 0.028,
+                "lon": -75.448,
+                "sigma": 0.025,
                 "sources": [
-                  "modèle A (fictif)"
+                  "modèle C (fictif)"
                 ]
               },
               {
                 "lat": 43.629,
-                "lon": -79.948,
-                "sigma": 0.029,
-                "sources": [
-                  "modèle B (fictif)",
-                  "modèle C (fictif)"
-                ]
-              },
-              {
-                "lat": 45.129,
-                "lon": -71.948,
-                "sigma": 0.029,
-                "sources": [
-                  "modèle A (fictif)"
-                ]
-              },
-              {
-                "lat": 44.629,
                 "lon": -74.448,
-                "sigma": 0.035,
+                "sigma": 0.026,
                 "sources": [
                   "modèle C (fictif)"
-                ]
-              },
-              {
-                "lat": 44.629,
-                "lon": -73.448,
-                "sigma": 0.039,
-                "sources": [
-                  "modèle B (fictif)",
-                  "modèle C (fictif)"
-                ]
-              },
-              {
-                "lat": 46.129,
-                "lon": -72.948,
-                "sigma": 0.044,
-                "sources": [
-                  "modèle A (fictif)"
-                ]
-              },
-              {
-                "lat": 46.129,
-                "lon": -69.948,
-                "sigma": 0.047,
-                "sources": [
-                  "modèle A (fictif)"
-                ]
-              },
-              {
-                "lat": 45.629,
-                "lon": -75.948,
-                "sigma": 0.047,
-                "sources": [
-                  "modèle B (fictif)"
-                ]
-              },
-              {
-                "lat": 45.129,
-                "lon": -73.448,
-                "sigma": 0.05,
-                "sources": [
-                  "modèle C (fictif)"
-                ]
-              },
-              {
-                "lat": 45.129,
-                "lon": -77.448,
-                "sigma": 0.051,
-                "sources": [
-                  "modèle B (fictif)"
                 ]
               },
               {
                 "lat": 44.129,
-                "lon": -80.448,
-                "sigma": 0.052,
+                "lon": -78.448,
+                "sigma": 0.04,
                 "sources": [
                   "modèle C (fictif)"
                 ]
               },
               {
-                "lat": 43.629,
+                "lat": 44.129,
                 "lon": -77.448,
-                "sigma": 0.054,
+                "sigma": 0.041,
                 "sources": [
                   "modèle C (fictif)"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -77.448,
-                "sigma": 0.057,
+                "lat": 45.129,
+                "lon": -78.948,
+                "sigma": 0.041,
+                "sources": [
+                  "modèle C (fictif)"
+                ]
+              },
+              {
+                "lat": 45.629,
+                "lon": -74.448,
+                "sigma": 0.045,
                 "sources": [
                   "modèle C (fictif)"
                 ]
@@ -1945,29 +1982,29 @@
             ]
           },
           "risks": {
-            "erosion": 0.888,
-            "water": 0.388
+            "erosion": 0.557,
+            "water": 0.397
           },
           "weights": {
             "rendement": 0.242,
             "eau": 0.01,
             "fourrage": 0.002,
             "azote": 0.158,
-            "erosion": 0.771,
+            "erosion": 0.636,
             "matiere_org": 0.061,
             "marche": 0.028,
             "ravageurs": 0.007,
             "reserve": 0.103
           },
           "chosen": {
-            "score": 68.777,
+            "score": 69.046,
             "criteria": {
               "rendement": 0.688,
-              "erosion": 0.673,
+              "erosion": 0.675,
               "eau": 0.562,
               "fourrage": 0.778,
-              "azote": 0.748,
-              "matiere_org": 0.784,
+              "azote": 0.747,
+              "matiere_org": 0.783,
               "marche": 0.525,
               "ravageurs": 0.875,
               "reserve": null
@@ -1984,7 +2021,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2033-05-08",
-                "harvest": "2033-09-02",
+                "harvest": "2033-09-05",
                 "positions": [
                   1,
                   1
@@ -2014,7 +2051,7 @@
                 "crop": "luzerne",
                 "kind": "culture",
                 "sowing": "2035-04-23",
-                "harvest": "2037-09-20",
+                "harvest": "2037-09-21",
                 "positions": [
                   3,
                   5
@@ -2032,14 +2069,14 @@
             "warnings": []
           },
           "reference": {
-            "score": 71.411,
+            "score": 71.391,
             "criteria": {
               "rendement": 0.68,
-              "erosion": 0.728,
+              "erosion": 0.73,
               "eau": 0.556,
               "fourrage": 0.724,
               "azote": 0.73,
-              "matiere_org": 0.742,
+              "matiere_org": 0.741,
               "marche": 0.58,
               "ravageurs": 0.556,
               "reserve": null
@@ -2056,7 +2093,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2033-05-08",
-                "harvest": "2033-09-02",
+                "harvest": "2033-09-05",
                 "positions": [
                   1,
                   1
@@ -2075,7 +2112,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2034-05-16",
-                "harvest": "2034-08-23",
+                "harvest": "2034-08-25",
                 "positions": [
                   2,
                   2
@@ -2086,7 +2123,7 @@
                 "crop": "luzerne",
                 "kind": "culture",
                 "sowing": "2035-04-23",
-                "harvest": "2037-09-20",
+                "harvest": "2037-09-21",
                 "positions": [
                   3,
                   5
@@ -2109,7 +2146,8 @@
                 "kind": "meme-famille",
                 "previous": "soya",
                 "next": "luzerne",
-                "family": "Fabacées"
+                "family": "Fabacées",
+                "disease": null
               },
               "yearsWithout": 0,
               "minimum": 1,
@@ -2126,10 +2164,10 @@
           ],
           "alternatives": [
             {
-              "score": 67.713,
+              "score": 67.658,
               "criteria": {
                 "rendement": 0.681,
-                "erosion": 0.695,
+                "erosion": 0.698,
                 "eau": 0.574,
                 "fourrage": 0.598,
                 "azote": 0.586,
@@ -2151,7 +2189,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2033-05-08",
-                  "harvest": "2033-09-02",
+                  "harvest": "2033-09-05",
                   "positions": [
                     1,
                     1
@@ -2170,7 +2208,7 @@
                   "crop": "soya",
                   "kind": "culture",
                   "sowing": "2034-05-16",
-                  "harvest": "2034-08-23",
+                  "harvest": "2034-08-25",
                   "positions": [
                     2,
                     2
@@ -2181,7 +2219,7 @@
                   "crop": "ble-automne",
                   "kind": "culture",
                   "sowing": "2034-09-16",
-                  "harvest": "2035-07-17",
+                  "harvest": "2035-07-18",
                   "positions": [
                     3,
                     3
@@ -2192,7 +2230,7 @@
                   "crop": "luzerne",
                   "kind": "culture",
                   "sowing": "2036-04-23",
-                  "harvest": "2037-09-20",
+                  "harvest": "2037-09-21",
                   "positions": [
                     4,
                     5
@@ -2210,14 +2248,14 @@
               "warnings": []
             },
             {
-              "score": 67.419,
+              "score": 67.608,
               "criteria": {
                 "rendement": 0.688,
-                "erosion": 0.666,
+                "erosion": 0.668,
                 "eau": 0.547,
-                "fourrage": 0.741,
-                "azote": 0.687,
-                "matiere_org": 0.757,
+                "fourrage": 0.74,
+                "azote": 0.686,
+                "matiere_org": 0.756,
                 "marche": 0.525,
                 "ravageurs": 0.875,
                 "reserve": null
@@ -2244,7 +2282,7 @@
                   "sheet": "seigle-couvert",
                   "crop": "seigle",
                   "kind": "couvert",
-                  "sowing": "2032-09-30",
+                  "sowing": "2032-09-29",
                   "harvest": "2033-05-07",
                   "positions": null
                 },
@@ -2253,7 +2291,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2034-05-08",
-                  "harvest": "2034-09-02",
+                  "harvest": "2034-09-05",
                   "positions": [
                     2,
                     2
@@ -2264,7 +2302,7 @@
                   "crop": "luzerne",
                   "kind": "culture",
                   "sowing": "2035-04-23",
-                  "harvest": "2037-09-20",
+                  "harvest": "2037-09-21",
                   "positions": [
                     3,
                     5
@@ -2319,23 +2357,23 @@
       ],
       "field": {
         "measures": {
-          "slopePct": 3.1,
-          "heavyRainDays": 8,
-          "bareSoilDays": 142,
-          "summerStressIndex": 0.65,
-          "rootZoneDrought": 0.44,
-          "groundwaterTrendCmPerYear": -0.7
+          "slopePct": 5.2,
+          "heavyRainDays": 7.0,
+          "bareSoilDays": 95.0,
+          "summerStressIndex": 0.53,
+          "rootZoneDrought": 0.45,
+          "groundwaterTrendCmPerYear": -1.3
         },
         "soil": {
-          "clayPct": 32,
-          "sandPct": 15,
-          "organicCarbon": 24.7,
+          "clayPct": 24.0,
+          "sandPct": 32.0,
+          "organicCarbon": 19.7,
           "ph": 6.2,
           "source": "SoilGrids 2.0 (fictif)"
         },
         "risksToday": {
-          "erosion": 0.683,
-          "water": 0.317
+          "erosion": 0.714,
+          "water": 0.47
         }
       },
       "cycles": [
@@ -2352,89 +2390,73 @@
             "models": [],
             "lastSpringFrost": {
               "month": 4,
-              "day": 26
+              "day": 23
             },
             "firstFallFrost": {
               "month": 10,
-              "day": 10
+              "day": 8
             },
-            "januaryMinimumC": -13.935,
-            "warmingC": 0.422,
-            "summerRainChangePct": 0,
+            "januaryMinimumC": -14.574,
+            "warmingC": 0.472,
+            "summerRainChangePct": 0.0,
             "harvestAdvanceDays": 1
           },
           "twins": {
-            "sigmaMean": 0.01,
+            "sigmaMean": 0.008,
             "reliable": true,
             "cells": [
               {
-                "lat": 46.129,
-                "lon": -69.948,
-                "sigma": 0.003,
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
                 "lat": 45.129,
-                "lon": -74.448,
-                "sigma": 0.003,
+                "lon": -71.448,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -71.948,
-                "sigma": 0.007,
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
-                "sigma": 0.007,
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.006,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -72.948,
+                "lat": 45.129,
+                "lon": -74.948,
                 "sigma": 0.009,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 46.129,
+                "lon": -71.948,
                 "sigma": 0.01,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -70.948,
-                "sigma": 0.014,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 44.129,
-                "lon": -76.448,
-                "sigma": 0.014,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
                 "lat": 45.629,
-                "lon": -72.448,
-                "sigma": 0.017,
+                "lon": -70.948,
+                "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -2442,7 +2464,23 @@
               {
                 "lat": 45.129,
                 "lon": -73.948,
-                "sigma": 0.02,
+                "sigma": 0.013,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -69.948,
+                "sigma": 0.017,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -2460,28 +2498,28 @@
             ]
           },
           "risks": {
-            "erosion": 0.683,
-            "water": 0.317
+            "erosion": 0.714,
+            "water": 0.47
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.009,
+            "eau": 0.01,
             "fourrage": 0.002,
             "azote": 0.158,
-            "erosion": 0.687,
+            "erosion": 0.7,
             "matiere_org": 0.061,
             "marche": 0.028,
             "ravageurs": 0.007,
             "reserve": 0.103
           },
           "chosen": {
-            "score": 68.555,
+            "score": 68.524,
             "criteria": {
               "rendement": 0.677,
               "erosion": 0.675,
               "eau": 0.561,
               "fourrage": 0.777,
-              "azote": 0.745,
+              "azote": 0.744,
               "matiere_org": 0.782,
               "marche": 0.525,
               "ravageurs": 0.875,
@@ -2499,7 +2537,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2027-05-08",
-                "harvest": "2027-09-08",
+                "harvest": "2027-09-11",
                 "positions": [
                   1,
                   1
@@ -2520,7 +2558,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2027-09-16",
+                "sowing": "2027-09-19",
                 "harvest": "2028-05-08",
                 "positions": null
               },
@@ -2549,17 +2587,17 @@
             "warnings": []
           },
           "reference": {
-            "score": 55.582,
+            "score": 55.799,
             "criteria": {
               "rendement": 0.651,
-              "erosion": 0.522,
-              "eau": 0.524,
+              "erosion": 0.527,
+              "eau": 0.523,
               "fourrage": 0.307,
               "azote": 0.251,
               "matiere_org": 0.477,
               "marche": 0.8,
               "ravageurs": 0.8,
-              "reserve": 1
+              "reserve": 1.0
             },
             "label": "Blé d’automne → Maïs → Soya → Blé d’automne → Maïs",
             "sheets": [
@@ -2586,7 +2624,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2028-05-08",
-                "harvest": "2028-09-08",
+                "harvest": "2028-09-11",
                 "positions": [
                   2,
                   2
@@ -2597,7 +2635,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2029-05-16",
-                "harvest": "2029-08-26",
+                "harvest": "2029-08-29",
                 "positions": [
                   3,
                   3
@@ -2619,7 +2657,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2031-05-08",
-                "harvest": "2031-09-08",
+                "harvest": "2031-09-11",
                 "positions": [
                   5,
                   5
@@ -2639,14 +2677,14 @@
           "referenceAlerts": [],
           "alternatives": [
             {
-              "score": 67.447,
+              "score": 67.496,
               "criteria": {
                 "rendement": 0.677,
-                "erosion": 0.671,
+                "erosion": 0.673,
                 "eau": 0.547,
-                "fourrage": 0.738,
-                "azote": 0.684,
-                "matiere_org": 0.755,
+                "fourrage": 0.737,
+                "azote": 0.682,
+                "matiere_org": 0.754,
                 "marche": 0.525,
                 "ravageurs": 0.875,
                 "reserve": 0.667
@@ -2682,7 +2720,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2028-05-08",
-                  "harvest": "2028-09-08",
+                  "harvest": "2028-09-11",
                   "positions": [
                     2,
                     2
@@ -2713,14 +2751,14 @@
               "warnings": []
             },
             {
-              "score": 66.997,
+              "score": 67.056,
               "criteria": {
                 "rendement": 0.594,
-                "erosion": 0.674,
+                "erosion": 0.676,
                 "eau": 0.561,
                 "fourrage": 0.78,
-                "azote": 0.748,
-                "matiere_org": 0.784,
+                "azote": 0.747,
+                "matiere_org": 0.783,
                 "marche": 0.525,
                 "ravageurs": 0.833,
                 "reserve": 0.667
@@ -2767,7 +2805,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2031-05-08",
-                  "harvest": "2031-09-08",
+                  "harvest": "2031-09-11",
                   "positions": [
                     5,
                     5
@@ -2793,7 +2831,7 @@
             }
           ],
           "removed": [],
-          "robustness": 68.555,
+          "robustness": 68.524,
           "becomesInfeasibleLater": false
         },
         {
@@ -2809,71 +2847,87 @@
             "models": [],
             "lastSpringFrost": {
               "month": 4,
-              "day": 26
+              "day": 21
             },
             "firstFallFrost": {
               "month": 10,
-              "day": 10
+              "day": 8
             },
-            "januaryMinimumC": -13.79,
-            "warmingC": 0.568,
-            "summerRainChangePct": 0,
+            "januaryMinimumC": -14.411,
+            "warmingC": 0.634,
+            "summerRainChangePct": 0.0,
             "harvestAdvanceDays": 2
           },
           "twins": {
-            "sigmaMean": 0.013,
+            "sigmaMean": 0.009,
             "reliable": true,
             "cells": [
               {
-                "lat": 44.629,
-                "lon": -71.948,
-                "sigma": 0.005,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 44.129,
-                "lon": -76.448,
-                "sigma": 0.006,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 46.129,
-                "lon": -69.948,
-                "sigma": 0.006,
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
                 "lat": 45.129,
-                "lon": -74.448,
-                "sigma": 0.007,
+                "lon": -71.448,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 43.629,
-                "lon": -78.948,
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.002,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.005,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.009,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
                 "sigma": 0.012,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
-                "sigma": 0.014,
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
+                "lat": 45.129,
                 "lon": -71.948,
                 "sigma": 0.016,
                 "sources": [
@@ -2881,25 +2935,9 @@
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -72.948,
-                "sigma": 0.02,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
                 "lat": 45.629,
-                "lon": -72.448,
-                "sigma": 0.021,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 45.629,
-                "lon": -75.948,
-                "sigma": 0.024,
+                "lon": -70.948,
+                "sigma": 0.018,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -2917,26 +2955,26 @@
             ]
           },
           "risks": {
-            "erosion": 0.683,
-            "water": 0.317
+            "erosion": 0.714,
+            "water": 0.47
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.009,
+            "eau": 0.01,
             "fourrage": 0.002,
             "azote": 0.158,
-            "erosion": 0.687,
+            "erosion": 0.7,
             "matiere_org": 0.061,
             "marche": 0.028,
             "ravageurs": 0.007,
             "reserve": 0.103
           },
           "chosen": {
-            "score": 69.048,
+            "score": 69.094,
             "criteria": {
               "rendement": 0.688,
-              "erosion": 0.676,
-              "eau": 0.562,
+              "erosion": 0.678,
+              "eau": 0.561,
               "fourrage": 0.778,
               "azote": 0.747,
               "matiere_org": 0.783,
@@ -2956,7 +2994,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2032-05-08",
-                "harvest": "2032-09-05",
+                "harvest": "2032-09-10",
                 "positions": [
                   1,
                   1
@@ -2977,7 +3015,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2032-09-16",
+                "sowing": "2032-09-17",
                 "harvest": "2033-05-08",
                 "positions": null
               },
@@ -2986,7 +3024,7 @@
                 "crop": "luzerne",
                 "kind": "culture",
                 "sowing": "2034-04-23",
-                "harvest": "2036-09-22",
+                "harvest": "2036-09-21",
                 "positions": [
                   3,
                   5
@@ -3004,14 +3042,14 @@
             "warnings": []
           },
           "reference": {
-            "score": 67.165,
+            "score": 67.427,
             "criteria": {
               "rendement": 0.667,
-              "erosion": 0.77,
-              "eau": 0.578,
+              "erosion": 0.772,
+              "eau": 0.577,
               "fourrage": 0.271,
-              "azote": 0.293,
-              "matiere_org": 0.528,
+              "azote": 0.294,
+              "matiere_org": 0.526,
               "marche": 0.78,
               "ravageurs": 0.867,
               "reserve": null
@@ -3029,7 +3067,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2031-09-16",
+                "sowing": "2031-09-19",
                 "harvest": "2032-05-08",
                 "positions": null
               },
@@ -3038,7 +3076,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2032-05-16",
-                "harvest": "2032-08-25",
+                "harvest": "2032-08-28",
                 "positions": [
                   1,
                   1
@@ -3049,7 +3087,7 @@
                 "crop": "ble-automne",
                 "kind": "culture",
                 "sowing": "2032-09-16",
-                "harvest": "2033-07-19",
+                "harvest": "2033-07-18",
                 "positions": [
                   2,
                   2
@@ -3060,7 +3098,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2034-05-08",
-                "harvest": "2034-09-05",
+                "harvest": "2034-09-10",
                 "positions": [
                   3,
                   3
@@ -3070,7 +3108,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2034-09-16",
+                "sowing": "2034-09-17",
                 "harvest": "2035-05-08",
                 "positions": null
               },
@@ -3079,7 +3117,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2035-05-16",
-                "harvest": "2035-08-25",
+                "harvest": "2035-08-28",
                 "positions": [
                   4,
                   4
@@ -3090,7 +3128,7 @@
                 "crop": "ble-automne",
                 "kind": "culture",
                 "sowing": "2035-09-16",
-                "harvest": "2036-07-19",
+                "harvest": "2036-07-18",
                 "positions": [
                   5,
                   5
@@ -3106,7 +3144,9 @@
               "reason": {
                 "kind": "meme-culture",
                 "previous": "soya",
-                "next": "soya"
+                "next": "soya",
+                "family": null,
+                "disease": null
               },
               "yearsWithout": 1,
               "minimum": 2,
@@ -3123,14 +3163,14 @@
           ],
           "alternatives": [
             {
-              "score": 67.846,
+              "score": 68.029,
               "criteria": {
                 "rendement": 0.681,
-                "erosion": 0.7,
-                "eau": 0.574,
+                "erosion": 0.703,
+                "eau": 0.573,
                 "fourrage": 0.598,
                 "azote": 0.586,
-                "matiere_org": 0.688,
+                "matiere_org": 0.687,
                 "marche": 0.64,
                 "ravageurs": 0.833,
                 "reserve": null
@@ -3148,7 +3188,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2032-05-08",
-                  "harvest": "2032-09-05",
+                  "harvest": "2032-09-10",
                   "positions": [
                     1,
                     1
@@ -3158,7 +3198,7 @@
                   "sheet": "seigle-couvert",
                   "crop": "seigle",
                   "kind": "couvert",
-                  "sowing": "2032-09-16",
+                  "sowing": "2032-09-17",
                   "harvest": "2033-05-08",
                   "positions": null
                 },
@@ -3167,7 +3207,7 @@
                   "crop": "soya",
                   "kind": "culture",
                   "sowing": "2033-05-16",
-                  "harvest": "2033-08-25",
+                  "harvest": "2033-08-28",
                   "positions": [
                     2,
                     2
@@ -3178,7 +3218,7 @@
                   "crop": "ble-automne",
                   "kind": "culture",
                   "sowing": "2033-09-16",
-                  "harvest": "2034-07-19",
+                  "harvest": "2034-07-18",
                   "positions": [
                     3,
                     3
@@ -3189,7 +3229,7 @@
                   "crop": "luzerne",
                   "kind": "culture",
                   "sowing": "2035-04-23",
-                  "harvest": "2036-09-22",
+                  "harvest": "2036-09-21",
                   "positions": [
                     4,
                     5
@@ -3207,14 +3247,14 @@
               "warnings": []
             },
             {
-              "score": 67.639,
+              "score": 67.719,
               "criteria": {
                 "rendement": 0.688,
-                "erosion": 0.669,
-                "eau": 0.547,
-                "fourrage": 0.74,
-                "azote": 0.686,
-                "matiere_org": 0.756,
+                "erosion": 0.671,
+                "eau": 0.546,
+                "fourrage": 0.739,
+                "azote": 0.684,
+                "matiere_org": 0.755,
                 "marche": 0.525,
                 "ravageurs": 0.875,
                 "reserve": null
@@ -3250,7 +3290,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2033-05-08",
-                  "harvest": "2033-09-05",
+                  "harvest": "2033-09-10",
                   "positions": [
                     2,
                     2
@@ -3261,7 +3301,7 @@
                   "crop": "luzerne",
                   "kind": "culture",
                   "sowing": "2034-04-23",
-                  "harvest": "2036-09-22",
+                  "harvest": "2036-09-21",
                   "positions": [
                     3,
                     5
@@ -3316,23 +3356,23 @@
       ],
       "field": {
         "measures": {
-          "slopePct": 5.2,
-          "heavyRainDays": 7,
-          "bareSoilDays": 142,
-          "summerStressIndex": 0.55,
-          "rootZoneDrought": 0.51,
-          "groundwaterTrendCmPerYear": -1
+          "slopePct": 7.3,
+          "heavyRainDays": 6.0,
+          "bareSoilDays": 124.0,
+          "summerStressIndex": 0.66,
+          "rootZoneDrought": 0.47,
+          "groundwaterTrendCmPerYear": -1.0
         },
         "soil": {
-          "clayPct": 22,
-          "sandPct": 25,
-          "organicCarbon": 27.2,
+          "clayPct": 29.0,
+          "sandPct": 16.0,
+          "organicCarbon": 25.5,
           "ph": 6.1,
           "source": "SoilGrids 2.0 (fictif)"
         },
         "risksToday": {
-          "erosion": 0.777,
-          "water": 0.453
+          "erosion": 0.847,
+          "water": 0.331
         }
       },
       "cycles": [
@@ -3349,89 +3389,73 @@
             "models": [],
             "lastSpringFrost": {
               "month": 4,
-              "day": 26
+              "day": 23
             },
             "firstFallFrost": {
               "month": 10,
-              "day": 10
+              "day": 8
             },
-            "januaryMinimumC": -13.935,
-            "warmingC": 0.422,
-            "summerRainChangePct": 0,
+            "januaryMinimumC": -14.574,
+            "warmingC": 0.472,
+            "summerRainChangePct": 0.0,
             "harvestAdvanceDays": 1
           },
           "twins": {
-            "sigmaMean": 0.01,
+            "sigmaMean": 0.008,
             "reliable": true,
             "cells": [
               {
-                "lat": 46.129,
-                "lon": -69.948,
-                "sigma": 0.003,
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
                 "lat": 45.129,
-                "lon": -74.448,
-                "sigma": 0.003,
+                "lon": -71.448,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -71.948,
-                "sigma": 0.007,
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
-                "sigma": 0.007,
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.006,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -72.948,
+                "lat": 45.129,
+                "lon": -74.948,
                 "sigma": 0.009,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 46.129,
+                "lon": -71.948,
                 "sigma": 0.01,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -70.948,
-                "sigma": 0.014,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 44.129,
-                "lon": -76.448,
-                "sigma": 0.014,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
                 "lat": 45.629,
-                "lon": -72.448,
-                "sigma": 0.017,
+                "lon": -70.948,
+                "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -3439,7 +3463,23 @@
               {
                 "lat": 45.129,
                 "lon": -73.948,
-                "sigma": 0.02,
+                "sigma": 0.013,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.015,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 46.129,
+                "lon": -69.948,
+                "sigma": 0.017,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -3457,28 +3497,28 @@
             ]
           },
           "risks": {
-            "erosion": 0.777,
-            "water": 0.453
+            "erosion": 0.847,
+            "water": 0.331
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.01,
+            "eau": 0.009,
             "fourrage": 0.002,
             "azote": 0.158,
-            "erosion": 0.726,
+            "erosion": 0.754,
             "matiere_org": 0.061,
             "marche": 0.028,
             "ravageurs": 0.007,
             "reserve": 0.103
           },
           "chosen": {
-            "score": 66.037,
+            "score": 65.994,
             "criteria": {
               "rendement": 0.656,
               "erosion": 0.642,
-              "eau": 0.556,
-              "fourrage": 0.764,
-              "azote": 0.724,
+              "eau": 0.555,
+              "fourrage": 0.765,
+              "azote": 0.723,
               "matiere_org": 0.773,
               "marche": 0.525,
               "ravageurs": 0.875,
@@ -3496,7 +3536,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2027-05-08",
-                "harvest": "2027-09-08",
+                "harvest": "2027-09-11",
                 "positions": [
                   1,
                   1
@@ -3517,7 +3557,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2027-09-16",
+                "sowing": "2027-09-19",
                 "harvest": "2028-05-08",
                 "positions": null
               },
@@ -3546,17 +3586,17 @@
             "warnings": []
           },
           "reference": {
-            "score": 49.847,
+            "score": 49.888,
             "criteria": {
               "rendement": 0.688,
-              "erosion": 0.391,
+              "erosion": 0.396,
               "eau": 0.49,
               "fourrage": 0.269,
               "azote": 0.344,
               "matiere_org": 0.404,
               "marche": 0.82,
               "ravageurs": 0.867,
-              "reserve": 1
+              "reserve": 1.0
             },
             "label": "Maïs → Soya → Blé d’automne → Maïs → Soya",
             "sheets": [
@@ -3572,7 +3612,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2027-05-08",
-                "harvest": "2027-09-08",
+                "harvest": "2027-09-11",
                 "positions": [
                   1,
                   1
@@ -3583,7 +3623,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2028-05-16",
-                "harvest": "2028-08-26",
+                "harvest": "2028-08-29",
                 "positions": [
                   2,
                   2
@@ -3605,7 +3645,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2030-05-08",
-                "harvest": "2030-09-08",
+                "harvest": "2030-09-11",
                 "positions": [
                   4,
                   4
@@ -3616,7 +3656,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2031-05-16",
-                "harvest": "2031-08-26",
+                "harvest": "2031-08-29",
                 "positions": [
                   5,
                   5
@@ -3641,7 +3681,9 @@
               "reason": {
                 "kind": "meme-culture",
                 "previous": "soya",
-                "next": "soya"
+                "next": "soya",
+                "family": null,
+                "disease": null
               },
               "yearsWithout": 1,
               "minimum": 2,
@@ -3658,36 +3700,27 @@
           ],
           "alternatives": [
             {
-              "score": 65.503,
+              "score": 65.715,
               "criteria": {
-                "rendement": 0.594,
-                "erosion": 0.649,
-                "eau": 0.563,
-                "fourrage": 0.761,
-                "azote": 0.737,
-                "matiere_org": 0.778,
-                "marche": 0.525,
-                "ravageurs": 0.875,
-                "reserve": 0.667
+                "rendement": 0.5,
+                "erosion": 0.786,
+                "eau": 0.643,
+                "fourrage": 0.222,
+                "azote": 0.294,
+                "matiere_org": 0.579,
+                "marche": 0.55,
+                "ravageurs": 0.833,
+                "reserve": 0.714
               },
-              "label": "(seigle) → Jachère → Luzerne ×3 [3 pos.] → Maïs",
+              "label": "(seigle) → Sarrasin → Blé d’automne (+ seigle) → Sarrasin (+ seigle) → Jachère → Blé d’automne",
               "sheets": [
+                "sarrasin",
+                "ble-automne",
+                "sarrasin",
                 "jachere",
-                "luzerne-3",
-                "mais"
+                "ble-automne"
               ],
               "steps": [
-                {
-                  "sheet": "jachere",
-                  "crop": "jachere",
-                  "kind": "jachere",
-                  "sowing": null,
-                  "harvest": null,
-                  "positions": [
-                    1,
-                    1
-                  ]
-                },
                 {
                   "sheet": "seigle-couvert",
                   "crop": "seigle",
@@ -3697,22 +3730,71 @@
                   "positions": null
                 },
                 {
-                  "sheet": "luzerne-3",
-                  "crop": "luzerne",
+                  "sheet": "sarrasin",
+                  "crop": "sarrasin",
                   "kind": "culture",
-                  "sowing": "2028-04-23",
-                  "harvest": "2030-09-22",
+                  "sowing": "2027-06-16",
+                  "harvest": "2027-08-13",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
+                  "kind": "culture",
+                  "sowing": "2027-09-16",
+                  "harvest": "2028-07-19",
                   "positions": [
                     2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2028-09-16",
+                  "harvest": "2029-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "sarrasin",
+                  "crop": "sarrasin",
+                  "kind": "culture",
+                  "sowing": "2029-06-16",
+                  "harvest": "2029-08-13",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "jachere",
+                  "crop": "jachere",
+                  "kind": "jachere",
+                  "sowing": null,
+                  "harvest": null,
+                  "positions": [
+                    4,
                     4
                   ]
                 },
                 {
-                  "sheet": "mais",
-                  "crop": "mais",
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
                   "kind": "culture",
-                  "sowing": "2031-05-08",
-                  "harvest": "2031-09-08",
+                  "sowing": "2030-09-16",
+                  "harvest": "2031-07-19",
                   "positions": [
                     5,
                     5
@@ -3722,51 +3804,42 @@
               "gaps": [
                 {
                   "previous": "ble-automne",
-                  "next": "luzerne",
-                  "message": "Blé d’automne → Luzerne"
+                  "next": "sarrasin",
+                  "message": "Blé d’automne → Sarrasin"
                 },
                 {
-                  "previous": "mais",
-                  "next": "luzerne",
-                  "message": "Maïs → Luzerne"
+                  "previous": "sarrasin",
+                  "next": "ble-automne",
+                  "message": "Sarrasin → Blé d’automne"
                 }
               ],
               "seedsToBuy": [
-                "luzerne"
+                "sarrasin"
               ],
               "warnings": []
             },
             {
-              "score": 65.336,
+              "score": 65.715,
               "criteria": {
-                "rendement": 0.656,
-                "erosion": 0.642,
-                "eau": 0.549,
-                "fourrage": 0.72,
-                "azote": 0.675,
-                "matiere_org": 0.75,
-                "marche": 0.525,
-                "ravageurs": 0.875,
-                "reserve": 0.667
+                "rendement": 0.5,
+                "erosion": 0.786,
+                "eau": 0.643,
+                "fourrage": 0.222,
+                "azote": 0.294,
+                "matiere_org": 0.579,
+                "marche": 0.55,
+                "ravageurs": 0.833,
+                "reserve": 0.714
               },
-              "label": "(seigle) → Jachère → Maïs → Luzerne ×3 [3 pos.]",
+              "label": "(seigle) → Sarrasin (+ seigle) → Jachère → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
               "sheets": [
+                "sarrasin",
                 "jachere",
-                "mais",
-                "luzerne-3"
+                "ble-automne",
+                "sarrasin",
+                "ble-automne"
               ],
               "steps": [
-                {
-                  "sheet": "jachere",
-                  "crop": "jachere",
-                  "kind": "jachere",
-                  "sowing": null,
-                  "harvest": null,
-                  "positions": [
-                    1,
-                    1
-                  ]
-                },
                 {
                   "sheet": "seigle-couvert",
                   "crop": "seigle",
@@ -3776,43 +3849,97 @@
                   "positions": null
                 },
                 {
-                  "sheet": "mais",
-                  "crop": "mais",
+                  "sheet": "sarrasin",
+                  "crop": "sarrasin",
                   "kind": "culture",
-                  "sowing": "2028-05-08",
-                  "harvest": "2028-09-08",
+                  "sowing": "2027-06-16",
+                  "harvest": "2027-08-13",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "jachere",
+                  "crop": "jachere",
+                  "kind": "jachere",
+                  "sowing": null,
+                  "harvest": null,
                   "positions": [
                     2,
                     2
                   ]
                 },
                 {
-                  "sheet": "luzerne-3",
-                  "crop": "luzerne",
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2027-09-16",
+                  "harvest": "2028-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
                   "kind": "culture",
-                  "sowing": "2029-04-23",
-                  "harvest": "2031-09-22",
+                  "sowing": "2028-09-16",
+                  "harvest": "2029-07-19",
                   "positions": [
                     3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "sarrasin",
+                  "crop": "sarrasin",
+                  "kind": "culture",
+                  "sowing": "2030-06-16",
+                  "harvest": "2030-08-13",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
+                  "kind": "culture",
+                  "sowing": "2030-09-16",
+                  "harvest": "2031-07-19",
+                  "positions": [
+                    5,
                     5
                   ]
                 }
               ],
               "gaps": [
                 {
-                  "previous": "mais",
-                  "next": "luzerne",
-                  "message": "Maïs → Luzerne"
+                  "previous": "ble-automne",
+                  "next": "sarrasin",
+                  "message": "Blé d’automne → Sarrasin"
+                },
+                {
+                  "previous": "sarrasin",
+                  "next": "ble-automne",
+                  "message": "Sarrasin → Blé d’automne"
                 }
               ],
               "seedsToBuy": [
-                "luzerne"
+                "sarrasin"
               ],
               "warnings": []
             }
           ],
           "removed": [],
-          "robustness": 66.037,
+          "robustness": 65.994,
           "becomesInfeasibleLater": false
         },
         {
@@ -3828,71 +3955,87 @@
             "models": [],
             "lastSpringFrost": {
               "month": 4,
-              "day": 26
+              "day": 21
             },
             "firstFallFrost": {
               "month": 10,
-              "day": 10
+              "day": 8
             },
-            "januaryMinimumC": -13.79,
-            "warmingC": 0.568,
-            "summerRainChangePct": 0,
+            "januaryMinimumC": -14.411,
+            "warmingC": 0.634,
+            "summerRainChangePct": 0.0,
             "harvestAdvanceDays": 2
           },
           "twins": {
-            "sigmaMean": 0.013,
+            "sigmaMean": 0.009,
             "reliable": true,
             "cells": [
               {
-                "lat": 44.629,
-                "lon": -71.948,
-                "sigma": 0.005,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 44.129,
-                "lon": -76.448,
-                "sigma": 0.006,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 46.129,
-                "lon": -69.948,
-                "sigma": 0.006,
+                "lat": 45.629,
+                "lon": -72.948,
+                "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
                 "lat": 45.129,
-                "lon": -74.448,
-                "sigma": 0.007,
+                "lon": -71.448,
+                "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 43.629,
-                "lon": -78.948,
+                "lat": 45.129,
+                "lon": -70.948,
+                "sigma": 0.002,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -70.448,
+                "sigma": 0.005,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -73.948,
+                "sigma": 0.009,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 44.629,
+                "lon": -71.948,
+                "sigma": 0.011,
+                "sources": [
+                  "NASA POWER"
+                ]
+              },
+              {
+                "lat": 45.129,
+                "lon": -74.948,
                 "sigma": 0.012,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
-                "sigma": 0.014,
+                "lat": 46.129,
+                "lon": -71.948,
+                "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
+                "lat": 45.129,
                 "lon": -71.948,
                 "sigma": 0.016,
                 "sources": [
@@ -3900,25 +4043,9 @@
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -72.948,
-                "sigma": 0.02,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
                 "lat": 45.629,
-                "lon": -72.448,
-                "sigma": 0.021,
-                "sources": [
-                  "NASA POWER"
-                ]
-              },
-              {
-                "lat": 45.629,
-                "lon": -75.948,
-                "sigma": 0.024,
+                "lon": -70.948,
+                "sigma": 0.018,
                 "sources": [
                   "NASA POWER"
                 ]
@@ -3936,26 +4063,26 @@
             ]
           },
           "risks": {
-            "erosion": 0.777,
-            "water": 0.453
+            "erosion": 0.847,
+            "water": 0.331
           },
           "weights": {
             "rendement": 0.242,
-            "eau": 0.01,
+            "eau": 0.009,
             "fourrage": 0.002,
             "azote": 0.158,
-            "erosion": 0.726,
+            "erosion": 0.754,
             "matiere_org": 0.061,
             "marche": 0.028,
             "ravageurs": 0.007,
             "reserve": 0.103
           },
           "chosen": {
-            "score": 68.994,
+            "score": 69.048,
             "criteria": {
               "rendement": 0.688,
-              "erosion": 0.676,
-              "eau": 0.562,
+              "erosion": 0.678,
+              "eau": 0.561,
               "fourrage": 0.778,
               "azote": 0.747,
               "matiere_org": 0.783,
@@ -3975,7 +4102,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2032-05-08",
-                "harvest": "2032-09-05",
+                "harvest": "2032-09-10",
                 "positions": [
                   1,
                   1
@@ -3996,7 +4123,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2032-09-16",
+                "sowing": "2032-09-17",
                 "harvest": "2033-05-08",
                 "positions": null
               },
@@ -4005,7 +4132,7 @@
                 "crop": "luzerne",
                 "kind": "culture",
                 "sowing": "2034-04-23",
-                "harvest": "2036-09-22",
+                "harvest": "2036-09-21",
                 "positions": [
                   3,
                   5
@@ -4023,14 +4150,14 @@
             "warnings": []
           },
           "reference": {
-            "score": 58.852,
+            "score": 59.254,
             "criteria": {
               "rendement": 0.651,
-              "erosion": 0.645,
-              "eau": 0.54,
+              "erosion": 0.65,
+              "eau": 0.538,
               "fourrage": 0.32,
               "azote": 0.211,
-              "matiere_org": 0.531,
+              "matiere_org": 0.53,
               "marche": 0.8,
               "ravageurs": 0.867,
               "reserve": null
@@ -4049,7 +4176,7 @@
                 "crop": "ble-automne",
                 "kind": "culture",
                 "sowing": "2031-09-16",
-                "harvest": "2032-07-19",
+                "harvest": "2032-07-18",
                 "positions": [
                   1,
                   1
@@ -4060,7 +4187,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2033-05-08",
-                "harvest": "2033-09-05",
+                "harvest": "2033-09-10",
                 "positions": [
                   2,
                   2
@@ -4070,7 +4197,7 @@
                 "sheet": "seigle-couvert",
                 "crop": "seigle",
                 "kind": "couvert",
-                "sowing": "2033-09-16",
+                "sowing": "2033-09-17",
                 "harvest": "2034-05-08",
                 "positions": null
               },
@@ -4079,7 +4206,7 @@
                 "crop": "soya",
                 "kind": "culture",
                 "sowing": "2034-05-16",
-                "harvest": "2034-08-25",
+                "harvest": "2034-08-28",
                 "positions": [
                   3,
                   3
@@ -4090,7 +4217,7 @@
                 "crop": "ble-automne",
                 "kind": "culture",
                 "sowing": "2034-09-16",
-                "harvest": "2035-07-19",
+                "harvest": "2035-07-18",
                 "positions": [
                   4,
                   4
@@ -4101,7 +4228,7 @@
                 "crop": "mais",
                 "kind": "culture",
                 "sowing": "2036-05-08",
-                "harvest": "2036-09-05",
+                "harvest": "2036-09-10",
                 "positions": [
                   5,
                   5
@@ -4121,14 +4248,14 @@
           "referenceAlerts": [],
           "alternatives": [
             {
-              "score": 67.904,
+              "score": 68.133,
               "criteria": {
                 "rendement": 0.681,
-                "erosion": 0.7,
-                "eau": 0.574,
+                "erosion": 0.703,
+                "eau": 0.573,
                 "fourrage": 0.598,
                 "azote": 0.586,
-                "matiere_org": 0.688,
+                "matiere_org": 0.687,
                 "marche": 0.64,
                 "ravageurs": 0.833,
                 "reserve": null
@@ -4146,7 +4273,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2032-05-08",
-                  "harvest": "2032-09-05",
+                  "harvest": "2032-09-10",
                   "positions": [
                     1,
                     1
@@ -4156,7 +4283,7 @@
                   "sheet": "seigle-couvert",
                   "crop": "seigle",
                   "kind": "couvert",
-                  "sowing": "2032-09-16",
+                  "sowing": "2032-09-17",
                   "harvest": "2033-05-08",
                   "positions": null
                 },
@@ -4165,7 +4292,7 @@
                   "crop": "soya",
                   "kind": "culture",
                   "sowing": "2033-05-16",
-                  "harvest": "2033-08-25",
+                  "harvest": "2033-08-28",
                   "positions": [
                     2,
                     2
@@ -4176,7 +4303,7 @@
                   "crop": "ble-automne",
                   "kind": "culture",
                   "sowing": "2033-09-16",
-                  "harvest": "2034-07-19",
+                  "harvest": "2034-07-18",
                   "positions": [
                     3,
                     3
@@ -4187,7 +4314,7 @@
                   "crop": "luzerne",
                   "kind": "culture",
                   "sowing": "2035-04-23",
-                  "harvest": "2036-09-22",
+                  "harvest": "2036-09-21",
                   "positions": [
                     4,
                     5
@@ -4205,14 +4332,14 @@
               "warnings": []
             },
             {
-              "score": 67.605,
+              "score": 67.704,
               "criteria": {
                 "rendement": 0.688,
-                "erosion": 0.669,
-                "eau": 0.547,
-                "fourrage": 0.74,
-                "azote": 0.686,
-                "matiere_org": 0.756,
+                "erosion": 0.671,
+                "eau": 0.546,
+                "fourrage": 0.739,
+                "azote": 0.684,
+                "matiere_org": 0.755,
                 "marche": 0.525,
                 "ravageurs": 0.875,
                 "reserve": null
@@ -4248,7 +4375,7 @@
                   "crop": "mais",
                   "kind": "culture",
                   "sowing": "2033-05-08",
-                  "harvest": "2033-09-05",
+                  "harvest": "2033-09-10",
                   "positions": [
                     2,
                     2
@@ -4259,7 +4386,7 @@
                   "crop": "luzerne",
                   "kind": "culture",
                   "sowing": "2034-04-23",
-                  "harvest": "2036-09-22",
+                  "harvest": "2036-09-21",
                   "positions": [
                     3,
                     5

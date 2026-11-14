@@ -5,7 +5,7 @@ import { icon, ICONS } from './icons.js';
 import { demoBadge, logo } from './widgets.js';
 
 export function isDemo(state) {
-  return state.plan.data?.meta?.demo ?? state.engineName === 'mock';
+  return state.plan.data?.meta?.demo ?? false;
 }
 
 export function appHeader(state, active) {

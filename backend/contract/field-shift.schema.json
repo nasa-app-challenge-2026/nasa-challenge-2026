@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "field-shift",
   "title": "Field Shift · contrat entre le front end et l'algorithme",
-  "description": "Version 2.0 (algorithme field_shift v5.1). Une opération : planFarm (POST /plan en mode distant). Voir docs/ALGO_CONTRACT.md.",
+  "description": "Version 2.0 (algorithme field_shift v5.1). Une opération : planFarm (POST /plan du serveur FastAPI). Voir docs/ALGO_CONTRACT.md.",
   "definitions": {
     "SheetId": {
       "description": "Fiche de culture de l'algorithme (data/reference/crops.js, CROP_SHEETS).",
@@ -67,14 +67,43 @@
       ]
     },
     "DiseaseId": {
-      "description": "Maladie du sol (data/reference/returnDelays.js, SOIL_DISEASES).",
-      "type": "string"
+      "description": "Maladie du sol (SARE, annexe 3) : voir server/field_shift/reference/return_delays.py.",
+      "enum": [
+        "moisissure-blanche",
+        "hernie-cruciferes",
+        "jambe-noire",
+        "pourriture-noire",
+        "gale-commune",
+        "fusariose",
+        "pourriture-brune",
+        "nematode-kyste-soya",
+        "pourridies-legumineuses",
+        "anthracnose-luzerne",
+        "tache-profonde",
+        "septoriose-celeri",
+        "brulure-botrytique",
+        "mildiou-laitue",
+        "mildiou-epinard",
+        "cercosporiose-betterave",
+        "anthracnose-cucurbitacees",
+        "fletrissure-cucurbitacees",
+        "septoriose-tomate",
+        "fletrissure-tomate"
+      ]
     },
-    "YearMonth": { "type": "string", "pattern": "^\\d{4}-\\d{2}$" },
-    "IsoDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "YearMonth": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}$"
+    },
+    "IsoDate": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
     "Point": {
       "type": "array",
-      "items": { "type": "number" },
+      "items": {
+        "type": "number"
+      },
       "minItems": 2,
       "maxItems": 2
     },
@@ -82,21 +111,48 @@
       "type": "object",
       "required": ["id", "areaHa", "currentCrop", "currentRotation"],
       "properties": {
-        "id": { "type": "string", "minLength": 1, "maxLength": 3 },
-        "areaHa": { "type": "number", "exclusiveMinimum": 0 },
-        "note": { "type": "string" },
-        "polygon": { "type": "array", "items": { "$ref": "#/definitions/Point" } },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 3
+        },
+        "areaHa": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "note": {
+          "type": "string"
+        },
+        "polygon": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Point"
+          }
+        },
         "currentCrop": {
           "description": "Culture en place : une fiche (luzerne-3…) ou une autre culture, null = parcelle libre.",
           "anyOf": [
-            { "$ref": "#/definitions/SheetId" },
-            { "$ref": "#/definitions/CropId" },
-            { "type": "null" }
+            {
+              "$ref": "#/definitions/SheetId"
+            },
+            {
+              "$ref": "#/definitions/CropId"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "currentHarvest": {
           "description": "Mois de récolte (ou de fin pour une pérenne) de la culture en place.",
-          "anyOf": [{ "$ref": "#/definitions/YearMonth" }, { "type": "null" }]
+          "anyOf": [
+            {
+              "$ref": "#/definitions/YearMonth"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "history": {
           "type": "array",
@@ -104,26 +160,69 @@
             "type": "object",
             "required": ["year", "crop"],
             "properties": {
-              "year": { "type": "integer" },
-              "crop": { "anyOf": [{ "$ref": "#/definitions/CropId" }, { "type": "null" }] }
+              "year": {
+                "type": "integer"
+              },
+              "crop": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/CropId"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
             }
           }
         },
-        "currentRotation": { "type": "array", "items": { "$ref": "#/definitions/SheetId" } },
-        "rotationPosition": { "type": "integer", "minimum": 0 },
-        "diseases": { "type": "array", "items": { "$ref": "#/definitions/DiseaseId" } },
-        "irrigated": { "type": "boolean" },
+        "currentRotation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SheetId"
+          }
+        },
+        "rotationPosition": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "diseases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DiseaseId"
+          }
+        },
+        "irrigated": {
+          "type": "boolean"
+        },
         "soilTest": {
           "anyOf": [
-            { "type": "null" },
+            {
+              "type": "null"
+            },
             {
               "type": "object",
               "required": ["clayPct", "sandPct", "organicCarbon", "ph"],
               "properties": {
-                "clayPct": { "type": "number", "minimum": 0, "maximum": 100 },
-                "sandPct": { "type": "number", "minimum": 0, "maximum": 100 },
-                "organicCarbon": { "type": "number", "exclusiveMinimum": 0 },
-                "ph": { "type": "number", "minimum": 3, "maximum": 10 }
+                "clayPct": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "sandPct": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "organicCarbon": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "ph": {
+                  "type": "number",
+                  "minimum": 3,
+                  "maximum": 10
+                }
               }
             }
           ]
@@ -134,81 +233,183 @@
       "type": "object",
       "required": ["version", "farm", "sections"],
       "properties": {
-        "version": { "const": "2.0" },
-        "today": { "$ref": "#/definitions/IsoDate" },
+        "version": {
+          "const": "2.0"
+        },
+        "today": {
+          "$ref": "#/definitions/IsoDate"
+        },
         "farm": {
           "type": "object",
           "required": ["type", "location", "time", "priorities", "seeds"],
           "properties": {
-            "id": { "type": "string" },
-            "name": { "type": "string" },
-            "type": { "const": "grandes-cultures" },
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "type": {
+              "const": "grandes-cultures"
+            },
             "location": {
               "type": "object",
               "required": ["lat", "lon"],
               "properties": {
-                "lat": { "type": "number", "minimum": -90, "maximum": 90 },
-                "lon": { "type": "number", "minimum": -180, "maximum": 180 },
-                "label": { "type": "string" }
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180
+                },
+                "label": {
+                  "type": "string"
+                }
               }
             },
-            "boundary": { "type": "array", "items": { "$ref": "#/definitions/Point" } },
+            "boundary": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Point"
+              }
+            },
             "time": {
               "type": "object",
               "required": ["cycleYears", "frequencyMonths", "horizonYears"],
               "properties": {
-                "cycleYears": { "type": "integer", "minimum": 2, "maximum": 6 },
-                "frequencyMonths": { "enum": [12, 6, 4] },
-                "horizonYears": { "type": "integer", "minimum": 2 }
+                "cycleYears": {
+                  "type": "integer",
+                  "minimum": 2,
+                  "maximum": 6
+                },
+                "frequencyMonths": {
+                  "enum": [12, 6, 4]
+                },
+                "horizonYears": {
+                  "type": "integer",
+                  "minimum": 2
+                }
               }
             },
             "priorities": {
               "type": "array",
               "uniqueItems": true,
-              "items": { "$ref": "#/definitions/CriterionId" }
+              "items": {
+                "$ref": "#/definitions/CriterionId"
+              }
             },
-            "livestock": { "type": "boolean" },
-            "missingEquipment": { "type": "array", "items": { "enum": ["fourragere"] } },
+            "livestock": {
+              "type": "boolean"
+            },
+            "missingEquipment": {
+              "type": "array",
+              "items": {
+                "enum": ["fourragere"]
+              }
+            },
             "seeds": {
               "type": "object",
               "required": ["crops", "mode"],
               "properties": {
-                "crops": { "type": "array", "items": { "$ref": "#/definitions/CropId" } },
-                "mode": { "enum": ["preferer", "uniquement"] }
+                "crops": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/CropId"
+                  }
+                },
+                "mode": {
+                  "enum": ["preferer", "uniquement"]
+                }
               }
             }
           }
         },
-        "sections": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/Section" } }
+        "sections": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Section"
+          }
+        }
       }
     },
-    "Score": { "type": "number", "minimum": 0, "maximum": 100 },
-    "Ratio": { "anyOf": [{ "type": "number", "minimum": 0, "maximum": 1 }, { "type": "null" }] },
+    "Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "Ratio": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "Step": {
       "type": "object",
       "required": ["sheet", "crop", "kind", "sowing", "harvest", "positions"],
       "properties": {
-        "sheet": { "$ref": "#/definitions/SheetId" },
-        "crop": { "$ref": "#/definitions/CropId" },
-        "kind": { "enum": ["culture", "couvert", "jachere"] },
-        "sowing": { "anyOf": [{ "$ref": "#/definitions/IsoDate" }, { "type": "null" }] },
-        "harvest": { "anyOf": [{ "$ref": "#/definitions/IsoDate" }, { "type": "null" }] },
+        "sheet": {
+          "$ref": "#/definitions/SheetId"
+        },
+        "crop": {
+          "$ref": "#/definitions/CropId"
+        },
+        "kind": {
+          "enum": ["culture", "couvert", "jachere"]
+        },
+        "sowing": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IsoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "harvest": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IsoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "positions": {
           "anyOf": [
             {
               "type": "array",
-              "items": { "type": "integer", "minimum": 1 },
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              },
               "minItems": 2,
               "maxItems": 2
             },
-            { "type": "null" }
+            {
+              "type": "null"
+            }
           ]
         }
       }
     },
     "Chain": {
       "anyOf": [
-        { "type": "null" },
+        {
+          "type": "null"
+        },
         {
           "type": "object",
           "required": [
@@ -222,20 +423,50 @@
             "warnings"
           ],
           "properties": {
-            "score": { "$ref": "#/definitions/Score" },
+            "score": {
+              "$ref": "#/definitions/Score"
+            },
             "criteria": {
               "type": "object",
-              "additionalProperties": { "$ref": "#/definitions/Ratio" }
+              "additionalProperties": {
+                "$ref": "#/definitions/Ratio"
+              }
             },
-            "label": { "type": "string" },
-            "sheets": { "type": "array", "items": { "$ref": "#/definitions/SheetId" } },
-            "steps": { "type": "array", "items": { "$ref": "#/definitions/Step" } },
+            "label": {
+              "type": "string"
+            },
+            "sheets": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SheetId"
+              }
+            },
+            "steps": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Step"
+              }
+            },
             "gaps": {
               "type": "array",
-              "items": { "type": "object", "required": ["previous", "next", "message"] }
+              "items": {
+                "type": "object",
+                "required": ["previous", "next", "message"]
+              }
             },
-            "seedsToBuy": { "type": "array", "items": { "$ref": "#/definitions/CropId" } },
-            "warnings": { "type": "array", "items": { "type": "object", "required": ["message"] } }
+            "seedsToBuy": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CropId"
+              }
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["message"]
+              }
+            }
           }
         }
       ]
@@ -246,11 +477,21 @@
           "type": "object",
           "required": ["month", "day"],
           "properties": {
-            "month": { "type": "integer", "minimum": 1, "maximum": 12 },
-            "day": { "type": "integer", "minimum": 1, "maximum": 31 }
+            "month": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12
+            },
+            "day": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 31
+            }
           }
         },
-        { "type": "null" }
+        {
+          "type": "null"
+        }
       ]
     },
     "Cycle": {
@@ -271,69 +512,147 @@
         "becomesInfeasibleLater"
       ],
       "properties": {
-        "index": { "type": "integer", "minimum": 1 },
-        "years": { "type": "array", "items": { "type": "integer" }, "minItems": 2, "maxItems": 2 },
-        "decision": { "enum": ["garder", "changer", "aucune"] },
+        "index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "years": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "decision": {
+          "enum": ["garder", "changer", "aucune"]
+        },
         "climate": {
           "type": "object",
           "required": ["method", "source", "lastSpringFrost", "firstFallFrost", "januaryMinimumC"],
           "properties": {
-            "method": { "enum": ["tendance", "modeles"] },
-            "source": { "type": "string" },
-            "models": { "type": "array", "items": { "type": "string" } },
-            "lastSpringFrost": { "$ref": "#/definitions/MonthDay" },
-            "firstFallFrost": { "$ref": "#/definitions/MonthDay" },
-            "januaryMinimumC": { "type": "number" },
-            "warmingC": { "type": "number" },
-            "summerRainChangePct": { "type": "number" },
-            "harvestAdvanceDays": { "type": "integer" }
+            "method": {
+              "enum": ["tendance", "modeles"]
+            },
+            "source": {
+              "type": "string"
+            },
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "lastSpringFrost": {
+              "$ref": "#/definitions/MonthDay"
+            },
+            "firstFallFrost": {
+              "$ref": "#/definitions/MonthDay"
+            },
+            "januaryMinimumC": {
+              "type": "number"
+            },
+            "warmingC": {
+              "type": "number"
+            },
+            "summerRainChangePct": {
+              "type": "number"
+            },
+            "harvestAdvanceDays": {
+              "type": "integer"
+            }
           }
         },
         "twins": {
           "type": "object",
           "required": ["sigmaMean", "reliable", "cells", "crops"],
           "properties": {
-            "sigmaMean": { "type": ["number", "null"] },
-            "reliable": { "type": "boolean" },
+            "sigmaMean": {
+              "type": ["number", "null"]
+            },
+            "reliable": {
+              "type": "boolean"
+            },
             "cells": {
               "type": "array",
               "items": {
                 "type": "object",
                 "required": ["lat", "lon", "sigma", "sources"],
                 "properties": {
-                  "lat": { "type": "number" },
-                  "lon": { "type": "number" },
-                  "sigma": { "type": ["number", "null"] },
-                  "sources": { "type": "array", "items": { "type": "string" } }
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  },
+                  "sigma": {
+                    "type": ["number", "null"]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             },
-            "crops": { "type": "array", "items": { "$ref": "#/definitions/CropId" } }
+            "crops": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CropId"
+              }
+            }
           }
         },
         "risks": {
           "type": "object",
           "required": ["erosion", "water"],
-          "properties": { "erosion": { "type": "number" }, "water": { "type": "number" } }
+          "properties": {
+            "erosion": {
+              "type": "number"
+            },
+            "water": {
+              "type": "number"
+            }
+          }
         },
-        "weights": { "type": "object" },
-        "chosen": { "$ref": "#/definitions/Chain" },
-        "reference": { "$ref": "#/definitions/Chain" },
+        "weights": {
+          "type": "object"
+        },
+        "chosen": {
+          "$ref": "#/definitions/Chain"
+        },
+        "reference": {
+          "$ref": "#/definitions/Chain"
+        },
         "referenceAlerts": {
           "type": "array",
-          "items": { "type": "object", "required": ["message"] }
+          "items": {
+            "type": "object",
+            "required": ["message"]
+          }
         },
         "alternatives": {
           "type": "array",
           "maxItems": 2,
-          "items": { "$ref": "#/definitions/Chain" }
+          "items": {
+            "$ref": "#/definitions/Chain"
+          }
         },
         "removed": {
           "type": "array",
-          "items": { "type": "object", "required": ["sheet", "message"] }
+          "items": {
+            "type": "object",
+            "required": ["sheet", "message"]
+          }
         },
-        "robustness": { "type": ["number", "null"] },
-        "becomesInfeasibleLater": { "type": "boolean" }
+        "robustness": {
+          "type": ["number", "null"]
+        },
+        "becomesInfeasibleLater": {
+          "type": "boolean"
+        }
       }
     },
     "SectionPlan": {
@@ -349,21 +668,40 @@
         "cycles"
       ],
       "properties": {
-        "id": { "type": "string" },
-        "freeAt": { "$ref": "#/definitions/IsoDate" },
-        "firstYear": { "type": ["integer", "null"] },
-        "lastYear": { "type": ["integer", "null"] },
-        "repeatsCurrentCrop": { "type": "boolean" },
-        "historyYears": { "type": "integer", "minimum": 1 },
+        "id": {
+          "type": "string"
+        },
+        "freeAt": {
+          "$ref": "#/definitions/IsoDate"
+        },
+        "firstYear": {
+          "type": ["integer", "null"]
+        },
+        "lastYear": {
+          "type": ["integer", "null"]
+        },
+        "repeatsCurrentCrop": {
+          "type": "boolean"
+        },
+        "historyYears": {
+          "type": "integer",
+          "minimum": 1
+        },
         "history": {
           "type": "array",
           "items": {
             "type": "object",
             "required": ["crop", "from", "to"],
             "properties": {
-              "crop": { "type": "string" },
-              "from": { "type": "integer" },
-              "to": { "type": "integer" }
+              "crop": {
+                "type": "string"
+              },
+              "from": {
+                "type": "integer"
+              },
+              "to": {
+                "type": "integer"
+              }
             }
           }
         },
@@ -371,36 +709,63 @@
           "type": "object",
           "required": ["measures", "soil", "risksToday"],
           "properties": {
-            "measures": { "type": "object" },
+            "measures": {
+              "type": "object"
+            },
             "soil": {
               "type": "object",
               "required": ["clayPct", "sandPct", "organicCarbon", "ph", "source"]
             },
-            "risksToday": { "type": "object", "required": ["erosion", "water"] }
+            "risksToday": {
+              "type": "object",
+              "required": ["erosion", "water"]
+            }
           }
         },
-        "cycles": { "type": "array", "items": { "$ref": "#/definitions/Cycle" } }
+        "cycles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Cycle"
+          }
+        }
       }
     },
     "FarmPlan": {
       "type": "object",
       "required": ["version", "meta", "settings", "weights", "sections"],
       "properties": {
-        "version": { "const": "2.0" },
+        "version": {
+          "const": "2.0"
+        },
         "meta": {
           "type": "object",
           "required": ["engine", "demo", "sources"],
           "properties": {
-            "engine": { "type": "string" },
-            "algorithm": { "type": "string" },
-            "demo": { "type": "boolean" },
-            "generatedAt": { "type": "string" },
+            "engine": {
+              "type": "string"
+            },
+            "algorithm": {
+              "type": "string"
+            },
+            "demo": {
+              "type": "boolean"
+            },
+            "generatedAt": {
+              "type": "string"
+            },
             "sources": {
               "type": "object",
               "additionalProperties": {
                 "type": "object",
                 "required": ["real", "label"],
-                "properties": { "real": { "type": "boolean" }, "label": { "type": "string" } }
+                "properties": {
+                  "real": {
+                    "type": "boolean"
+                  },
+                  "label": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }
@@ -412,11 +777,46 @@
             "frequencyMonths",
             "positionsPerCycle",
             "horizonYears",
-            "currentYear"
-          ]
+            "currentYear",
+            "priorities"
+          ],
+          "properties": {
+            "cycleYears": {
+              "type": "integer"
+            },
+            "frequencyMonths": {
+              "type": "integer"
+            },
+            "positionsPerCycle": {
+              "type": "integer"
+            },
+            "horizonYears": {
+              "type": "integer"
+            },
+            "currentYear": {
+              "type": "integer"
+            },
+            "priorities": {
+              "description": "Le classement dont les poids ont été calculés.",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CriterionId"
+              }
+            }
+          }
         },
-        "weights": { "type": "object", "additionalProperties": { "type": "number" } },
-        "sections": { "type": "array", "items": { "$ref": "#/definitions/SectionPlan" } }
+        "weights": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SectionPlan"
+          }
+        }
       }
     }
   }

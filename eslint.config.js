@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 
 export default [
-  { ignores: ['dist/**', 'node_modules/**', 'coverage/**'] },
+  { ignores: ['dist/**', 'node_modules/**', 'coverage/**', 'backend/server/**'] },
   js.configs.recommended,
   {
     // The four layers run in the browser (see docs/ARCHITECTURE.md).

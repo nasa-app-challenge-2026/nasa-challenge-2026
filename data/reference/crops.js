@@ -1,14 +1,14 @@
 /**
- * Crops known by the app, and the crop sheets of the algorithm (step 9b).
+ * Crops and crop sheets as the screens need them: names, colours, textures and the little
+ * structure the forms use. The agronomy of a sheet (sowing window, degree-days, harvest date,
+ * hardiness, values for the criteria) lives in the algorithm server:
+ * backend/server/field_shift/reference/crops.py. The ids are the contract, and
+ * tests/contract.test.js checks that both sides know the same ones.
  *
  * Two levels:
- *   - CROPS: what grows in a field (display: name, colour, texture). The farmer's
- *     history, the seed reserve and the climate twins speak about crops.
- *   - CROP_SHEETS: one way to grow a crop inside a rotation chain (alfalfa kept
- *     2 or 3 years, soybean sown after winter wheat…), with its calendar and its
- *     values for the scoring criteria.
- *
- * VALUES ARE INDICATIVE (field_shift.py v5.1): they must be checked by an agronomist.
+ *   - a CROP is what grows in a field (history, seed reserve, crops grown in the twins);
+ *   - a SHEET is one way to grow a crop in a rotation chain (alfalfa kept 2 or 3 years, soybean
+ *     sown after winter wheat…): the algorithm builds its chains from sheets.
  */
 
 /** `texture` = id of the SVG field pattern (frontend/ui/textures.js). */
@@ -46,7 +46,7 @@ export const CROPS = {
   courge: { id: 'courge', name: 'Courge', color: '#F0C27B', texture: 'legume' },
 };
 
-/** Crops grown in the sheets below, in the order the seed reserve shows them. */
+/** Seeds a farmer can own (the crops that have a sheet), in the order the reserve shows them. */
 export const SEED_IDS = [
   'mais',
   'soya',
@@ -81,167 +81,68 @@ export const OTHER_CROP_IDS = [
 /** Role of a sheet in a chain. */
 export const ROLE = { SOLD: 'vente', COVER: 'couvert', FALLOW: 'jachere' };
 
-/** Equipment a sheet may need. */
+/** Equipment a farmer may lack: without it, no alfalfa and no hay. */
 export const EQUIPMENT = { fourragere: { id: 'fourragere', name: 'Récolteuse fourragère' } };
+
+/** Month (1–12) a crop is usually harvested, to prefill the harvest month of a new field. */
+export const DEFAULT_HARVEST_MONTH = 10;
 
 const sheet = (fields) => ({
   role: ROLE.SOLD,
-  degreeDays: null,
-  onlyAfter: null,
-  harvestMonth: null,
   productionYears: 0,
-  januaryMinimumC: null,
-  frostSensitive: false,
-  equipment: null,
+  usualHarvestMonth: DEFAULT_HARVEST_MONTH,
   ...fields,
   seedId: fields.seedId ?? fields.cropId,
 });
 
 /**
- * Crop sheets (field_shift.py, CULTURES). Months are 0-based decimals in the
- * year (4.25 = early May). The ORDER MATTERS: the chain search tries the
- * candidates in this order and keeps the first one on ties.
- *
- *  sowingWindow     earliest and latest sowing month
- *  degreeDays       growing degree-days (base 10 °C) from sowing to maturity
- *  harvestMonth     fixed harvest / destruction month (winter crops, perennials)
- *  productionYears  perennials: years of production
- *  januaryMinimumC  coldest mean January minimum the crop survives
- *  onlyAfter        double crop: allowed only right after one of these sheets
- *  values           criteria values between 0 and 1 (indicative)
+ * The sheets: `productionYears` = years a planting holds the field (alfalfa ×3 = 3);
+ * `seedId` = the seed it is sown with.
  */
 export const CROP_SHEETS = [
-  sheet({
-    id: 'mais',
-    name: 'Maïs',
-    cropId: 'mais',
-    sowingWindow: [4.25, 5.5],
-    degreeDays: 1150,
-    frostSensitive: true,
-    values: { eau: 0.4, fourrage: 0.4, azote: 0.1, matiere_org: 0.5, marche: 0.9 },
-  }),
-  sheet({
-    id: 'soya',
-    name: 'Soya',
-    cropId: 'soya',
-    sowingWindow: [4.5, 5.75],
-    degreeDays: 1000,
-    frostSensitive: true,
-    values: { eau: 0.5, fourrage: 0.1, azote: 0.7, matiere_org: 0.2, marche: 0.8 },
-  }),
-  sheet({
-    id: 'soya-2e',
-    name: 'Soya (2e culture)',
-    cropId: 'soya-2e',
-    seedId: 'soya',
-    sowingWindow: [6.0, 7.0],
-    degreeDays: 800,
-    onlyAfter: ['ble-automne'],
-    frostSensitive: true,
-    values: { eau: 0.5, fourrage: 0.1, azote: 0.6, matiere_org: 0.2, marche: 0.75 },
-  }),
-  sheet({
-    id: 'ble-automne',
-    name: 'Blé d’automne',
-    cropId: 'ble-automne',
-    sowingWindow: [8.5, 9.75],
-    harvestMonth: 6.65,
-    januaryMinimumC: -16,
-    values: { eau: 0.7, fourrage: 0.3, azote: 0.2, matiere_org: 0.6, marche: 0.7 },
-  }),
-  sheet({
-    id: 'orge',
-    name: 'Orge',
-    cropId: 'orge',
-    sowingWindow: [3.75, 4.75],
-    degreeDays: 800,
-    values: { eau: 0.6, fourrage: 0.4, azote: 0.2, matiere_org: 0.5, marche: 0.5 },
-  }),
-  sheet({
-    id: 'canola',
-    name: 'Canola',
-    cropId: 'canola',
-    sowingWindow: [4.25, 5.25],
-    degreeDays: 900,
-    values: { eau: 0.4, fourrage: 0.0, azote: 0.1, matiere_org: 0.3, marche: 0.7 },
-  }),
-  sheet({
-    id: 'sarrasin',
-    name: 'Sarrasin',
-    cropId: 'sarrasin',
-    sowingWindow: [5.5, 7.0],
-    degreeDays: 600,
-    frostSensitive: true,
-    values: { eau: 0.6, fourrage: 0.0, azote: 0.2, matiere_org: 0.4, marche: 0.4 },
-  }),
+  sheet({ id: 'mais', name: 'Maïs', cropId: 'mais' }),
+  sheet({ id: 'soya', name: 'Soya', cropId: 'soya' }),
+  sheet({ id: 'soya-2e', name: 'Soya (2e culture)', cropId: 'soya-2e', seedId: 'soya' }),
+  sheet({ id: 'ble-automne', name: 'Blé d’automne', cropId: 'ble-automne', usualHarvestMonth: 7 }),
+  sheet({ id: 'orge', name: 'Orge', cropId: 'orge' }),
+  sheet({ id: 'canola', name: 'Canola', cropId: 'canola' }),
+  sheet({ id: 'sarrasin', name: 'Sarrasin', cropId: 'sarrasin' }),
   sheet({
     id: 'luzerne-2',
     name: 'Luzerne ×2',
     cropId: 'luzerne',
-    sowingWindow: [3.75, 5.0],
-    harvestMonth: 8.75,
     productionYears: 2,
-    januaryMinimumC: -22,
-    equipment: 'fourragere',
-    values: { eau: 0.6, fourrage: 1.0, azote: 1.0, matiere_org: 0.9, marche: 0.4 },
+    usualHarvestMonth: 9,
   }),
   sheet({
     id: 'luzerne-3',
     name: 'Luzerne ×3',
     cropId: 'luzerne',
-    sowingWindow: [3.75, 5.0],
-    harvestMonth: 8.75,
     productionYears: 3,
-    januaryMinimumC: -22,
-    equipment: 'fourragere',
-    values: { eau: 0.6, fourrage: 1.0, azote: 1.0, matiere_org: 0.9, marche: 0.4 },
+    usualHarvestMonth: 9,
   }),
   sheet({
     id: 'foin-2',
     name: 'Foin ×2',
     cropId: 'foin',
-    sowingWindow: [3.75, 5.0],
-    harvestMonth: 8.75,
     productionYears: 2,
-    januaryMinimumC: -28,
-    equipment: 'fourragere',
-    values: { eau: 0.7, fourrage: 1.0, azote: 0.6, matiere_org: 0.9, marche: 0.35 },
+    usualHarvestMonth: 9,
   }),
   sheet({
     id: 'foin-3',
     name: 'Foin ×3',
     cropId: 'foin',
-    sowingWindow: [3.75, 5.0],
-    harvestMonth: 8.75,
     productionYears: 3,
-    januaryMinimumC: -28,
-    equipment: 'fourragere',
-    values: { eau: 0.7, fourrage: 1.0, azote: 0.6, matiere_org: 0.9, marche: 0.35 },
+    usualHarvestMonth: 9,
   }),
-  sheet({
-    id: 'seigle-couvert',
-    name: 'Seigle (couvert)',
-    cropId: 'seigle',
-    role: ROLE.COVER,
-    sowingWindow: [8.5, 10.5],
-    harvestMonth: 4.3,
-    januaryMinimumC: -30,
-    values: { eau: 0.6, fourrage: 0.2, azote: 0.4, matiere_org: 0.6, marche: 0.0 },
-  }),
-  sheet({
-    id: 'jachere',
-    name: 'Jachère',
-    cropId: 'jachere',
-    role: ROLE.FALLOW,
-    sowingWindow: null,
-    values: { eau: 1.0, fourrage: 0.0, azote: 0.0, matiere_org: 0.0, marche: 0.0 },
-  }),
+  sheet({ id: 'seigle-couvert', name: 'Seigle (couvert)', cropId: 'seigle', role: ROLE.COVER }),
+  sheet({ id: 'jachere', name: 'Jachère', cropId: 'jachere', role: ROLE.FALLOW }),
 ];
 
 export const SHEETS = Object.fromEntries(CROP_SHEETS.map((s) => [s.id, s]));
 export const FALLOW_SHEET_ID = 'jachere';
 
-/** Sheets a farmer can have in place now or in a current rotation (sold crops). */
+/** Sheets of crops that are sold: the ones a farmer can have in place or in his rotation. */
 export const SOLD_SHEET_IDS = CROP_SHEETS.filter((s) => s.role === ROLE.SOLD).map((s) => s.id);
 
 /** Display helpers that work for a sheet id as well as a crop id. */

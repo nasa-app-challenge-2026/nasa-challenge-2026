@@ -11,11 +11,12 @@ import {
   SEED_IDS,
   SHEETS,
   SOLD_SHEET_IDS,
+  DEFAULT_HARVEST_MONTH,
   colorOf,
   nameOf,
 } from '../../data/reference/crops.js';
 import { RESERVE_MODES } from '../../data/reference/planning.js';
-import { SOIL_DISEASES } from '../../data/reference/returnDelays.js';
+import { SOIL_DISEASES } from '../../data/reference/diseases.js';
 import { getSeeds, setReserveMode, toggleSeed } from '../../application/rules/seeds.js';
 import {
   addToRotation,
@@ -30,12 +31,8 @@ import {
 import { fieldSwatch } from './textures.js';
 import { icon, ICONS } from './icons.js';
 
-/** Month of the year (1–12) a crop is usually harvested, to prefill the harvest month. */
-const USUAL_SUMMER_HARVEST_MONTH = 10;
-const usualHarvestMonth = (id) => {
-  const fixed = SHEETS[id]?.harvestMonth;
-  return fixed ? Math.floor(fixed) + 1 : USUAL_SUMMER_HARVEST_MONTH;
-};
+/** Month (1–12) a sheet is usually harvested, to prefill the harvest month of the crop in place. */
+const usualHarvestMonth = (id) => SHEETS[id]?.usualHarvestMonth ?? DEFAULT_HARVEST_MONTH;
 const thisYear = () => new Date().getFullYear();
 
 const option = (value, label, selected) =>

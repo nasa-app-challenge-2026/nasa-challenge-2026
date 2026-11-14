@@ -1,4 +1,5 @@
 /** Step 1 (the farmer's inputs) and the reading of the plan by the screens. */
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
   TimeSettings,
@@ -6,11 +7,7 @@ import {
   allowedHorizons,
   nearestHorizon,
 } from '../application/rules/timeSettings.js';
-import {
-  moveCriterion,
-  unrankedCriteria,
-  weightsFromRanking,
-} from '../application/rules/priorities.js';
+import { moveCriterion, unrankedCriteria, weightShares } from '../application/rules/priorities.js';
 import {
   addSeeds,
   deriveSeeds,
@@ -35,8 +32,11 @@ import {
   positionYear,
 } from '../application/rules/planView.js';
 import { DEMO_FARM } from '../data/reference/demoFarm.js';
-import { createAlgorithmEngine } from '../backend/algorithmEngine.js';
-import { CASES } from '../backend/contract/cases.js';
+
+const example = (name) =>
+  JSON.parse(
+    readFileSync(new URL(`../backend/contract/examples/${name}`, import.meta.url), 'utf8'),
+  );
 
 describe('time settings (block C)', () => {
   it('lays out the positions of a cycle', () => {
@@ -61,17 +61,20 @@ describe('time settings (block C)', () => {
 });
 
 describe('priorities (block D)', () => {
-  it('rank order centroid: 5 criteria weigh 0.46 / 0.26 / 0.16 / 0.09 / 0.04', () => {
-    const w = weightsFromRanking(['rendement', 'eau', 'azote', 'erosion', 'marche']);
-    expect(
-      ['rendement', 'eau', 'azote', 'erosion', 'marche'].map((c) => Math.round(w[c] * 100) / 100),
-    ).toEqual([0.46, 0.26, 0.16, 0.09, 0.04]);
-    expect(w.reserve).toBeCloseTo(0.25 * w.marche, 12);
-  });
-
   it('moves and lists criteria', () => {
     expect(moveCriterion(['a', 'b'], 1, -1)).toEqual(['b', 'a']);
+    expect(moveCriterion(['a', 'b'], 0, -1)).toEqual(['a', 'b']);
     expect(unrankedCriteria(['eau'])).not.toContain('eau');
+  });
+
+  it('shows the weights the algorithm computed, only for the ranking they come from', () => {
+    const plan = example('ferme-demo.plan.json');
+    const ranking = plan.settings.priorities;
+    const shares = weightShares(plan, ranking);
+    expect(Object.values(shares).reduce((a, b) => a + b, 0)).toBeGreaterThanOrEqual(99);
+    expect(shares[ranking[0]]).toBeGreaterThan(shares[ranking[1]]);
+    expect(weightShares(plan, [...ranking].reverse())).toBeNull();
+    expect(weightShares(null, ranking)).toBeNull();
   });
 });
 
@@ -120,9 +123,9 @@ describe('section inputs (block A)', () => {
   });
 });
 
-describe('reading the plan', async () => {
-  const plan = await createAlgorithmEngine({ useRealWeather: false }).planFarm(CASES['ferme-demo']);
-  const farm = CASES['ferme-demo'];
+describe('reading the plan of the server', () => {
+  const plan = example('ferme-demo.plan.json');
+  const farm = example('ferme-demo.input.json');
   const [a, b] = plan.sections;
 
   it('finds the years, cycles and crops of each year', () => {

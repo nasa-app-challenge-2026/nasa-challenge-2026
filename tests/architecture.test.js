@@ -4,7 +4,8 @@
  *   frontend → backend → application → data
  *
  * A file may import its own layer and the layers below it, never a layer above.
- * Two more rules keep the screens simple:
+ * backend/ holds the client of the algorithm server (the server itself, in Python, is backend/server/
+ * and is not imported by anything). Two more rules keep the screens simple:
  *   - in frontend/, only main.js imports backend/ (it hands the engine to the app);
  *   - frontend/ never imports data/access/: network and storage go through `app`.
  */
@@ -18,11 +19,15 @@ const LAYERS = ['frontend', 'backend', 'application', 'data'];
 
 const toPosix = (path) => path.split(sep).join('/');
 
+/** backend/server is the Python server (FastAPI): it only talks to the front end over HTTP. */
+const PYTHON_SERVER = 'backend/server/';
+
 /** Repository-relative paths of the JS files of one layer. */
 function filesOf(layer) {
   return readdirSync(join(ROOT, layer), { recursive: true, withFileTypes: true })
     .filter((entry) => entry.isFile() && /\.m?js$/.test(entry.name))
-    .map((entry) => toPosix(relative(ROOT, join(entry.parentPath ?? entry.path, entry.name))));
+    .map((entry) => toPosix(relative(ROOT, join(entry.parentPath ?? entry.path, entry.name))))
+    .filter((file) => !file.startsWith(PYTHON_SERVER));
 }
 
 const IMPORT = /^\s*import\s+(?:[^'";]*?\s+from\s+)?['"]([^'"]+)['"]/gm;
@@ -82,9 +87,7 @@ describe('layered architecture', () => {
     expect(violation('frontend/screens/tableau.js', 'backend/index.js')).not.toBeNull();
     expect(violation('frontend/screens/localisation.js', 'data/access/geocode.js')).not.toBeNull();
     expect(violation('frontend/main.js', 'backend/index.js')).toBeNull();
-    expect(
-      violation('backend/algorithm/input/FarmInputReader.js', 'application/rules/timeSettings.js'),
-    ).toBeNull();
+    expect(violation('backend/remoteEngine.js', 'data/reference/crops.js')).toBeNull();
     expect(violation('frontend/screens/plan.js', 'data/reference/crops.js')).toBeNull();
   });
 });

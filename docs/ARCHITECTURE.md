@@ -2,21 +2,23 @@
 
 Field Shift suit une **architecture en quatre couches**. Chaque couche est un dossier à la racine du dépôt :
 
-| Couche          | Dossier        | Rôle                                                                                                                                                                   |
-| --------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Frontend**    | `frontend/`    | Ce que le fermier voit et touche : la page, les écrans, les composants, les styles. Aucun calcul métier, aucun appel réseau.                                           |
-| **Back end**    | `backend/`     | **L'algorithme Field Shift** (`backend/algorithm/`), le moteur qui l'expose à l'appli, le client d'un algorithme distant, le contrat et ses outils.                    |
-| **Application** | `application/` | Le contrôleur `app` que les écrans appellent, l'état de l'appli, les règles des entrées du fermier (étape 1) et la lecture du plan pour les écrans.                    |
-| **Data**        | `data/`        | Les données fixes (`reference/` : cultures et fiches, délais de retour, critères, textes, ferme de démo, sources) et l'accès au réseau et à la sauvegarde (`access/`). |
+| Couche          | Dossier        | Rôle                                                                                                                                                                                                                                |
+| --------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Frontend**    | `frontend/`    | Ce que le fermier voit et touche : la page, les écrans, les composants, les styles. Aucun calcul métier, aucun appel réseau.                                                                                                        |
+| **Back end**    | `backend/`     | Tout ce qui touche l'algorithme : le **serveur Python (FastAPI)** qui le contient (`backend/server/`), le client HTTP que le front utilise pour l'appeler, le contrat (schéma JSON, types, exemples) et son script de vérification. |
+| **Application** | `application/` | Le contrôleur `app` que les écrans appellent, l'état de l'appli, les règles des entrées du fermier (étape 1) et la lecture du plan pour les écrans.                                                                                 |
+| **Data**        | `data/`        | Les données fixes d'affichage (`reference/` : noms et couleurs des cultures, maladies du sol, critères, textes, ferme de démo, sources) et l'accès au réseau et à la sauvegarde (`access/`).                                        |
 
-**La logique métier vit dans `backend/algorithm/` et nulle part ailleurs.** Les écrans affichent le plan que l'algorithme renvoie (voir [`ALGO_CONTRACT.md`](ALGO_CONTRACT.md)) ; l'application ne fait que valider les entrées du fermier (cycle, fréquence, horizon, classement des critères, réserve, parcelles) et retrouver une année ou un cycle dans le plan. Le fonctionnement de l'algorithme est décrit dans [`ALGORITHME.md`](ALGORITHME.md).
+**La logique métier vit dans `backend/server/field_shift/algorithm/` et nulle part ailleurs.** Les écrans affichent le plan que le serveur renvoie ; l'application ne fait que proposer au fermier des choix valides (cycle, fréquence, horizon, ordre des critères, réserve, parcelles) et retrouver une année ou un cycle dans le plan. Même les poids des critères viennent du plan. Le fonctionnement de l'algorithme est décrit dans [`ALGORITHME.md`](ALGORITHME.md).
+
+Le front (JavaScript, dans le navigateur) et le serveur (Python) sont **deux programmes** : ils ne se parlent qu'en HTTP, selon le contrat `POST /plan` ([`ALGO_CONTRACT.md`](ALGO_CONTRACT.md)). Pour les lancer ensemble, voir le [`README`](../README.md).
 
 ## Qui peut importer quoi
 
 ```
 frontend/      présentation
    ↓
-backend/       algorithme + moteur + contrat
+backend/       client HTTP du serveur, contrat
    ↓
 application/   contrôleur, état, règles des entrées, lecture du plan
    ↓
@@ -28,9 +30,11 @@ data/          données fixes, réseau, sauvegarde
 - Dans `frontend/`, **seul `main.js` importe `backend/`** : il crée le moteur et le donne à l'application (`createApp({ engine: createEngine() })`). Les écrans passent toujours par `app`.
 - `frontend/` lit `data/reference/` (noms des cultures, critères, libellés…) mais **jamais `data/access/`** : le réseau et la sauvegarde passent par l'application (`app.loadWeather`, `app.searchPlaces`, `app.setFarmLocation`…).
 
-L'application appelle le moteur (`engine.planFarm`) **sans l'importer** : elle reçoit l'objet moteur de `main.js` et ne connaît que son interface (`backend/contract/types.js`). L'algorithme, lui, réutilise les règles de l'étape 1 de l'application (`TimeSettings`, poids du classement) et lit la météo NASA POWER par `data/access/nasaPower.js`, sans créer de cycle.
+L'application appelle le moteur (`engine.planFarm`) **sans l'importer** : elle reçoit l'objet moteur de `main.js` et ne connaît que son interface (`backend/contract/types.js`).
 
-`tests/architecture.test.js` vérifie ces règles à chaque `npm test` : un import dans le mauvais sens fait échouer la CI.
+Le serveur Python (`backend/server/`) n'entre pas dans ce graphe : le JavaScript ne l'importe pas, il l'appelle en HTTP. Il a ses propres couches, dans le même esprit (`api → services → contract, data_access → algorithm → reference`), décrites dans son [`README`](../backend/server/README.md).
+
+`tests/architecture.test.js` (JavaScript) et `backend/server/tests/test_architecture.py` (Python) vérifient ces règles à chaque lancement des tests : un import dans le mauvais sens fait échouer la CI.
 
 ## Arborescence
 
@@ -46,20 +50,26 @@ frontend/              COUCHE PRÉSENTATION
   styles/                tokens (base commune), base, composants, écrans
   lib/                   gabarit HTML sûr, ordre des blocs du tableau de bord
 backend/               COUCHE BACK END
-  algorithm/             L'ALGORITHME (port de field_shift.py v5.1) : voir docs/ALGORITHME.md
-  algorithmEngine.js     moteur par défaut : météo NASA POWER de la ferme + algorithme, dans le navigateur
-  remoteEngine.js        appelle un algorithme distant en HTTP (POST /plan)
-  index.js               choisit le moteur selon VITE_ALGO_MODE et VITE_FARM_WEATHER
-  contract/              schéma JSON du contrat 2.0, types JSDoc, cas de référence, exemples
-  scripts/               génération des exemples, vérification d'un algorithme distant
+  index.js               donne le moteur à l'appli : le client du serveur, à l'adresse VITE_ALGO_URL
+  remoteEngine.js        client HTTP du serveur (POST /plan) et erreurs lisibles
+  contract/              schéma JSON du contrat 2.0, types JSDoc, exemples (entrées et plans)
+  scripts/               check-algo.mjs : vérifie qu'un serveur respecte le contrat (npm run check:algo)
+  server/                LE SERVEUR (Python, FastAPI) : voir backend/server/README.md
+    field_shift/algorithm/     L'ALGORITHME (étapes 2 à 10), sans code web : voir docs/ALGORITHME.md
+    field_shift/contract/      le format d'échange (Pydantic) et les deux traducteurs
+    field_shift/services/      PlanService : une requête de bout en bout
+    field_shift/api/           l'application FastAPI : routes et réglages
+    field_shift/data_access/   NASA POWER et les sources de météo
+    field_shift/reference/     fiches des cultures, délais de retour, critères
+    tests/                     pytest : l'algorithme contre sa référence, l'API, le contrat, les couches
 application/           COUCHE APPLICATION
   app.js                 contrôleur : état, appel au moteur, réseau, navigation
   state/                 store observable, état initial, migration des sauvegardes de la version 1
   rules/                 étape 1 (cycle et horizon, priorités, réserve, entrées des sections), lecture du plan, géométrie, tracé
 data/                  COUCHE DONNÉES
-  reference/             cultures et fiches, délais de retour et maladies, critères, réglages, mesures, ferme de démo, sources, RotaAI
-  access/                météo NASA POWER (plan) et Open-Meteo (tableau de bord), adresses (Nominatim), sauvegarde locale
-tests/                 Vitest : une suite par sujet, l'algorithme contre la référence Python, le respect des couches
+  reference/             cultures (noms, couleurs), maladies du sol, critères, réglages des formulaires, mesures, ferme de démo, sources, RotaAI
+  access/                météo du jour Open-Meteo (tableau de bord), adresses (Nominatim), sauvegarde locale
+tests/                 Vitest : une suite par sujet, le contrat côté front, le respect des couches
 docs/                  documentation
 ```
 
@@ -84,16 +94,18 @@ docs/                  documentation
 
 ## Où mettre du nouveau code
 
-| Je veux ajouter…                                         | Où                                                                                    |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| un écran                                                 | `frontend/screens/`, déclaré dans `frontend/screens/index.js` et `frontend/router.js` |
-| un composant réutilisé                                   | `frontend/ui/`                                                                        |
-| une opération qui appelle le moteur ou le réseau         | une méthode de `app` dans `application/app.js`                                        |
-| une règle des entrées du fermier ou de lecture du plan   | `application/rules/`, avec un test dans `tests/`                                      |
-| un calcul agronomique (climat, jumeaux, note, délais…)   | `backend/algorithm/`, avec un test dans `tests/algorithm/` (voir `ALGORITHME.md`)     |
-| un champ du plan                                         | `backend/algorithm/report/PlanSerializer.js`, puis le schéma et `ALGO_CONTRACT.md`    |
-| un service externe (API, stockage)                       | `data/access/`, appelé depuis `application/app.js` ou `backend/algorithmEngine.js`    |
-| une donnée fixe (culture, fiche, critère, texte, source) | `data/reference/`                                                                     |
+| Je veux ajouter…                                                       | Où                                                                                                                                                              |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| un écran                                                               | `frontend/screens/`, déclaré dans `frontend/screens/index.js` et `frontend/router.js`                                                                           |
+| un composant réutilisé                                                 | `frontend/ui/`                                                                                                                                                  |
+| une opération qui appelle le moteur ou le réseau                       | une méthode de `app` dans `application/app.js`                                                                                                                  |
+| une règle des entrées du fermier ou de lecture du plan                 | `application/rules/`, avec un test dans `tests/`                                                                                                                |
+| un calcul agronomique (climat, jumeaux, note, délais…)                 | `backend/server/field_shift/algorithm/`, avec un test dans `backend/server/tests/` (voir `ALGORITHME.md`)                                                       |
+| une donnée agronomique (fiche de culture, délai de retour, critère)    | `backend/server/field_shift/reference/`                                                                                                                         |
+| un champ du plan                                                       | `backend/server/field_shift/contract/` (modèle et traducteur), puis le schéma, `ALGO_CONTRACT.md` et les exemples (`python -m field_shift.tools.make_examples`) |
+| un service externe lu par le serveur (NASA POWER…)                     | `backend/server/field_shift/data_access/`                                                                                                                       |
+| un service externe lu par le front (adresses, météo du jour, stockage) | `data/access/`, appelé depuis `application/app.js`                                                                                                              |
+| une donnée fixe d'affichage (nom, couleur, texte, source)              | `data/reference/` (les identifiants sont ceux du contrat : `tests/contract.test.js` le vérifie)                                                                 |
 
 ## Comment un écran marche
 
@@ -127,7 +139,9 @@ export default {
 
 ## Le moteur
 
-`app.engine` respecte l'interface du contrat : `{ name, planFarm(farmInput) → Promise<FarmPlan> }`. Le moteur par défaut (`backend/algorithmEngine.js`) télécharge une fois la météo NASA POWER de la ferme, puis fait tourner l'algorithme dans le navigateur ; s'il n'y a pas de réseau, il utilise la météo fictive et le plan le dit. `VITE_ALGO_MODE=remote` le remplace par un serveur, sans toucher aux écrans.
+`app.engine` respecte l'interface du contrat : `{ name, planFarm(farmInput) → Promise<FarmPlan> }`. Le moteur est le client du serveur Python (`backend/remoteEngine.js`) : il envoie la ferme à `POST {VITE_ALGO_URL}/plan` et rend le plan. Le serveur télécharge la météo NASA POWER du lieu (une fois par lieu, gardée en mémoire), lance l'algorithme et répond ; sans réseau, il utilise une météo fictive et le plan le dit (`meta.sources.farmWeather`). Si le serveur ne répond pas, l'écran affiche l'erreur avec un bouton « Réessayer ».
+
+`VITE_ALGO_URL` vaut `http://localhost:8000` avec `npm run dev` et n'a pas de valeur par défaut en production : le site publié doit être configuré avec l'adresse du serveur.
 
 ## Sauvegarde
 
@@ -136,3 +150,5 @@ L'utilisateur, la ferme, l'étape de configuration et les préférences d'affich
 ## Outils
 
 Vite sert la page depuis `frontend/` et suit les imports vers les autres couches (`vite.config.js`). `.env.local` reste à la racine du dépôt et la version de production va dans `dist/`.
+
+Le serveur se lance à part, depuis `backend/server/` (voir son [`README`](../backend/server/README.md)). La CI a deux tâches : le front (lint, format, tests, build) et le serveur (ruff, pytest).

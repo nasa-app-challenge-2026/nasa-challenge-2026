@@ -10,3 +10,14 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# Python (backend/server)
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/

@@ -10,19 +10,16 @@ import { EQUIPMENT } from '../../data/reference/crops.js';
 import {
   moveCriterion,
   unrankedCriteria,
-  weightsFromRanking,
+  weightShares,
 } from '../../application/rules/priorities.js';
 import { onboardingHeader } from '../ui/layout.js';
 import { icon, ICONS } from '../ui/icons.js';
 import { switchButton } from '../ui/widgets.js';
 
-const PERCENT = 100;
-
 export function priorityEditor(state) {
   const ranking = state.farm.farm.priorities;
-  const weights = weightsFromRanking(ranking);
-  const total = Object.values(weights).reduce((a, b) => a + b, 0);
-  const share = (c) => Math.round((PERCENT * weights[c]) / total);
+  const shares = weightShares(state.plan.data, ranking);
+  const share = (c) => (shares ? `${shares[c]} %` : '…');
   return html`<div class="stack-md">
     <ol class="prio-list">
       ${ranking.map((k, i) => {
@@ -33,7 +30,7 @@ export function priorityEditor(state) {
           <span class="stack-0 grow"
             ><strong>${c.label}</strong><span class="muted small">${c.text}</span></span
           >
-          <span class="muted small nowrap">${share(k)} %</span>
+          <span class="muted small nowrap" title="Poids calculé par l’algorithme">${share(k)}</span>
           <span class="row gap-xs">
             <button
               type="button"
@@ -84,7 +81,7 @@ export function priorityEditor(state) {
                     data-c="${k}"
                     title="${CRITERIA[k].text}"
                   >
-                    + ${CRITERIA[k].label} · ${share(k)} %
+                    + ${CRITERIA[k].label} · ${share(k)}
                   </button>`,
               )}
             </div>
