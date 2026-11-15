@@ -43,6 +43,7 @@ from field_shift.algorithm.weather.daily_weather import DailyWeather
 from field_shift.data_access.soilgrids import (
     ALL_DEPTHS,
     D_FACTOR,
+    DEPTHS,
     SoilGridsClient,
     SoilGridsError,
 )
@@ -376,6 +377,18 @@ def with_component(result: Mapping[str, Any], name: str, value: float) -> dict[s
 # Soil and slope of a place
 # --------------------------------------------------------------------------------------------------
 _soils: dict[tuple[int, int], Sol] = {}
+#: What water_use says when SoilGrids has no soil at the point (water, built-up area, rock).
+NO_SOIL_SIGNS: Final = ("n'a pas de texture", "n'a pas de carbone organique")
+#: Where to look when the point has no soil: rings of 8 points at about 300 m, 600 m, 1 and 2 km.
+NEIGHBOUR_STEPS_DEG: Final = (0.003, 0.006, 0.010, 0.020)
+NEIGHBOUR_DIRECTIONS: Final = ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1))
+
+
+def _no_soil(error: Exception) -> bool:
+    """The error says SoilGrids has no soil at the point (not that it did not answer)."""
+    return any(sign in str(error) for sign in NO_SOIL_SIGNS)
+
+
 #: Reads the soil of a place (lat, lon) → Sol; raises ErreurDonnees.
 SoilReader = Callable[[float, float], Sol]
 #: The box where water_use asks SSURGO first (the United States, wide).
@@ -429,11 +442,44 @@ def soilgrids_soil_reader(client: SoilGridsClient) -> SoilReader:
                 return soil
         return read_soilgrids(lat, lon)
 
-    def read_soilgrids(lat: float, lon: float) -> Sol:
+    def read_one(lat: float, lon: float) -> Sol:
         try:
             return lire_reponse_soilgrids(_soilgrids_answer(client, lat, lon))
         except SoilGridsError as error:
             raise ErreurDonnees(str(error)) from error
+
+    def has_topsoil(lat: float, lon: float) -> bool:
+        """One map read (sand, 0-5 cm) instead of the 18 of a full profile."""
+        try:
+            sand = client.layers(lat, lon, DEPTHS[:1], ("sand",))["sand"][DEPTHS[0][0]]
+        except SoilGridsError as error:
+            raise ErreurDonnees(str(error)) from error
+        return sand is not None
+
+    def read_soilgrids(lat: float, lon: float) -> Sol:
+        """The point, else its nearest neighbour with soil (a pin on a road, a shore or a
+        built-up pixel has none: the nearest field, within about 2 km, stands for it)."""
+        try:
+            return read_one(lat, lon)
+        except ErreurDonnees as error:
+            if not _no_soil(error):
+                raise
+            first = error
+        for step in NEIGHBOUR_STEPS_DEG:
+            for d_lat, d_lon in NEIGHBOUR_DIRECTIONS:
+                n_lat, n_lon = lat + d_lat * step, lon + d_lon * step
+                if not has_topsoil(n_lat, n_lon):
+                    continue
+                try:
+                    soil = read_one(n_lat, n_lon)
+                except ErreurDonnees as error:
+                    if not _no_soil(error):
+                        raise
+                    continue
+                soil.source += f" — lu à environ {round(step * 111_000, -2):.0f} m (point sans sol)"
+                soil.details["point_lu"] = dict(lat=round(n_lat, 5), lon=round(n_lon, 5))
+                return soil
+        raise first
 
     return read
 
@@ -447,6 +493,12 @@ def soil_of_place(lat: float, lon: float, read: SoilReader | None = None) -> Sol
         try:
             soil = (read or _water_use_soil)(lat, lon)
         except ErreurDonnees as error:
+            if _no_soil(error):
+                raise WaterDataUnavailableError(
+                    "la ferme est sur un endroit sans sol connu (lac, rivière, ville, côte ou "
+                    "roche), et aucun sol n’a été trouvé à moins de 2 km : placez la ferme et "
+                    "ses sections sur un champ."
+                ) from error
             raise WaterDataUnavailableError(
                 f"le sol du champ n’a pas pu être lu pour la note eau : {error}"
             ) from error
