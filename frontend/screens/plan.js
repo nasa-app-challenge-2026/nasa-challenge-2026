@@ -3,7 +3,7 @@
  * of the algorithm): years and climate source, keep or change and the score on
  * 100, the score of his current rotation, the chain with its covers, the calendar,
  * the gaps, the seeds to buy, the warnings, the crops removed, the alerts on his
- * rotation, 2 alternatives, the robustness and the 9 criteria.
+ * rotation, 2 alternatives, the robustness, the 4 priorities and the water.
  */
 import { html } from '../lib/html.js';
 import { CROPS, nameOf } from '../../data/reference/crops.js';
@@ -68,7 +68,7 @@ function headline(cycle) {
 
 const MM = (v) => `${Math.round(v)} mm par an`;
 
-/** The water score of the chosen chain in plain numbers (water_use), beside the 9 criteria. */
+/** The water score of the chosen chain in plain numbers (water_use), beside the 4 priorities. */
 function waterCard(cycle) {
   const w = cycle.chosen?.water;
   if (!w) return '';
@@ -213,7 +213,7 @@ export default {
         ${
           cycle.chosen
             ? html`<div class="card grow-1 stack-md">
-                <h2 class="h2">Les 9 critères</h2>
+                <h2 class="h2">Les 4 priorités</h2>
                 ${criteriaBars(cycle.chosen, cycle.reference, cycle.weights)}
               </div>`
             : ''

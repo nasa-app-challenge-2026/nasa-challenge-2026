@@ -7,7 +7,11 @@ import {
   allowedHorizons,
   nearestHorizon,
 } from '../application/rules/timeSettings.js';
-import { moveCriterion, unrankedCriteria, weightShares } from '../application/rules/priorities.js';
+import {
+  moveCriterion,
+  normalizePriorities,
+  weightShares,
+} from '../application/rules/priorities.js';
 import {
   addSeeds,
   deriveSeeds,
@@ -61,10 +65,24 @@ describe('time settings (block C)', () => {
 });
 
 describe('priorities (block D)', () => {
-  it('moves and lists criteria', () => {
+  it('moves a priority', () => {
     expect(moveCriterion(['a', 'b'], 1, -1)).toEqual(['b', 'a']);
     expect(moveCriterion(['a', 'b'], 0, -1)).toEqual(['a', 'b']);
-    expect(unrankedCriteria(['eau'])).not.toContain('eau');
+  });
+
+  it('always ranks the four priorities, from any saved ranking', () => {
+    expect(normalizePriorities(['eau', 'rendement'])).toEqual([
+      'eau',
+      'rendement',
+      'protection_sol',
+      'ravageurs',
+    ]);
+    // A ranking of the previous version (nine criteria): erosion is now protection_sol, the
+    // criteria that are not a priority any more are dropped.
+    expect(
+      normalizePriorities(['erosion', 'rendement', 'azote', 'reserve', 'matiere_org', 'marche']),
+    ).toEqual(['protection_sol', 'rendement', 'eau', 'ravageurs']);
+    expect(normalizePriorities()).toEqual(['rendement', 'eau', 'protection_sol', 'ravageurs']);
   });
 
   it('shows the weights the algorithm computed, only for the ranking they come from', () => {
@@ -132,10 +150,7 @@ describe('reading the plan of the server', () => {
     expect(planYears(plan)).toEqual({ first: 2027, last: 2039 });
     expect(cycleOfYear(a, 2032).index).toBe(2);
     expect(positionYear(a.cycles[0], 4, 12)).toBe(2030);
-    expect(cropOfYear(farm.sections[0], a, 2028, 12)).toEqual({
-      id: 'luzerne-2',
-      source: 'plan',
-    });
+    expect(cropOfYear(farm.sections[0], a, 2028, 12)).toEqual({ id: 'soya', source: 'plan' });
     expect(cropOfYear(farm.sections[0], a, 2027, 12)).toEqual({ id: 'jachere', source: 'plan' });
     expect(cropOfYear(farm.sections[1], b, 2027, 12)).toEqual({
       id: 'luzerne-3',

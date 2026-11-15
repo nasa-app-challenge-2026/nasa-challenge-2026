@@ -64,7 +64,8 @@ export const SOIL_PROPERTIES = {
   ph: { label: 'pH', unit: '' },
 };
 
+/** The two risks of a field, and the priority each one gives more weight to. */
 export const RISKS = {
-  erosion: { label: 'Risque d’érosion' },
-  water: { label: 'Risque de manque d’eau' },
+  erosion: { label: 'Risque d’érosion', priority: 'protection_sol' },
+  water: { label: 'Risque de manque d’eau', priority: 'eau' },
 };

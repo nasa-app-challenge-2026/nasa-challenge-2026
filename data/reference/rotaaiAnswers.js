@@ -88,7 +88,7 @@ export const INTENTS = [
   },
   {
     keys: ['jachere', 'repos', 'vide'],
-    text: 'Une jachère est une position laissée sans culture vendue. Avec les couverts de seigle, le sol reste couvert, ce qui plaît aux critères eau et érosion. Jamais deux jachères de suite. Si l’appli en propose souvent, les fiches des cultures sont à revoir avec un agronome.',
+    text: 'Une jachère est une position laissée sans culture vendue. Avec les couverts de seigle, le sol reste couvert, ce qui plaît à la priorité protection du sol. Jamais deux jachères de suite. Si l’appli en propose souvent, les fiches des cultures sont à revoir avec un agronome.',
   },
   {
     keys: ['seigle', 'couvert', 'couverture'],
@@ -100,7 +100,7 @@ export const INTENTS = [
   },
   {
     keys: ['delai', 'retour', 'revenir', 'trop tot'],
-    text: 'Le délai de retour, c’est le nombre d’années sans une culture avant de la remettre au même endroit, pour que ses maladies et ses insectes disparaissent du sol. Par exemple, au moins 2 ans sans soya. Le minimum est obligatoire ; le délai conseillé compte dans le critère ravageurs.',
+    text: 'Le délai de retour, c’est le nombre d’années sans une culture avant de la remettre au même endroit, pour que ses maladies et ses insectes disparaissent du sol. Par exemple, au moins 2 ans sans soya. Le minimum est obligatoire ; le délai conseillé compte dans la priorité ravageurs.',
     sources: true,
   },
   {
@@ -116,8 +116,8 @@ export const INTENTS = [
     text: 'Votre rotation actuelle est prolongée cycle après cycle et notée avec les mêmes règles. Elle sert de comparaison : si elle ne respecte pas un délai de retour, l’appli vous le signale, sans la rejeter.',
   },
   {
-    keys: ['erosion'],
-    text: 'Le risque d’érosion combine la pente (la moitié), les jours de forte pluie et les jours de sol nu, vus par satellite. Plus il est haut, plus le critère érosion pèse dans la note.',
+    keys: ['erosion', 'protection du sol'],
+    text: 'Le risque d’érosion combine la pente (la moitié), les jours de forte pluie et les jours de sol nu, vus par satellite. Plus il est haut, plus la priorité protection du sol pèse dans la note.',
     sources: true,
   },
   {
@@ -135,12 +135,12 @@ export const INTENTS = [
   },
   {
     keys: ['donnee', 'source', 'nasa', 'vient', 'satellite', 'chiffre'],
-    text: 'La météo de la ferme vient de NASA POWER. Le reste viendra de SoilGrids, des cartes de cultures (USDA, AAC) et de satellites NASA (HLS, SRTM, GPM IMERG, MODIS, ECOSTRESS, SMAP, GRACE-FO) ; pour l’instant ces données sont des exemples. Tout est dans Détail et sources.',
+    text: 'La météo de la ferme vient de NASA POWER, les modèles climatiques de NEX-GDDP-CMIP6, les jumeaux de la grille NASA POWER et des cartes de cultures (AAC, USDA), le sol de SoilGrids, la pente de Copernicus DEM et le sol nu de MODIS. L’eau utilise aussi les puits USGS, SMAP et ECOSTRESS quand ils sont disponibles. Tout est dans Détail et sources.',
     sources: true,
   },
   {
     keys: ['priorite', 'poids', 'critere'],
-    text: 'Vous classez les critères qui comptent ; le premier pèse le plus. Un critère non classé garde un petit poids. L’appli donne aussi plus de poids à l’érosion et à l’eau si votre champ y est fragile.',
+    text: 'Vous classez quatre priorités : le rendement, l’utilisation de l’eau, la protection du sol et les ravageurs. La première pèse le plus. Chaque suite de cultures reçoit une note sur chacune, puis leur moyenne pondérée. L’appli donne aussi plus de poids à la protection du sol et à l’eau si votre champ y est fragile.',
   },
   {
     keys: ['bonjour', 'salut', 'allo', 'hello'],

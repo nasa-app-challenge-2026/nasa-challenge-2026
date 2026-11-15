@@ -34,8 +34,7 @@ Le tableau de bord, « Ma parcelle », « Mon champ », « Plan par cycle » et 
       [45.626, -72.952]
     ],
     "time": { "cycleYears": 4, "frequencyMonths": 12, "horizonYears": 12 },
-    "priorities": ["erosion", "rendement", "azote", "reserve", "matiere_org", "marche"],
-    "livestock": false,
+    "priorities": ["rendement", "protection_sol", "eau", "ravageurs"],
     "missingEquipment": [],
     "seeds": { "crops": ["mais", "soya", "ble-automne", "seigle"], "mode": "preferer" }
   },
@@ -65,22 +64,21 @@ Le tableau de bord, « Ma parcelle », « Mon champ », « Plan par cycle » et 
 }
 ```
 
-| Champ                     | Étape du PDF | Règle                                                                                                                                                                                                                |
-| ------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `today`                   | 1            | facultatif ; date d'utilisation (limite des 10 ans du cas 1). Par défaut : la date du jour.                                                                                                                          |
-| `farm.location`           | 3, 4         | point de la météo NASA POWER et centre de la recherche des jumeaux.                                                                                                                                                  |
-| `farm.time`               | 1 bloc C     | `cycleYears` 2 à 6 ; `frequencyMonths` 12, 6 ou 4 (doit diviser 12 × C) ; `horizonYears` multiple de C, jusqu'en 2060. Règles dans `application/rules/timeSettings.js`.                                              |
-| `farm.priorities`         | 1 bloc D     | critères classés, du plus important au moins important, parmi `rendement`, `eau`, `fourrage`, `azote`, `erosion`, `matiere_org`, `marche`, `ravageurs`, `reserve`. Un critère absent garde 25 % du plus petit poids. |
-| `farm.livestock`          | 1 bloc D     | sans bétail, le poids du fourrage est multiplié par 0,3.                                                                                                                                                             |
-| `farm.missingEquipment`   | 1 bloc D     | `fourragere` absente → plus de luzerne ni de foin.                                                                                                                                                                   |
-| `farm.seeds`              | 1 bloc B     | semences possédées, **sans quantités** (ids de `SEED_IDS`) ; `mode` `preferer` (la réserve compte dans la note) ou `uniquement` (seules ces semences, plus la jachère).                                              |
-| `section.currentCrop`     | 1 bloc A     | une fiche (`mais`, `luzerne-3`…) ou une autre culture (`pomme-de-terre`…), `null` = parcelle libre.                                                                                                                  |
-| `section.currentHarvest`  | 1 bloc A     | `"AAAA-MM"`, mois de récolte (ou de fin pour une pérenne) ; lu comme le milieu du mois. Obligatoire si une culture est en place.                                                                                     |
-| `section.history`         | 1 bloc A     | cultures des années **avant** la culture en place, une par année. Le plan dit combien d'années demander (`historyYears`).                                                                                            |
-| `section.currentRotation` | 1 bloc A, 10 | la rotation que suit le fermier (fiches) ; `rotationPosition` = indice de la culture en place. Elle sert de **référence** ; vide = la culture en place répétée.                                                      |
-| `section.diseases`        | partie B     | maladies du sol connues (ids de `SOIL_DISEASES`) : leur délai le plus long devient obligatoire.                                                                                                                      |
-| `section.irrigated`       | 8, 9b        | parcelle irriguée : le risque eau est multiplié par 0,4, la note eau compte la part des besoins à irriguer, et le plan affiche l'irrigation nécessaire (`water.irrigationMmPerYear`).                                |
-| `section.soilTest`        | 5            | `{ clayPct, sandPct, organicCarbon (g/kg), ph }` ou `null` (SoilGrids).                                                                                                                                              |
+| Champ                     | Étape du PDF | Règle                                                                                                                                                                                                                                               |
+| ------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `today`                   | 1            | facultatif ; date d'utilisation (limite des 10 ans du cas 1). Par défaut : la date du jour.                                                                                                                                                         |
+| `farm.location`           | 3, 4         | point de la météo NASA POWER et centre de la recherche des jumeaux.                                                                                                                                                                                 |
+| `farm.time`               | 1 bloc C     | `cycleYears` 2 à 6 ; `frequencyMonths` 12, 6 ou 4 (doit diviser 12 × C) ; `horizonYears` multiple de C, jusqu'en 2060. Règles dans `application/rules/timeSettings.js`.                                                                             |
+| `farm.priorities`         | 1 bloc D     | les 4 priorités, de la plus importante à la moins importante : `rendement`, `eau` (utilisation de l'eau), `protection_sol`, `ravageurs` (les mêmes que les mesures de `POST /rotations/rank`). Une priorité absente garde 25 % du plus petit poids. |
+| `farm.missingEquipment`   | 1 bloc D     | `fourragere` absente → plus de luzerne ni de foin.                                                                                                                                                                                                  |
+| `farm.seeds`              | 1 bloc B     | semences possédées, **sans quantités** (ids de `SEED_IDS`) ; `mode` `preferer` (toutes les cultures ; celles qui manquent sont listées dans `seedsToBuy`) ou `uniquement` (seules ces semences, plus la jachère).                                   |
+| `section.currentCrop`     | 1 bloc A     | une fiche (`mais`, `luzerne-3`…) ou une autre culture (`pomme-de-terre`…), `null` = parcelle libre.                                                                                                                                                 |
+| `section.currentHarvest`  | 1 bloc A     | `"AAAA-MM"`, mois de récolte (ou de fin pour une pérenne) ; lu comme le milieu du mois. Obligatoire si une culture est en place.                                                                                                                    |
+| `section.history`         | 1 bloc A     | cultures des années **avant** la culture en place, une par année. Le plan dit combien d'années demander (`historyYears`).                                                                                                                           |
+| `section.currentRotation` | 1 bloc A, 10 | la rotation que suit le fermier (fiches) ; `rotationPosition` = indice de la culture en place. Elle sert de **référence** ; vide = la culture en place répétée.                                                                                     |
+| `section.diseases`        | partie B     | maladies du sol connues (ids de `SOIL_DISEASES`) : leur délai le plus long devient obligatoire.                                                                                                                                                     |
+| `section.irrigated`       | 8, 9b        | parcelle irriguée : le risque eau est multiplié par 0,4, la note eau compte la part des besoins à irriguer, et le plan affiche l'irrigation nécessaire (`water.irrigationMmPerYear`).                                                               |
+| `section.soilTest`        | 5            | `{ clayPct, sandPct, organicCarbon (g/kg), ph }` ou `null` (SoilGrids).                                                                                                                                                                             |
 
 ## Sortie : `FarmPlan`
 
@@ -111,9 +109,9 @@ Un plan par section, **dans le même ordre et avec le même `id`** que l'entrée
     "positionsPerCycle": 4,
     "horizonYears": 12,
     "currentYear": 2026,
-    "priorities": ["erosion", "rendement", "azote", "reserve", "matiere_org", "marche"]
+    "priorities": ["rendement", "protection_sol", "eau", "ravageurs"]
   },
-  "weights": { "erosion": 0.408, "rendement": 0.242, "...": 0 },
+  "weights": { "rendement": 0.521, "eau": 0.146, "protection_sol": 0.271, "ravageurs": 0.062 },
   "sections": [
     {
       "id": "A",
@@ -178,19 +176,19 @@ Un plan par section, **dans le même ordre et avec le même `id`** que l'entrée
           },
           "risks": { "erosion": 0.72, "water": 0.31 },
           "waterPressure": { "pressure": 0.31, "worst": 0.31, "…": "comme field.waterPressure" },
-          "weights": { "erosion": 0.7, "...": 0 },
+          "weights": {
+            "rendement": 0.521,
+            "eau": 0.147,
+            "protection_sol": 0.465,
+            "ravageurs": 0.062
+          },
           "chosen": {
             "score": 60.86,
             "criteria": {
               "rendement": 0.66,
-              "erosion": 0.58,
-              "eau": 0.6,
-              "fourrage": 0.2,
-              "azote": 0.44,
-              "matiere_org": 0.46,
-              "marche": 0.75,
-              "ravageurs": 1,
-              "reserve": 1
+              "eau": 0.8,
+              "protection_sol": 0.58,
+              "ravageurs": 1
             },
             "label": "(seigle) → Jachère → Soya (+ seigle) → Jachère → Blé d’automne",
             "sheets": ["jachere", "soya", "jachere", "ble-automne"],
@@ -266,8 +264,8 @@ Un plan par section, **dans le même ordre et avec le même `id`** que l'entrée
 
 Règles :
 
-- **`settings.priorities` et `weights`** : le classement dont les poids (rank order centroid) ont été calculés, et ces poids. L'écran des priorités affiche les parts de chaque critère seulement quand `settings.priorities` est le classement en cours : le front ne recalcule aucun poids.
-- **Notes** : de 0 à 100 (décimales gardées, les écrans arrondissent). **Critères** : de 0 à 1, `null` = inconnu (laissé de côté dans la moyenne).
+- **`settings.priorities` et `weights`** : le classement dont les poids (rank order centroid) ont été calculés, et ces poids. L'écran des priorités affiche la part de chaque priorité seulement quand `settings.priorities` est le classement en cours : le front ne recalcule aucun poids.
+- **Notes** : de 0 à 100 (décimales gardées, les écrans arrondissent). **Priorités** (`criteria`) : les 4, de 0 à 1, `null` = inconnu (laissé de côté dans la moyenne).
 - **`decision`** : `garder`, `changer`, ou `aucune` quand aucune chaîne ne respecte les contraintes ; dans ce cas `chosen` vaut `null` et les cycles suivants ne sont pas renvoyés.
 - **`steps`** : les cultures de la chaîne et les couverts (`kind: "couvert"`, sans position) dans l'ordre du calendrier ; dates ISO ; positions comptées à partir de 1. Une jachère n'a ni semis ni récolte.
 - **`robustness`** : pire note de la chaîne adoptée dans les cycles suivants ; `null` pour une chaîne gardée du cycle précédent ou qui devient infaisable (`becomesInfeasibleLater`).

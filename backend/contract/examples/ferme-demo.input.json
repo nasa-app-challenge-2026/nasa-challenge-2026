@@ -32,15 +32,7 @@
       "frequencyMonths": 12,
       "horizonYears": 12
     },
-    "priorities": [
-      "erosion",
-      "rendement",
-      "azote",
-      "reserve",
-      "matiere_org",
-      "marche"
-    ],
-    "livestock": false,
+    "priorities": ["rendement", "protection_sol", "eau", "ravageurs"],
     "missingEquipment": [],
     "seeds": {
       "crops": [

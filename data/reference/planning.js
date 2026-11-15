@@ -30,8 +30,8 @@ export const LAST_PROJECTION_YEAR = 2060;
 /** Seed reserve modes. */
 export const RESERVE_MODES = {
   preferer: {
-    label: 'Préférer ma réserve',
-    text: 'Toutes les cultures restent possibles ; celles de la réserve comptent dans la note.',
+    label: 'Toutes les cultures',
+    text: 'Toutes les cultures restent possibles ; celles qui manquent à la réserve sont listées « à se procurer ».',
   },
   uniquement: {
     label: 'Ma réserve uniquement',

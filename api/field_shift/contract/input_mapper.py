@@ -82,7 +82,6 @@ def read_farm_input(
         ),
         farmer=FarmerProfile(
             ranking=tuple(farm.priorities),
-            livestock=farm.livestock,
             missing_equipment=frozenset(farm.missing_equipment),
             seeds=frozenset(farm.seeds.crops),
             reserve_mode=farm.seeds.mode,

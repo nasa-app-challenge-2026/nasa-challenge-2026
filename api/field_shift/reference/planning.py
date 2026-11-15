@@ -45,7 +45,12 @@ FREQUENCIES: Final[tuple[Frequency, ...]] = (
 
 
 class ReserveMode(StrEnum):
-    """What the seed reserve means for the proposals."""
+    """What the seed reserve means for the proposals.
+
+    PREFERRED  every crop can be proposed; the seeds missing from the reserve are listed to buy
+               (in field_shift.py v5.1, the share of owned seeds was also a criterion)
+    ONLY       only the seeds of the reserve are proposed (and fallow)
+    """
 
     PREFERRED = "preferer"
     ONLY = "uniquement"

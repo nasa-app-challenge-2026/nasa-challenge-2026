@@ -46,6 +46,20 @@ def disease_id_of(name: str) -> str:
     return _DISEASE_TO_ID[plain(name)]
 
 
+#: field_shift.py v5.1 calls the soil criterion `erosion`; this project, `protection_sol`.
+_CRITERION_TO_ID = {"erosion": "protection_sol"}
+
+
+def criterion_id_of(name: str) -> str:
+    """Id of a criterion of the reference ("erosion" → "protection_sol")."""
+    return _CRITERION_TO_ID.get(name, name)
+
+
+def by_criterion_id(values: dict[str, Any]) -> dict[str, Any]:
+    """A mapping of the reference by criterion, with the ids of this project."""
+    return {criterion_id_of(name): value for name, value in values.items()}
+
+
 def infinite(value: Any) -> Any:
     """ "Infinity" (JSON-safe) → inf."""
     return {"Infinity": float("inf"), "-Infinity": float("-inf")}.get(value, value)

@@ -1,17 +1,13 @@
 /**
  * 6 · Priorités (onboarding). Owner: Loïc. Step 1 of the algorithm, block D: the
- * farmer ranks the criteria that matter (the others keep a small weight), says if
- * he has livestock and which equipment he lacks. The weights shown are the rank
+ * farmer ranks the four priorities (rendement, utilisation de l’eau, protection du
+ * sol, ravageurs) and says which equipment he lacks. The weights shown are the rank
  * order centroid the algorithm uses.
  */
 import { html } from '../lib/html.js';
 import { CRITERIA } from '../../data/reference/criteria.js';
 import { EQUIPMENT } from '../../data/reference/crops.js';
-import {
-  moveCriterion,
-  unrankedCriteria,
-  weightShares,
-} from '../../application/rules/priorities.js';
+import { moveCriterion, weightShares } from '../../application/rules/priorities.js';
 import { onboardingHeader } from '../ui/layout.js';
 import { icon, ICONS } from '../ui/icons.js';
 import { switchButton } from '../ui/widgets.js';
@@ -54,53 +50,20 @@ export function priorityEditor(state) {
             >
               ${icon(ICONS.down, { size: 18 })}
             </button>
-            <button
-              type="button"
-              class="icon-btn"
-              data-action="prio-remove"
-              data-c="${k}"
-              aria-label="Ne pas classer ${c.label}"
-            >
-              ${icon(ICONS.close, { size: 18 })}
-            </button>
           </span>
         </li>`;
       })}
     </ol>
-    ${
-      unrankedCriteria(ranking).length
-        ? html`<div class="stack-xs">
-            <span class="eyebrow">Non classés (comptent peu)</span>
-            <div class="row-wrap gap-xs">
-              ${unrankedCriteria(ranking).map(
-                (k) =>
-                  html`<button
-                    type="button"
-                    class="now-chip"
-                    data-action="prio-add"
-                    data-c="${k}"
-                    title="${CRITERIA[k].text}"
-                  >
-                    + ${CRITERIA[k].label} · ${share(k)}
-                  </button>`,
-              )}
-            </div>
-          </div>`
-        : ''
-    }
+    <span class="muted small"
+      >La note de chaque suite de cultures est la moyenne de ces quatre notes, pondérée par ces
+      poids.</span
+    >
   </div>`;
 }
 
 export function farmFactsEditor(state) {
   const f = state.farm.farm;
   return html`<div class="stack-sm">
-    <div class="toggle-card">
-      <span class="stack-0"
-        ><strong class="small">J’ai du bétail</strong
-        ><span class="muted small">Sinon, le fourrage compte peu</span></span
-      >
-      ${switchButton(f.livestock, 'toggle-livestock', 'J’ai du bétail')}
-    </div>
     ${Object.values(EQUIPMENT).map(
       (e) =>
         html`<div class="toggle-card">
@@ -123,16 +86,6 @@ export const priorityActions = {
         Number(el.dataset.d),
       );
     }),
-  'prio-remove': (app, el) =>
-    app.updateFarm((farm) => {
-      farm.farm.priorities = farm.farm.priorities.filter((c) => c !== el.dataset.c);
-    }),
-  'prio-add': (app, el) =>
-    app.updateFarm((farm) => {
-      farm.farm.priorities = [...farm.farm.priorities, el.dataset.c];
-    }),
-  'toggle-livestock': (app) =>
-    app.updateFarm((farm) => (farm.farm.livestock = !farm.farm.livestock)),
   'toggle-equipment': (app, el) =>
     app.updateFarm((farm) => {
       const id = el.dataset.equipment;
@@ -151,14 +104,14 @@ export default {
         <div class="stack-xs">
           <h1 class="h1 h1--xl">Qu’est-ce qui compte le plus pour vous ?</h1>
           <p class="lead">
-            Classez les critères qui comptent, du plus important au moins important. L’appli note
-            chaque suite de cultures sur ces critères ; le premier pèse le plus. Elle donne aussi
-            plus de poids à l’érosion et à l’eau si votre champ y est fragile.
+            Classez les quatre priorités, de la plus importante à la moins importante. L’appli note
+            chaque suite de cultures sur ces quatre priorités ; la première pèse le plus. Elle donne
+            aussi plus de poids à la protection du sol et à l’eau si votre champ y est fragile.
           </p>
         </div>
         ${priorityEditor(state)}
         <section class="card stack-sm">
-          <h2 class="h2">Votre ferme</h2>
+          <h2 class="h2">Votre équipement</h2>
           ${farmFactsEditor(state)}
         </section>
         <div class="actions-bar">

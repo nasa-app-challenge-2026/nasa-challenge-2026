@@ -1,27 +1,53 @@
-"""The nine criteria of the chain score (step 9b of field_shift.py v5.1).
+"""The criteria a chain is scored on (step 9b).
 
-The farmer ranks the ones that matter to him; the algorithm turns the ranking into weights
-(rank order centroid) and scores every chain on each criterion, from 0 to 1.
+The farmer ranks four priorities, the same four as the measures of the rotation ranking
+(`measures.py`): rendement, eau, protection_sol, ravageurs. The algorithm turns the ranking into
+weights (rank order centroid) and scores every chain on each of them, from 0 to 1.
+
+field_shift.py v5.1 scored five more criteria (fourrage, azote, matiere_org, marche, reserve) and
+called the soil criterion `erosion`. They are no longer ranked nor scored. The chain scorer still
+computes them when a profile asks for them (`V51_CRITERIA_IDS`): the reference tests compare the
+planner with field_shift.py v5.1, on its nine criteria.
 """
 
 from __future__ import annotations
 
 from typing import Final
 
-#: Fixed order of the criteria (field_shift.py, CRITERES).
-CRITERIA_IDS: Final[tuple[str, ...]] = (
-    "rendement",
-    "eau",
+from field_shift.reference.measures import (
+    MEASURE_IDS,
+    MEASURE_PESTS,
+    MEASURE_SOIL_PROTECTION,
+    MEASURE_WATER,
+    MEASURE_YIELD,
+)
+
+#: The four priorities, in their fixed order: the ids of the measures of the ranking.
+CRITERIA_IDS: Final[tuple[str, ...]] = MEASURE_IDS
+
+#: Yield: the precrop values of the successions, measured in the climate twins.
+YIELD_CRITERION: Final = MEASURE_YIELD
+#: Water: the water score of the whole chain (`algorithm/water`).
+WATER_CRITERION: Final = MEASURE_WATER
+#: Soil protection: the share of the time the soil is covered by a living crop.
+SOIL_CRITERION: Final = MEASURE_SOIL_PROTECTION
+#: Pests: the return delays of the crops.
+PESTS_CRITERION: Final = MEASURE_PESTS
+
+#: The nine criteria of field_shift.py v5.1, in its order (its `erosion` is `protection_sol`).
+V51_CRITERIA_IDS: Final[tuple[str, ...]] = (
+    YIELD_CRITERION,
+    WATER_CRITERION,
     "fourrage",
     "azote",
-    "erosion",
+    SOIL_CRITERION,
     "matiere_org",
     "marche",
-    "ravageurs",
+    PESTS_CRITERION,
     "reserve",
 )
 
-#: Criteria computed from the sheet values, weighted by the time each crop holds the field.
-#: The water criterion: the water score of the whole chain (`algorithm/water`).
-WATER_CRITERION: Final = "eau"
+#: Criteria of v5.1 computed from the sheet values, weighted by the time each crop holds the field.
 TIME_WEIGHTED_CRITERIA: Final[tuple[str, ...]] = ("fourrage", "azote", "matiere_org")
+#: The forage criterion of v5.1 (its weight drops without livestock).
+FORAGE_CRITERION: Final = "fourrage"

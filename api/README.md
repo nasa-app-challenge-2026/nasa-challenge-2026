@@ -82,8 +82,8 @@ field_shift/
     twins/           étapes 4 à 7 : jumeaux climatiques, sol, rotations observées, valeur du précédent
     diagnostic/      étape 8 : risques d'érosion et d'eau
     water/           l'interface du modèle d'eau que voit le planificateur (note d'une chaîne, pression)
-    delays/          délais de retour (contraintes dures, critère ravageurs, vigilances)
-    chain/           étape 9b : candidates, placement, couverts, note sur 9 critères, recherche en faisceau
+    delays/          délais de retour (contraintes dures, priorité ravageurs, vigilances)
+    chain/           étape 9b : candidates, placement, couverts, note sur les 4 priorités, recherche en faisceau
     planning/        étape 10 : entrées du fermier, plan cycle par cycle, robustesse
     report/          les messages en français et le libellé des chaînes
     sources/         d'où viennent les données (aujourd'hui des données d'exemple, voir ALGORITHME.md)
@@ -93,7 +93,7 @@ field_shift/
                      les statistiques de pluie et de saison (forcing.py)
     terrain/         classement : le contour d'une section (surface, centre), sa pente et sa longueur de pente
     ranking/         classement : les quatre mesures, les poids des priorités, le tri
-  reference/       les données fixes : fiches des cultures, délais de retour et maladies, critères, limites
+  reference/       les données fixes : fiches des cultures, délais de retour et maladies, priorités, limites
                    notes de protection du sol des cultures (soil_protection.py), les quatre mesures
 water_use/         LE MODULE EAU, autonome : bilan d'eau du sol jour par jour (FAO-56, FAO-33, NRCS)
                    python -m water_use cultures | evaluer | connexions | valider

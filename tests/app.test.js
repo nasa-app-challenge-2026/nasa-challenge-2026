@@ -5,6 +5,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from '../application/app.js';
 import { STORAGE_KEY } from '../data/access/storage.js';
+import { DEMO_FARM } from '../data/reference/demoFarm.js';
 
 const engine = {
   name: 'test',
@@ -127,6 +128,19 @@ describe('application', () => {
       currentRotation: ['ble-automne'],
     });
     expect(farm.sections[0].offset).toBeUndefined();
+    expect(farm.farm.priorities).toHaveLength(4);
+  });
+
+  it('brings a farm saved with the nine criteria to the four priorities', () => {
+    const storage = memoryStorage();
+    const saved = structuredClone(DEMO_FARM);
+    saved.farm.priorities = ['erosion', 'rendement', 'azote', 'reserve', 'matiere_org', 'marche'];
+    saved.farm.livestock = true;
+    storage.setItem(STORAGE_KEY, JSON.stringify({ user: null, farm: saved }));
+    const { farm } = createApp({ engine, storage }).state;
+    expect(farm.farm.priorities).toEqual(['protection_sol', 'rendement', 'eau', 'ravageurs']);
+    expect(farm.farm.livestock).toBeUndefined();
+    expect(farm.sections).toEqual(DEMO_FARM.sections);
   });
 
   it('keeps a given label without looking up the address', () => {

@@ -1,6 +1,6 @@
 """FarmInput 2.0: what the screens send to the algorithm (see docs/ALGO_CONTRACT.md).
 
-The farm (place, cycle / frequency / horizon, ranked criteria, seed reserve) and one entry per
+The farm (place, cycle / frequency / horizon, ranked priorities, seed reserve) and one entry per
 section (crop in place and its harvest month, previous years, current rotation, soil diseases,
 irrigation, soil test). Invalid input is refused with a 422 that says which field is wrong.
 """
@@ -47,7 +47,15 @@ def _known_crop(value: str) -> str:
 
 CropId = Annotated[str, AfterValidator(_known_crop)]
 SheetId = Annotated[str, AfterValidator(_one_of(SHEETS, "fiche de culture"))]
-CriterionId = Annotated[str, AfterValidator(_one_of(CRITERIA_IDS, "critère"))]
+
+
+def _known_priority(value: str) -> str:
+    if value not in CRITERIA_IDS:
+        raise ValueError(f"priorité inconnue : {value} (priorités : {', '.join(CRITERIA_IDS)})")
+    return value
+
+
+CriterionId = Annotated[str, AfterValidator(_known_priority)]
 DiseaseId = Annotated[str, AfterValidator(_one_of(SOIL_DISEASES, "maladie du sol"))]
 EquipmentId = Annotated[str, AfterValidator(_one_of({EQUIPMENT_FORAGE}, "équipement"))]
 
@@ -85,15 +93,17 @@ class FarmInfo(CamelModel):
     type: Literal["grandes-cultures"]
     location: Location
     time: TimeInput
-    priorities: list[CriterionId] = Field(description="Criteria, most important first.")
+    priorities: list[CriterionId] = Field(
+        description="The four priorities (rendement, eau, protection_sol, ravageurs), most "
+        "important first. One left out keeps a small weight."
+    )
     seeds: SeedsInput
-    livestock: bool = False
     missing_equipment: list[EquipmentId] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def priorities_are_distinct(self) -> FarmInfo:
         if len(set(self.priorities)) != len(self.priorities):
-            raise ValueError("un critère ne peut être classé qu’une fois")
+            raise ValueError("une priorité ne peut être classée qu’une fois")
         return self
 
 

@@ -1,7 +1,8 @@
 /**
  * The farmer's seed reserve (`farm.seeds`, step 1 block B): the list of seeds he
- * owns, without quantities, and the mode: "preferer" (default, the reserve counts
- * in the score) or "uniquement" (only the reserve is proposed).
+ * owns, without quantities, and the mode: "preferer" (default: every crop can be
+ * proposed, the seeds missing are listed to buy) or "uniquement" (only the reserve is
+ * proposed).
  */
 import { SEED_IDS, SHEETS } from '../../data/reference/crops.js';
 

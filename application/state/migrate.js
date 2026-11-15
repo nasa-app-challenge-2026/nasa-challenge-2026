@@ -2,10 +2,12 @@
  * Farms saved by an older version of the app (contract 1.0: one rotation edited by
  * hand per section, offsets, covers) are brought to the FarmInput 2.0: the drawing,
  * the areas and the crops in place are kept; the old rotation becomes the current
- * rotation (the reference the algorithm compares with).
+ * rotation (the reference the algorithm compares with). Farms saved when the
+ * algorithm had nine criteria get their ranking brought to the four priorities.
  */
 import { DEMO_FARM } from '../../data/reference/demoFarm.js';
 import { SHEETS } from '../../data/reference/crops.js';
+import { normalizePriorities } from '../rules/priorities.js';
 import { deriveSeeds } from '../rules/seeds.js';
 
 export const CURRENT_VERSION = '2.0';
@@ -41,8 +43,22 @@ function migrateSection(s, currentYear) {
   };
 }
 
+/**
+ * The algorithm now scores the four priorities only: the ranking of a saved farm is brought to
+ * them, and livestock (it only weighed the forage criterion) is no longer asked. Mutates `farm`.
+ */
+function withFourPriorities(farm) {
+  farm.farm.priorities = normalizePriorities(farm.farm.priorities);
+  delete farm.farm.livestock;
+  return farm;
+}
+
 export function migrateFarm(saved, currentYear = new Date().getFullYear()) {
-  if (saved?.version === CURRENT_VERSION) return structuredClone(saved);
+  if (saved?.version === CURRENT_VERSION) return withFourPriorities(structuredClone(saved));
+  return withFourPriorities(fromVersion1(saved, currentYear));
+}
+
+function fromVersion1(saved, currentYear) {
   const base = structuredClone(DEMO_FARM);
   const farm = {
     ...base,

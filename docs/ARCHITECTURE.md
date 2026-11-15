@@ -84,11 +84,11 @@ docs/                  documentation
 | `#/tracer`             | Tracer la ferme    | contour et sections                                                                                                                          |
 | `#/cultures`           | Mes cultures       | culture en place, mois de récolte, rotation actuelle de chaque section ; réserve de semences                                                 |
 | `#/temps`              | Cycle et horizon   | cycle, fréquence, horizon                                                                                                                    |
-| `#/priorites`          | Priorités          | classement des 9 critères, bétail, équipement                                                                                                |
+| `#/priorites`          | Priorités          | classement des 4 priorités, équipement                                                                                                      |
 | `#/tableau`            | Tableau de bord    | météo du jour, vue 3D, toute la ferme par année, une carte par section (cycle, garder/changer, note), curseur des années                     |
 | `#/section/A/parcelle` | Ma parcelle        | toutes les entrées de la section, années précédentes, maladies, irrigation, analyse de sol                                                   |
 | `#/section/A/champ`    | Mon champ          | risques érosion et eau, mesures satellites, sol                                                                                              |
-| `#/section/A/plan`     | Plan par cycle     | décision, note contre la rotation actuelle, chaîne et calendrier, lacunes, semences, cultures retirées, 9 critères, alternatives, robustesse |
+| `#/section/A/plan`     | Plan par cycle     | décision, note contre la rotation actuelle, chaîne et calendrier, lacunes, semences, cultures retirées, 4 priorités, eau, alternatives, robustesse |
 | `#/section/A/jumeaux`  | Climat et jumeaux  | climat visé du cycle, jumeaux et carte (une flèche par modèle)                                                                               |
 | `#/sources`            | Détail et sources  | données et méthodes, réelles ou fictives                                                                                                     |
 | `#/compte`             | Compte et réglages | profil, ferme, semences, cycle et horizon, priorités                                                                                         |

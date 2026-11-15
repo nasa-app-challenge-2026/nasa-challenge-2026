@@ -26,7 +26,8 @@ EROSION_BARE_SOIL: Final = RiskTerm(share=0.2, saturation=150)
 #: also counts in the water score of the chain: whether to keep both is a decision of the team.
 IRRIGATED_WATER_RISK_FACTOR: Final = 0.4
 
-#: Without livestock, the weight of the forage criterion is multiplied by this.
+#: Without livestock, the weight of the forage criterion of field_shift.py v5.1 (reference tests)
+#: is multiplied by this.
 NO_LIVESTOCK_FORAGE_FACTOR: Final = 0.3
 
 #: Yield criterion: precrop values from −16 % to +16 % become 0 to 1.

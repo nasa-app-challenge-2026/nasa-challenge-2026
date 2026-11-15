@@ -14,7 +14,7 @@ Projet de l'équipe **NASA-LARPERS** pour le [NASA Space Apps Challenge 2026](ht
 
 1. Le fermier crée son compte, place sa ferme sur la carte et la **découpe en sections** A, B, C…
 2. Pour chaque section, il dit **ce qui pousse**, quand ce sera récolté et la **rotation qu'il suit** ; il coche les **semences** qu'il a déjà.
-3. Il choisit la **durée du cycle**, le nombre de cultures par an et l'**horizon**, puis classe les **9 critères** qui comptent pour lui (rendement, eau, fourrage, azote, érosion, matière organique, marché, ravageurs, réserve).
+3. Il choisit la **durée du cycle**, le nombre de cultures par an et l'**horizon**, puis classe ses **4 priorités** : rendement, utilisation de l'eau, protection du sol et ravageurs.
 4. Pour chaque section et chaque cycle, l'algorithme :
    - calcule le **climat** que la ferme aura (tendance des 40 ans de NASA POWER, puis modèles climatiques au-delà de 10 ans) ;
    - trouve ses **jumeaux climatiques**, des endroits qui ont déjà eu ce climat entre 2011 et 2024 ;
@@ -66,7 +66,7 @@ Le code est rangé en **quatre couches**, une par dossier. Une couche n'importe 
 | **Frontend**    | [`frontend/`](frontend/)       | la page, les écrans, les composants, les styles                                            |
 | **Back end**    | [`backend/`](backend/)         | **le serveur de l'algorithme** (`api/`, en Python), son client HTTP, le contrat |
 | **Application** | [`application/`](application/) | le contrôleur `app`, l'état, les règles des entrées du fermier, la lecture du plan         |
-| **Data**        | [`data/`](data/)               | noms et couleurs des cultures, critères, textes, ferme de démo, adresses, sauvegarde       |
+| **Data**        | [`data/`](data/)               | noms et couleurs des cultures, priorités, textes, ferme de démo, adresses, sauvegarde       |
 
 La logique métier vit seulement dans `api/field_shift/algorithm/` : une cinquantaine de petits modules Python, une classe ou une fonction par rôle, toutes les constantes nommées dans `algorithm/config/`. Le front et le serveur ne se parlent qu'en HTTP, selon un contrat. Détails : [`docs/ALGORITHME.md`](docs/ALGORITHME.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) et [`api/README.md`](api/README.md).
 

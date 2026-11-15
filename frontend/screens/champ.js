@@ -5,6 +5,7 @@
  * plan (FarmPlan.sections[].field).
  */
 import { html } from '../lib/html.js';
+import { CRITERIA } from '../../data/reference/criteria.js';
 import { nameOf } from '../../data/reference/crops.js';
 import {
   FIELD_MEASURES,
@@ -30,7 +31,8 @@ function riskCard(key, value) {
       <div class="bar__fill ${pct >= 50 ? 'is-bad' : 'is-blue'}" style="width: ${pct}%"></div>
     </div>
     <span class="muted small"
-      >Plus le risque est haut, plus ce critère pèse dans la note du plan.</span
+      >Plus le risque est haut, plus la priorité « ${CRITERIA[RISKS[key].priority].label} » pèse
+      dans la note du plan.</span
     >
   </div>`;
 }

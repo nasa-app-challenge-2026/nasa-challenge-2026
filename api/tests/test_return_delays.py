@@ -19,8 +19,17 @@ from field_shift.algorithm.report.messages import (
     rule_reason_text,
     shared_disease_text,
 )
+from field_shift.reference.criteria import CRITERIA_IDS, V51_CRITERIA_IDS
 from field_shift.reference.crops import SHEETS
-from tests.helpers.reference_names import crop_id_of, disease_id_of, fixture, id_of, plain
+from tests.helpers.reference_names import (
+    by_criterion_id,
+    criterion_id_of,
+    crop_id_of,
+    disease_id_of,
+    fixture,
+    id_of,
+    plain,
+)
 
 REF = fixture("delays.json")
 
@@ -136,17 +145,25 @@ def test_a_crop_not_in_the_sheets_still_counts_in_the_history():
     ]
 
 
-def test_weights_follow_the_rank_order_centroid():
+def test_weights_follow_the_rank_order_centroid_of_the_reference():
     for case in REF["weights"]:
-        weights = weights_from_ranking(case["classement"])
-        assert weights == pytest.approx(case["base"], rel=1e-12)
+        ranking = [criterion_id_of(c) for c in case["classement"]]
+        weights = weights_from_ranking(ranking, V51_CRITERIA_IDS)
+        assert weights == pytest.approx(by_criterion_id(case["base"]), rel=1e-12)
 
 
-def test_five_ranked_criteria_weigh_46_26_16_9_4_percent():
-    ranking = ["rendement", "eau", "azote", "erosion", "marche"]
+def test_the_four_priorities_weigh_52_27_15_6_percent():
+    ranking = ["protection_sol", "rendement", "eau", "ravageurs"]
     weights = weights_from_ranking(ranking)
-    assert [round(weights[c], 2) for c in ranking] == [0.46, 0.26, 0.16, 0.09, 0.04]
-    assert weights["reserve"] == pytest.approx(0.25 * weights["marche"])
+    assert list(weights) == list(CRITERIA_IDS)
+    assert [round(weights[c], 2) for c in ranking] == [0.52, 0.27, 0.15, 0.06]
+    assert sum(weights.values()) == pytest.approx(1)
+
+
+def test_a_priority_left_out_keeps_a_quarter_of_the_smallest_weight():
+    weights = weights_from_ranking(["eau", "rendement", "protection_sol"])
+    assert weights["ravageurs"] == pytest.approx(0.25 * weights["protection_sol"])
+    assert weights_from_ranking([]) == dict.fromkeys(CRITERIA_IDS, 1.0)
 
 
 def test_a_chain_step_knows_its_sheet():

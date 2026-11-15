@@ -106,7 +106,7 @@ export function calendarTable(chain) {
   </div>`;
 }
 
-/** The 9 criteria of the chosen chain, with the current rotation as a marker. */
+/** The 4 priorities of the chosen chain, with the current rotation as a marker. */
 export function criteriaBars(chain, reference, weights) {
   const order = [...CRITERIA_IDS].sort((a, b) => (weights?.[b] ?? 0) - (weights?.[a] ?? 0));
   return html`<div class="stack-sm">

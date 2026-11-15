@@ -54,17 +54,8 @@
       ]
     },
     "CriterionId": {
-      "enum": [
-        "rendement",
-        "eau",
-        "fourrage",
-        "azote",
-        "erosion",
-        "matiere_org",
-        "marche",
-        "ravageurs",
-        "reserve"
-      ]
+      "description": "Une des quatre priorités : rendement, utilisation de l'eau, protection du sol, ravageurs (les mêmes que les mesures du classement des rotations).",
+      "enum": ["rendement", "eau", "protection_sol", "ravageurs"]
     },
     "DiseaseId": {
       "description": "Maladie du sol (SARE, annexe 3) : voir server/field_shift/reference/return_delays.py.",
@@ -296,14 +287,12 @@
               }
             },
             "priorities": {
+              "description": "Les quatre priorités, de la plus importante à la moins importante ; une priorité absente garde un petit poids.",
               "type": "array",
               "uniqueItems": true,
               "items": {
                 "$ref": "#/definitions/CriterionId"
               }
-            },
-            "livestock": {
-              "type": "boolean"
             },
             "missingEquipment": {
               "type": "array",

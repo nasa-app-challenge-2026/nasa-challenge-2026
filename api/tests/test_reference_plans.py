@@ -16,7 +16,7 @@ from field_shift.algorithm.chain.chain_step import sheet_ids
 from field_shift.algorithm.planning.parcel_planner import ParcelPlanner
 from field_shift.algorithm.report.chain_label import chain_label
 from field_shift.algorithm.report.messages import rule_reason_text, shared_disease_text
-from tests.helpers.reference_names import crop_id_of, fixture, id_of, plain
+from tests.helpers.reference_names import by_criterion_id, crop_id_of, fixture, id_of, plain
 from tests.helpers.reference_plan import inputs_of
 
 SCENARIOS = [
@@ -51,13 +51,13 @@ def assert_chain(actual_chain, expected: list) -> None:
 def assert_cycle(actual, ref: dict) -> None:
     assert list(actual.years) == ref["annees"]
     assert list(actual.context.candidates) == [id_of(n) for n in ref["ctx"]["candidates"]]
-    assert actual.weights == pytest.approx(ref["ctx"]["poids"], rel=TOLERANCE)
+    assert actual.weights == pytest.approx(by_criterion_id(ref["ctx"]["poids"]), rel=TOLERANCE)
     assert actual.decision.value == ref["decision"]
 
     chosen = actual.chosen
     assert_chain(chosen.chain, ref["chaine"])
     assert chosen.score == pytest.approx(ref["note"], abs=TOLERANCE)
-    for criterion, value in ref["criteres"].items():
+    for criterion, value in by_criterion_id(ref["criteres"]).items():
         if value is None:
             assert chosen.criteria[criterion] is None
         else:

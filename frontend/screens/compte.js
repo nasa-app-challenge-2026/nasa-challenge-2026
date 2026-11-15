@@ -65,7 +65,7 @@ function panel(state) {
         <div class="stack-xs">
           <h2 class="h2 h2--lg">Priorités</h2>
           <p class="muted small">
-            L’ordre donne le poids de chaque critère dans la note des suites de cultures.
+            L’ordre des quatre priorités donne leur poids dans la note des suites de cultures.
           </p>
         </div>
         ${priorityEditor(state)} ${farmFactsEditor(state)}

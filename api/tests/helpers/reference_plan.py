@@ -14,9 +14,10 @@ from field_shift.algorithm.planning.farmer_profile import FarmerProfile
 from field_shift.algorithm.planning.parcel import Parcel
 from field_shift.algorithm.planning.time_settings import TimeSettings
 from field_shift.algorithm.twins.twin_evidence import TwinEvidence
+from field_shift.reference.criteria import V51_CRITERIA_IDS
 from field_shift.reference.crops import SHEETS
 from field_shift.reference.planning import ReserveMode
-from tests.helpers.reference_names import crop_id_of, disease_id_of, id_of
+from tests.helpers.reference_names import criterion_id_of, crop_id_of, disease_id_of, id_of
 from tests.helpers.reference_water import ReferenceCycleWater
 
 EQUIPMENT = {"fourragère": "fourragere"}
@@ -99,7 +100,9 @@ def inputs_of(fixture: dict) -> PlanInputs:
     return PlanInputs(
         time=TimeSettings(scenario["C"], scenario["f"], scenario["H"]),
         farmer=FarmerProfile(
-            ranking=tuple(fixture["fermier"]["classement"]),
+            # The reference scores its nine criteria (the server, the four priorities).
+            ranking=tuple(criterion_id_of(c) for c in fixture["fermier"]["classement"]),
+            criteria=V51_CRITERIA_IDS,
             livestock=fixture["fermier"]["betail"],
             missing_equipment=frozenset(
                 EQUIPMENT.get(e, e) for e in fixture["fermier"]["equipement_manquant"]

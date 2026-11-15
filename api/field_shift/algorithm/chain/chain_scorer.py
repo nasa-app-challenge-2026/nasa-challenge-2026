@@ -1,22 +1,25 @@
-"""Step 9b, the score of a chain: 9 criteria from 0 to 1, then their weighted mean on 100.
+"""Step 9b, the score of a chain: the four priorities from 0 to 1, then their weighted mean on 100.
 
-  rendement     precrop values (step 7) of each succession, from the crop in place to the return
-                to the start of the cycle; same crop twice = 0 %; unknown value = 0 % and a gap is
-                reported. −16 %…+16 % become 0…1.
-  erosion       share of the time the soil is covered by a living crop (covers included)
-  eau           water score of the whole chain, covers included: a daily soil water balance on
-                the weather of the cycle (`CycleContext.water`); unknown for a partial chain
+  rendement       precrop values (step 7) of each succession, from the crop in place to the
+                  return to the start of the cycle; same crop twice = 0 %; unknown value = 0 % and
+                  a gap is reported. −16 %…+16 % become 0…1.
+  eau             water score of the whole chain, covers included: a daily soil water balance on
+                  the weather of the cycle (`CycleContext.water`); unknown for a partial chain
+  protection_sol  share of the time the soil is covered by a living crop (covers included)
+  ravageurs       return delays (see ReturnDelayChecker.pest_score)
+An unknown criterion is left out of the mean. The seeds the farmer does not own are listed "to
+buy" whatever the criteria.
+
+The criteria scored are the keys of the weights of the cycle. The nine criteria of field_shift.py
+v5.1 (reference tests) add:
   fourrage, azote, matiere_org   sheet values weighted by the time each crop holds the field
-  marche        mean of the sold crops (a perennial counts once per year)
-  ravageurs     return delays (see ReturnDelayChecker.pest_score)
-  reserve       share of the sowings of the 1st cycle made with seeds the farmer owns; the other
-                seeds are listed "to buy"
-An unknown criterion is left out of the mean.
+  marche          mean of the sold crops (a perennial counts once per year)
+  reserve         share of the sowings of the 1st cycle made with seeds the farmer owns
 """
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from itertools import pairwise
 from statistics import fmean
@@ -34,11 +37,17 @@ from field_shift.algorithm.numerics.ratios import clamp01
 from field_shift.algorithm.twins.twin_evidence import TwinEvidence
 from field_shift.algorithm.water.water_model import WaterScore
 from field_shift.reference.criteria import (
-    CRITERIA_IDS,
+    PESTS_CRITERION,
+    SOIL_CRITERION,
     TIME_WEIGHTED_CRITERIA,
     WATER_CRITERION,
+    YIELD_CRITERION,
 )
 from field_shift.reference.crops import CropSheet, Role
+
+#: The criteria of field_shift.py v5.1 that are not a priority (reference tests).
+MARKET_CRITERION = "marche"
+RESERVE_CRITERION = "reserve"
 
 
 @dataclass(frozen=True)
@@ -46,7 +55,7 @@ class ScoredChain:
     """A chain with its score and everything the plan says about it.
 
     score         0 to 100
-    criteria      the 9 criteria, 0 to 1 (None = unknown)
+    criteria      the criteria of the cycle (the four priorities), 0 to 1 (None = unknown)
     gaps          successions whose precrop value is unknown
     seeds_to_buy  seeds the farmer does not own yet
     covers        cover steps placed automatically between the crops
@@ -158,10 +167,10 @@ def _reserve_share(
 
 def best_possible_score(scored: ScoredChain, weights: Mapping[str, float]) -> float:
     """The highest score a chain scored without its water can reach once the water is known
-    (a water score of 1). Equal to its score when the water is already in it."""
-    if scored.criteria.get(WATER_CRITERION) is not None:
+    (a water score of 1). Equal to its score when the water is already in it, or not scored."""
+    if WATER_CRITERION not in weights or scored.criteria.get(WATER_CRITERION) is not None:
         return scored.score
-    known = sum(weights[c] for c in CRITERIA_IDS if scored.criteria.get(c) is not None)
+    known = sum(weights[c] for c, value in scored.criteria.items() if value is not None)
     water = weights[WATER_CRITERION]
     return (scored.score * known + SCORE_SCALE * water) / (known + water)
 
@@ -190,19 +199,24 @@ def score_chain(
 
     water = (
         ctx.water.score(steps, start, end, irrigated=ctx.irrigated, partial=partial)
-        if with_water
+        if with_water and WATER_CRITERION in ctx.weights
         else None
     )
-    criteria: dict[str, float | None] = {
-        "rendement": yield_criterion(values),
-        "erosion": min(1.0, _living_cover_months(steps, end) / duration),
-        WATER_CRITERION: None if water is None else water.note,
-        **_time_weighted_values(steps, start),
-        "marche": _market_value([step.sheet for step in sold]),
-        "ravageurs": ctx.delays.pest_score(occupations, closed=not partial),
-        "reserve": reserve_share,
+    time_weighted: dict[str, float] = {}
+    if any(c in ctx.weights for c in TIME_WEIGHTED_CRITERIA):
+        time_weighted = _time_weighted_values(steps, start)
+    # Only the criteria of the cycle are computed (the keys of its weights).
+    measures: dict[str, Callable[[], float | None]] = {
+        YIELD_CRITERION: lambda: yield_criterion(values),
+        WATER_CRITERION: lambda: None if water is None else water.note,
+        SOIL_CRITERION: lambda: min(1.0, _living_cover_months(steps, end) / duration),
+        PESTS_CRITERION: lambda: ctx.delays.pest_score(occupations, closed=not partial),
+        MARKET_CRITERION: lambda: _market_value([step.sheet for step in sold]),
+        RESERVE_CRITERION: lambda: reserve_share,
+        **{c: (lambda c=c: time_weighted[c]) for c in TIME_WEIGHTED_CRITERIA},
     }
-    known = [c for c in CRITERIA_IDS if criteria.get(c) is not None]
+    criteria: dict[str, float | None] = {c: measures[c]() for c in ctx.weights}
+    known = [c for c, value in criteria.items() if value is not None]
     weight_sum = sum(ctx.weights[c] for c in known)
     score = SCORE_SCALE * sum(ctx.weights[c] * criteria[c] for c in known) / weight_sum
     return ScoredChain(
