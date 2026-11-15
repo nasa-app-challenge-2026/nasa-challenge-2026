@@ -12,5 +12,5 @@
 
 1. Une branche par tâche : `ali/tableau-3d`, `loic/carte-leaflet`, `justin/graphique-revenu`.
 2. `npm run lint && npm test` avant de pousser.
-3. Une pull request vers `main`, relue par une autre personne. La CI vérifie le lint, le format, les tests et la compilation.
+3. Une pull request vers `main`, relue par une autre personne. Il n'y a pas de CI : lancez le lint, le format, les tests et la compilation avant de pousser.
 4. Chaque fusion dans `main` met le site à jour sur GitHub Pages.

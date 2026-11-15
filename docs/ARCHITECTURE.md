@@ -34,7 +34,7 @@ L'application appelle le moteur (`engine.planFarm`) **sans l'importer** : elle r
 
 Le serveur Python (`backend/server/`) n'entre pas dans ce graphe : le JavaScript ne l'importe pas, il l'appelle en HTTP. Il a ses propres couches, dans le même esprit (`api → services → contract, data_access → algorithm → reference`), décrites dans son [`README`](../backend/server/README.md).
 
-`tests/architecture.test.js` (JavaScript) et `backend/server/tests/test_architecture.py` (Python) vérifient ces règles à chaque lancement des tests : un import dans le mauvais sens fait échouer la CI.
+`tests/architecture.test.js` (JavaScript) et `backend/server/tests/test_architecture.py` (Python) vérifient ces règles à chaque lancement des tests : un import dans le mauvais sens fait échouer les tests.
 
 ## Arborescence
 
@@ -151,4 +151,4 @@ L'utilisateur, la ferme, l'étape de configuration et les préférences d'affich
 
 Vite sert la page depuis `frontend/` et suit les imports vers les autres couches (`vite.config.js`). `.env.local` reste à la racine du dépôt et la version de production va dans `dist/`.
 
-Le serveur se lance à part, depuis `backend/server/` (voir son [`README`](../backend/server/README.md)). La CI a deux tâches : le front (lint, format, tests, build) et le serveur (ruff, pytest).
+Le serveur se lance à part, depuis `backend/server/` (voir son [`README`](../backend/server/README.md)). Il n'y a pas de CI : avant de pousser, lancez vous-même `npm run lint`, `npm test` et `npm run build` pour le front, `ruff check .` et `pytest` (dans `api/`) pour le serveur.
