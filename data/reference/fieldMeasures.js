@@ -1,6 +1,7 @@
 /**
- * What the satellites measure on a field for the diagnostic (step 8) and its soil
- * (step 5). The algorithm sends the values; the screens use these labels.
+ * What the satellites measure on a field for the erosion risk (step 8), what the water
+ * pressure of the farm is made of (water_use), and the soil (step 5). The algorithm sends
+ * the values; the screens use these labels.
  */
 export const FIELD_MEASURES = {
   slopePct: {
@@ -27,27 +28,32 @@ export const FIELD_MEASURES = {
     explain:
       'Jours où les satellites ne voient aucune plante vivante sur le champ. Maximum à 150 jours.',
   },
-  summerStressIndex: {
-    label: 'Stress des plantes en été',
-    unit: 'indice ESI',
-    source: 'ECOSTRESS',
-    risk: 'water',
+};
+
+/**
+ * The components of the water pressure of the farm (FarmPlan…waterPressure.components), each
+ * from 0 (no pressure) to 1. A component no data base could give is listed in `missing`.
+ */
+export const WATER_COMPONENTS = {
+  aridite: {
+    label: 'Aridité',
     explain:
-      'Indice de stress hydrique : 1 = les plantes ont toute l’eau qu’il leur faut. Le stress commence sous 0,8.',
+      'Pluie de l’année comparée à l’eau que l’air peut prendre (évapotranspiration de référence). Compte pour 40 %.',
   },
-  rootZoneDrought: {
-    label: 'Sécheresse des racines',
-    unit: '0 à 1',
-    source: 'SMAP L4',
-    risk: 'water',
-    explain: 'Manque d’eau dans la zone des racines (0 = humide, 1 = très sec).',
+  pluie_ete: {
+    label: 'Baisse de la pluie d’été',
+    explain:
+      'Pluie de juin à août de la seconde moitié de la période comparée à la première. Maximum à −20 %.',
   },
-  groundwaterTrendCmPerYear: {
-    label: 'Réserves d’eau régionales',
-    unit: 'cm par an',
-    source: 'GRACE-FO',
-    risk: 'water',
-    explain: 'Évolution des réserves d’eau de la région (négatif = elles baissent).',
+  nappes: {
+    label: 'Niveau des nappes',
+    explain:
+      'Niveau récent des puits suivis près du champ, comparé à leur historique (puits USGS, États-Unis seulement).',
+  },
+  stress_mesure: {
+    label: 'Stress mesuré',
+    explain:
+      'Sol sec dans la zone des racines (SMAP, sinon le modèle MERRA-2) et stress des plantes (ECOSTRESS).',
   },
 };
 

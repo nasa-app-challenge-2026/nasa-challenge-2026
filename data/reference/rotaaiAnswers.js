@@ -122,7 +122,7 @@ export const INTENTS = [
   },
   {
     keys: ['risque d eau', 'eau', 'secheresse'],
-    text: 'Le risque d’eau combine le stress des plantes en été, la sécheresse des racines, la baisse de pluie prévue pour le cycle et la baisse des réserves d’eau de la région. Une parcelle irriguée en garde 40 %.',
+    text: 'Le risque d’eau est la pression sur l’eau de la ferme pendant le cycle : l’aridité de sa météo (pluie comparée à l’eau que l’air peut prendre), la baisse de la pluie d’été, le niveau des nappes et le stress mesuré (sol sec, stress des plantes) quand ces mesures existent. Une parcelle irriguée en garde 40 %. La note eau d’une suite de cultures vient d’une simulation de l’eau du sol jour par jour.',
     sources: true,
   },
   {

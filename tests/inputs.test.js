@@ -132,7 +132,10 @@ describe('reading the plan of the server', () => {
     expect(planYears(plan)).toEqual({ first: 2027, last: 2039 });
     expect(cycleOfYear(a, 2032).index).toBe(2);
     expect(positionYear(a.cycles[0], 4, 12)).toBe(2030);
-    expect(cropOfYear(farm.sections[0], a, 2028, 12)).toEqual({ id: 'soya', source: 'plan' });
+    expect(cropOfYear(farm.sections[0], a, 2028, 12)).toEqual({
+      id: 'luzerne-2',
+      source: 'plan',
+    });
     expect(cropOfYear(farm.sections[0], a, 2027, 12)).toEqual({ id: 'jachere', source: 'plan' });
     expect(cropOfYear(farm.sections[1], b, 2027, 12)).toEqual({
       id: 'luzerne-3',

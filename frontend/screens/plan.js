@@ -66,6 +66,55 @@ function headline(cycle) {
   </section>`;
 }
 
+const MM = (v) => `${Math.round(v)} mm par an`;
+
+/** The water score of the chosen chain in plain numbers (water_use), beside the 9 criteria. */
+function waterCard(cycle) {
+  const w = cycle.chosen?.water;
+  if (!w) return '';
+  const facts = [
+    ['Note eau', `${Math.round(w.note * 100)} sur 100`],
+    ['Demande en eau', MM(w.demandMmPerYear)],
+    ['Eau qui manque', MM(w.shortfallMmPerYear)],
+    ...(w.irrigationMmPerYear === null
+      ? []
+      : [['Irrigation nécessaire', MM(w.irrigationMmPerYear)]]),
+    ['Pluie gardée', `${Math.round(w.rainKeptPct)} %`],
+    ...(w.waterAtSowingMm === null
+      ? []
+      : [['Eau dans le sol au semis', `${Math.round(w.waterAtSowingMm)} mm`]]),
+  ];
+  return html`<div class="card stack-sm">
+    <div class="row-between wrap">
+      <h2 class="h2">L’eau de cette suite</h2>
+      <span class="muted small"
+        >pression sur l’eau du cycle : ${Math.round(cycle.waterPressure.pressure * 100)} %</span
+      >
+    </div>
+    <div class="row-wrap gap-md">
+      ${facts.map(
+        ([label, value]) =>
+          html`<div class="stack-0">
+            <span class="muted small">${label}</span><strong>${value}</strong>
+          </div>`,
+      )}
+    </div>
+    ${
+      w.byModel.length > 1
+        ? html`<span class="muted small"
+            >Moyenne de ${w.byModel.length} modèles climatiques · note avec le pire modèle :
+            ${Math.round(w.worst * 100)}</span
+          >`
+        : ''
+    }
+    ${w.alerts.map((a) => alertBox('warn', a))}
+    <span class="muted small"
+      >Simulation de l’eau du sol jour par jour, avec les dates de semis et de récolte et les
+      couverts de la suite.</span
+    >
+  </div>`;
+}
+
 function notices(cycle) {
   const c = cycle.chosen;
   return [
@@ -169,7 +218,9 @@ export default {
               </div>`
             : ''
         }
-        <div class="grow-1 stack-md">${referenceCard(cycle)}${alternatives(cycle)}</div>
+        <div class="grow-1 stack-md">
+          ${waterCard(cycle)}${referenceCard(cycle)}${alternatives(cycle)}
+        </div>
       </section>
       <div class="actions-bar">
         <a class="btn btn--secondary" href="#/section/${id}/parcelle">Ma parcelle</a

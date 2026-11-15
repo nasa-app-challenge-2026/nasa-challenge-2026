@@ -56,7 +56,7 @@ from water_use.rotation import Rotation, rotation_depuis_dict
 from water_use.sol import Sol, sol_manuel, trouver_sol
 from water_use.terrain import terrain_srtm
 
-#: Sheet or crop of the pipeline → crop code of `water_use` (`python -m water_use cultures`).
+#: Sheet of the plan → crop code of `water_use` (`python -m water_use cultures`).
 #: A crop that is not here is refused with a clear error (`water_use_code`): there is no default.
 WATER_USE_CODES: Final[dict[str, str]] = {
     # the sheets of the plan (reference/crops.py, CROP_SHEETS)
@@ -72,13 +72,6 @@ WATER_USE_CODES: Final[dict[str, str]] = {
     "foin-2": "prairie",
     "foin-3": "prairie",
     "seigle-couvert": "seigle_couvert",
-    # the crops of the ranking that are not a sheet id
-    "luzerne": "luzerne",
-    "foin": "prairie",
-    "seigle": "seigle_couvert",
-    "avoine": "avoine",
-    "pois": "pois",
-    "haricot-sec": "haricot",
 }
 #: What leaves the soil bare: nothing is sown, so the rotation of `water_use` has no entry for it.
 BARE_SOIL_IDS: Final = frozenset({"jachere"})

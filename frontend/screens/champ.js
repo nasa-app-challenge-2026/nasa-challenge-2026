@@ -1,11 +1,17 @@
 /**
  * 9 · Mon champ. Owner: Justin. The weak points of the section (step 8 of the
- * algorithm): erosion and water risks, the satellite measures behind them, and
- * the soil (step 5). Values come from the plan (FarmPlan.sections[].field).
+ * algorithm): erosion and water risks, the satellite measures behind the erosion,
+ * what the water pressure is made of, and the soil (step 5). Values come from the
+ * plan (FarmPlan.sections[].field).
  */
 import { html } from '../lib/html.js';
 import { nameOf } from '../../data/reference/crops.js';
-import { FIELD_MEASURES, RISKS, SOIL_PROPERTIES } from '../../data/reference/fieldMeasures.js';
+import {
+  FIELD_MEASURES,
+  RISKS,
+  SOIL_PROPERTIES,
+  WATER_COMPONENTS,
+} from '../../data/reference/fieldMeasures.js';
 import { cropOfYear, planYears } from '../../application/rules/planView.js';
 import { sectionLayout, pageTitle } from '../ui/layout.js';
 import { errorBox, infoButton, loading } from '../ui/widgets.js';
@@ -44,9 +50,7 @@ function measureCard(state, sectionId, key, value) {
     </div>
     ${open ? html`<p class="explain">${m.explain}</p>` : ''}
     <div class="row-between divider-top">
-      <span class="small muted"
-        >${m.source} · risque ${m.risk === 'erosion' ? 'érosion' : 'eau'}</span
-      >
+      <span class="small muted">${m.source} · risque érosion</span>
       <button
         type="button"
         class="report-btn ${reported ? 'is-on' : ''}"
@@ -57,6 +61,59 @@ function measureCard(state, sectionId, key, value) {
       </button>
     </div>
   </article>`;
+}
+
+/** What the water pressure of the farm is made of, and where each part comes from. */
+function waterPressureCard(water, irrigated) {
+  const parts = Object.entries(water.components).filter(([k]) => WATER_COMPONENTS[k]);
+  const missing = water.missing.filter((k) => WATER_COMPONENTS[k]);
+  return html`<section class="card stack-sm">
+    <div class="row-between wrap">
+      <h2 class="h2">La pression sur l’eau</h2>
+      <span class="muted small"
+        >${Math.round(water.pressure * PERCENT)}
+        %${water.aridityClass ? ` · climat ${water.aridityClass}` : ''}</span
+      >
+    </div>
+    <div class="stack-sm">
+      ${parts.map(
+        ([k, v]) =>
+          html`<div class="score">
+            <div class="score__row">
+              <span class="score__label" title="${WATER_COMPONENTS[k].explain}"
+                >${WATER_COMPONENTS[k].label}</span
+              ><span><strong>${Math.round(v * PERCENT)}</strong></span>
+            </div>
+            <div class="score__track">
+              <div class="score__fill" style="width: ${v * PERCENT}%"></div>
+            </div>
+          </div>`,
+      )}
+    </div>
+    ${
+      missing.length
+        ? html`<span class="muted small"
+            >Non mesuré ici :
+            ${missing.map((k) => WATER_COMPONENTS[k].label.toLowerCase()).join(', ')}. Les autres
+            composantes se partagent leur poids.</span
+          >`
+        : ''
+    }
+    ${
+      irrigated
+        ? html`<span class="muted small"
+            >Parcelle irriguée : le risque de manque d’eau ne garde que 40 % de cette
+            pression.</span
+          >`
+        : ''
+    }
+    <details class="small muted">
+      <summary>D’où viennent ces données</summary>
+      <ul>
+        ${Object.entries(water.sources).map(([k, v]) => html`<li><strong>${k}</strong> : ${v}</li>`)}
+      </ul>
+    </details>
+  </section>`;
 }
 
 export default {
@@ -82,8 +139,11 @@ export default {
             ${riskCard('erosion', field.risksToday.erosion)}${riskCard('water', field.risksToday.water)}
           </div>
           <div class="grid grid--metrics">
-            ${Object.entries(field.measures).map(([k, v]) => measureCard(state, id, k, v))}
+            ${Object.entries(field.measures)
+              .filter(([k]) => FIELD_MEASURES[k])
+              .map(([k, v]) => measureCard(state, id, k, v))}
           </div>
+          ${field.waterPressure ? waterPressureCard(field.waterPressure, section.irrigated) : ''}
           <section class="card stack-sm">
             <div class="row-between wrap">
               <h2 class="h2">Le sol (0 à 30 cm)</h2>
@@ -99,8 +159,8 @@ export default {
           </section>`
       : state.plan.status === 'error'
         ? errorBox(state.plan.error)
-        : loading('Lecture des données satellites…');
-    const body = html`${pageTitle('Mon champ', `Les points faibles de la section ${id}, vus par satellite. Le risque d’eau ci-dessous ne compte pas encore la baisse de pluie prévue par cycle (voir le plan).`)}
+        : loading('Lecture des données du champ…');
+    const body = html`${pageTitle('Mon champ', `Les points faibles de la section ${id}. Le risque d’eau ci-dessous est celui de la météo récente ; chaque cycle du plan a le sien, calculé sur son climat.`)}
       <div class="row-wrap align-start gap-lg">
         <div class="grow-3 stack-md">${content}</div>
         <div class="card card--flush grow-1 section-map">

@@ -64,6 +64,8 @@ field_shift/
   data_access/     l'accès au réseau (aucune valeur de repli : un service en panne est une erreur)
                      data_source_config.py  TOUTES les adresses des services, au même endroit
                      nasa_power.py          la météo quotidienne de la ferme (POST /plan)
+                     field_shift_eau.py     L'ADAPTATEUR EAU : le seul fichier qui connaît water_use
+                                            (note_eau, pression_eau, WaterUseModel)
                      site_readers.py        un lecteur par service : SoilGrids, Open-Meteo, NASA POWER, MODIS
                      site_data.py           appelle en parallèle les services dont une section a besoin
   algorithm/       L'ALGORITHME, sans aucun code web (voir docs/ALGORITHME.md)
@@ -74,6 +76,7 @@ field_shift/
     climate/         étapes 2 et 3 : les 5 indicateurs, le climat visé de chaque cycle
     twins/           étapes 4 à 7 : jumeaux climatiques, sol, rotations observées, valeur du précédent
     diagnostic/      étape 8 : risques d'érosion et d'eau
+    water/           l'interface du modèle d'eau que voit le planificateur (note d'une chaîne, pression)
     delays/          délais de retour (contraintes dures, critère ravageurs, vigilances)
     chain/           étape 9b : candidates, placement, couverts, note sur 9 critères, recherche en faisceau
     planning/        étape 10 : entrées du fermier, plan cycle par cycle, robustesse
@@ -88,17 +91,41 @@ field_shift/
   reference/       les données fixes : fiches des cultures, délais de retour et maladies, critères, limites
                    notes de protection du sol des cultures (soil_protection.py), les quatre mesures
   tools/           make_examples : régénère les plans d'exemple du contrat
+water_use/         LE MODULE EAU, autonome : bilan d'eau du sol jour par jour (FAO-56, FAO-33, NRCS)
+                   python -m water_use cultures | evaluer | connexions | valider
+exemples/          rotations d'exemple de water_use
 tests/             pytest : l'algorithme contre sa référence Python, l'API, le contrat, les couches
+tests/water_use/   les tests de water_use (11 interrogent les vraies bases : WATER_USE_RESEAU=1)
 ```
 
 Une règle : **`algorithm/` n'importe ni FastAPI ni Pydantic**. Il reçoit et rend des objets Python ordinaires ; c'est `contract/` qui les traduit vers et depuis le JSON.
 
 Plus généralement, les paquets ne s'importent que dans un sens : `api → services → contract, data_access → algorithm → reference`. `tests/test_architecture.py` le vérifie, et vérifie aussi les bibliothèques que chaque paquet a le droit d'utiliser (`algorithm/` : numpy et scipy seulement) : un import dans le mauvais sens fait échouer les tests.
 
+## L'eau : `water_use`
+
+Le critère **eau** d'une chaîne et le **risque eau** d'une parcelle viennent du module [`water_use/`](water_use/), par un seul fichier : [`field_shift/data_access/field_shift_eau.py`](field_shift/data_access/field_shift_eau.py).
+
+- `note_eau(chaine, meteo_cycle, lat, lon, irrigue, debut, fin)` : la note eau (0 à 1) d'une chaîne, ses sous-notes A, B, C, D, ses alertes et ses chiffres lisibles (demande, manque, irrigation en mm par an, pluie gardée, eau au semis).
+- `pression_eau(meteo, et0, debut, fin, nappes_percentile, esi, secheresse_sol)` : la pression sur l'eau de la ferme (0 à 1).
+- `WaterUseModel.from_data_bases(lat, lon)` : le modèle d'un lieu, donné au planificateur. Il lit une fois le sol (SSURGO, sinon SoilGrids), la pente (SRTM), la météo complète de NASA POWER (humidité, vent, rayonnement : ET0 de Penman-Monteith) et ce qui mesure la pression (puits USGS ; SMAP et ECOSTRESS avec un compte Earthdata, sinon MERRA-2).
+
+Seul le sol est obligatoire : s'il ne peut pas être lu, `POST /plan` répond **502**. Toute autre base qui ne répond pas est laissée de côté et nommée dans `waterPressure.sources`.
+
+Identifiants (facultatifs) : copier [`.env.exemple`](.env.exemple) en `api/.env` et remplir `EARTHDATA_USERNAME` / `EARTHDATA_PASSWORD` (ou variables d'environnement, ou `~/.netrc`). `.env`, `.cache_donnees/` (réponses des bases) et `resultats/` sont exclus de git. Les tâches SMAP / ECOSTRESS prennent des minutes côté NASA : le serveur n'attend pas, il utilise MERRA-2 et lira le résultat à un prochain plan.
+
+```bash
+python -m water_use cultures                                                    # les codes des cultures
+python -m water_use evaluer --demo sec --rotations "exemples/*.json"            # sans réseau
+python -m water_use evaluer --lat 45.55 --lon -72.98 --rotations "exemples/*.json"
+```
+
+Une culture du plan sans code `water_use` (table `WATER_USE_CODES`) est refusée avec un message clair, jamais remplacée. Les formules de `water_use/` ne se modifient pas ici.
+
 ## Tests et qualité
 
 ```bash
-pytest                   # plus de 260 tests, environ 15 s, sans réseau (services simulés)
+pytest                   # plus de 360 tests, environ 2 min, sans réseau (services simulés)
 ruff check .             # lint
 ruff format --check .    # formatage
 ```

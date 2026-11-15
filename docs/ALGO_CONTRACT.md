@@ -79,7 +79,7 @@ Le tableau de bord, « Ma parcelle », « Mon champ », « Plan par cycle » et 
 | `section.history`         | 1 bloc A     | cultures des années **avant** la culture en place, une par année. Le plan dit combien d'années demander (`historyYears`).                                                                                            |
 | `section.currentRotation` | 1 bloc A, 10 | la rotation que suit le fermier (fiches) ; `rotationPosition` = indice de la culture en place. Elle sert de **référence** ; vide = la culture en place répétée.                                                      |
 | `section.diseases`        | partie B     | maladies du sol connues (ids de `SOIL_DISEASES`) : leur délai le plus long devient obligatoire.                                                                                                                      |
-| `section.irrigated`       | 8            | parcelle irriguée : le risque eau est multiplié par 0,4.                                                                                                                                                             |
+| `section.irrigated`       | 8, 9b        | parcelle irriguée : le risque eau est multiplié par 0,4, la note eau compte la part des besoins à irriguer, et le plan affiche l'irrigation nécessaire (`water.irrigationMmPerYear`).                                |
 | `section.soilTest`        | 5            | `{ clayPct, sandPct, organicCarbon (g/kg), ph }` ou `null` (SoilGrids).                                                                                                                                              |
 
 ## Sortie : `FarmPlan`
@@ -130,10 +130,7 @@ Un plan par section, **dans le même ordre et avec le même `id`** que l'entrée
         "measures": {
           "slopePct": 4.9,
           "heavyRainDays": 6,
-          "bareSoilDays": 140,
-          "summerStressIndex": 0.62,
-          "rootZoneDrought": 0.32,
-          "groundwaterTrendCmPerYear": -0.7
+          "bareSoilDays": 140
         },
         "soil": {
           "clayPct": 28,
@@ -142,7 +139,20 @@ Un plan par section, **dans le même ordre et avec le même `id`** que l'entrée
           "ph": 6.4,
           "source": "SoilGrids 2.0 (fictif)"
         },
-        "risksToday": { "erosion": 0.72, "water": 0.31 }
+        "risksToday": { "erosion": 0.72, "water": 0.31 },
+        "waterPressure": {
+          "pressure": 0.31,
+          "worst": 0.31,
+          "components": { "aridite": 0.1, "pluie_ete": 0.4, "stress_mesure": 0.675 },
+          "missing": ["nappes"],
+          "sources": {
+            "sol": "SoilGrids 2.0 (ISRIC)…",
+            "sol_sec": "MERRA-2 GWETROOT via NASA POWER… : percentile 27.0",
+            "nappes": "non mesuré : aucun puits USGS suivi près du champ"
+          },
+          "aridityIndex": 1.6,
+          "aridityClass": "humide"
+        }
       },
       "cycles": [
         {
@@ -167,6 +177,7 @@ Un plan par section, **dans le même ordre et avec le même `id`** que l'entrée
             "crops": ["mais", "soya", "canola"]
           },
           "risks": { "erosion": 0.72, "water": 0.31 },
+          "waterPressure": { "pressure": 0.31, "worst": 0.31, "…": "comme field.waterPressure" },
           "weights": { "erosion": 0.7, "...": 0 },
           "chosen": {
             "score": 60.86,
