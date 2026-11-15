@@ -68,6 +68,9 @@ DAYS_PER_YEAR: Final = 365
 MIN_NDVI_COMPOSITES: Final = 12
 #: Years tried, from the last one back, for a year the MODIS catalogue has in full.
 NDVI_YEARS_TRIED: Final = 3
+#: Fallback bare-soil days when MODIS gives no valid NDVI for any tried year (tile-edge
+#: gaps, incomplete catalogue). Chosen as a typical value for an agricultural parcel.
+NDVI_BARE_SOIL_FALLBACK_DAYS: Final = 60.0
 ELEVATION_CACHE: Final = "elevations"
 DECIMALS: Final = 1
 #: SoilGrids is the slowest of the services (up to a minute).
@@ -168,7 +171,9 @@ class RemoteFieldData:
         return terrain.slope_pct, f"{endpoint.dataset}, {terrain.points} altitudes {where}"
 
     def _bare_soil_days(self, lat: float, lon: float) -> tuple[float, str]:
-        """The bare days of the last year the MODIS catalogue has in full (see the module)."""
+        """The bare days of the last year the MODIS catalogue has in full (see the module).
+        When no year succeeds (tile-edge gap, incomplete catalogue for all tried years), returns
+        NDVI_BARE_SOIL_FALLBACK_DAYS with a note in the origin instead of raising an error."""
         last_year = self._today().year - 1
         problems: list[str] = []
         for year in range(last_year, last_year - NDVI_YEARS_TRIED, -1):
@@ -186,7 +191,13 @@ class RemoteFieldData:
                 f"{len(series)} composites NDVI MODIS de {year}{skipped} au centre de la "
                 f"section, NDVI ≤ {NDVI_BARE_SOIL:g}"
             )
-        raise FieldDataUnavailableError(f"{self._ndvi.dataset} : {' ; '.join(problems)}")
+        # All tried years failed (tile-edge gap or incomplete catalogue): use the fallback.
+        fallback_note = (
+            f"{self._ndvi.dataset} : {' ; '.join(problems)} "
+            f"— valeur de repli utilisée ({NDVI_BARE_SOIL_FALLBACK_DAYS:.0f} jours, "
+            f"valeur typique d'une parcelle agricole)"
+        )
+        return NDVI_BARE_SOIL_FALLBACK_DAYS, fallback_note
 
     def _soil(self, section: SectionPlace) -> tuple[Soil, str]:
         try:
