@@ -13,11 +13,16 @@ crop in place.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+import math
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 from typing import TypeVar
 
-from field_shift.algorithm.chain.chain_scorer import ScoredChain, score_chain
+from field_shift.algorithm.chain.chain_scorer import (
+    ScoredChain,
+    best_possible_score,
+    score_chain,
+)
 from field_shift.algorithm.chain.chain_step import (
     Chain,
     ChainStep,
@@ -78,6 +83,18 @@ def closes(chain: Chain, ctx: CycleContext) -> bool:
     return True
 
 
+def _score_to_beat(scored: Iterable[ScoredChain], count: int) -> float:
+    """The score of the last of the `count` best distinct chains scored so far (−∞ while there
+    are fewer): a chain that cannot reach it cannot be one of them."""
+    best: dict[tuple[str, ...], float] = {}
+    for result in scored:
+        key = tuple(sheet_ids(result.chain))
+        best[key] = max(best.get(key, -math.inf), result.score)
+    if len(best) < count:
+        return -math.inf
+    return sorted(best.values(), reverse=True)[count - 1]
+
+
 def _best_first(items: Sequence[T], score_of: Callable[[T], float]) -> list[T]:
     """Highest score first; equal scores keep their order."""
     return sorted(items, key=lambda item: -score_of(item))
@@ -133,10 +150,24 @@ def _distinct_best(
     complete: Sequence[tuple[ChainStep, ...]], ctx: CycleContext, count: int
 ) -> list[ScoredChain]:
     """The best chains that differ by their sequence of crops (the same sequence at other dates
-    is the same chain)."""
-    scored = _best_first(
-        [score_chain(chain, ctx) for chain in complete], lambda result: result.score
-    )
+    is the same chain).
+
+    The water score of a chain is a simulation of every day of twenty years: it is not run for
+    every complete chain. The chains are first scored without their water, which gives the
+    highest score each one can still reach (`best_possible_score`); the water is then simulated
+    from the most promising chain down, and stops when no chain left can enter the `count` best.
+    The result is the one a full scoring would give."""
+    possible = [
+        best_possible_score(score_chain(chain, ctx, with_water=False), ctx.weights)
+        for chain in complete
+    ]
+    by_promise = sorted(range(len(complete)), key=lambda i: -possible[i])
+    scored_at: dict[int, ScoredChain] = {}
+    for i in by_promise:
+        if possible[i] < _score_to_beat(scored_at.values(), count):
+            break
+        scored_at[i] = score_chain(complete[i], ctx)
+    scored = _best_first([scored_at[i] for i in sorted(scored_at)], lambda result: result.score)
     distinct: list[ScoredChain] = []
     seen: set[tuple[str, ...]] = set()
     for result in scored:

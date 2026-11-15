@@ -20,18 +20,10 @@ EROSION_SLOPE: Final = RiskTerm(share=0.5, saturation=8)
 EROSION_HEAVY_RAIN: Final = RiskTerm(share=0.3, saturation=8)
 EROSION_BARE_SOIL: Final = RiskTerm(share=0.2, saturation=150)
 
-# Step 8, water.
-#: ECOSTRESS ESI: no stress at 0.8 and above, full stress 0.4 below.
-WATER_STRESS_SHARE: Final = 0.4
-WATER_STRESS_NONE_ABOVE: Final = 0.8
-WATER_STRESS_RANGE: Final = 0.4
-#: SMAP L4 root-zone drought, already between 0 and 1.
-WATER_DROUGHT_SHARE: Final = 0.3
-#: Summer rain drop forecast for the cycle (%).
-WATER_RAIN_DROP: Final = RiskTerm(share=0.2, saturation=20)
-#: GRACE-FO water storage drop (cm a year).
-WATER_GROUNDWATER_DROP: Final = RiskTerm(share=0.1, saturation=2)
-#: An irrigated field keeps 40 % of its water risk.
+# Step 8, water: the risk is the water pressure of the farm, given by the water model
+# (`algorithm/water`). Its components and their weights are those of the model.
+#: An irrigated field keeps 40 % of its water risk (the risk is divided by 2.5). The irrigation
+#: also counts in the water score of the chain: whether to keep both is a decision of the team.
 IRRIGATED_WATER_RISK_FACTOR: Final = 0.4
 
 #: Without livestock, the weight of the forage criterion is multiplied by this.

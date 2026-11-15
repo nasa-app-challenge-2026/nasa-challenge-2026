@@ -54,9 +54,44 @@ class FieldMeasuresOut(CamelModel):
     slope_pct: float
     heavy_rain_days: float
     bare_soil_days: float
-    summer_stress_index: float
-    root_zone_drought: float
-    groundwater_trend_cm_per_year: float
+
+
+class WaterPressureOut(CamelModel):
+    """The water pressure of the farm (the water risk before the irrigation is counted)."""
+
+    pressure: float = Field(description="0 (water is not scarce) to 1 (very dry).")
+    worst: float = Field(description="The pressure with the worst climate model.")
+    components: dict[str, float] = Field(
+        description="aridite, pluie_ete, nappes, stress_mesure: each from 0 to 1."
+    )
+    missing: list[str] = Field(description="Components no source could give.")
+    sources: dict[str, str] = Field(description="Where each piece of data comes from.")
+    aridity_index: float | None = Field(description="Rain / reference evapotranspiration.")
+    aridity_class: str
+
+
+class ModelNoteOut(CamelModel):
+    model: str
+    note: float
+
+
+class WaterOut(CamelModel):
+    """The water score of a chain (criterion `eau`) and its readable numbers."""
+
+    note: float = Field(description="0 to 1: the mean of the climate models.")
+    worst: float = Field(description="The score with the worst climate model.")
+    sub_scores: dict[str, float] = Field(
+        description="A sobriety, B resistance, C rain kept, D water left at sowing (0 to 1)."
+    )
+    demand_mm_per_year: float
+    shortfall_mm_per_year: float
+    irrigation_mm_per_year: float | None = Field(
+        description="Irrigation needed; null when the section is not irrigated."
+    )
+    rain_kept_pct: float
+    water_at_sowing_mm: float | None
+    alerts: list[str]
+    by_model: list[ModelNoteOut]
 
 
 class SoilOut(CamelModel):
@@ -76,6 +111,7 @@ class FieldOut(CamelModel):
     measures: FieldMeasuresOut
     soil: SoilOut
     risks_today: RisksOut
+    water_pressure: WaterPressureOut = Field(description="With the most recent weather.")
 
 
 class MonthDayOut(CamelModel):
@@ -142,6 +178,7 @@ class ChainOut(CamelModel):
     gaps: list[GapOut]
     seeds_to_buy: list[str]
     warnings: list[SharedDiseaseOut]
+    water: WaterOut | None
 
 
 class AlertReasonOut(CamelModel):
@@ -181,6 +218,7 @@ class CycleOut(CamelModel):
     climate: ClimateOut
     twins: TwinsOut
     risks: RisksOut
+    water_pressure: WaterPressureOut
     weights: dict[str, float]
     chosen: ChainOut | None
     reference: ChainOut | None

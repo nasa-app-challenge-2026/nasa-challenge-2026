@@ -25,6 +25,7 @@ from field_shift.algorithm.report.messages import (
 from field_shift.algorithm.sources.field_data import FieldData
 from field_shift.algorithm.timeline import month_time
 from field_shift.algorithm.twins.climate_twin_finder import is_good_twin
+from field_shift.algorithm.water.water_model import WaterPressure, WaterScore
 from field_shift.contract.farm_plan import (
     AlertReasonOut,
     ChainOut,
@@ -35,6 +36,7 @@ from field_shift.contract.farm_plan import (
     FieldOut,
     GapOut,
     HistoryEntry,
+    ModelNoteOut,
     MonthDayOut,
     PlanMeta,
     PlanSettings,
@@ -49,6 +51,8 @@ from field_shift.contract.farm_plan import (
     StepOut,
     TwinCellOut,
     TwinsOut,
+    WaterOut,
+    WaterPressureOut,
     YearAndSourceOut,
 )
 from field_shift.contract.input_mapper import FarmContext
@@ -109,7 +113,38 @@ def _steps_in_calendar_order(scored: ScoredChain) -> list[StepOut]:
     return [_step_out(step) for _, step in ordered]
 
 
-def chain_out(scored: ScoredChain | None) -> ChainOut | None:
+def water_pressure_out(water: WaterPressure) -> WaterPressureOut:
+    return WaterPressureOut(
+        pressure=rounded(water.pressure),
+        worst=rounded(water.worst),
+        components=_rounded_values(water.components),
+        missing=list(water.missing),
+        sources=dict(water.sources),
+        aridity_index=rounded_or_none(water.aridity_index),
+        aridity_class=water.aridity_class,
+    )
+
+
+def _water_out(water: WaterScore | None, irrigated: bool) -> WaterOut | None:
+    """The water score of a chain; the irrigation is shown only for an irrigated section."""
+    if water is None:
+        return None
+    figures = water.figures
+    return WaterOut(
+        note=rounded(water.note),
+        worst=rounded(water.worst),
+        sub_scores=_rounded_values(water.sub_scores),
+        demand_mm_per_year=rounded(figures["demande_mm_an"]),
+        shortfall_mm_per_year=rounded(figures["manque_mm_an"]),
+        irrigation_mm_per_year=rounded(figures["irrigation_mm_an"]) if irrigated else None,
+        rain_kept_pct=rounded(figures["pluie_gardee_pct"]),
+        water_at_sowing_mm=rounded_or_none(figures["eau_au_semis_mm"]),
+        alerts=list(water.alerts),
+        by_model=[ModelNoteOut(model=name, note=rounded(note)) for name, note in water.by_model],
+    )
+
+
+def chain_out(scored: ScoredChain | None, irrigated: bool = False) -> ChainOut | None:
     if scored is None:
         return None
     return ChainOut(
@@ -131,6 +166,7 @@ def chain_out(scored: ScoredChain | None) -> ChainOut | None:
             )
             for w in scored.warnings
         ],
+        water=_water_out(scored.water, irrigated),
     )
 
 
@@ -176,6 +212,7 @@ def _twins_out(cycle: CyclePlan) -> TwinsOut:
 
 
 def cycle_out(cycle: CyclePlan, cycle_years: int) -> CycleOut:
+    irrigated = cycle.context.irrigated
     return CycleOut(
         index=cycle.index,
         years=cycle.years,
@@ -183,9 +220,10 @@ def cycle_out(cycle: CyclePlan, cycle_years: int) -> CycleOut:
         climate=_climate_out(cycle),
         twins=_twins_out(cycle),
         risks=RisksOut(erosion=rounded(cycle.risks.erosion), water=rounded(cycle.risks.water)),
+        water_pressure=water_pressure_out(cycle.water_pressure),
         weights=_rounded_values(cycle.weights),
-        chosen=chain_out(cycle.chosen),
-        reference=chain_out(cycle.reference),
+        chosen=chain_out(cycle.chosen, irrigated),
+        reference=chain_out(cycle.reference, irrigated),
         reference_alerts=[
             ReferenceAlertOut(
                 reason=AlertReasonOut(
@@ -203,7 +241,7 @@ def cycle_out(cycle: CyclePlan, cycle_years: int) -> CycleOut:
             )
             for v in cycle.reference_alerts
         ],
-        alternatives=[chain_out(a) for a in cycle.alternatives],
+        alternatives=[chain_out(a, irrigated) for a in cycle.alternatives],
         removed=[
             RemovedCropOut(
                 sheet=sheet_id,
@@ -225,7 +263,7 @@ def _history_out(history: Sequence[Occupation]) -> list[HistoryEntry]:
     ]
 
 
-def _field_out(parcel: Parcel, data: FieldData) -> FieldOut:
+def _field_out(parcel: Parcel, data: FieldData, water_today: WaterPressure) -> FieldOut:
     m = data.measures
     return FieldOut(
         measures=FieldMeasuresOut(**vars(m)),
@@ -238,13 +276,18 @@ def _field_out(parcel: Parcel, data: FieldData) -> FieldOut:
         ),
         risks_today=RisksOut(
             erosion=rounded(parcel.diagnostic.erosion_risk),
-            water=rounded(parcel.diagnostic.water_risk(0.0)),
+            water=rounded(parcel.diagnostic.water_risk(water_today.pressure)),
         ),
+        water_pressure=water_pressure_out(water_today),
     )
 
 
 def section_plan_out(
-    parcel: Parcel, plan: ParcelPlan, data: FieldData, cycle_years: int
+    parcel: Parcel,
+    plan: ParcelPlan,
+    data: FieldData,
+    cycle_years: int,
+    water_today: WaterPressure,
 ) -> SectionPlanOut:
     cycles = [cycle_out(c, cycle_years) for c in plan.cycles]
     return SectionPlanOut(
@@ -255,7 +298,7 @@ def section_plan_out(
         repeats_current_crop=parcel.repeats_in_place_crop,
         history_years=history_depth(SEED_IDS, parcel.diseases),
         history=_history_out(plan.history),
-        field=_field_out(parcel, data),
+        field=_field_out(parcel, data, water_today),
         cycles=cycles,
     )
 
@@ -287,7 +330,13 @@ def farm_plan_out(
         ),
         weights=_rounded_values(context.farmer.base_weights),
         sections=[
-            section_plan_out(parcel, plan, context.field_data[parcel.id], time.cycle_years)
+            section_plan_out(
+                parcel,
+                plan,
+                context.field_data[parcel.id],
+                time.cycle_years,
+                algorithm.water_today,
+            )
             for parcel, plan in zip(context.parcels, plans, strict=True)
         ],
     )

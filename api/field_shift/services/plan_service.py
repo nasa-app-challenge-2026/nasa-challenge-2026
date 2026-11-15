@@ -1,8 +1,8 @@
 """What the web layer calls: plan a whole farm.
 
 Reads the request, gets the weather of the farm, runs the algorithm for every section and writes
-the plan. The algorithm of a place (its weather, climate models and twin grid) is built once and
-kept: the farmer edits his fields many times for one farm.
+the plan. The algorithm of a place (its weather, climate models, twin grid and water model) is
+built once and kept: the farmer edits his fields many times for one farm.
 """
 
 from __future__ import annotations
@@ -15,10 +15,12 @@ from datetime import date, datetime
 from field_shift.algorithm.field_shift_algorithm import FieldShiftAlgorithm
 from field_shift.algorithm.sources.field_data import DemoFieldDataSource, FieldDataSource
 from field_shift.algorithm.timeline import month_time
+from field_shift.algorithm.water.water_model import WaterModel
 from field_shift.contract.farm_input import FarmInput
 from field_shift.contract.farm_plan import FarmPlan
 from field_shift.contract.input_mapper import read_farm_input
 from field_shift.contract.plan_mapper import farm_plan_out
+from field_shift.data_access.field_shift_eau import WaterUseModel
 from field_shift.data_access.weather_providers import WeatherProvider
 
 #: Places kept in memory (an algorithm holds ~15 MB of weather and grid).
@@ -27,6 +29,8 @@ MAX_PLACES = 8
 PLACE_PRECISION = 100
 
 PlaceKey = tuple[int, int, int]
+#: The water model of a place (lat, lon). Raises WaterDataUnavailableError.
+WaterModelProvider = Callable[[float, float], WaterModel]
 
 
 class PlanService:
@@ -35,10 +39,12 @@ class PlanService:
     def __init__(
         self,
         weather: WeatherProvider,
+        water: WaterModelProvider = WaterUseModel.from_data_bases,
         field_data: FieldDataSource | None = None,
         clock: Callable[[], date] = date.today,
     ) -> None:
         self._weather = weather
+        self._water = water
         self._field_data = field_data or DemoFieldDataSource()
         self._clock = clock
         self._places: OrderedDict[PlaceKey, FieldShiftAlgorithm] = OrderedDict()
@@ -64,7 +70,12 @@ class PlanService:
                 return self._places[key]
             farm_weather = self._weather.farm_weather(lat, lon)
             algorithm = FieldShiftAlgorithm(
-                farm_weather.weather, farm_weather.source, lat, lon, current_year
+                farm_weather.weather,
+                farm_weather.source,
+                lat,
+                lon,
+                current_year,
+                water=self._water(lat, lon),
             )
             self._places[key] = algorithm
             while len(self._places) > MAX_PLACES:

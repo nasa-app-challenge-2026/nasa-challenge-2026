@@ -15,6 +15,7 @@ from field_shift.algorithm.delays.occupation import Occupation
 from field_shift.algorithm.delays.return_delay_checker import DelayViolation, ImpossibleCrop
 from field_shift.algorithm.diagnostic.parcel_diagnostic import Risks
 from field_shift.algorithm.twins.twin_evidence import TwinEvidence
+from field_shift.algorithm.water.water_model import CycleWater, WaterPressure
 
 
 class Decision(StrEnum):
@@ -27,10 +28,12 @@ class Decision(StrEnum):
 
 @dataclass(frozen=True)
 class CycleData:
-    """What steps 3 to 7 give for one cycle: its climate and what the twins grow."""
+    """What steps 3 to 7 give for one cycle: its climate, what the twins grow, and the water
+    model on the weather of the cycle (water pressure of step 8, water score of step 9b)."""
 
     climate: CycleClimate
     evidence: TwinEvidence
+    water: CycleWater
 
 
 class CycleDataSource(Protocol):
@@ -49,6 +52,7 @@ class CyclePlan:
     alternatives      up to 2 other good chains
     removed           crops removed because their delay does not fit in the cycle
     robustness        worst score of the adopted chain in the later cycles (None = not computed)
+    water_pressure    the water pressure of the farm during the cycle (behind `risks.water`)
     """
 
     index: int
@@ -64,6 +68,7 @@ class CyclePlan:
     reference_alerts: list[DelayViolation]
     alternatives: list[ScoredChain]
     context: CycleContext
+    water_pressure: WaterPressure
     robustness: float | None = None
     becomes_infeasible_later: bool = False
 

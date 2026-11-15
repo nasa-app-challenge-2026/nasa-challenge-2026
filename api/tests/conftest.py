@@ -12,7 +12,7 @@ from field_shift.api.app import create_app
 from field_shift.api.settings import Settings
 from field_shift.services.plan_service import PlanService
 from field_shift.services.ranking_service import RankingService
-from field_shift.tools.make_examples import ExampleWeatherProvider
+from field_shift.tools.make_examples import example_plan_service
 from tests.helpers.site_stub import FixedSiteData
 
 CONTRACT_DIR = Path(__file__).resolve().parents[2] / "backend" / "contract"
@@ -33,14 +33,20 @@ def example_inputs() -> dict[str, dict]:
     }
 
 
+@pytest.fixture(scope="session")
+def plan_service() -> PlanService:
+    """One plan service for all the tests: the water scores of a place are simulated once."""
+    return example_plan_service()
+
+
 @pytest.fixture
-def plan_client() -> TestClient:
-    """The application on the fixed weather of the contract examples and the test site data
-    (no network)."""
+def plan_client(plan_service: PlanService) -> TestClient:
+    """The application on the fixed weather and soil of the contract examples and the test site
+    data (no network)."""
     return TestClient(
         create_app(
             Settings(),
-            PlanService(ExampleWeatherProvider()),
+            plan_service,
             RankingService(FixedSiteData()),
         )
     )

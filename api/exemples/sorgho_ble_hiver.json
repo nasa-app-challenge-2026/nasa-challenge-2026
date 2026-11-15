@@ -1,0 +1,9 @@
+{
+  "nom": "Sorgho - Blé d'hiver",
+  "duree_ans": 2,
+  "travail_sol": "semis_direct",
+  "cultures": [
+    {"culture": "sorgho", "annee": 1, "semis": "05-25", "fin": "10-10"},
+    {"culture": "ble_hiver", "annee": 1, "semis": "10-15", "fin": "07-20"}
+  ]
+}

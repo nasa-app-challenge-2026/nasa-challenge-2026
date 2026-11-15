@@ -6,7 +6,7 @@ import {
   lockReason,
   rotationErrors,
   toSlots,
-} from '../../src/lib/rotation.js';
+} from '../rotation.js';
 import {
   evaluateRotationYieldFromPairs,
   findBestMultiCropRotationsForYield,

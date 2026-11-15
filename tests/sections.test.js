@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { areaHa, roundHa } from '../src/lib/geo.js';
-import { followOutline } from '../src/lib/sections.js';
-import { DEMO_FARM } from '../src/data/demoFarm.js';
+import { areaHa, roundHa } from '../application/rules/geo.js';
+import { followOutline } from '../application/rules/sections.js';
+import { DEMO_FARM } from '../data/reference/demoFarm.js';
 
 // The demo farm: four sections drawn inside the outline, their corners on it.
 const [[N, W]] = DEMO_FARM.farm.boundary;

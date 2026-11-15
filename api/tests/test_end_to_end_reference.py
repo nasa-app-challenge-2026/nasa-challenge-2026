@@ -2,7 +2,8 @@
 
 The demo weather is generated exactly like field_shift.py does (same numpy random numbers), so
 steps 2 to 10 run for real: climate of each cycle, climate models, twin search, planning. The
-plans must be the ones of the reference, and so must the climate calendar of every cycle.
+plans must be the ones of the reference, and so must the climate calendar of every cycle. The
+water is the one of the reference (`tests/helpers/reference_water.py`).
 """
 
 from __future__ import annotations
@@ -17,8 +18,10 @@ from field_shift.algorithm.sources.demo_farm_weather import demo_farm_weather
 from field_shift.algorithm.sources.demo_twin_atlas import demo_twin_atlas
 from field_shift.algorithm.sources.demo_twin_crops import demo_twin_evidence
 from field_shift.algorithm.twins.climate_twin_finder import ClimateTwinFinder
+from field_shift.tools.make_examples import example_water_model
 from tests.helpers.reference_names import fixture
 from tests.helpers.reference_plan import inputs_of
+from tests.helpers.reference_water import WithReferenceWater
 from tests.test_climate import assert_climate_close
 from tests.test_reference_plans import SCENARIOS, assert_cycle
 
@@ -30,6 +33,7 @@ DATA = CycleDataProvider(
     projector=TargetClimateProjector(WEATHER, CURRENT_YEAR, demo_climate_models(WEATHER)),
     twin_finder=ClimateTwinFinder(demo_twin_atlas(*FARM, WEATHER)),
     evidence_for=demo_twin_evidence,
+    water=example_water_model(*FARM),
 )
 
 
@@ -45,7 +49,8 @@ def test_the_climate_of_every_cycle_is_the_reference_one(scenario):
 def test_the_demo_plans_are_the_reference_ones(scenario):
     reference = fixture(f"plan-{scenario}.json")
     inputs = inputs_of(reference)
-    planner = ParcelPlanner(inputs.time, inputs.farmer, DATA, inputs.today)
+    data = WithReferenceWater(DATA, reference["mesures"])
+    planner = ParcelPlanner(inputs.time, inputs.farmer, data, inputs.today)
     for parcel, expected in zip(inputs.parcels, reference["parcels"], strict=True):
         plan = planner.plan(parcel)
         assert len(plan.cycles) == len(expected["cycles"])

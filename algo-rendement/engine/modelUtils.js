@@ -1,6 +1,6 @@
 /** Invariants partagés par l'évaluation historique et le transfert vers le jumeau. */
-import { CROPS } from '../../src/data/crops.js';
-import { toSlots } from '../../src/lib/rotation.js';
+import { CROPS } from '../crops.js';
+import { toSlots } from '../rotation.js';
 import { CONFIG } from '../config.js';
 
 export const MAX_ROTATION_YEARS = 6;

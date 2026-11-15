@@ -1,6 +1,6 @@
 /** Optimisation de l'indice annuel relatif, sous l'hypothèse vigueur/rendement du modèle. */
-import { CROPS, CROP_IDS } from '../../src/data/crops.js';
-import { currentCropConflict, rotationErrors } from '../../src/lib/rotation.js';
+import { CROPS, CROP_IDS } from '../crops.js';
+import { currentCropConflict, rotationErrors } from '../rotation.js';
 import { CONFIG } from '../config.js';
 import { forecastFutureRotationYield, normalizeCycleOffset } from './climateTwins.js';
 import {

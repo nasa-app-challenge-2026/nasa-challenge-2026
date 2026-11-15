@@ -128,7 +128,14 @@ class YieldMeasure:
 
 
 class WaterDemandMeasure:
-    """Water demand of the rotation, in mm. TODO: not written yet."""
+    """Water demand of the rotation, in mm. TODO: not written yet.
+
+    The plan (`POST /plan`) already scores the water of its chains with `water_use`
+    (`data_access/field_shift_eau.py`). It cannot be reused here as is: a rotation of the
+    ranking has durations but no sowing dates, some of its crops (the vegetables) have no water
+    sheet in `water_use`, and the ranking reads no daily weather. Nothing is estimated meanwhile:
+    the measure stays "not available" and is left out of the score.
+    """
 
     id = MEASURE_WATER
     implemented = False

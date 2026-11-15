@@ -11,12 +11,23 @@ Thumbs.db
 !.vscode/extensions.json
 .idea/
 
-# Python (apps/api)
+# Python (apps/api / backend / server)
 __pycache__/
 *.pyc
 .venv/
+venv/
 .pytest_cache/
+.ruff_cache/
+.mypy_cache/
 *.egg-info/
+build/
+
+# Adresses (et jetons) des sources de données du serveur : copie locale de data_sources.example.json
+data_sources.json
+
+# Water Use (api/water_use) : identifiants Earthdata, cache des bases, résultats de la ligne de commande
+.cache_donnees/
+resultats/
 
 # Cache satellite local algo-rendement
 algo-rendement/.cache/

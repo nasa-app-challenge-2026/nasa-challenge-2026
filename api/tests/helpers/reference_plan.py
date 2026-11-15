@@ -1,4 +1,6 @@
-"""Rebuilds the inputs of a plan fixture (field_shift.py v5.1) for the Python planner."""
+"""Rebuilds the inputs of a plan fixture (field_shift.py v5.1) for the Python planner. The
+water is the one of the reference (see `reference_water.py`), not the one of the server.
+"""
 
 from __future__ import annotations
 
@@ -15,6 +17,7 @@ from field_shift.algorithm.twins.twin_evidence import TwinEvidence
 from field_shift.reference.crops import SHEETS
 from field_shift.reference.planning import ReserveMode
 from tests.helpers.reference_names import crop_id_of, disease_id_of, id_of
+from tests.helpers.reference_water import ReferenceCycleWater
 
 EQUIPMENT = {"fourragère": "fourragere"}
 
@@ -37,16 +40,19 @@ def climate_of(raw: dict) -> CycleClimate:
 class FixtureCycleData:
     """The climate and twin evidence the reference used for each cycle window of a scenario."""
 
-    def __init__(self, windows: dict) -> None:
+    def __init__(self, windows: dict, measures: dict) -> None:
         self._windows = windows
+        self._measures = measures
         self._cache: dict[str, CycleData] = {}
 
     def cycle_data(self, first_year: int, last_year: int) -> CycleData:
         key = f"{first_year}-{last_year}"
         if key not in self._cache:
             window = self._windows[key]
+            climate = climate_of(window["climate"])
             self._cache[key] = CycleData(
-                climate=climate_of(window["climate"]),
+                climate=climate,
+                water=ReferenceCycleWater(self._measures, climate.summer_rain_change_pct),
                 evidence=TwinEvidence(
                     crops=[crop_id_of(c) for c in window["cultures"]],
                     successions=[
@@ -87,9 +93,6 @@ def inputs_of(fixture: dict) -> PlanInputs:
         slope_pct=m["pente_pct"],
         heavy_rain_days=m["jours_pluie_intense"],
         bare_soil_days=m["jours_sol_nu"],
-        summer_stress_index=m["esi_ete"],
-        root_zone_drought=m["smap_secheresse"],
-        groundwater_trend_cm_per_year=m["grace_tendance_cm_an"],
     )
     scenario = fixture["scenario"]
     diagnostic = ParcelDiagnostic(measures, irrigated=scenario.get("irrigation", False))
@@ -104,7 +107,7 @@ def inputs_of(fixture: dict) -> PlanInputs:
             seeds=frozenset(crop_id_of(s) for s in fixture["reserve"]),
             reserve_mode=ReserveMode(scenario.get("mode", "preferer")),
         ),
-        data=FixtureCycleData(fixture["windows"]),
+        data=FixtureCycleData(fixture["windows"], m),
         today=fixture["debut"],
         parcels=[
             Parcel(

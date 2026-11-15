@@ -1,6 +1,6 @@
 # Base commune (design)
 
-Les valeurs vivent dans [`src/styles/tokens.css`](../src/styles/tokens.css). Dans Figma, utilisez les mêmes.
+Les valeurs vivent dans [`frontend/styles/tokens.css`](../frontend/styles/tokens.css). Dans Figma, utilisez les mêmes.
 
 ## Couleurs
 
@@ -20,7 +20,7 @@ Bleu et orange plutôt que vert et rouge : lisibles par les daltoniens. **Une co
 
 ## Cultures
 
-Chaque culture a une couleur plate (pastilles) et une texture de champ (vue 3D, cartes, frise) : `fill="url(#pat-ble)"`. Les textures sont définies une seule fois dans [`src/ui/textures.js`](../src/ui/textures.js).
+Chaque culture a une couleur plate (pastilles) et une texture de champ (vue 3D, cartes, frise) : `fill="url(#pat-ble)"`. Les textures sont définies une seule fois dans [`frontend/ui/textures.js`](../frontend/ui/textures.js).
 
 ## Typographie et mesures
 
@@ -28,7 +28,7 @@ Space Grotesk pour les titres, Inter pour le reste (34, 30, 18, 16, 14, 12). Gri
 
 ## Quand un écran est fini
 
-- [ ] Il n'utilise que les composants de la base commune (`src/ui/`, `src/styles/components.css`)
+- [ ] Il n'utilise que les composants de la base commune (`frontend/ui/`, `frontend/styles/components.css`)
 - [ ] Tout le contenu de la maquette de référence y est
 - [ ] Aucune couleur seule
 - [ ] Boutons et zones cliquables d'au moins 44 px

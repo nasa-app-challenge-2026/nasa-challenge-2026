@@ -14,8 +14,8 @@
  *    des sources de poids non nul, ne peut jamais dépasser la confiance historique,
  *    et est dégradée d'un cran dès que l'horizon atteint `longHorizonConfidenceDowngradeYears` (12 ans).
  */
-import { CROPS } from '../../src/data/crops.js';
-import { firstYear } from '../../src/lib/rotation.js';
+import { CROPS } from '../crops.js';
+import { firstYear } from '../rotation.js';
 import { CONFIG } from '../config.js';
 import {
   downgradeConfidence,

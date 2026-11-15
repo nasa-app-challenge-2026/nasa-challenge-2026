@@ -7,8 +7,8 @@ import {
   followCorner,
   isClosed,
   roundHa,
-} from '../src/lib/geo.js';
-import { DEMO_FARM } from '../src/data/demoFarm.js';
+} from '../application/rules/geo.js';
+import { DEMO_FARM } from '../data/reference/demoFarm.js';
 
 // A grid of 100 m cells near Saint-Hyacinthe: P(x, y) is x cells east, y cells north.
 const LAT0 = 45.6;
