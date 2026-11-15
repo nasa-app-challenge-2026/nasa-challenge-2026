@@ -38,4 +38,3 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: pytest
-      - run: python -m uvicorn field_shift.api.main:app --port 8000
