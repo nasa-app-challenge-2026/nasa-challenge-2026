@@ -92,6 +92,39 @@ def test_lecture_csv_appeears():
         earthdata.lire_csv_appeears("ID,Date,autre\n1,2024-01-01,3\n", "ESI")
 
 
+class _Reponse:
+    def __init__(self, corps):
+        self.corps = corps
+        self.text = corps if isinstance(corps, str) else ""
+
+    def json(self):
+        return self.corps
+
+
+def test_tache_appeears_trouve_le_csv_d_ecostress(monkeypatch, tmp_path):
+    """AppEEARS nomme le CSV avec des tirets, tiret bas compris (« ECO-L4T-ESI-002 ») : noms
+    relevés sur une vraie tâche le 15 novembre 2026."""
+    from water_use import reseau
+    monkeypatch.setattr(reseau, "DOSSIER_CACHE", tmp_path)
+    csv_esi = ("ID,Latitude,Longitude,Date,MODIS_Tile,ECO_L4T_ESI_002_ESI\n"
+               "parcelle,45.55,-72.98,2024-07-01,h12v04,0.62\n")
+    reponses = {
+        ("POST", "task"): {"task_id": "t1"},
+        ("GET", "task/t1"): {"status": "done"},
+        ("GET", "bundle/t1"): {"files": [
+            {"file_type": "txt", "file_name": "water-use-ecostress-granule-list.txt", "file_id": "g"},
+            {"file_type": "csv", "file_name": "water-use-ecostress-ECO-L4T-ESI-002-results.csv",
+             "file_id": "f1"},
+        ]},
+        ("GET", "bundle/t1/f1"): csv_esi,
+    }
+    monkeypatch.setattr(earthdata, "_appel", lambda methode, chemin, **k: _Reponse(
+        reponses[(methode, chemin)]))
+    valeurs = earthdata.tache_point("water-use-ecostress", *earthdata.ECOSTRESS, [], 45.55, -72.98,
+                                    attente_s=0, utiliser_cache=False, journal=lambda *_: None)
+    assert valeurs == [("2024-07-01", 0.62)]
+
+
 def test_dates_smap_courtes():
     d = earthdata.dates_smap(45.6, 2024)
     assert len(d) == 3 * 5 * 3                               # 3 ans × 5 mois × 3 jours

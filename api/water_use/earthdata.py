@@ -157,7 +157,9 @@ def tache_point(nom: str, produit: str, couche: str, dates: list, lat: float, lo
                             "commande plus tard, elle reprendra là où elle en est.")
         time.sleep(15)
     fichiers = _appel("GET", f"bundle/{tache}").json().get("files", [])
-    marque = produit.replace(".", "-")
+    # AppEEARS écrit le produit avec des tirets, tiret bas compris :
+    # ECO_L4T_ESI.002 -> « water-use-ecostress-ECO-L4T-ESI-002-results.csv ».
+    marque = produit.replace(".", "-").replace("_", "-")
     csvs = [f for f in fichiers if f.get("file_type") == "csv" and marque in f.get("file_name", "")]
     if not csvs:
         raise ErreurDonnees(f"la tâche AppEEARS {tache} n'a pas produit de CSV {marque}.")
