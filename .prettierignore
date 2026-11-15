@@ -6,5 +6,5 @@ backend/contract/examples
 docs/screenshots
 # Golden fixtures generated from field_shift.py (tests/algorithm/fixtures/export_reference.py)
 tests/algorithm/fixtures/
-# The Python server has its own tools (ruff, pytest): see backend/server
-backend/server
+# The Python server has its own tools (ruff, pytest): see api/README.md
+api
