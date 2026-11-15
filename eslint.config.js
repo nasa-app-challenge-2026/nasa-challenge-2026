@@ -18,7 +18,13 @@ export default [
     },
   },
   {
-    files: ['tests/**/*.js', 'scripts/**/*.mjs', 'contract/**/*.js', '*.config.js'],
+    files: [
+      'tests/**/*.js',
+      'scripts/**/*.mjs',
+      'contract/**/*.js',
+      '*.config.js',
+      'algo-rendement/**/*.{js,mjs}',
+    ],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',

@@ -53,6 +53,27 @@ export function entryStart(rotation, index) {
   return Math.max(0, start - 1);
 }
 
+function normalizedOffset(offset, length) {
+  const value = Number(offset);
+  if (!Number.isInteger(value)) throw new RangeError('Le décalage doit être un entier.');
+  return length ? ((value % length) + length) % length : 0;
+}
+
+/** A perennial block has one planting, rather than one return per occupied year. */
+function plantingStarts(rotation, crop) {
+  const starts = [];
+  let position = 0;
+  for (const entry of rotation) {
+    const years = entry.years || 1;
+    if (entry.crop === crop) {
+      const plantings = CROPS[crop].years > 1 ? 1 : years;
+      for (let year = 0; year < plantings; year++) starts.push(position + year);
+    }
+    position += years;
+  }
+  return starts;
+}
+
 function cleanBlocks(slots) {
   // A multi-year crop must occupy its full length; partial blocks are cleared.
   for (let i = 0; i < slots.length;) {
@@ -82,13 +103,14 @@ export function lockReason(rotation, index, crop) {
   const slots = toSlots(rotation);
   const L = slots.length;
   if (info.years > 1) {
-    return index + info.years > L ? `Il faut ${info.years} années libres à partir d’ici` : null;
+    if (index + info.years > L) return `Il faut ${info.years} années libres à partir d’ici`;
   }
   if (L > 1 && L < info.returnDelay) {
     return `Le cycle est plus court que le délai de retour (${info.returnDelay} ans)`;
   }
-  for (let j = 0; j < L; j++) {
-    if (j === index || slots[j].crop !== crop) continue;
+  const replacedStart = info.years > 1 ? entryStart(rotation, index) : index;
+  for (const j of plantingStarts(rotation, crop)) {
+    if (j === replacedStart) continue;
     const d = Math.abs(index - j);
     if (Math.min(d, L - d) < info.returnDelay) {
       return `Délai de retour : ${info.returnDelay} ans minimum`;
@@ -128,7 +150,10 @@ export function rotationErrors(rotation) {
   if (slots.length === 0) errors.push('La rotation est vide.');
   slots.forEach((s, i) => {
     if (!s.crop) errors.push(`L’année ${i + 1} n’a pas de culture.`);
-    else if (CROPS[s.crop].years === 1 && lockReason(rotation, i, s.crop)) {
+    else if (
+      (CROPS[s.crop].years === 1 || entryStart(rotation, i) === i) &&
+      lockReason(rotation, i, s.crop)
+    ) {
       errors.push(`${CROPS[s.crop].name} revient trop tôt (année ${i + 1}).`);
     }
   });
@@ -204,15 +229,16 @@ export function firstYear(section, offset = section.offset ?? 0) {
   const slots = toSlots(section.rotation);
   const L = slots.length;
   if (!L) return { crop: null, blockStart: true };
-  const pos = offset % L;
+  const pos = normalizedOffset(offset, L);
   return { crop: slots[pos].crop, blockStart: entryStart(section.rotation, pos) === pos };
 }
 
 /**
- * Why the first analysed year clashes with what grows on the section now
+ * Why the proposed calendar clashes with what grows on the section now
  * (`section.currentCrop`, the season before `startYear`), or null.
- * Rule: a one-year crop never follows itself (every return delay is ≥ 2 years);
- * a multi-year crop cannot start "in the middle" unless it is already there.
+ * Returns are checked from that known year, including a new planting after an
+ * initial perennial continuation. The age of the current stand is unknown:
+ * no earlier planting date is inferred to shorten its waiting period.
  */
 export function currentCropConflict(section, offset = section.offset ?? 0) {
   const now = section.currentCrop;
@@ -222,8 +248,20 @@ export function currentCropConflict(section, offset = section.offset ?? 0) {
   if (crop === now && CROPS[crop].years === 1) {
     return `${CROPS[crop].name} deux ans de suite : la section est déjà en ${CROPS[crop].name.toLowerCase()}`;
   }
-  if (!blockStart && crop !== now) {
+  if (CROPS[crop].years > 1 && !blockStart && crop !== now) {
     return `La ${CROPS[crop].name.toLowerCase()} ne peut pas commencer en cours de bloc : elle n’est pas encore semée`;
+  }
+  const slots = toSlots(section.rotation);
+  const L = slots.length;
+  const start = normalizedOffset(offset, L);
+  const starts = new Set(plantingStarts(section.rotation, now));
+  // One complete traversal includes the next planting even when year 1 is in
+  // the middle of an existing perennial block and that planting is in cycle 2.
+  for (let year = 1; year <= L; year++) {
+    const position = (start + year - 1) % L;
+    if (starts.has(position) && year < CROPS[now].returnDelay) {
+      return `Délai de retour : ${CROPS[now].name} revient trop tôt (année ${year}, ${CROPS[now].returnDelay} ans minimum).`;
+    }
   }
   return null;
 }

@@ -1,0 +1,148 @@
+{
+  "endpoints": {
+    "nasaPowerDaily": "https://power.larc.nasa.gov/api/temporal/daily/point",
+    "planetaryComputerStac": "https://planetarycomputer.microsoft.com/api/stac/v1/search",
+    "planetaryComputerPoint": "https://planetarycomputer.microsoft.com/api/data/v1/item/point",
+    "ornlModisSubset": "https://modis.ornl.gov/rst/api/v1",
+    "cmrStacSearch": "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/search",
+    "usdaCropScapeValue": "https://nassgeodata.gmu.edu/axis2/services/CDLService/GetCDLValue",
+    "aafcCropInventoryRest": "https://agriculture.canada.ca/imagery-images/rest/services/annual_crop_inventory",
+    "usdaNassQuickStats": "https://quickstats.nass.usda.gov/api/api_GET/"
+  },
+  "sampling": {
+    "startYear": 2018,
+    "endYear": 2024,
+    "halfWindowKm": 8,
+    "minSamplesHighConfidence": 15,
+    "minSamplesMediumConfidence": 5,
+    "minRegimeSamplesForStressModulation": 5
+  },
+  "hyperparameters": {
+    "ridgeLambda": 1,
+    "pairPriorStrengthK": 4,
+    "regimePriorStrengthK": 6,
+    "monocultureBaselinePriorK": 20,
+    "minCropPriorStdPct": 4,
+    "maxUnobservedPairPenaltyPct": -1.5,
+    "unobservedHalfWidthPct": 8,
+    "climateDistanceWeights": {
+      "gddBase10": 0.4,
+      "meanTempC": 0.25,
+      "heatStressDays": 0.2,
+      "precipMm": 0.15
+    },
+    "similarityDecayFactor": 0.35,
+    "horizonUncertaintyPerYearPct": 0.08,
+    "twinDistanceUncertaintyFactor": 0.25,
+    "longHorizonConfidenceDowngradeYears": 12
+  },
+  "satelliteCropCodes": {
+    "usdaCdl": {
+      "1": "mais",
+      "5": "soya",
+      "21": "orge",
+      "22": "ble",
+      "23": "ble",
+      "24": "ble",
+      "36": "luzerne",
+      "43": "patate"
+    },
+    "aafcCanada": {
+      "122": null,
+      "133": "orge",
+      "140": "ble",
+      "145": "ble",
+      "146": "ble",
+      "147": "mais",
+      "158": "soya",
+      "177": "patate"
+    }
+  },
+  "satelliteCropMappingVersion": 2,
+  "cropTaxonomy": {
+    "mais": {
+      "scientificName": "Zea mays",
+      "family": "Poaceae"
+    },
+    "ble": {
+      "scientificName": "Triticum aestivum",
+      "family": "Poaceae"
+    },
+    "orge": {
+      "scientificName": "Hordeum vulgare",
+      "family": "Poaceae"
+    },
+    "soya": {
+      "scientificName": "Glycine max",
+      "family": "Fabaceae"
+    },
+    "luzerne": {
+      "scientificName": "Medicago sativa",
+      "family": "Fabaceae"
+    },
+    "patate": {
+      "scientificName": "Solanum tuberosum",
+      "family": "Solanaceae"
+    }
+  },
+  "crops": {
+    "mais": {
+      "id": "mais",
+      "name": "Maïs",
+      "color": "#F2C14E",
+      "years": 1,
+      "returnDelay": 2,
+      "roles": [
+        "gourmand"
+      ]
+    },
+    "soya": {
+      "id": "soya",
+      "name": "Soya",
+      "color": "#9CC27A",
+      "years": 1,
+      "returnDelay": 2,
+      "roles": [
+        "azote"
+      ]
+    },
+    "ble": {
+      "id": "ble",
+      "name": "Blé",
+      "color": "#DDB07F",
+      "years": 1,
+      "returnDelay": 2,
+      "roles": []
+    },
+    "orge": {
+      "id": "orge",
+      "name": "Orge",
+      "color": "#BFD6E6",
+      "years": 1,
+      "returnDelay": 2,
+      "roles": [
+        "sec"
+      ]
+    },
+    "patate": {
+      "id": "patate",
+      "name": "Patate",
+      "color": "#C3A3D6",
+      "years": 1,
+      "returnDelay": 4,
+      "roles": []
+    },
+    "luzerne": {
+      "id": "luzerne",
+      "name": "Luzerne",
+      "color": "#7FC0B2",
+      "years": 3,
+      "returnDelay": 4,
+      "roles": [
+        "azote",
+        "racines",
+        "couverture"
+      ]
+    }
+  }
+}

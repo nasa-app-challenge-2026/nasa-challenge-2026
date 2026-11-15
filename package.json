@@ -17,6 +17,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:rendement": "node --test algo-rendement/regression.mjs",
     "test:watch": "vitest",
     "lint": "eslint .",
     "format": "prettier --write .",
