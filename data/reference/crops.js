@@ -46,6 +46,26 @@ export const CROPS = {
   courge: { id: 'courge', name: 'Courge', color: '#F0C27B', texture: 'legume' },
 };
 
+/**
+ * A small picture of each crop, to recognise it at a glance in a rotation (the wheel, the strips).
+ * The three small grains share the ear: their colour and their name tell them apart.
+ */
+const DEFAULT_SYMBOL = '🌱';
+const SYMBOLS = {
+  mais: '🌽',
+  soya: '🌱',
+  'soya-2e': '🌱',
+  'ble-automne': '🌾',
+  orge: '🌾',
+  seigle: '🌾',
+  avoine: '🌾',
+  canola: '🌼',
+  sarrasin: '🌸',
+  luzerne: '🍀',
+  foin: '🌿',
+  jachere: '💤',
+};
+
 /** Seeds a farmer can own (the crops that have a sheet), in the order the reserve shows them. */
 export const SEED_IDS = [
   'mais',
@@ -150,3 +170,4 @@ export const cropOf = (id) => CROPS[SHEETS[id]?.cropId ?? id] ?? null;
 export const nameOf = (id) => SHEETS[id]?.name ?? CROPS[id]?.name ?? id ?? '—';
 export const colorOf = (id) => cropOf(id)?.color ?? '#E5E9E0';
 export const textureOf = (id) => cropOf(id)?.texture ?? 'sol';
+export const symbolOf = (id) => SYMBOLS[cropOf(id)?.id] ?? DEFAULT_SYMBOL;

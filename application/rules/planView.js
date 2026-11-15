@@ -28,6 +28,30 @@ export function planYears(plan) {
   };
 }
 
+/** The option of the farmer's current rotation among the rotations of a cycle. */
+export const REFERENCE_OPTION = 'ref';
+
+/**
+ * The rotations a cycle proposes, best first: the one the algorithm chose, then its alternatives
+ * (three in all when the constraints leave that many).
+ */
+export const proposedRotations = (cycle) =>
+  cycle.chosen ? [cycle.chosen, ...cycle.alternatives] : [];
+
+/**
+ * The rotation shown in detail: { id, chain } where id is the rank of a proposal (0 = the chosen
+ * one) or REFERENCE_OPTION. An option the cycle does not have falls back on the chosen rotation,
+ * then on the current one; null when the cycle has neither.
+ */
+export function shownRotation(cycle, option) {
+  const proposals = proposedRotations(cycle);
+  if (option === REFERENCE_OPTION && cycle.reference)
+    return { id: REFERENCE_OPTION, chain: cycle.reference };
+  if (proposals[option]) return { id: option, chain: proposals[option] };
+  if (proposals.length) return { id: 0, chain: proposals[0] };
+  return cycle.reference ? { id: REFERENCE_OPTION, chain: cycle.reference } : null;
+}
+
 /** Steps of a chain that hold a position, with the years they cover. */
 export function positionedSteps(chain, cycle, frequencyMonths) {
   return (chain?.steps ?? [])

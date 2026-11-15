@@ -103,6 +103,12 @@ class PlanService:
         ]
         return farm_plan_out(context, plans, place.algorithm, today, generated_at)
 
+    def prepare_place(self, lat: float, lon: float, today: date) -> None:
+        """Builds the place when it is not kept yet. Everything its data services answer is then
+        on disk: another process that plans the same place reads it there, not on the network."""
+        if self._known_place(lat, lon, today.year) is None:
+            self._place_for(lat, lon, today.year, self._weather.farm_weather(lat, lon))
+
     def _sections_data(self, farm_input: FarmInput, weather: DailyWeather) -> dict[str, FieldData]:
         """The measures of every section, read in parallel (by section id)."""
         location = farm_input.farm.location

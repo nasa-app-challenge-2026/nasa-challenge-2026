@@ -2,6 +2,7 @@
 import { html } from '../lib/html.js';
 import { SOURCES } from '../../data/reference/sources.js';
 import { appHeader } from '../ui/layout.js';
+import { askRota } from '../ui/rota.js';
 
 export default {
   title: 'Détail et sources',
@@ -15,29 +16,9 @@ export default {
     return html`${appHeader(state, 'sources')}
       <main class="page page--read stack-md" id="main">
         <a class="back-link" href="#/section/${back}/plan">← Retour à la section ${back}</a>
-        <div class="stack-xs">
+        <div class="row-between wrap">
           <h1 class="h1 h1--xl">D’où viennent les chiffres</h1>
-          <p class="lead">
-            Les conseils de l’appli ne citent pas d’études, pour rester simples. Tout est ici : les
-            données de la NASA et des cartes de cultures, et les méthodes de l’algorithme. « Pas
-            encore calculé » veut dire que la valeur reste inconnue, sans chiffre d’exemple à la
-            place.
-          </p>
-        </div>
-        <div class="row-wrap gap-md align-stretch">
-          <div class="card grow-1 stack-0">
-            <span class="h1">${nData}</span><span class="muted small">jeux de données</span>
-          </div>
-          <div class="card grow-1 stack-0">
-            <span class="h1">${nStudy}</span><span class="muted small">méthodes publiées</span>
-          </div>
-          <div class="card card--soft grow-2 row-start">
-            <span class="info-dot">i</span>
-            <p class="small">
-              Toutes ces données sont ouvertes ou gratuites. Celles des centres de données de la
-              NASA demandent un compte Earthdata gratuit pour le téléchargement.
-            </p>
-          </div>
+          ${askRota('sources')}
         </div>
         <div class="row-wrap gap-sm" role="group" aria-label="Filtrer">
           ${[

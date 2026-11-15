@@ -20,7 +20,8 @@ def pressure_label(pressure: float) -> str:
 
 
 def years_text(years: int) -> str:
-    return f"{years} an" if years == 1 else f"{years} ans"
+    """The years in French: 0 and 1 take the singular ("0 an", "1 an", "2 ans")."""
+    return f"{years} an" if years <= 1 else f"{years} ans"
 
 
 def exposure_sentence(

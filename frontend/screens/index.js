@@ -1,7 +1,7 @@
 /**
  * Screen registry. A screen is { title, render(state, params, app), actions?, onEnter?, rota? }.
  * Owners (see docs/TEAM.md): Ali = tableau, parcelle · Loïc = connexion, type-de-ferme,
- * localisation, tracer, cultures, temps, priorites, compte, RotaAI · Justin = champ, plan,
+ * localisation, tracer, cultures, temps, priorites, compte, Rota · Justin = champ, plan,
  * jumeaux, sources.
  */
 import connexion from './connexion.js';

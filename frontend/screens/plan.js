@@ -1,97 +1,114 @@
 /**
- * 10 · Plan par cycle. Owner: Justin. What the farmer sees for each cycle (step 10
- * of the algorithm): years and climate source, keep or change and the score on
- * 100, the score of his current rotation, the chain with its covers, the calendar,
- * the gaps, the seeds to buy, the warnings, the crops removed, the alerts on his
- * rotation, 2 alternatives, the robustness, the 4 priorities, the water and the pests.
+ * 10 · Plan par cycle. Owner: Justin. For each cycle (step 10 of the algorithm), the rotations
+ * the algorithm proposes, side by side: the one it recommends and its two best alternatives,
+ * each as a wheel with its crops and its four priorities, and the farmer's current rotation to
+ * compare. Touching one shows its detail: the crops with their dates, the four priorities, the
+ * water, the pests and what to know (seeds to buy, successions not measured, alerts).
+ *
+ * The screen explains nothing itself: the « Demander à Rota » buttons do.
  */
-import { html } from '../lib/html.js';
+import { html, plural } from '../lib/html.js';
 import { CROPS, nameOf } from '../../data/reference/crops.js';
+import {
+  REFERENCE_OPTION,
+  proposedRotations,
+  shownRotation,
+} from '../../application/rules/planView.js';
 import { sectionLayout, pageTitle } from '../ui/layout.js';
 import { alertBox, errorBox, loading } from '../ui/widgets.js';
+import { askRota, askRotaIcon } from '../ui/rota.js';
 import {
-  calendarTable,
-  chainChips,
   criteriaBars,
+  criteriaMini,
   cycleTabs,
   decisionPill,
   planStatus,
   selectedCycle,
 } from '../ui/planWidgets.js';
+import {
+  rotationLegend,
+  rotationStrip,
+  rotationText,
+  rotationTimeline,
+  rotationWheel,
+} from '../ui/rotationViews.js';
 
-const score = (chain) => (chain ? Math.round(chain.score) : '—');
+const PERCENT = 100;
+/** Sentences of the pests model shown for a rotation (the most exposed crops first). */
+const MAX_PEST_SENTENCES = 3;
+const REFERENCE = REFERENCE_OPTION;
 
-function headline(cycle) {
-  const delta =
-    cycle.chosen && cycle.reference ? Math.round(cycle.chosen.score - cycle.reference.score) : null;
-  return html`<section class="row-wrap gap-md align-stretch">
-    <div class="card card--dark grow-2 stack-xs">
-      <span class="small"
-        >Cycle ${cycle.index} · ${cycle.years[0]} à ${cycle.years[1]} ·
-        ${cycle.climate.source}</span
-      >
-      <span class="row gap-sm"
-        >${decisionPill(cycle.decision)}<span class="big-number"
-          >${score(cycle.chosen)}/100</span
-        ></span
-      >
-      <span class="small"
-        >${
-          cycle.decision === 'garder'
-            ? 'La suite en place reste à 5 points ou moins de la meilleure : on la garde.'
-            : 'La meilleure suite de cultures pour ce cycle, avec le climat et les jumeaux de ces années.'
-        }</span
-      >
-    </div>
-    <div class="card grow-1 stack-xs justify-center">
-      <span class="muted small">Votre rotation actuelle</span>
-      <span class="h1">${score(cycle.reference)}/100</span>
-      ${delta !== null ? html`<span class="${delta >= 0 ? 'text-good' : 'text-bad'} strong small">${delta >= 0 ? `↑ le plan fait +${delta}` : `↓ le plan fait ${delta}`}</span>` : ''}
-    </div>
-    <div class="card grow-1 stack-xs justify-center">
-      <span class="muted small">Robustesse</span>
-      <span class="h1"
-        >${cycle.robustness !== null ? Math.round(cycle.robustness) : cycle.decision === 'garder' && cycle.index > 1 ? '—' : '⚠'}</span
-      >
-      <span class="muted small"
-        >${
-          cycle.becomesInfeasibleLater
-            ? 'Devient infaisable plus tard'
-            : cycle.robustness !== null
-              ? 'Pire note de cette suite jusqu’à la fin de l’horizon'
-              : 'Suite gardée du cycle précédent'
-        }</span
-      >
-    </div>
-  </section>`;
+const NO_ROTATION =
+  'Aucune rotation ne respecte toutes les contraintes pour ce cycle. Essayez un cycle plus long ou plus de semences.';
+
+const score = (chain) => Math.round(chain.score);
+const mmPerYear = (v) => `${Math.round(v)} mm par an`;
+
+const optionTitle = (id) => (id === REFERENCE ? 'Votre rotation actuelle' : `Rotation ${id + 1}`);
+
+/** One proposed rotation: its wheel, its crops, its four priorities. */
+function rotationCard(chain, id, { cycle, selected, frequencyMonths, positions }) {
+  return html`<article class="rot-card ${selected ? 'is-selected' : ''}">
+    <button
+      type="button"
+      class="rot-card__hit"
+      data-action="set-option"
+      data-option="${id}"
+      aria-pressed="${String(selected)}"
+      aria-label="${optionTitle(id)} : ${rotationText(chain)}"
+    ></button>
+    <header class="rot-card__head">
+      <strong>${optionTitle(id)}</strong>
+      ${id === 0 ? html`<span class="pill pill--ok">★ Recommandée</span>` : ''}
+    </header>
+    <div class="rot-card__wheel">${rotationWheel(chain, { positions })}</div>
+    ${rotationLegend(chain, cycle, frequencyMonths)} ${criteriaMini(chain, cycle.weights)}
+  </article>`;
 }
 
-const MM = (v) => `${Math.round(v)} mm par an`;
+/** The farmer's current rotation, to compare with the proposals. */
+function referenceRow(cycle, { selected, frequencyMonths }) {
+  const reference = cycle.reference;
+  if (!reference) return '';
+  const delta = cycle.chosen ? score(cycle.chosen) - score(reference) : null;
+  const alerts = cycle.referenceAlerts.length;
+  return html`<article class="rot-ref ${selected ? 'is-selected' : ''}">
+    <button
+      type="button"
+      class="rot-card__hit"
+      data-action="set-option"
+      data-option="${REFERENCE}"
+      aria-pressed="${String(selected)}"
+      aria-label="${optionTitle(REFERENCE)} : ${rotationText(reference)}"
+    ></button>
+    <span class="stack-0 rot-ref__title">
+      <strong>${optionTitle(REFERENCE)}</strong>
+      <span class="muted small"
+        >${score(reference)} sur
+        100${delta === null ? '' : ` · rotation 1 : ${delta >= 0 ? '+' : ''}${delta}`}</span
+      >
+    </span>
+    ${rotationStrip(reference, cycle, frequencyMonths)}
+    ${alerts ? html`<span class="pill pill--warn">⚠ ${plural(alerts, 'alerte', 'alertes')}</span>` : ''}
+  </article>`;
+}
 
-/** The water score of the chosen chain in plain numbers (water_use), beside the 4 priorities. */
-function waterCard(cycle) {
-  const w = cycle.chosen?.water;
+/** The water of a rotation in plain numbers (water_use). */
+function waterBlock(chain) {
+  const w = chain.water;
   if (!w) return '';
   const facts = [
-    ['Note eau', `${Math.round(w.note * 100)} sur 100`],
-    ['Demande en eau', MM(w.demandMmPerYear)],
-    ['Eau qui manque', MM(w.shortfallMmPerYear)],
-    ...(w.irrigationMmPerYear === null
-      ? []
-      : [['Irrigation nécessaire', MM(w.irrigationMmPerYear)]]),
+    ['Demande', mmPerYear(w.demandMmPerYear)],
+    ['Manque', mmPerYear(w.shortfallMmPerYear)],
+    ...(w.irrigationMmPerYear === null ? [] : [['Irrigation', mmPerYear(w.irrigationMmPerYear)]]),
     ['Pluie gardée', `${Math.round(w.rainKeptPct)} %`],
-    ...(w.waterAtSowingMm === null
-      ? []
-      : [['Eau dans le sol au semis', `${Math.round(w.waterAtSowingMm)} mm`]]),
   ];
-  return html`<div class="card stack-sm">
-    <div class="row-between wrap">
-      <h2 class="h2">L’eau de cette suite</h2>
-      <span class="muted small"
-        >pression sur l’eau du cycle : ${Math.round(cycle.waterPressure.pressure * 100)} %</span
-      >
+  return html`<div class="stack-xs">
+    <div class="row-between">
+      <h3 class="h3">Eau · ${Math.round(w.note * PERCENT)} sur 100</h3>
+      ${askRotaIcon('eau-suite')}
     </div>
-    <div class="row-wrap gap-md">
+    <div class="facts">
       ${facts.map(
         ([label, value]) =>
           html`<div class="stack-0">
@@ -99,177 +116,151 @@ function waterCard(cycle) {
           </div>`,
       )}
     </div>
-    ${
-      w.byModel.length > 1
-        ? html`<span class="muted small"
-            >Moyenne de ${w.byModel.length} modèles climatiques · note avec le pire modèle :
-            ${Math.round(w.worst * 100)}</span
-          >`
-        : ''
-    }
     ${w.alerts.map((a) => alertBox('warn', a))}
-    <span class="muted small"
-      >Simulation de l’eau du sol jour par jour, avec les dates de semis et de récolte et les
-      couverts de la suite.</span
-    >
   </div>`;
 }
 
-/** The pests of the chosen chain (the team's pests model), beside the 4 priorities. */
-function pestsCard(cycle) {
-  const p = cycle.chosen?.pests;
+/** The pests of a rotation: the most exposed crops (the team's pests model). */
+function pestsBlock(chain) {
+  const p = chain.pests;
   if (!p) return '';
-  return html`<div class="card stack-sm">
-    <div class="row-between wrap">
-      <h2 class="h2">Les ravageurs de cette suite</h2>
-      <span class="muted small">note ravageurs : ${Math.round(p.score * 100)} sur 100</span>
+  return html`<div class="stack-xs">
+    <div class="row-between">
+      <h3 class="h3">Ravageurs · ${Math.round(p.score * PERCENT)} sur 100</h3>
+      ${askRotaIcon('ravageurs-suite')}
     </div>
     ${
       p.sentences.length
-        ? html`<ul class="stack-xs small">
-            ${p.sentences.map((s) => html`<li>${s}</li>`)}
+        ? html`<ul class="plain-list small">
+            ${p.sentences.slice(0, MAX_PEST_SENTENCES).map((s) => html`<li>${s}</li>`)}
           </ul>`
-        : html`<span class="small"
-            >Aucune culture n’arrive sur une pression notable de maladies, de nématodes ou
-            d’insectes du sol.</span
-          >`
+        : html`<span class="small">Aucune culture exposée.</span>`
     }
     ${
       p.cropsWithoutData.length
         ? html`<span class="muted small"
-            >Aucune donnée pour :
-            ${p.cropsWithoutData.map((c) => nameOf(c).toLowerCase()).join(', ')} (comptées sans
-            risque).</span
+            >Sans donnée :
+            ${p.cropsWithoutData.map((c) => nameOf(c).toLowerCase()).join(', ')}</span
           >`
         : ''
     }
-    <span class="muted small"
-      >Pression des maladies, nématodes et insectes du sol, année après année : elle monte quand une
-      culture hôte pousse et baisse pendant les années sans hôte.</span
-    >
   </div>`;
 }
 
-const PERCENT_TEXT = (v) => `${v > 0 ? '+' : ''}${String(v).replace('.', ',')} %`;
-
-/** What an unmeasured succession counts in the yield priority. */
-function gapRule(assumedPct) {
-  return assumedPct === 0
-    ? 'Compté neutre.'
-    : `Compté ${PERCENT_TEXT(assumedPct)}, comme une succession jamais observée dans la région.`;
+/** What to know about the rotation shown: gaps, seeds to buy, warnings, alerts. */
+function notices(cycle, chain, id) {
+  const list = [];
+  if (chain.gaps.length)
+    list.push(
+      alertBox(
+        'warn',
+        `Précédent pas mesuré : ${chain.gaps.map((g) => g.message).join(', ')}.`,
+        askRotaIcon('precedent'),
+      ),
+    );
+  if (chain.seedsToBuy.length)
+    list.push(
+      alertBox(
+        'warn',
+        `Semences à se procurer : ${chain.seedsToBuy.map((s) => CROPS[s]?.name ?? s).join(', ')}.`,
+      ),
+    );
+  list.push(...chain.warnings.map((w) => alertBox('warn', w.message)));
+  if (id === REFERENCE) list.push(...cycle.referenceAlerts.map((a) => alertBox('warn', a.message)));
+  return list;
 }
 
-function notices(cycle) {
-  const c = cycle.chosen;
+/** The rotation the farmer touched, in detail. */
+function rotationDetail(cycle, chain, id, frequencyMonths) {
+  const isReference = id === REFERENCE;
+  return html`<section class="card stack-md" aria-live="polite">
+    <div class="row-between wrap">
+      <h2 class="h2">${optionTitle(id)} · ${score(chain)} sur 100</h2>
+      ${askRota('calendrier')}
+    </div>
+    ${rotationTimeline(chain, cycle, frequencyMonths)} ${notices(cycle, chain, id)}
+    <div class="detail-grid">
+      <div class="stack-sm">
+        <div class="row-between">
+          <h3 class="h3">Les 4 priorités</h3>
+          ${askRotaIcon('barres-priorites')}
+        </div>
+        ${criteriaBars(chain, isReference ? null : cycle.reference, cycle.weights)}
+      </div>
+      <div class="stack-md">${waterBlock(chain)}${pestsBlock(chain)}</div>
+    </div>
+  </section>`;
+}
+
+/** Robustness of the chain adopted: its worst score in the cycles that follow. */
+function robustnessChip(cycle) {
+  const text = cycle.becomesInfeasibleLater
+    ? 'Robustesse : devient infaisable plus tard'
+    : cycle.robustness === null
+      ? null
+      : `Robustesse : ${Math.round(cycle.robustness)} sur 100`;
+  return text ? html`<span class="chip">${text}${askRotaIcon('robustesse')}</span>` : '';
+}
+
+/** What the whole cycle says, whatever the rotation shown. */
+function cycleNotices(cycle) {
   return [
-    ...(c?.gaps.length
-      ? [
-          alertBox(
-            'warn',
-            `Précédent pas mesuré : ${c.gaps.map((g) => g.message).join(', ')}. ${gapRule(c.gaps[0].assumedPct)}`,
-          ),
-        ]
-      : []),
-    ...(c?.seedsToBuy.length
-      ? [
-          alertBox(
-            'warn',
-            `Semences à se procurer : ${c.seedsToBuy.map((s) => CROPS[s]?.name ?? s).join(', ')}.`,
-          ),
-        ]
-      : []),
-    ...(c?.warnings ?? []).map((w) => alertBox('warn', w.message)),
     ...cycle.removed.map((r) => alertBox('warn', `Retirée : ${r.message}`)),
     ...(cycle.twins.reliable
       ? []
-      : [
-          alertBox(
-            'warn',
-            'Aucun vrai jumeau climatique (σ > 2) : la recommandation est moins fiable.',
-          ),
-        ]),
+      : [alertBox('warn', 'Aucun vrai jumeau climatique : la recommandation est moins fiable.')]),
   ];
 }
 
-function referenceCard(cycle) {
-  if (!cycle.reference) return '';
-  return html`<section class="card stack-sm">
-    <div class="row-between wrap">
-      <h2 class="h2">Votre rotation actuelle, prolongée</h2>
-      <strong>${score(cycle.reference)}/100</strong>
-    </div>
-    ${chainChips(cycle.reference)} ${cycle.referenceAlerts.map((a) => alertBox('warn', a.message))}
-    <span class="muted small"
-      >Elle sert de comparaison : ses délais non respectés deviennent des alertes.</span
-    >
-  </section>`;
-}
-
-function alternatives(cycle) {
-  if (!cycle.alternatives.length) return '';
-  return html`<section class="card stack-sm">
-    <h2 class="h2">Deux autres possibilités</h2>
-    ${cycle.alternatives.map(
-      (a) =>
-        html`<div class="stack-xs">
-          <div class="row-between">
-            <span class="small">${a.label}</span><strong>${score(a)}/100</strong>
-          </div>
-          ${chainChips(a)}
-        </div>`,
-    )}
-  </section>`;
-}
-
 export default {
-  title: 'Plan par cycle',
+  title: 'Rotations proposées',
   rota: 'plan',
   render(state, { id }, app) {
     const section = app.section(id);
     const plan = app.sectionPlan(id);
-    const head = pageTitle(
-      `Plan de la section ${id}`,
-      section.currentCrop ? `Part de : ${nameOf(section.currentCrop)} en place` : 'Parcelle libre',
-    );
+    const head = pageTitle(`Plan de la section ${id}`);
     if (!plan) {
-      const wait = state.plan.status === 'error' ? errorBox(state.plan.error) : loading();
+      const wait =
+        state.plan.status === 'error'
+          ? errorBox(state.plan.error)
+          : loading('Rota prépare votre plan', askRota('chargement'));
       return sectionLayout(state, section, 'plan', html`${head}${planStatus(state)}${wait}`);
     }
     const cycle = selectedCycle(plan, state);
+    const frequencyMonths = state.plan.data.settings.frequencyMonths;
+    const positions = state.plan.data.settings.positionsPerCycle;
+    const proposals = proposedRotations(cycle);
+    const shown = shownRotation(cycle, state.ui.option);
     const body = html`${head} ${planStatus(state)} ${cycleTabs(plan, cycle.index)}
-      ${headline(cycle)}
-      ${
-        cycle.chosen
-          ? html`<section class="card stack-md">
+    ${
+      shown
+        ? html`<section class="stack-md">
               <div class="row-between wrap">
-                <h2 class="h2">La suite de cultures</h2>
-                <span class="muted small">${cycle.chosen.label}</span>
+                <h2 class="h2 h2--lg">
+                  ${plural(proposals.length, 'rotation proposée', 'rotations proposées')}
+                </h2>
+                ${askRota('trois-rotations')}
               </div>
-              ${chainChips(cycle.chosen)} ${calendarTable(cycle.chosen)}
-            </section>`
-          : alertBox(
-              'bad',
-              'Aucune suite de cultures ne respecte toutes les contraintes pour ce cycle. Essayez un cycle plus long ou plus de semences.',
-            )
-      }
-      ${notices(cycle)}
-      <section class="row-wrap gap-md align-start">
-        ${
-          cycle.chosen
-            ? html`<div class="card grow-1 stack-md">
-                <h2 class="h2">Les 4 priorités</h2>
-                ${criteriaBars(cycle.chosen, cycle.reference, cycle.weights)}
-              </div>`
-            : ''
-        }
-        <div class="grow-1 stack-md">
-          ${waterCard(cycle)}${pestsCard(cycle)}${referenceCard(cycle)}${alternatives(cycle)}
-        </div>
-      </section>
-      <div class="actions-bar">
-        <a class="btn btn--secondary" href="#/section/${id}/parcelle">Ma parcelle</a
-        ><a class="btn btn--primary" href="#/section/${id}/jumeaux">Climat et jumeaux →</a>
-      </div>`;
+              <div class="row-wrap gap-sm align-center">
+                ${decisionPill(cycle.decision)}${askRotaIcon('garder-changer')}
+                ${robustnessChip(cycle)}
+              </div>
+              ${proposals.length ? '' : alertBox('bad', NO_ROTATION)} ${cycleNotices(cycle)}
+              <div class="rot-cards">
+                ${proposals.map((chain, i) =>
+                  rotationCard(chain, i, {
+                    cycle,
+                    selected: shown.id === i,
+                    frequencyMonths,
+                    positions,
+                  }),
+                )}
+              </div>
+              ${referenceRow(cycle, { selected: shown.id === REFERENCE, frequencyMonths })}
+            </section>
+            ${rotationDetail(cycle, shown.chain, shown.id, frequencyMonths)}`
+        : html`${alertBox('bad', NO_ROTATION)} ${cycleNotices(cycle)}`
+    }`;
     return sectionLayout(state, section, 'plan', body);
   },
 };

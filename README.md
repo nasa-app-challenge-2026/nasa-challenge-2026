@@ -19,11 +19,12 @@ Projet de l'équipe **NASA-LARPERS** pour le [NASA Space Apps Challenge 2026](ht
    - calcule le **climat** que la ferme aura (tendance des 40 ans de NASA POWER, puis modèles climatiques au-delà de 10 ans) ;
    - trouve ses **jumeaux climatiques**, des endroits qui ont déjà eu ce climat entre 2011 et 2024 ;
    - garde les cultures et les enchaînements qui y marchent, au même sol ;
-   - construit la **meilleure suite de cultures** : calendrier, gel, délais de retour, couverts de seigle automatiques, note sur 100 ;
+   - construit les **trois meilleures rotations** : calendrier, gel, délais de retour, couverts de seigle automatiques, note sur 100 ;
    - dit s'il faut **garder ou changer** la rotation en place, et la compare à la rotation actuelle du fermier.
-5. **RotaAI**, en bas à droite, répond aux « pourquoi ».
+5. L'écran montre ces **trois rotations côte à côte**, chacune en roue de cultures, à côté de la rotation actuelle.
+6. **Rota**, l'assistant, répond aux « pourquoi » : les écrans n'expliquent rien eux-mêmes, un bouton « Demander à Rota » ouvre l'explication.
 
-| Plan par cycle                     | Ma parcelle                                   |
+| Rotations proposées                | Ma parcelle                                   |
 | ---------------------------------- | --------------------------------------------- |
 | ![Plan](docs/screenshots/plan.png) | ![Ma parcelle](docs/screenshots/parcelle.png) |
 
@@ -48,25 +49,25 @@ npm run dev
 
 Le front appelle le serveur à l'adresse `VITE_ALGO_URL` (`http://localhost:8000` par défaut avec `npm run dev`, voir [`.env.example`](.env.example)). Si le serveur est éteint, l'écran le dit et propose de réessayer. Le serveur lit toujours les données réelles (NASA POWER, SoilGrids, Copernicus DEM, MODIS) et répond `502` quand une source ne répond pas : il n'y a plus de mode démo (réglages : [`api/README.md`](api/README.md)).
 
-| Commande                                          | Rôle                                                                                   |
-| ------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `npm run dev`                                     | serveur de développement du front                                                      |
-| `npm run build` / `npm run preview`               | version de production dans `dist/`                                                     |
-| `npm test`                                        | tests du front (contrat, écrans, couches)                                              |
-| `npm run lint` / `npm run format`                 | qualité du code JavaScript                                                             |
-| `npm run check:algo -- <url>`                     | vérifie qu'un serveur respecte le contrat                                              |
+| Commande                               | Rôle                                                                                   |
+| -------------------------------------- | -------------------------------------------------------------------------------------- |
+| `npm run dev`                          | serveur de développement du front                                                      |
+| `npm run build` / `npm run preview`    | version de production dans `dist/`                                                     |
+| `npm test`                             | tests du front (contrat, écrans, couches)                                              |
+| `npm run lint` / `npm run format`      | qualité du code JavaScript                                                             |
+| `npm run check:algo -- <url>`          | vérifie qu'un serveur respecte le contrat                                              |
 | `pytest` · `ruff check .` (dans `api`) | tests et qualité du code Python : l'algorithme contre sa référence, l'API, les couches |
 
 ## Architecture
 
 Le code est rangé en **quatre couches**, une par dossier. Une couche n'importe que les couches en dessous d'elle (`npm test` le vérifie) :
 
-| Couche          | Dossier                        | Contenu                                                                                    |
-| --------------- | ------------------------------ | ------------------------------------------------------------------------------------------ |
-| **Frontend**    | [`frontend/`](frontend/)       | la page, les écrans, les composants, les styles                                            |
-| **Back end**    | [`backend/`](backend/)         | **le serveur de l'algorithme** (`api/`, en Python), son client HTTP, le contrat |
-| **Application** | [`application/`](application/) | le contrôleur `app`, l'état, les règles des entrées du fermier, la lecture du plan         |
-| **Data**        | [`data/`](data/)               | noms et couleurs des cultures, priorités, textes, ferme de démo, adresses, sauvegarde       |
+| Couche          | Dossier                        | Contenu                                                                               |
+| --------------- | ------------------------------ | ------------------------------------------------------------------------------------- |
+| **Frontend**    | [`frontend/`](frontend/)       | la page, les écrans, les composants, les styles                                       |
+| **Back end**    | [`backend/`](backend/)         | **le serveur de l'algorithme** (`api/`, en Python), son client HTTP, le contrat       |
+| **Application** | [`application/`](application/) | le contrôleur `app`, l'état, les règles des entrées du fermier, la lecture du plan    |
+| **Data**        | [`data/`](data/)               | noms et couleurs des cultures, priorités, textes, ferme de démo, adresses, sauvegarde |
 
 La logique métier vit seulement dans `api/field_shift/algorithm/` : une cinquantaine de petits modules Python, une classe ou une fonction par rôle, toutes les constantes nommées dans `algorithm/config/`. Le front et le serveur ne se parlent qu'en HTTP, selon un contrat. Détails : [`docs/ALGORITHME.md`](docs/ALGORITHME.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) et [`api/README.md`](api/README.md).
 
@@ -80,16 +81,16 @@ Le workflow [`deploy.yml`](.github/workflows/deploy.yml) publie le front sur Git
 
 ## Documentation
 
-| Fichier                                                | Contenu                                                                       |
-| ------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| [`docs/ALGORITHME.md`](docs/ALGORITHME.md)             | L'algorithme dans le code : étapes, fichiers, classes, données, écarts, tests |
-| [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md)       | Le contrat 2.0 entre l'interface et l'algorithme                              |
-| [`api/README.md`](api/README.md) | Lancer, régler, tester et héberger le serveur de l'algorithme                 |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)         | Les quatre couches, qui importe quoi, les écrans                              |
-| [`docs/DESIGN.md`](docs/DESIGN.md)                     | Base commune : couleurs, textures, typo, liste « écran fini »                 |
-| [`docs/TEAM.md`](docs/TEAM.md)                         | Qui fait quoi, façon de travailler                                            |
-| [`docs/ROTAAI.md`](docs/ROTAAI.md)                     | L'assistant, aujourd'hui et plus tard                                         |
-| [`docs/ROADMAP.md`](docs/ROADMAP.md)                   | Ce qui reste à faire                                                          |
+| Fichier                                          | Contenu                                                                       |
+| ------------------------------------------------ | ----------------------------------------------------------------------------- |
+| [`docs/ALGORITHME.md`](docs/ALGORITHME.md)       | L'algorithme dans le code : étapes, fichiers, classes, données, écarts, tests |
+| [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md) | Le contrat 2.0 entre l'interface et l'algorithme                              |
+| [`api/README.md`](api/README.md)                 | Lancer, régler, tester et héberger le serveur de l'algorithme                 |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)   | Les quatre couches, qui importe quoi, les écrans                              |
+| [`docs/DESIGN.md`](docs/DESIGN.md)               | Base commune : couleurs, textures, typo, liste « écran fini »                 |
+| [`docs/TEAM.md`](docs/TEAM.md)                   | Qui fait quoi, façon de travailler                                            |
+| [`docs/ROTA.md`](docs/ROTA.md)                   | Rota, l'assistant : les boutons « Demander à Rota », aujourd'hui et plus tard |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md)             | Ce qui reste à faire                                                          |
 
 ## Sources
 
@@ -97,7 +98,7 @@ NASA POWER (lue en direct par le serveur), NEX-GDDP-CMIP6, SoilGrids 2.0, USDA C
 
 ## Utilisation de l'IA
 
-Claude (Anthropic) a servi à la recherche d'études, aux maquettes, à l'architecture, à l'écriture de l'algorithme en classes Python (serveur FastAPI) et à une première version de ce code ; l'équipe l'a relu et le maintient. Les réponses de RotaAI sont écrites à l'avance et relues par l'équipe. Le journal détaillé sera tenu pour la déclaration de soumission.
+Claude (Anthropic) a servi à la recherche d'études, aux maquettes, à l'architecture, à l'écriture de l'algorithme en classes Python (serveur FastAPI) et à une première version de ce code ; l'équipe l'a relu et le maintient. Les réponses de Rota sont écrites à l'avance et relues par l'équipe. Le journal détaillé sera tenu pour la déclaration de soumission.
 
 ## Limites
 

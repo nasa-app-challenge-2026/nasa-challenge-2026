@@ -11,6 +11,7 @@ import { moveCriterion, weightShares } from '../../application/rules/priorities.
 import { onboardingHeader } from '../ui/layout.js';
 import { icon, ICONS } from '../ui/icons.js';
 import { switchButton } from '../ui/widgets.js';
+import { askRota, askRotaIcon } from '../ui/rota.js';
 
 export function priorityEditor(state) {
   const ranking = state.farm.farm.priorities;
@@ -23,10 +24,8 @@ export function priorityEditor(state) {
         return html`<li class="prio ${i === 0 ? 'is-first' : ''}">
           <span class="prio__rank">${i + 1}</span>
           <span class="prio__icon">${icon(c.icon, { size: 22, color: '#2E6B3B' })}</span>
-          <span class="stack-0 grow"
-            ><strong>${c.label}</strong><span class="muted small">${c.text}</span></span
-          >
-          <span class="muted small nowrap" title="Poids calculé par l’algorithme">${share(k)}</span>
+          <strong class="grow">${c.label}</strong>
+          <span class="muted small nowrap">${share(k)}</span>
           <span class="row gap-xs">
             <button
               type="button"
@@ -54,10 +53,6 @@ export function priorityEditor(state) {
         </li>`;
       })}
     </ol>
-    <span class="muted small"
-      >La note de chaque suite de cultures est la moyenne de ces quatre notes, pondérée par ces
-      poids.</span
-    >
   </div>`;
 }
 
@@ -67,9 +62,8 @@ export function farmFactsEditor(state) {
     ${Object.values(EQUIPMENT).map(
       (e) =>
         html`<div class="toggle-card">
-          <span class="stack-0"
-            ><strong class="small">${e.name}</strong
-            ><span class="muted small">Sans elle, pas de luzerne ni de foin</span></span
+          <span class="row gap-xs grow"
+            ><strong class="small">${e.name}</strong>${askRotaIcon('equipement')}</span
           >
           ${switchButton(!f.missingEquipment.includes(e.id), 'toggle-equipment', `J’ai une ${e.name.toLowerCase()}`, html`data-equipment="${e.id}"`)}
         </div>`,
@@ -101,13 +95,9 @@ export default {
   render(state) {
     return html`${onboardingHeader(6)}
       <main class="page page--narrow stack-lg" id="main">
-        <div class="stack-xs">
+        <div class="row-between wrap">
           <h1 class="h1 h1--xl">Qu’est-ce qui compte le plus pour vous ?</h1>
-          <p class="lead">
-            Classez les quatre priorités, de la plus importante à la moins importante. L’appli note
-            chaque suite de cultures sur ces quatre priorités ; la première pèse le plus. Elle donne
-            aussi plus de poids à la protection du sol et à l’eau si votre champ y est fragile.
-          </p>
+          ${askRota('priorites')}
         </div>
         ${priorityEditor(state)}
         <section class="card stack-sm">

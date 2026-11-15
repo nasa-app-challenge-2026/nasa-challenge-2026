@@ -61,9 +61,9 @@ export function onboardingHeader(step) {
 }
 
 const SECTION_TABS = [
+  ['plan', 'Rotations proposées'],
   ['parcelle', 'Ma parcelle'],
   ['champ', 'Mon champ'],
-  ['plan', 'Plan par cycle'],
   ['jumeaux', 'Climat et jumeaux'],
 ];
 
@@ -100,7 +100,6 @@ export function sectionLayout(state, section, tab, body) {
                 >`
               : html`<a href="#/section/${section.id}/${id}">${label}</a>`,
           )}
-          <a href="#/sources">Détail et sources</a>
         </nav>
       </aside>
       <main class="section-main" id="main">${body}</main>

@@ -32,6 +32,7 @@ from field_shift.algorithm.twins.soil_comparison import Soil
 from field_shift.algorithm.weather.daily_weather import DailyWeather
 from field_shift.data_access.data_source_config import (
     AAFC_CROPS,
+    MODIS_NDVI,
     SOILGRIDS,
     USDA_CDL,
     DataSourceConfig,
@@ -43,6 +44,7 @@ from field_shift.data_access.field_measures import (
     heavy_rain_days,
     square_around,
 )
+from field_shift.data_access.modis_ndvi import ModisNdviClient, composite_date
 from field_shift.data_access.nasa_power import DOWNLOAD_YEARS, NasaPowerClient
 from field_shift.data_access.power_grid import PowerGridClient, grid_box
 from field_shift.data_access.power_projection import (
@@ -84,6 +86,23 @@ def client_of(handle) -> httpx.Client:
 
 
 class TestDiskCache:
+    def test_a_file_another_process_keeps_busy_does_not_fail_the_answer(
+        self, tmp_path, monkeypatch
+    ):
+        # Two worker processes writing the same answer at once: Windows refuses the replace for a
+        # moment (found on 2026-11-15 with a SoilGrids answer). The answer is still given.
+        import field_shift.data_access.disk_cache as disk_cache
+
+        def busy(source, target):
+            raise PermissionError(5, "Access is denied")
+
+        monkeypatch.setattr(disk_cache.os, "replace", busy)
+        monkeypatch.setattr(disk_cache, "REPLACE_WAIT_S", 0)
+        cache = DataCache(tmp_path)
+        assert cache.get_or_fetch("ns", "k", lambda: [1, 2]) == [1, 2]
+        assert cache.get("ns", "k") == [1, 2]  # kept in memory
+        assert not list(tmp_path.rglob("*.tmp"))  # no file left behind
+
     def test_a_value_is_fetched_once_and_read_back_after_a_restart(self, tmp_path):
         calls = []
         first = DataCache(tmp_path)
@@ -479,6 +498,65 @@ class FakeSectionServices:
         return httpx.Response(404)
 
 
+class CatalogueBeingFilled(FakeSectionServices):
+    """The MODIS catalogue as the Planetary Computer served it on 2026-11-15: its 2025 has no
+    composite from July to October (8 at the point, all from June, November and December), its
+    2024 is whole."""
+
+    PARTIAL_2025_DAYS = (161, 169, 177, 321, 329, 337, 345, 353)
+
+    def handle(self, request):
+        if request.url.path.endswith("/mosaic/register"):
+            self.requests.append(request)
+            year = json.loads(request.content)["filter"]["args"][1]["args"][1]["interval"][0][:4]
+            return httpx.Response(200, json={"searchid": f"y{year}"})
+        if "/mosaic/y2025/point/" in request.url.path:
+            self.requests.append(request)
+            values = [
+                [f"x/MOD13Q1.A2025{d:03d}.h12v04.061", [500], []] for d in self.PARTIAL_2025_DAYS
+            ]
+            return httpx.Response(200, json={"values": values})
+        if "/mosaic/y2024/point/" in request.url.path:
+            self.requests.append(request)
+            values = [
+                [f"x/MOD13Q1.A2024{day:03d}.h12v04.061", [8000 if 130 < day < 280 else 500], []]
+                for day in range(1, 366, 8)
+            ]
+            return httpx.Response(200, json={"values": values})
+        return super().handle(request)
+
+
+class EdgeOfTile(FakeSectionServices):
+    """A point at the east edge of the tile h12v04 (45.34 N, 71.87 W): the outline the catalogue
+    gives h12v04 leaves it out, so the mosaic reads h13v04, which has no data there. Listed around
+    the point, the composites of both tiles come back; only those of h12v04 hold the point."""
+
+    def handle(self, request):
+        if request.url.path.endswith("/mosaic/register"):
+            return httpx.Response(200, json={"searchid": "edge"})
+        if "/mosaic/edge/point/" in request.url.path:
+            return httpx.Response(200, json={"values": []})
+        if request.url.path.endswith("/stac/v1/search"):
+            self.requests.append(request)
+            ids = [
+                f"{sat}13Q1.A2024{day:03d}.{tile}.061.2024"
+                for tile in ("h12v04", "h13v04")
+                for sat, first in (("MOD", 1), ("MYD", 9))
+                for day in range(first, 366, 16)
+            ]
+            return httpx.Response(200, json={"features": [{"id": i} for i in ids]})
+        if "/item/point/" in request.url.path:
+            self.requests.append(request)
+            item = request.url.params["item"]
+            if ".h13v04." in item:
+                return httpx.Response(
+                    424, json={"error": {"message": "Point is outside dataset bounds"}}
+                )
+            day = composite_date(item).timetuple().tm_yday
+            return httpx.Response(200, json={"values": [8000 if 130 < day < 280 else 500]})
+        return super().handle(request)
+
+
 def field_source(services: FakeSectionServices) -> RemoteFieldData:
     return RemoteFieldData(
         CONFIG, services.http, DataCache.in_memory(), today=lambda: date(2026, 11, 15)
@@ -508,6 +586,52 @@ class TestSectionMeasures:
         )
         assert "SoilGrids" in data.soil_source and "contour" in data.measures_source
         assert 150 < data.measures.bare_soil_days < 260
+
+    def test_the_bare_days_come_from_the_last_year_the_catalogue_has_in_full(self):
+        # 2025 has 8 composites, none from July to October: its bare days would be wrong (no
+        # summer) and too few to count. 2024 is whole: it is the year measured, and said.
+        services = CatalogueBeingFilled()
+        cache = DataCache.in_memory()
+        source = RemoteFieldData(CONFIG, services.http, cache, today=lambda: date(2026, 11, 15))
+        data = source.field_data(
+            SectionPlace("A", 45.34, -71.87), Soil(30, 30, 25, 6.8), demo_farm_weather()
+        )
+        assert 150 < data.measures.bare_soil_days < 260
+        assert "de 2024 (2025 : catalogue incomplet (3 mois sur 12))" in data.measures_source
+
+    def test_a_year_the_catalogue_is_still_filling_is_not_kept_on_disk(self, tmp_path):
+        services = CatalogueBeingFilled()
+        client = ModisNdviClient(CONFIG[MODIS_NDVI], services.http, DataCache(tmp_path))
+        assert len(client.year_series(45.34, -71.87, 2025)) == 8
+        assert len(client.year_series(45.34, -71.87, 2024)) == 46
+        kept = [p.read_text(encoding="utf-8") for p in tmp_path.rglob("*.json")]
+        assert len(kept) == 1 and ":2024:" in kept[0]
+        # Read again by the same server: from memory, not from the service.
+        asked = len(services.requests)
+        client.year_series(45.34, -71.87, 2025)
+        assert len(services.requests) == asked
+
+    def test_a_point_the_mosaic_misses_is_read_composite_by_composite(self, tmp_path):
+        services = EdgeOfTile()
+        client = ModisNdviClient(CONFIG[MODIS_NDVI], services.http, DataCache(tmp_path))
+        series = client.year_series(45.34, -71.868, 2024)
+        assert len(series) == 46 and {day[:4] for day, _ in series} == {"2024"}
+        reads = [r for r in services.requests if "/item/point/" in r.url.path]
+        assert len(reads) == 92  # both tiles tried, only h12v04 holds the point
+        assert len(list(tmp_path.rglob("*.json"))) == 1  # a whole year: kept on disk
+
+    def test_a_section_fails_when_no_recent_year_is_whole(self):
+        services = CatalogueBeingFilled()
+        source = RemoteFieldData(
+            CONFIG, services.http, DataCache.in_memory(), today=lambda: date(2026, 11, 15)
+        )
+        source._ndvi.year_series = lambda lat, lon, year: [("2025-06-10", 0.6)]
+        from field_shift.algorithm.sources.field_data import FieldDataUnavailableError
+
+        with pytest.raises(FieldDataUnavailableError, match=r"2025 .* 2024 .* 2023"):
+            source.field_data(
+                SectionPlace("A", 45.34, -71.87), Soil(30, 30, 25, 6.8), demo_farm_weather()
+            )
 
     def test_a_soil_test_replaces_soilgrids_and_no_soil_asks_for_one(self):
         services = FakeSectionServices(soil_value=None)

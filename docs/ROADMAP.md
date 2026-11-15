@@ -1,4 +1,4 @@
-j'a# Feuille de route
+# Feuille de route
 
 ## Avant et pendant le hackathon
 
@@ -16,8 +16,11 @@ j'a# Feuille de route
 - [x] Recherche d'adresse réelle (Nominatim ; 1 requête par seconde, pas d'usage massif)
 - [ ] **Héberger le serveur** de l'algorithme (HTTPS) et renseigner `VITE_ALGO_URL` pour le site GitHub Pages (voir `api/README.md`) ; mettre un compte NASA Earthdata dans ses secrets pour SMAP et ECOSTRESS
 - [ ] Relire les fiches des cultures avec un agronome (calendrier, fiches eau de `water_use` marquées « à vérifier », notes de protection du sol) ; revoir la préférence pour la jachère couverte
-- [ ] Relire les réponses de RotaAI avec l'équipe algo
-- [ ] Captures et parcours de la vidéo (les captures de `docs/screenshots/` datent d'avant les 4 priorités et l'eau)
+- [x] **3 rotations proposées** par cycle, côte à côte (roue de cultures, 4 priorités), et le détail de celle qu'on touche
+- [x] **Rota** explique tout : plus de texte d'explication dans les écrans, un bouton « Demander à Rota » à la place ; ce qui est hors du MVP le dit quand on le touche (aucun « bientôt »)
+- [x] Plan plus rapide sans toucher à l'algorithme : sections calculées en parallèle sur le serveur, dernier plan gardé dans le navigateur
+- [ ] Relire les réponses de Rota avec l'équipe algo
+- [ ] Parcours de la vidéo (les captures de `docs/screenshots/` sont celles de l'interface du 15 novembre 2026, avec les vraies données)
 
 ## Données réelles (voir docs/ALGORITHME.md, « D'où viennent les données »)
 

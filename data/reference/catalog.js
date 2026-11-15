@@ -6,8 +6,6 @@ export const FARM_TYPES = [
     name: 'Grandes cultures',
     what: 'Maïs, soya, blé, orge, canola, luzerne, en sections',
     available: true,
-    scale: 'des années',
-    how: 'Vous découpez votre ferme en sections A, B, C… et vous dites ce qui y pousse. Pour chaque section et chaque cycle, l’appli calcule le climat à venir, trouve les endroits qui le vivent déjà et construit la meilleure suite de cultures.',
     icon: 'M12 21V11M12 11C12 7 9 4 4 4c0 5 3 7 8 7ZM12 14c0-3 2.5-6 8-6 0 4-3 6-8 6Z',
   },
   {
@@ -15,8 +13,6 @@ export const FARM_TYPES = [
     name: 'Maraîchage',
     what: 'Légumes cultivés en planches',
     available: false,
-    scale: 'des saisons',
-    how: 'La rotation se fait par familles de légumes (tomate et patate, chou, oignon, pois), planche par planche, avec parfois 2 ou 3 récoltes dans la même saison.',
     icon: 'M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10ZM2 21c0-3 1.9-5.4 5.1-6',
   },
   {
@@ -24,8 +20,6 @@ export const FARM_TYPES = [
     name: 'Cultures et élevage',
     what: 'Céréales et prairies pour les animaux',
     available: false,
-    scale: 'des années',
-    how: 'Les céréales alternent avec une prairie de 2 à 4 ans (luzerne, trèfle) qui nourrit le troupeau. Le fumier revient sur les champs.',
     icon: 'M3 21V10l9-6 9 6v11ZM9 21v-6h6v6M3 10h18',
   },
   {
@@ -33,8 +27,6 @@ export const FARM_TYPES = [
     name: 'Pâturage tournant',
     what: 'Un troupeau et des enclos',
     available: false,
-    scale: 'des jours',
-    how: 'Ce sont les animaux qui tournent : quelques jours par enclos, pendant que l’herbe repousse dans les autres.',
     icon: 'M4 21V7l2-3 2 3v14M16 21V7l2-3 2 3v14M8 10h8M8 16h8',
   },
   {
@@ -42,8 +34,6 @@ export const FARM_TYPES = [
     name: 'Vergers et vignes',
     what: 'Arbres et vigne en place',
     available: false,
-    scale: 'des dizaines d’années',
-    how: 'Les arbres restent 20 à 40 ans : presque pas de rotation. L’enjeu est de ne pas replanter la même espèce au même endroit.',
     icon: 'M12 22v-6M12 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z',
   },
 ];

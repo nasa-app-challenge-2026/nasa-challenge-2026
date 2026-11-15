@@ -288,6 +288,25 @@ class TestChainToRotation:
         with pytest.raises(ValueError, match="aucune culture"):
             rotation_of_chain([fallow], START, START + 12)
 
+    def test_a_chain_two_crops_share_a_day_has_unknown_water_not_an_error(self):
+        # The planner placed the crops in months: a sold crop sown the very month the next one is
+        # sown has no day for itself (found at 45.34 N, 71.87 W: wheat sown 2033-09-28 and
+        # replaced the same day). Its water is unknown; the plan goes on.
+        same_day = [
+            step("ble-automne", 2033, 9.0, 2034, 7.0, 0),
+            step("soya", 2033, 9.0, 2034, 10.0, 1),
+        ]
+        cycle = example_water_model(*PLACE).for_cycle([recent("humide", "NASA POWER")])
+        assert cycle.score(same_day, START, START + 24, irrigated=False, partial=False) is None
+
+    def test_the_water_of_a_chain_with_nothing_sown_is_unknown_not_an_error(self):
+        # A current rotation none of whose crops can still be placed in the climate of a cycle is
+        # replayed as fallow (found at 45.34 N, 71.87 W on 2026-11-15): its water is left out of
+        # its score, as the planner expects of an unknown criterion, instead of failing the plan.
+        fallow = ChainStep("jachere", None, START, 0, 0)
+        cycle = example_water_model(*PLACE).for_cycle([recent("humide", "NASA POWER")])
+        assert cycle.score([fallow], START, START + 12, irrigated=False, partial=False) is None
+
 
 class TestWeatherOfACycle:
     weather = DailyWeather.from_series(

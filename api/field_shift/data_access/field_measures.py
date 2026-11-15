@@ -6,7 +6,9 @@
                       weather of the farm (PRECTOTCORR), RECENT_WINDOW
     bare_soil_days    days of the last complete year when MODIS sees no living plant on the
                       section: share of the NDVI composites (Terra + Aqua, 250 m, at the centre of
-                      the section) at or below NDVI_BARE_SOIL, × 365
+                      the section) at or below NDVI_BARE_SOIL, × 365. The year is the last one the
+                      catalogue has in full (its twelve months): a year missing its summer would
+                      count too many bare days
     soil              SoilGrids 2.0, clay, sand, organic carbon and pH over 0–30 cm at the centre
                       of the section; the soil test of the farmer replaces it
 
@@ -51,7 +53,11 @@ from field_shift.data_access.data_source_config import (
     DataSourceConfig,
 )
 from field_shift.data_access.disk_cache import DataCache
-from field_shift.data_access.modis_ndvi import ModisNdviClient, NdviUnavailableError
+from field_shift.data_access.modis_ndvi import (
+    ModisNdviClient,
+    NdviUnavailableError,
+    covers_whole_year,
+)
 from field_shift.data_access.site_readers import SourceError, read_elevations
 from field_shift.data_access.soilgrids import NoSoilError, SoilGridsClient, SoilGridsError
 
@@ -60,6 +66,8 @@ HEAVY_RAIN_MM: Final = 25.0
 DAYS_PER_YEAR: Final = 365
 #: Fewest valid NDVI composites in the year for a share of bare days.
 MIN_NDVI_COMPOSITES: Final = 12
+#: Years tried, from the last one back, for a year the MODIS catalogue has in full.
+NDVI_YEARS_TRIED: Final = 3
 ELEVATION_CACHE: Final = "elevations"
 DECIMALS: Final = 1
 #: SoilGrids is the slowest of the services (up to a minute).
@@ -160,16 +168,25 @@ class RemoteFieldData:
         return terrain.slope_pct, f"{endpoint.dataset}, {terrain.points} altitudes {where}"
 
     def _bare_soil_days(self, lat: float, lon: float) -> tuple[float, str]:
-        year = self._today().year - 1
-        try:
-            series = self._ndvi.year_series(lat, lon, year)
-            days = bare_soil_days(series)
-        except (NdviUnavailableError, ValueError) as error:
-            raise FieldDataUnavailableError(f"{self._ndvi.dataset} : {error}") from error
-        return days, (
-            f"{len(series)} composites NDVI MODIS de {year} au centre de la section, "
-            f"NDVI ≤ {NDVI_BARE_SOIL:g}"
-        )
+        """The bare days of the last year the MODIS catalogue has in full (see the module)."""
+        last_year = self._today().year - 1
+        problems: list[str] = []
+        for year in range(last_year, last_year - NDVI_YEARS_TRIED, -1):
+            try:
+                series = self._ndvi.year_series(lat, lon, year)
+                if not covers_whole_year(series):
+                    months = len({day[5:7] for day, _ in series})
+                    raise ValueError(f"catalogue incomplet ({months} mois sur 12)")
+                days = bare_soil_days(series)
+            except (NdviUnavailableError, ValueError) as error:
+                problems.append(f"{year} : {error}")
+                continue
+            skipped = f" ({' ; '.join(problems)})" if problems else ""
+            return days, (
+                f"{len(series)} composites NDVI MODIS de {year}{skipped} au centre de la "
+                f"section, NDVI ≤ {NDVI_BARE_SOIL:g}"
+            )
+        raise FieldDataUnavailableError(f"{self._ndvi.dataset} : {' ; '.join(problems)}")
 
     def _soil(self, section: SectionPlace) -> tuple[Soil, str]:
         try:

@@ -22,7 +22,6 @@ export function timeSettingsEditor(state) {
   return html`<div class="stack-md">
     <div class="stack-xs">
       <strong>Durée du cycle</strong>
-      <span class="muted small">Après combien d’années la rotation recommence.</span>
       <div class="row-wrap gap-sm">
         ${range(CYCLE_YEARS.min, CYCLE_YEARS.max).map(
           (n) =>
@@ -54,9 +53,7 @@ export function timeSettingsEditor(state) {
             </button>`,
         )}
       </div>
-      <span class="muted small"
-        >${positions} positions par cycle : l’appli choisit une culture pour chacune.</span
-      >
+      <span class="muted small">${positions} positions par cycle</span>
     </div>
     <label class="field field--narrow"
       >Horizon
@@ -69,7 +66,6 @@ export function timeSettingsEditor(state) {
             </option>`,
         )}
       </select>
-      <span class="muted small">Toujours un nombre entier de cycles, jusqu’en 2060 au plus.</span>
     </label>
   </div>`;
 }

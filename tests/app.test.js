@@ -4,7 +4,7 @@
  */
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from '../application/app.js';
-import { STORAGE_KEY } from '../data/access/storage.js';
+import { PLAN_STORAGE_KEY, STORAGE_KEY } from '../data/access/storage.js';
 import { DEMO_FARM } from '../data/reference/demoFarm.js';
 
 const engine = {
@@ -87,6 +87,51 @@ describe('application', () => {
     app.refreshPlan();
     await vi.waitFor(() => expect(app.state.plan.status).toBe('ready'));
     expect(engine.planFarm).toHaveBeenCalledWith(app.state.farm);
+  });
+
+  it('shows the plan of the last visit at once, and still asks the engine for a fresh one', async () => {
+    const storage = memoryStorage();
+    const first = createApp({ engine, storage });
+    first.refreshPlan();
+    await vi.waitFor(() => expect(first.state.plan.status).toBe('ready'));
+    expect(JSON.parse(storage.data[PLAN_STORAGE_KEY]).data).toEqual(first.state.plan.data);
+
+    const calls = engine.planFarm.mock.calls.length;
+    const second = createApp({ engine, storage });
+    expect(second.state.plan).toMatchObject({ status: 'ready', data: first.state.plan.data });
+    second.refreshPlan();
+    await vi.waitFor(() => expect(engine.planFarm.mock.calls.length).toBe(calls + 1));
+  });
+
+  it('does not show the plan of the last visit for another farm', () => {
+    const storage = memoryStorage();
+    storage.setItem(PLAN_STORAGE_KEY, JSON.stringify({ key: '{"another":"farm"}', data: {} }));
+    expect(createApp({ engine, storage }).state.plan).toMatchObject({ status: 'idle', data: null });
+  });
+
+  it('asks the engine once for a farm already planned in this visit', async () => {
+    const planFarm = vi.fn(async (farm) => ({ priorities: farm.farm.priorities }));
+    const app = createApp({ engine: { name: 'test', planFarm }, storage: memoryStorage() });
+    const swapPriorities = () =>
+      app.updateFarm((farm) => {
+        const [a, b, ...rest] = farm.farm.priorities;
+        farm.farm.priorities = [b, a, ...rest];
+      });
+    const planned = async (count) => {
+      await vi.waitFor(() => expect(app.state.plan.status).toBe('ready'));
+      expect(planFarm).toHaveBeenCalledTimes(count);
+      expect(app.state.plan.data.priorities).toEqual(app.state.farm.farm.priorities);
+    };
+    app.refreshPlan();
+    await planned(1);
+    swapPriorities();
+    await vi.waitFor(() => expect(planFarm).toHaveBeenCalledTimes(2));
+    await planned(2);
+    swapPriorities(); // back to the first farm: its plan is known
+    await vi.waitFor(() =>
+      expect(app.state.plan.data.priorities).toEqual(app.state.farm.farm.priorities),
+    );
+    await planned(2);
   });
 
   it('does not plan while a section misses its harvest month', async () => {

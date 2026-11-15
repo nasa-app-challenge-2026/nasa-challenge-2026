@@ -16,11 +16,28 @@ from field_shift.services.plan_service import PlanService
 from tests.helpers.demo_farm_weather import demo_farm_weather
 from tests.helpers.demo_field_data import DemoFieldDataSource
 from tests.helpers.example_plans import example_water_model
-from tests.helpers.reference_place import ReferencePlaceData
 from tests.helpers.nasa_power_stub import StubbedPower, power_body
+from tests.helpers.reference_place import ReferencePlaceData
 from tests.test_contract import errors
 
 FRONT = "http://localhost:5173"
+
+
+def test_an_unexpected_error_answers_500_with_its_message_and_cors(plan_client):
+    # The browser reads the answer (with its CORS headers) and shows the message; without them
+    # it says "cannot reach the server" (found on 2026-11-15, a water chain that failed).
+    app = plan_client.app
+
+    @app.get("/boom")
+    def boom():
+        raise RuntimeError("chaîne de test")
+
+    response = TestClient(app, raise_server_exceptions=False).get(
+        "/boom", headers={"Origin": "http://localhost:5173"}
+    )
+    assert response.status_code == 500
+    assert "chaîne de test" in response.json()["detail"][0]["msg"]
+    assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
 
 
 def test_health(plan_client):

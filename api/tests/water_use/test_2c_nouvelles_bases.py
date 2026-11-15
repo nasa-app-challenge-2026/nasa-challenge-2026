@@ -1,5 +1,7 @@
 """Niveau 2c — lecture des nouvelles bases (SRTM, USGS, SMAP/ECOSTRESS par AppEEARS, ERA5,
 MERRA-2 par NASA POWER), avec des réponses au format documenté de chaque API, sans réseau."""
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -140,6 +142,20 @@ def test_anomalie_esi():
     assert anomalie < -0.8 and len(par_an) == 7
     trop_peu, _ = earthdata.anomalie_par_saison(vals[:40], 45.0, 3, 2024)
     assert trop_peu is None
+
+
+def test_anomalie_esi_du_vrai_fichier_earthdata():
+    """Le CSV qu'AppEEARS (NASA Earthdata) a rendu le 15 novembre 2026 pour la tâche
+    « water-use-ecostress » au point 45,55 ; -72,98 (Saint-Hyacinthe), saisons 2018 à 2024 :
+    61 valeurs lues ; 2019 et 2024 ont moins de 5 images et ne comptent pas ; les trois
+    dernières saisons sont un peu plus stressées que d'habitude."""
+    fichier = Path(__file__).parent / "donnees" / "appeears-ecostress-esi-saint-hyacinthe.csv"
+    valeurs = earthdata.lire_csv_appeears(fichier.read_text(encoding="utf-8"), earthdata.ECOSTRESS[1])
+    assert len(valeurs) == 61
+    assert valeurs[0] == ("2018-07-30", 0.4276828)
+    anomalie, par_an = earthdata.anomalie_par_saison(valeurs, 45.55, earthdata.ANNEES_RECENTES, 2024)
+    assert sorted(par_an) == [2018, 2020, 2021, 2022, 2023]
+    assert anomalie == pytest.approx(-0.23, abs=0.005)
 
 
 def test_identifiants_earthdata(monkeypatch, tmp_path):

@@ -2,12 +2,12 @@
 
 Field Shift suit une **architecture en quatre couches**. Chaque couche est un dossier à la racine du dépôt :
 
-| Couche          | Dossier        | Rôle                                                                                                                                                                                                                                |
-| --------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Frontend**    | `frontend/`    | Ce que le fermier voit et touche : la page, les écrans, les composants, les styles. Aucun calcul métier, aucun appel réseau.                                                                                                        |
+| Couche          | Dossier        | Rôle                                                                                                                                                                                                                     |
+| --------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Frontend**    | `frontend/`    | Ce que le fermier voit et touche : la page, les écrans, les composants, les styles. Aucun calcul métier, aucun appel réseau.                                                                                             |
 | **Back end**    | `backend/`     | Tout ce qui touche l'algorithme : le **serveur Python (FastAPI)** qui le contient (`api/`), le client HTTP que le front utilise pour l'appeler, le contrat (schéma JSON, types, exemples) et son script de vérification. |
-| **Application** | `application/` | Le contrôleur `app` que les écrans appellent, l'état de l'appli, les règles des entrées du fermier (étape 1) et la lecture du plan pour les écrans.                                                                                 |
-| **Data**        | `data/`        | Les données fixes d'affichage (`reference/` : noms et couleurs des cultures, maladies du sol, critères, textes, ferme de démo, sources) et l'accès au réseau et à la sauvegarde (`access/`).                                        |
+| **Application** | `application/` | Le contrôleur `app` que les écrans appellent, l'état de l'appli, les règles des entrées du fermier (étape 1) et la lecture du plan pour les écrans.                                                                      |
+| **Data**        | `data/`        | Les données fixes d'affichage (`reference/` : noms et couleurs des cultures, maladies du sol, critères, textes, ferme de démo, sources) et l'accès au réseau et à la sauvegarde (`access/`).                             |
 
 **La logique métier vit dans `api/field_shift/algorithm/` et nulle part ailleurs.** Les écrans affichent le plan que le serveur renvoie ; l'application ne fait que proposer au fermier des choix valides (cycle, fréquence, horizon, ordre des critères, réserve, parcelles) et retrouver une année ou un cycle dans le plan. Même les poids des critères viennent du plan. Le fonctionnement de l'algorithme est décrit dans [`ALGORITHME.md`](ALGORITHME.md).
 
@@ -44,9 +44,9 @@ frontend/              COUCHE PRÉSENTATION
   public/                fichiers copiés tels quels : favicon, logos, vidéo de la connexion
   main.js                point d'entrée : assemble les couches, rendu, événements, transitions
   router.js              routes en #/… (marche sur GitHub Pages sans configuration)
-  actions.js             actions communes à tous les écrans (RotaAI, sélection, année, cycle)
+  actions.js             actions communes à tous les écrans (Rota, sélection, année, cycle, rotation affichée)
   screens/               un fichier par écran
-  ui/                    composants : en-têtes, widgets, plan (chaîne, calendrier, critères), éditeurs des entrées, cartes Leaflet, vue 3D, textures, RotaAI
+  ui/                    composants : en-têtes, widgets, rotations (roue, liste, frise), priorités, éditeurs des entrées, cartes Leaflet, vue 3D, textures, Rota
   styles/                tokens (base commune), base, composants, écrans
   lib/                   gabarit HTML sûr, ordre des blocs du tableau de bord
 backend/               COUCHE BACK END
@@ -68,7 +68,7 @@ application/           COUCHE APPLICATION
   state/                 store observable, état initial, migration des sauvegardes de la version 1
   rules/                 étape 1 (cycle et horizon, priorités, réserve, entrées des sections), lecture du plan, géométrie, tracé
 data/                  COUCHE DONNÉES
-  reference/             cultures (noms, couleurs), maladies du sol, critères, réglages des formulaires, mesures, ferme de démo, sources, RotaAI
+  reference/             cultures (noms, couleurs), maladies du sol, critères, réglages des formulaires, mesures, ferme de démo, sources, réponses de Rota
   access/                météo du jour Open-Meteo (tableau de bord), adresses (Nominatim), sauvegarde locale
 tests/                 Vitest : une suite par sujet, le contrat côté front, le respect des couches
 docs/                  documentation
@@ -76,37 +76,37 @@ docs/                  documentation
 
 ## Les écrans
 
-| Route                  | Écran              | Contenu                                                                                                                                      |
-| ---------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `#/connexion`          | Connexion          | compte de démo                                                                                                                               |
-| `#/type-de-ferme`      | Type de ferme      | grandes cultures (les autres types arrivent)                                                                                                 |
-| `#/localisation`       | Localisation       | point de la ferme (météo NASA POWER, centre des jumeaux)                                                                                     |
-| `#/tracer`             | Tracer la ferme    | contour et sections                                                                                                                          |
-| `#/cultures`           | Mes cultures       | culture en place, mois de récolte, rotation actuelle de chaque section ; réserve de semences                                                 |
-| `#/temps`              | Cycle et horizon   | cycle, fréquence, horizon                                                                                                                    |
-| `#/priorites`          | Priorités          | classement des 4 priorités, équipement                                                                                                      |
-| `#/tableau`            | Tableau de bord    | météo du jour, vue 3D, toute la ferme par année, une carte par section (cycle, garder/changer, note), curseur des années                     |
-| `#/section/A/parcelle` | Ma parcelle        | toutes les entrées de la section, années précédentes, maladies, irrigation, analyse de sol                                                   |
-| `#/section/A/champ`    | Mon champ          | risques érosion et eau, mesures satellites, sol                                                                                              |
-| `#/section/A/plan`     | Plan par cycle     | décision, note contre la rotation actuelle, chaîne et calendrier, lacunes, semences, cultures retirées, 4 priorités, eau, alternatives, robustesse |
-| `#/section/A/jumeaux`  | Climat et jumeaux  | climat visé du cycle, jumeaux et carte (une flèche par modèle)                                                                               |
-| `#/sources`            | Détail et sources  | données et méthodes, réelles ou fictives                                                                                                     |
-| `#/compte`             | Compte et réglages | profil, ferme, semences, cycle et horizon, priorités                                                                                         |
+| Route                  | Écran               | Contenu                                                                                                                                                                                            |
+| ---------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `#/connexion`          | Connexion           | compte de démo                                                                                                                                                                                     |
+| `#/type-de-ferme`      | Type de ferme       | grandes cultures ; toucher un autre type ouvre Rota (« Hors de portée du MVP. »)                                                                                                                   |
+| `#/localisation`       | Localisation        | point de la ferme (météo NASA POWER, centre des jumeaux)                                                                                                                                           |
+| `#/tracer`             | Tracer la ferme     | contour et sections                                                                                                                                                                                |
+| `#/cultures`           | Mes cultures        | culture en place, mois de récolte, rotation actuelle de chaque section ; réserve de semences                                                                                                       |
+| `#/temps`              | Cycle et horizon    | cycle, fréquence, horizon                                                                                                                                                                          |
+| `#/priorites`          | Priorités           | classement des 4 priorités, équipement                                                                                                                                                             |
+| `#/tableau`            | Tableau de bord     | année affichée, météo du jour, vue 3D, toute la ferme, une carte par section (rotation du cycle, garder/changer, note)                                                                             |
+| `#/section/A/parcelle` | Ma parcelle         | toutes les entrées de la section, années précédentes, maladies, irrigation, analyse de sol                                                                                                         |
+| `#/section/A/champ`    | Mon champ           | risques érosion et eau, mesures satellites, sol                                                                                                                                                    |
+| `#/section/A/plan`     | Rotations proposées | les 3 rotations du cycle côte à côte (roue, cultures, 4 priorités), la rotation actuelle, puis le détail de celle qu'on touche : frise des cultures et dates, 4 priorités, eau, ravageurs, alertes |
+| `#/section/A/jumeaux`  | Climat et jumeaux   | climat visé du cycle, jumeaux et carte (une flèche par modèle)                                                                                                                                     |
+| `#/sources`            | Détail et sources   | données et méthodes, réelles ou fictives                                                                                                                                                           |
+| `#/compte`             | Compte et réglages  | profil, ferme, semences, cycle et horizon, priorités                                                                                                                                               |
 
 ## Où mettre du nouveau code
 
-| Je veux ajouter…                                                       | Où                                                                                                                                                              |
-| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| un écran                                                               | `frontend/screens/`, déclaré dans `frontend/screens/index.js` et `frontend/router.js`                                                                           |
-| un composant réutilisé                                                 | `frontend/ui/`                                                                                                                                                  |
-| une opération qui appelle le moteur ou le réseau                       | une méthode de `app` dans `application/app.js`                                                                                                                  |
-| une règle des entrées du fermier ou de lecture du plan                 | `application/rules/`, avec un test dans `tests/`                                                                                                                |
-| un calcul agronomique (climat, jumeaux, note, délais…)                 | `api/field_shift/algorithm/`, avec un test dans `api/tests/` (voir `ALGORITHME.md`)                                                       |
+| Je veux ajouter…                                                       | Où                                                                                                                                                   |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| un écran                                                               | `frontend/screens/`, déclaré dans `frontend/screens/index.js` et `frontend/router.js`                                                                |
+| un composant réutilisé                                                 | `frontend/ui/`                                                                                                                                       |
+| une opération qui appelle le moteur ou le réseau                       | une méthode de `app` dans `application/app.js`                                                                                                       |
+| une règle des entrées du fermier ou de lecture du plan                 | `application/rules/`, avec un test dans `tests/`                                                                                                     |
+| un calcul agronomique (climat, jumeaux, note, délais…)                 | `api/field_shift/algorithm/`, avec un test dans `api/tests/` (voir `ALGORITHME.md`)                                                                  |
 | une donnée agronomique (fiche de culture, délai de retour, critère)    | `api/field_shift/reference/`                                                                                                                         |
 | un champ du plan                                                       | `api/field_shift/contract/` (modèle et traducteur), puis le schéma, `ALGO_CONTRACT.md` et les exemples (`python -m field_shift.tools.make_examples`) |
 | un service externe lu par le serveur (NASA POWER…)                     | `api/field_shift/data_access/`                                                                                                                       |
-| un service externe lu par le front (adresses, météo du jour, stockage) | `data/access/`, appelé depuis `application/app.js`                                                                                                              |
-| une donnée fixe d'affichage (nom, couleur, texte, source)              | `data/reference/` (les identifiants sont ceux du contrat : `tests/contract.test.js` le vérifie)                                                                 |
+| un service externe lu par le front (adresses, météo du jour, stockage) | `data/access/`, appelé depuis `application/app.js`                                                                                                   |
+| une donnée fixe d'affichage (nom, couleur, texte, source)              | `data/reference/` (les identifiants sont ceux du contrat : `tests/contract.test.js` le vérifie)                                                      |
 
 ## Comment un écran marche
 
@@ -114,8 +114,8 @@ Un écran est un objet :
 
 ```js
 export default {
-  title: 'Plan par cycle', // titre de l'onglet
-  rota: 'plan', // questions proposées par RotaAI sur cet écran
+  title: 'Rotations proposées', // titre de l'onglet
+  rota: 'plan', // questions proposées par Rota sur cet écran (et son bouton flottant)
   onEnter(app, params) {}, // à l'arrivée (charger des données…)
   mount(app, params) {}, // après chaque rendu, pour ce qui vit hors du HTML (carte Leaflet) ; idempotent
   unmount(app) {}, // en quittant l'écran (détruire la carte)

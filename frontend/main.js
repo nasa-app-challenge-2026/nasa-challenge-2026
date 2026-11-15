@@ -28,7 +28,7 @@ import { parseHash } from './router.js';
 import { SCREENS } from './screens/index.js';
 import { globalActions } from './actions.js';
 import { TEXTURE_DEFS } from './ui/textures.js';
-import { rotaai } from './ui/rotaai.js';
+import { rota } from './ui/rota.js';
 import { attachSlots } from './ui/leafletMap.js';
 import { captureLayout, initDragSort, isDragging, playLayout } from './ui/dragSort.js';
 import { html } from './lib/html.js';
@@ -74,9 +74,12 @@ function onRoute() {
   lastRouteName = route.name;
 
   const screen = SCREENS[route.name];
+  const leavesScreen = s.ui.route.name !== route.name;
   app.update((d) => {
     d.ui.route = route;
     if (route.params.id) d.ui.selectedSection = route.params.id;
+    // Rota answered on the screen we leave: the next one starts without the panel over it.
+    if (leavesScreen) d.ui.rota.open = false;
   });
   document.title = `${screen.title} · Field Shift`;
   window.scrollTo(0, 0);
@@ -153,9 +156,10 @@ function draw() {
   const typed = snapshotInputs();
   const refocus = document.activeElement?.closest?.('[data-refocus][id]')?.id;
   const layout = sameScreen ? captureLayout(root) : null;
-  const ctx = typeof screen.rota === 'function' ? screen.rota(s) : screen.rota;
+  // Rota is on every screen: with its launcher where the screen names its questions
+  // (`rota: 'plan'`), else only once a « Demander à Rota » button has opened it.
   const body = screen.render(s, s.ui.route.params, app);
-  root.innerHTML = String(html`${body}${ctx ? rotaai(s, ctx) : ''}`);
+  root.innerHTML = String(html`${body}${rota(s, screen.rota, { launcher: !!screen.rota })}`);
 
   const list = document.getElementById('rota-list');
   if (list) list.scrollTop = list.scrollHeight;

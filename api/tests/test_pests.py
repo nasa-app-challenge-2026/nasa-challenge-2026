@@ -17,6 +17,7 @@ from field_shift.algorithm.delays.return_delay_checker import ReturnDelayChecker
 from field_shift.algorithm.pests.pest_catalog import PestCatalog
 from field_shift.algorithm.pests.pest_criterion import PestCriterion
 from field_shift.algorithm.pests.pest_data import DEFAULT_SEVERITY, PESTS, PestType
+from field_shift.algorithm.pests.pest_explanations import years_text
 from field_shift.algorithm.pests.pest_settings import DEFAULT_PRESSURE_PARAMS
 from field_shift.algorithm.pests.pressure_model import decay_per_year, pressure_by_year
 from field_shift.reference.crops import CROP_NAMES
@@ -231,6 +232,10 @@ class TestResult:
         assert "Soya" in text
         assert "moisissure blanche" in text
         assert "pour 5 conseillés" in text
+
+    def test_the_years_without_a_host_are_written_in_good_french(self):
+        # 0 and 1 take the singular in French: "0 an sans hôte", not "0 ans".
+        assert [years_text(n) for n in (0, 1, 2, 5)] == ["0 an", "1 an", "2 ans", "5 ans"]
 
     def test_a_disease_the_farmer_declared_says_so(self):
         chain = annual("mais", "canola", "orge", "soya")

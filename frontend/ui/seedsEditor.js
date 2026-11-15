@@ -30,6 +30,7 @@ import {
 } from '../../application/rules/sectionInputs.js';
 import { fieldSwatch } from './textures.js';
 import { icon, ICONS } from './icons.js';
+import { askRotaIcon } from './rota.js';
 
 /** Month (1–12) a sheet is usually harvested, to prefill the harvest month of the crop in place. */
 const usualHarvestMonth = (id) => SHEETS[id]?.usualHarvestMonth ?? DEFAULT_HARVEST_MONTH;
@@ -85,10 +86,10 @@ export function inPlaceEditor(section) {
       </label>
     </div>
     <div class="stack-xs">
-      <span class="strong small">Ma rotation actuelle</span>
-      <span class="muted small"
-        >La suite de cultures que vous suivez. Elle sert de référence : l’appli la compare à ses
-        propositions. Cochez la culture en place.</span
+      <span class="row gap-xs"
+        ><span class="strong small">Ma rotation actuelle</span>${askRotaIcon(
+          'rotation-actuelle',
+        )}</span
       >
       <div class="row-wrap gap-xs" role="list">
         ${rotation.map(
@@ -105,7 +106,6 @@ export function inPlaceEditor(section) {
                 data-id="${id}"
                 data-i="${i}"
                 aria-pressed="${String(i === section.rotationPosition)}"
-                title="C’est la culture en place"
               >
                 ${i === section.rotationPosition ? '● ' : ''}${nameOf(sheet)}
               </button>
@@ -219,13 +219,11 @@ export function seedBank(state) {
             data-action="set-reserve-mode"
             data-mode="${mode}"
             aria-pressed="${String(seeds.mode === mode)}"
-            title="${m.text}"
           >
             ${m.label}
           </button>`,
       )}
     </div>
-    <span class="muted small">${RESERVE_MODES[seeds.mode].text}</span>
   </div>`;
 }
 

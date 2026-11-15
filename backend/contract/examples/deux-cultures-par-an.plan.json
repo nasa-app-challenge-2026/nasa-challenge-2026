@@ -405,8 +405,8 @@
               "confidence": 1.0,
               "cropsWithoutData": [],
               "sentences": [
-                "Maïs 2026 puis Orge 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Orge 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                "Maïs 2026 puis Orge 2027 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Orge 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
               ]
             }
           },
@@ -775,7 +775,7 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Maïs 2026 puis Orge 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Maïs 2026 puis Orge 2027 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
                   "Au cycle suivant, Soya 2030 puis Canola 2032 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
@@ -921,11 +921,11 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Maïs 2028 puis Orge 2029 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Au cycle suivant, Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Maïs 2026 puis Orge 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Orge 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Orge 2029 puis Maïs 2030 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                  "Maïs 2028 puis Orge 2029 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Maïs 2026 puis Orge 2027 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2029 puis Maïs 2030 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             }
@@ -1230,8 +1230,8 @@
               "confidence": 1.0,
               "cropsWithoutData": [],
               "sentences": [
-                "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
               ]
             }
           },
@@ -1597,7 +1597,7 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
                   "Au cycle suivant, Soya 2034 puis Canola 2036 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
@@ -1763,8 +1763,8 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Blé d’automne 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                  "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Blé d’automne 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             }
@@ -2135,8 +2135,8 @@
               "confidence": 1.0,
               "cropsWithoutData": [],
               "sentences": [
-                "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Au cycle suivant, Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Au cycle suivant, Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
               ]
             }
           },
@@ -2418,8 +2418,8 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Maïs 2028 puis Orge 2029 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Orge 2029 puis Maïs 2030 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                  "Maïs 2028 puis Orge 2029 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2029 puis Maïs 2030 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             },
@@ -2886,8 +2886,8 @@
               "confidence": 1.0,
               "cropsWithoutData": [],
               "sentences": [
-                "Maïs 2034 puis Orge 2035 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                "Maïs 2034 puis Orge 2035 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
               ]
             }
           },
@@ -3165,9 +3165,9 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Maïs 2032 puis Orge 2033 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Orge 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                  "Maïs 2032 puis Orge 2033 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             },
@@ -3326,7 +3326,7 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
                   "Au cycle suivant, Soya 2037 puis Canola 2039 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
@@ -3703,8 +3703,8 @@
               "confidence": 1.0,
               "cropsWithoutData": [],
               "sentences": [
-                "Maïs 2027 puis Orge 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Orge 2028 puis Maïs 2029 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                "Maïs 2027 puis Orge 2028 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Orge 2028 puis Maïs 2029 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
               ]
             }
           },
@@ -3847,8 +3847,8 @@
               "confidence": 1.0,
               "cropsWithoutData": [],
               "sentences": [
-                "Au cycle suivant, Blé d’automne 2030 puis Blé d’automne 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Blé d’automne 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Au cycle suivant, Blé d’automne 2030 puis Blé d’automne 2031 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
                 "Blé d’automne 2025 puis Blé d’automne 2027 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
                 "Soya 2026 puis Soya 2029 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
@@ -4018,9 +4018,9 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Au cycle suivant, Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Au cycle suivant, Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Orge 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
                   "Soya 2026 puis Soya 2029 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
@@ -4488,8 +4488,8 @@
               "confidence": 1.0,
               "cropsWithoutData": [],
               "sentences": [
-                "Maïs 2031 puis Orge 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Orge 2032 puis Maïs 2033 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                "Maïs 2031 puis Orge 2032 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Orge 2032 puis Maïs 2033 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
               ]
             }
           },
@@ -4632,9 +4632,9 @@
               "confidence": 1.0,
               "cropsWithoutData": [],
               "sentences": [
-                "Au cycle suivant, Maïs 2034 puis Maïs 2035 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Blé d’automne 2030 puis Maïs 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Blé d’automne 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Au cycle suivant, Maïs 2034 puis Maïs 2035 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2030 puis Maïs 2031 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
                 "Soya 2029 puis Soya 2032 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
@@ -4801,9 +4801,9 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Au cycle suivant, Maïs 2034 puis Orge 2035 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Au cycle suivant, Orge 2035 puis Maïs 2036 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Maïs 2034 puis Orge 2035 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Orge 2035 puis Maïs 2036 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
                   "Soya 2030 puis Soya 2033 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
@@ -5511,7 +5511,7 @@
               "confidence": 1.0,
               "cropsWithoutData": [],
               "sentences": [
-                "Blé d’automne 2026 puis Maïs 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                "Blé d’automne 2026 puis Maïs 2027 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
               ]
             }
           },
@@ -5848,8 +5848,8 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Maïs 2027 puis Orge 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Blé d’automne 2026 puis Maïs 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                  "Maïs 2027 puis Orge 2028 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Blé d’automne 2026 puis Maïs 2027 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             }
@@ -6301,9 +6301,9 @@
               "confidence": 1.0,
               "cropsWithoutData": [],
               "sentences": [
-                "Au cycle suivant, Maïs 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Blé d’automne 2029 puis Maïs 2030 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                "Blé d’automne 2032 puis Maïs 2033 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Au cycle suivant, Maïs 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2029 puis Maïs 2030 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2032 puis Maïs 2033 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
                 "Soya 2028 puis Soya 2031 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
@@ -6633,8 +6633,8 @@
                 "confidence": 1.0,
                 "cropsWithoutData": [],
                 "sentences": [
-                  "Maïs 2031 puis Orge 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
-                  "Blé d’automne 2030 puis Maïs 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                  "Maïs 2031 puis Orge 2032 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée.",
+                  "Blé d’automne 2030 puis Maïs 2031 : fusariose de l’épi / gibbérelle, 0 an sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             }

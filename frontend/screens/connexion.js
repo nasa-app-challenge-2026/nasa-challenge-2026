@@ -97,7 +97,7 @@ export default {
                 required
                 value="demo1234"
             /></label>
-            ${signup ? html`<label class="check"><input name="terms" type="checkbox" required />J’accepte les conditions d’utilisation et la politique de confidentialité.</label>` : html`<a class="link-end" href="#/compte">Mot de passe oublié ?</a>`}
+            ${signup ? html`<label class="check"><input name="terms" type="checkbox" required />J’accepte les conditions d’utilisation et la politique de confidentialité.</label>` : html`<button type="button" class="link-btn link-end" data-action="rota-mvp" data-what="Mot de passe oublié">Mot de passe oublié ?</button>`}
             <button type="submit" class="btn btn--primary btn--block">
               ${signup ? 'Créer mon compte et commencer' : 'Se connecter'}
             </button>

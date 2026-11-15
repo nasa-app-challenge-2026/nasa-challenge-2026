@@ -1,26 +1,27 @@
 /**
  * 7 · Tableau de bord de la ferme. Owner: Ali.
- * A grid of blocks the farmer can reorder by dragging (or with the keyboard):
- * weather, isometric farm, what the whole farm grows, and one widget per section
- * with its cycle of the selected year (keep or change, score against the current
- * rotation). The order is a per-browser preference (prefs.dashboard). The year
- * slider below covers the plans of every section.
+ * The year slider on top moves the whole page. Under it, a grid of blocks the farmer can reorder
+ * by dragging (or with the keyboard): weather, isometric farm, what the whole farm grows, and
+ * one card per section with the rotation of its cycle (the crop of the year is ringed), keep or
+ * change and the score. The order is a per-browser preference (prefs.dashboard).
  */
 import { html, plural } from '../lib/html.js';
 import { colorOf, nameOf } from '../../data/reference/crops.js';
-import { FREQUENCIES } from '../../data/reference/planning.js';
 import { cropOfYear, cycleOfYear, farmMix, planYears } from '../../application/rules/planView.js';
 import { getSeeds } from '../../application/rules/seeds.js';
 import { blockLabel, dashboardOrder, isDefaultOrder, secBlock } from '../lib/dashboard.js';
 import { appHeader, pageTitle } from '../ui/layout.js';
 import { icon, ICONS } from '../ui/icons.js';
 import { isoFarm } from '../ui/isoFarm.js';
-import { fieldStrip } from '../ui/textures.js';
 import { errorBox, loading } from '../ui/widgets.js';
+import { askRota } from '../ui/rota.js';
 import { weatherWidget } from '../ui/weatherWidget.js';
 import { decisionPill, planStatus, selectedYear } from '../ui/planWidgets.js';
+import { rotationStrip } from '../ui/rotationViews.js';
 
 const GRIP = 'M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01';
+/** Beyond this many years, the slider replaces the row of year buttons. */
+const MAX_YEAR_BUTTONS = 14;
 
 function sectionWidget(state, section, year, sectionPlan) {
   const sel = state.ui.selectedSection === section.id;
@@ -47,35 +48,27 @@ function sectionWidget(state, section, year, sectionPlan) {
           >${section.id}</span
         ><span class="stack-0"
           ><strong>Section ${section.id}</strong
-          ><span class="muted small"
-            >${section.areaHa}
-            ha${cycle ? ` · cycle ${cycle.index} (${cycle.years.join('–')})` : ''}</span
-          ></span
+          ><span class="muted small">${section.areaHa} ha</span></span
         ></span
       ><span class="widget__score" title="Note du plan sur 100"
         >${cycle?.chosen ? Math.round(cycle.chosen.score) : sectionPlan ? '—' : '…'}</span
       >
     </div>
-    ${fieldStrip(crop, 44)}
     <div class="row-between small">
       <span class="muted">${source === 'en-place' ? `En place en ${year}` : `En ${year}`}</span>
       <strong>${crop ? nameOf(crop) : '—'}</strong>
     </div>
     ${
       cycle?.chosen
-        ? html`<div class="cycle-chips">
-              ${cycle.chosen.sheets.map((id) => html`<span class="cycle-chip" style="background: ${colorOf(id)}">${nameOf(id)}</span>`)}
-            </div>
+        ? html`${rotationStrip(cycle.chosen, cycle, f, { year })}
             <div class="row-between small">
               ${decisionPill(cycle.decision)}
-              <span class="muted"
-                >Rotation actuelle :
-                ${cycle.reference ? Math.round(cycle.reference.score) : '—'}</span
-              >
+              <span class="muted">${cycle.years.join('–')}</span>
             </div>`
         : ''
     }
     ${alerts ? html`<span class="widget__flag">⚠ Rotation actuelle : ${plural(alerts, 'délai de retour non respecté', 'délais de retour non respectés')}</span>` : ''}
+    <a class="widget__link" href="#/section/${section.id}/plan">Voir les rotations →</a>
   </article>`;
 }
 
@@ -83,7 +76,7 @@ function mixCard(state, year) {
   const area = farmMix(state.farm, state.plan.data, year);
   const entries = Object.entries(area);
   return html`<section class="card stack-sm" aria-label="Toute la ferme en ${year}">
-    <h2 class="h2">Sur toute la ferme en ${year}</h2>
+    <h2 class="h2">Toute la ferme en ${year}</h2>
     ${
       entries.length
         ? html`<div class="mix-bar">
@@ -94,32 +87,22 @@ function mixCard(state, year) {
             </div>`
         : html`<span class="muted small">Pas encore de plan pour cette année.</span>`
     }
-    <span class="muted small"
-      >Chaque section suit son propre plan, à partir de ce qui pousse aujourd’hui.</span
-    >
   </section>`;
 }
 
 function farm3dCard(state, { sections, sel, cropOf }) {
-  const sectionPlan = state.plan.data?.sections.find((s) => s.id === sel.id);
   return html`<section class="card stack-sm farm3d" aria-label="Vue 3D de la ferme">
-    <div class="row-between">
-      <h2 class="h2">Ma ferme en 3D</h2>
-      <span class="muted small">Texture = culture de l’année</span>
-    </div>
+    <h2 class="h2">Ma ferme en 3D</h2>
     <div class="iso-wrap">
       ${isoFarm({ sections, cropOf, selectedId: sel.id, boundary: state.farm.farm.boundary })}
     </div>
     <div class="card card--tint row-between wrap">
-      <div class="stack-0">
-        <strong>Section ${sel.id} · ${sel.areaHa} ha</strong
-        ><span class="muted small"
-          >${sectionPlan ? `Plan de ${sectionPlan.firstYear} à ${sectionPlan.lastYear}` : 'Plan en calcul…'}</span
-        >
-      </div>
+      <strong>Section ${sel.id} · ${sel.areaHa} ha</strong>
       <div class="row-wrap gap-sm">
         <a class="btn btn--secondary btn--sm" href="#/section/${sel.id}/parcelle">Ma parcelle</a
-        ><a class="btn btn--primary btn--sm" href="#/section/${sel.id}/plan">Voir le plan →</a>
+        ><a class="btn btn--primary btn--sm" href="#/section/${sel.id}/plan"
+          >Voir les rotations →</a
+        >
       </div>
     </div>
   </section>`;
@@ -145,26 +128,27 @@ function block(id, content) {
   </div>`;
 }
 
-function yearSlider(state, years, year) {
+/** The year the whole page shows: a row of year buttons, or a slider for a long horizon. */
+function yearPicker(years, year) {
   if (!years) return '';
   const list = Array.from({ length: years.last - years.first + 1 }, (_, i) => years.first + i);
-  return html`<section class="card stack-sm" aria-label="Curseur des années">
-    <div class="row-between wrap">
-      <label for="year" class="strong">Curseur des années</label
-      ><span class="h2 text-brand">${year}</span>
-    </div>
-    <input
-      id="year"
-      class="range"
-      type="range"
-      min="${years.first}"
-      max="${years.last}"
-      value="${year}"
-      data-change="set-year"
-    />
-    <div class="year-ticks">
-      ${list.map((y) => html`<button type="button" class="year-tick ${y === year ? 'is-on' : ''}" data-action="set-year" data-year="${y}">${y}</button>`)}
-    </div>
+  return html`<section class="year-bar" aria-label="Année affichée">
+    <span class="year-bar__year" aria-hidden="true">${year}</span>
+    ${
+      list.length <= MAX_YEAR_BUTTONS
+        ? html`<div class="year-ticks" role="group" aria-label="Choisir l’année">
+            ${list.map((y) => html`<button type="button" class="year-tick ${y === year ? 'is-on' : ''}" data-action="set-year" data-year="${y}" aria-pressed="${String(y === year)}">${y}</button>`)}
+          </div>`
+        : html`<input
+            aria-label="Choisir l’année"
+            class="range"
+            type="range"
+            min="${years.first}"
+            max="${years.last}"
+            value="${year}"
+            data-change="set-year"
+          />`
+    }
   </section>`;
 }
 
@@ -196,17 +180,16 @@ export default {
     return html`${appHeader(state, 'tableau')}
       <main class="page stack-lg" id="main">
         ${pageTitle(
-          `Ma ferme · ${total} ha · ${plural(sections.length, 'section', 'sections')}`,
-          `${farm.farm.name} · ${farm.farm.location?.label ?? ''}`,
-          html`<div class="row-wrap gap-sm">
+          'Ma ferme',
+          `${farm.farm.name} · ${total} ha · ${plural(sections.length, 'section', 'sections')}`,
+          html`<div class="row-wrap gap-sm align-center">
             <button
               type="button"
               class="chip chip--link"
               data-action="open-settings"
               data-tab="temps"
             >
-              ${icon(ICONS.calendar, { size: 16 })}Cycle de ${time.cycleYears} ans ·
-              ${FREQUENCIES.find((x) => x.months === time.frequencyMonths)?.label} · horizon
+              ${icon(ICONS.calendar, { size: 16 })}Cycle de ${time.cycleYears} ans · horizon
               ${time.horizonYears} ans
             </button>
             <button
@@ -215,21 +198,22 @@ export default {
               data-action="open-settings"
               data-tab="semences"
             >
-              ${icon(ICONS.sprout, { size: 16 })}Ma réserve ·
-              ${plural(seeds.crops.length, 'semence', 'semences')}
+              ${icon(ICONS.sprout, { size: 16 })}${plural(seeds.crops.length, 'semence', 'semences')}
             </button>
-            <a class="chip chip--link" href="#/tracer">+ Ajouter une section</a>
+            <a class="chip chip--link" href="#/tracer">+ Section</a>
+            ${askRota('tableau')}
           </div>`,
         )}
         ${planStatus(state)}
-        ${state.plan.data ? '' : state.plan.status === 'error' ? errorBox(state.plan.error) : loading('L’algorithme prépare votre plan (climat NASA POWER, jumeaux climatiques). Le premier calcul d’un nouveau lieu télécharge les données de la NASA et les cartes de cultures : quelques minutes, puis quelques secondes les fois suivantes.')}
-        <div class="dash-toolbar">
-          <span class="muted small row gap-xs"
-            >${icon(GRIP, { size: 16, width: 3.2 })}Glissez les poignées pour réorganiser vos
-            blocs</span
-          >
-          ${isDefaultOrder(order, ids) ? '' : html`<button type="button" class="link-btn small" data-action="reset-dashboard">Disposition par défaut</button>`}
-        </div>
+        ${
+          state.plan.data
+            ? yearPicker(years, year)
+            : state.plan.status === 'error'
+              ? errorBox(state.plan.error)
+              : state.plan.status === 'incomplete'
+                ? ''
+                : loading('Rota prépare votre plan', askRota('chargement'))
+        }
         <p id="dash-help" class="sr-only">
           Glissez la poignée, ou utilisez les flèches du clavier, Début et Fin, pour déplacer le
           bloc.
@@ -243,7 +227,7 @@ export default {
         >
           ${order.map((id) => block(id, content[id]()))}
         </div>
-        ${yearSlider(state, years, year)}
+        ${isDefaultOrder(order, ids) ? '' : html`<button type="button" class="link-btn small" data-action="reset-dashboard">Disposition par défaut</button>`}
       </main>`;
   },
   actions: {

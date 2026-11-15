@@ -4,18 +4,30 @@
  *
  * The engine (back end) is handed in by frontend/main.js: this layer only knows
  * its interface (planFarm, see backend/contract/types.js), never which engine runs.
+ *
+ * A plan takes the server several seconds, so it is asked for as rarely as possible, without
+ * ever showing a plan that is not the one of the farm on screen:
+ *   - the last plan is kept in the browser with the farm it was computed for: at the next visit
+ *     it shows at once, while the server computes it again;
+ *   - the plans of this visit are kept by farm: going back to a setting already planned (a
+ *     priority moved up, then down) shows its plan without asking the server again.
  */
 import { createStore } from './state/store.js';
 import { initialState, persisted } from './state/initialState.js';
 import { coordsLabel, sameCoord } from './rules/geo.js';
 import { sectionInputProblems } from './rules/sectionInputs.js';
-import { loadSaved, save } from '../data/access/storage.js';
+import { loadPlan, loadSaved, save, savePlan } from '../data/access/storage.js';
 import { fetchWeather, weatherKey } from '../data/access/weather.js';
 import { geocode, reverseGeocode } from '../data/access/geocode.js';
 
 const WEATHER_TTL_MS = 30 * 60 * 1000;
 /** Wait this long after the last change before planning again. */
 const PLAN_DEBOUNCE_MS = 250;
+/** Plans of this visit kept in memory, one per farm planned. */
+const MAX_RECENT_PLANS = 8;
+
+/** What a plan depends on: the whole farm, as it is sent to the engine. */
+const planKey = (farm) => JSON.stringify(farm);
 
 export function createApp({ engine, storage = globalThis.localStorage }) {
   const store = createStore(initialState(engine.name, loadSaved(storage)));
@@ -23,6 +35,20 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
 
   let timer = null;
   let seq = 0;
+  const recentPlans = new Map();
+
+  const lastPlan = loadPlan(storage);
+  if (lastPlan?.key === planKey(store.get().farm))
+    store.update((s) => {
+      s.plan = { status: 'ready', data: lastPlan.data, error: null };
+    });
+
+  function keepPlan(key, data) {
+    recentPlans.delete(key);
+    recentPlans.set(key, data);
+    while (recentPlans.size > MAX_RECENT_PLANS) recentPlans.delete(recentPlans.keys().next().value);
+    savePlan(storage, key, data);
+  }
 
   const app = {
     store,
@@ -141,12 +167,21 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
       return;
     }
     const mine = ++seq;
+    const key = planKey(farm);
+    const known = recentPlans.get(key);
+    if (known) {
+      store.update((s) => {
+        s.plan = { status: 'ready', data: known, error: null };
+      });
+      return;
+    }
     store.update((s) => {
       s.plan.status = s.plan.data ? 'refreshing' : 'loading';
       s.plan.error = null;
     });
     try {
       const data = await engine.planFarm(farm);
+      keepPlan(key, data);
       if (mine !== seq) return;
       store.update((s) => {
         s.plan = { status: 'ready', data, error: null };

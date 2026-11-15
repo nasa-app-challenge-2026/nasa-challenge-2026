@@ -2,6 +2,7 @@
 import { html } from '../lib/html.js';
 import { nameOf } from '../../data/reference/crops.js';
 import { appHeader } from '../ui/layout.js';
+import { askRota } from '../ui/rota.js';
 import { farmFactsEditor, priorityActions, priorityEditor } from './priorites.js';
 import { seedActions, seedBank } from '../ui/seedsEditor.js';
 import { timeActions, timeSettingsEditor } from '../ui/timeSettingsEditor.js';
@@ -20,10 +21,7 @@ function panel(state) {
   switch (state.ui.settingsTab) {
     case 'profil':
       return html`<div class="stack-md">
-        <div class="stack-xs">
-          <h2 class="h2 h2--lg">Profil</h2>
-          <p class="muted small">Vos informations de connexion.</p>
-        </div>
+        <h2 class="h2 h2--lg">Profil</h2>
         <div class="grid grid--2">
           <label class="field"
             >Nom complet<input
@@ -43,30 +41,25 @@ function panel(state) {
       </div>`;
     case 'semences':
       return html`<div class="stack-md">
-        <div class="stack-xs">
+        <div class="row-between wrap">
           <h2 class="h2 h2--lg">Ma réserve de semences</h2>
-          <p class="muted small">
-            Les semences que vous avez déjà, sans les quantités. Ce qui pousse sur chaque section se
-            change dans « Ma parcelle ».
-          </p>
+          ${askRota('reserve')}
         </div>
         ${seedBank(state)}
       </div>`;
     case 'temps':
       return html`<div class="stack-md">
-        <div class="stack-xs">
+        <div class="row-between wrap">
           <h2 class="h2 h2--lg">Cycle et horizon</h2>
-          <p class="muted small">Le même découpage du temps pour toutes les sections.</p>
+          ${askRota('temps')}
         </div>
         ${timeSettingsEditor(state)}
       </div>`;
     case 'prio':
       return html`<div class="stack-md">
-        <div class="stack-xs">
+        <div class="row-between wrap">
           <h2 class="h2 h2--lg">Priorités</h2>
-          <p class="muted small">
-            L’ordre des quatre priorités donne leur poids dans la note des suites de cultures.
-          </p>
+          ${askRota('priorites')}
         </div>
         ${priorityEditor(state)} ${farmFactsEditor(state)}
       </div>`;
@@ -80,7 +73,6 @@ function panel(state) {
         </p>
         <p>
           Le contour de votre ferme et vos réglages servent uniquement à calculer vos résultats.
-          [TEXTE COMPLET À RÉDIGER]
         </p>
         <a href="#/sources">Voir toutes les sources de données</a>
       </div>`;

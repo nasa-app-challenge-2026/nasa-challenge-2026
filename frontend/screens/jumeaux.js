@@ -8,6 +8,7 @@ import { html } from '../lib/html.js';
 import { CROPS } from '../../data/reference/crops.js';
 import { sectionLayout, pageTitle } from '../ui/layout.js';
 import { errorBox, loading } from '../ui/widgets.js';
+import { askRota, askRotaIcon } from '../ui/rota.js';
 import { cycleTabs, dayLabel, planStatus, selectedCycle } from '../ui/planWidgets.js';
 import { destroyMap, ensureMap, L, mapSlot } from '../ui/leafletMap.js';
 
@@ -30,11 +31,12 @@ const fmtSigma = (v) => (v < SMALLEST_SIGMA_SHOWN ? '< 0,1' : fmt1(v));
 function climateCard(cycle) {
   const c = cycle.climate;
   return html`<section class="card stack-sm">
-    <h2 class="h2">Le climat visé pour ${cycle.years[0]}–${cycle.years[1]}</h2>
-    <span class="muted small"
-      >${c.method === 'tendance' ? 'Tendance des 40 dernières années de NASA POWER, prolongée jusqu’au milieu du cycle' : `Méthode des deltas : ${c.models.join(', ')}`}</span
-    >
-    <div class="row-wrap gap-md">
+    <div class="row-between wrap">
+      <h2 class="h2">Climat visé · ${cycle.years[0]}–${cycle.years[1]}</h2>
+      ${askRotaIcon('climat-vise')}
+    </div>
+    <span class="muted small">${c.source}</span>
+    <div class="facts">
       <div class="stack-0">
         <span class="muted small">Réchauffement vs 2005–2024</span
         ><strong>${c.warmingC >= 0 ? '+' : ''}${fmt1(c.warmingC)} °C</strong>
@@ -67,16 +69,12 @@ function twinsCard(cycle) {
   const t = cycle.twins;
   return html`<section class="card stack-sm">
     <div class="row-between wrap">
-      <h2 class="h2">${t.cells.length} jumeaux climatiques</h2>
+      <h2 class="h2 row gap-xs">${t.cells.length} jumeaux climatiques${askRotaIcon('jumeaux')}</h2>
       <span class="pill ${t.reliable ? 'pill--info' : 'pill--warn'}"
         >σ moyen ${t.sigmaMean === null ? '—' : fmtSigma(t.sigmaMean)} ·
         ${t.reliable ? 'bons jumeaux' : 'aucun vrai jumeau'}</span
       >
     </div>
-    <span class="muted small"
-      >Des endroits qui ont déjà eu, entre 2011 et 2024, le climat que votre ferme aura. σ mesure la
-      ressemblance : 0 = identique, moins de 2 = bon jumeau.</span
-    >
     <span class="small"
       ><strong>Cultivé chez les jumeaux :</strong>
       ${t.crops.map((c) => CROPS[c]?.name ?? c).join(', ')}</span
@@ -132,12 +130,12 @@ export default {
   render(state, { id }, app) {
     const section = app.section(id);
     const plan = app.sectionPlan(id);
-    const head = pageTitle(
-      'Climat et jumeaux',
-      'D’où vient le plan : le climat de chaque cycle et les endroits qui le vivent déjà.',
-    );
+    const head = pageTitle('Climat et jumeaux');
     if (!plan) {
-      const wait = state.plan.status === 'error' ? errorBox(state.plan.error) : loading();
+      const wait =
+        state.plan.status === 'error'
+          ? errorBox(state.plan.error)
+          : loading('Rota cherche vos jumeaux climatiques', askRota('chargement'));
       return sectionLayout(state, section, 'jumeaux', html`${head}${wait}`);
     }
     const cycle = selectedCycle(plan, state);
@@ -147,10 +145,6 @@ export default {
         <div class="card card--flush grow-2 twins-map">
           ${mapSlot(KEY, 'Carte des jumeaux climatiques')}
         </div>
-      </div>
-      <div class="actions-bar">
-        <a class="btn btn--secondary" href="#/section/${id}/plan">Retour au plan</a
-        ><a class="btn btn--primary" href="#/sources">Les sources →</a>
       </div>`;
     return sectionLayout(state, section, 'jumeaux', body);
   },

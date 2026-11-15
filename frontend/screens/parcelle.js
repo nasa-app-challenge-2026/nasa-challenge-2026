@@ -4,12 +4,12 @@
  * years (as many as the return delays need), soil diseases, irrigation, soil test.
  */
 import { html } from '../lib/html.js';
-import { CROPS } from '../../data/reference/crops.js';
 import { MIN_HISTORY_YEARS } from '../../data/reference/planning.js';
 import { SOIL_PROPERTIES } from '../../data/reference/fieldMeasures.js';
 import { sectionInputProblems } from '../../application/rules/sectionInputs.js';
 import { sectionLayout, pageTitle } from '../ui/layout.js';
 import { alertBox, switchButton } from '../ui/widgets.js';
+import { askRota, askRotaIcon } from '../ui/rota.js';
 import { diseasesEditor, historyEditor, inPlaceEditor, seedActions } from '../ui/seedsEditor.js';
 
 /** Typical soil of the region, proposed when the farmer starts a soil test. */
@@ -62,61 +62,47 @@ export default {
     const plan = app.sectionPlan(id);
     const currentYear = state.plan.data?.settings.currentYear ?? new Date().getFullYear();
     const years = plan?.historyYears ?? MIN_HISTORY_YEARS;
-    const body = html`${pageTitle(`Ma parcelle ${id}`, 'Ce que vous savez de cette section. Tout se recalcule dès que vous changez quelque chose.')}
+    const body = html`${pageTitle(`Ma parcelle ${id}`, '', askRota('parcelle'))}
       <section class="card stack-md">
         <div class="step-head">
           <span class="step-num">1</span>
           <h2 class="h2">Aujourd’hui</h2>
         </div>
         ${inPlaceEditor(section)} ${sectionInputProblems(section).map((p) => alertBox('warn', p))}
-        ${plan?.repeatsCurrentCrop ? alertBox('warn', 'Sans rotation actuelle, l’appli compare son plan à la culture en place répétée chaque année.') : ''}
+        ${plan?.repeatsCurrentCrop ? alertBox('warn', 'Pas de rotation actuelle : la culture en place sert de comparaison.') : ''}
       </section>
       <section class="card stack-md">
         <div class="step-head">
           <span class="step-num">2</span>
           <h2 class="h2">Les années précédentes</h2>
-          <span class="muted small"
-            >${years} années : le plus long délai de retour des cultures possibles</span
-          >
+          ${askRotaIcon('historique')}
         </div>
         ${historyEditor(section, { currentYear, years })}
-        ${
-          plan?.history.length
-            ? html`<span class="muted small"
-                >L’algorithme lit :
-                ${plan.history.map((h) => `${CROPS[h.crop]?.name ?? h.crop} ${h.from === h.to ? h.from : `${h.from}–${h.to}`}`).join(' · ')}</span
-              >`
-            : ''
-        }
       </section>
       <section class="card stack-md">
         <div class="step-head">
           <span class="step-num">3</span>
           <h2 class="h2">Maladies du sol connues</h2>
+          ${askRotaIcon('maladies')}
         </div>
-        <span class="muted small"
-          >Une maladie déclarée rend obligatoire son délai le plus long pour toutes ses
-          cultures-hôtes (ex. hernie : 7 ans sans crucifère).</span
-        >
         ${diseasesEditor(section)}
       </section>
       <section class="card stack-md">
         <div class="step-head">
           <span class="step-num">4</span>
           <h2 class="h2">Eau et sol</h2>
+          ${askRotaIcon('analyse-sol')}
         </div>
         <div class="toggle-card">
-          <span class="stack-0"
-            ><strong class="small">Parcelle irriguée</strong
-            ><span class="muted small">Le risque de manque d’eau est réduit</span></span
+          <span class="row gap-xs grow"
+            ><strong class="small">Parcelle irriguée</strong>${askRotaIcon('irrigation')}</span
           >
           ${switchButton(section.irrigated, 'toggle-irrigated', 'Parcelle irriguée', html`data-id="${id}"`)}
         </div>
         ${soilTestEditor(section)}
       </section>
       <div class="actions-bar">
-        <a class="btn btn--secondary" href="#/tableau">Retour</a
-        ><a class="btn btn--primary" href="#/section/${id}/plan">Voir le plan →</a>
+        <a class="btn btn--primary" href="#/section/${id}/plan">Voir les rotations →</a>
       </div>`;
     return sectionLayout(state, section, 'parcelle', body);
   },

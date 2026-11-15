@@ -10,12 +10,24 @@ Interactive documentation:      http://localhost:8000/docs
 
 A data service that fails (NASA POWER, SoilGrids, Open-Meteo, MODIS) gives a 502 that names it:
 there is no fictitious data to fall back on.
+
+The sections of a farm are planned at the same time in worker processes (FIELD_SHIFT_WORKERS,
+see `services/parallel_plan_service.py`), and the answers are compressed (a plan is ~250 kB of
+JSON, ~25 kB once compressed).
 """
 
 from __future__ import annotations
 
+import json
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from datetime import datetime
+from functools import partial
+from typing import Protocol
+
 from fastapi import APIRouter, Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 
 from field_shift import __version__
@@ -40,11 +52,66 @@ from field_shift.data_access.site_data import RemoteSiteData
 from field_shift.data_access.soilgrids import SoilGridsClient
 from field_shift.data_access.twin_crops import CropMapsUnavailableError
 from field_shift.data_access.weather_providers import NasaPowerWeatherProvider
+from field_shift.services.parallel_plan_service import ParallelPlanService
 from field_shift.services.plan_service import PlanService
 from field_shift.services.ranking_service import RankingService
 
 #: A data service the answer depends on failed.
 BAD_GATEWAY = 502
+#: Answers smaller than this are sent as they are (compressing them would not pay).
+GZIP_MIN_BYTES = 1024
+
+
+class AnswerUnexpectedErrors:
+    """An error nobody planned for answers 500 with a message, inside the CORS middleware: the
+    browser then reads the answer (with its CORS headers) instead of "cannot reach the server".
+    Starlette's own 500 is outside CORS, without these headers. Written as a plain ASGI
+    middleware (a few lines, no import beyond FastAPI's)."""
+
+    def __init__(self, app) -> None:
+        self._app = app
+
+    async def __call__(self, scope, receive, send) -> None:
+        if scope["type"] != "http":
+            await self._app(scope, receive, send)
+            return
+        started = False
+
+        async def watched_send(message) -> None:
+            nonlocal started
+            if message["type"] == "http.response.start":
+                started = True
+            await send(message)
+
+        try:
+            await self._app(scope, receive, watched_send)
+        except Exception as error:  # the server stays up; the message says what failed
+            if started:
+                raise  # the answer is already on its way: nothing better to send
+            body = json.dumps(
+                {"detail": [{"msg": f"Erreur inattendue du serveur : {error}"}]},
+                ensure_ascii=False,
+            ).encode("utf-8")
+            await send(
+                {
+                    "type": "http.response.start",
+                    "status": 500,
+                    "headers": [
+                        (b"content-type", b"application/json"),
+                        (b"content-length", str(len(body)).encode("ascii")),
+                    ],
+                }
+            )
+            await send({"type": "http.response.body", "body": body})
+
+
+class FarmPlanner(Protocol):
+    """What the route needs: `PlanService`, or the same in several processes."""
+
+    def plan_farm(
+        self, farm_input: FarmInput, generated_at: datetime | None = None
+    ) -> FarmPlan: ...
+
 
 DESCRIPTION = """
 Plans the crop rotations of a farm with the **climate twin** method (field_shift v5.1): for each
@@ -63,7 +130,14 @@ and MODIS; a service that fails gives a **502** naming it.
 """
 
 
-def plan_service_for(settings: Settings) -> PlanService:
+def plan_service_for(settings: Settings) -> FarmPlanner:
+    """The plan service of the server: in several processes when the settings give workers."""
+    if settings.workers <= 0:
+        return single_process_plan_service(settings)
+    return ParallelPlanService(partial(single_process_plan_service, settings), settings.workers)
+
+
+def single_process_plan_service(settings: Settings) -> PlanService:
     """The plan service on the real data services, their answers kept on disk."""
     cache = DataCache.default()
     sources = settings.data_sources
@@ -92,19 +166,31 @@ SERVICE_FAILURES = (
 )
 
 
-def get_plan_service(request: Request) -> PlanService:
+def get_plan_service(request: Request) -> FarmPlanner:
     return request.app.state.plan_service
 
 
 def create_app(
     settings: Settings | None = None,
-    plan_service: PlanService | None = None,
+    plan_service: FarmPlanner | None = None,
     ranking_service: RankingService | None = None,
 ) -> FastAPI:
     """Builds the application. `plan_service` and `ranking_service` let the tests give their own
     weather and data sources."""
     settings = settings or Settings.from_environment()
-    app = FastAPI(title="Field Shift", version=__version__, description=DESCRIPTION)
+    planner = plan_service or plan_service_for(settings)
+
+    @asynccontextmanager
+    async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+        yield
+        if isinstance(planner, ParallelPlanService):
+            planner.close()  # the worker processes stop with the server
+
+    app = FastAPI(
+        title="Field Shift", version=__version__, description=DESCRIPTION, lifespan=lifespan
+    )
+    app.add_middleware(GZipMiddleware, minimum_size=GZIP_MIN_BYTES)
+    app.add_middleware(AnswerUnexpectedErrors)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=list(settings.cors_origins),
@@ -112,7 +198,7 @@ def create_app(
         allow_headers=["Content-Type"],
     )
     app.state.settings = settings
-    app.state.plan_service = plan_service or plan_service_for(settings)
+    app.state.plan_service = planner
     app.state.ranking_service = ranking_service or ranking_service_for(settings)
 
     def answer_bad_gateway(source: str):
@@ -139,7 +225,7 @@ def create_app(
         summary="Plan every section of a farm",
         responses={BAD_GATEWAY: {"description": "A data service could not be read (named)."}},
     )
-    def plan(farm_input: FarmInput, service: PlanService = Depends(get_plan_service)) -> FarmPlan:
+    def plan(farm_input: FarmInput, service: FarmPlanner = Depends(get_plan_service)) -> FarmPlan:
         return service.plan_farm(farm_input)
 
     app.include_router(router)

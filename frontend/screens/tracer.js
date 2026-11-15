@@ -11,6 +11,7 @@
 import { html, plural } from '../lib/html.js';
 import { onboardingHeader } from '../ui/layout.js';
 import { icon, ICONS } from '../ui/icons.js';
+import { askRota } from '../ui/rota.js';
 import { mapSlot, ensureMap, destroyMap } from '../ui/leafletMap.js';
 import { createPolygonEditor } from '../ui/drawMap.js';
 import {
@@ -175,13 +176,9 @@ export default {
     return html`${onboardingHeader(3)}
       <div class="split" id="main">
         <aside class="split__side stack-md">
-          <div class="stack-xs">
+          <div class="row-between wrap">
             <h1 class="h1">Tracez votre ferme</h1>
-            <p class="muted">
-              Cliquez d’abord les coins principaux pour relier le contour de la ferme, puis les
-              coins de chaque section. L’appli planifiera chaque section à partir de ce qui y
-              pousse.
-            </p>
+            ${askRota('tracer')}
           </div>
 
           <div class="stack-xs">
@@ -274,17 +271,7 @@ export default {
                       ${icon(ICONS.plus, { size: 18 })}Nouvelle section
                     </button>
                     ${onFarm ? '' : drawTools(draw, pts, `la section ${draw.target}`)}`
-                : html`<p class="muted small">
-                    Fermez d’abord le contour, puis tracez chaque section de la même façon.
-                  </p>`
-            }
-          </div>
-
-          <div class="card card--tint small">
-            ${
-              onFarm
-                ? 'Astuce : cliquez seulement les coins principaux, pas chaque courbe. Vous pourrez glisser les coins pour ajuster.'
-                : 'Astuce : une section = une partie de la ferme qui a la même culture la même année. Ses coins s’aimantent au contour et aux autres sections, pour qu’elles se touchent sans trou.'
+                : ''
             }
           </div>
         </aside>

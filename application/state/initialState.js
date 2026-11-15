@@ -1,5 +1,5 @@
 import { DEMO_FARM } from '../../data/reference/demoFarm.js';
-import { GREETING } from '../../data/reference/rotaaiAnswers.js';
+import { GREETING } from '../../data/reference/rotaAnswers.js';
 import { migrateFarm } from './migrate.js';
 
 /** What survives a page reload (per browser, never shared; see data/access/storage.js). */
@@ -25,7 +25,6 @@ export function initialState(engineName, saved) {
     ui: {
       route: { name: 'connexion', params: {} },
       authMode: 'login',
-      farmTypeSel: 'grandes-cultures',
       geo: { query: '', results: null, status: 'idle', error: null },
       draw: { target: 'farm', drawing: false },
       selectedSection: 'A',
@@ -33,10 +32,10 @@ export function initialState(engineName, saved) {
       year: null,
       /** Cycle shown on the plan and twins screens of a section (index from 1). */
       cycle: 1,
+      /** Rotation shown in detail on the plan screen: rank of a proposal (0 = chosen) or 'ref'. */
+      option: 0,
       sourcesFilter: 'all',
       openSources: { 0: true },
-      openInfo: null,
-      reported: {},
       settingsTab: 'ferme',
       dashAnnounce: '',
       rota: { open: false, typing: false, msgs: [{ from: 'bot', text: GREETING }] },

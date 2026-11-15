@@ -33,9 +33,7 @@ export function weatherWidget(state) {
   const w = state.weather;
   const head = html`<div class="row-between">
     <h2 class="h2">Météo à la ferme</h2>
-    <span class="muted small" title="Prévisions locales, mises à jour toutes les heures"
-      >Open-Meteo</span
-    >
+    <span class="muted small">Open-Meteo</span>
   </div>`;
 
   if (!w.data) {

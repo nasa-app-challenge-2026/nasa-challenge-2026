@@ -2,10 +2,9 @@
  * 9 · Mon champ. Owner: Justin. The weak points of the section (step 8 of the
  * algorithm): erosion and water risks, the satellite measures behind the erosion,
  * what the water pressure is made of, and the soil (step 5). Values come from the
- * plan (FarmPlan.sections[].field).
+ * plan (FarmPlan.sections[].field). Rota explains each of them.
  */
 import { html } from '../lib/html.js';
-import { CRITERIA } from '../../data/reference/criteria.js';
 import { nameOf } from '../../data/reference/crops.js';
 import {
   FIELD_MEASURES,
@@ -15,75 +14,63 @@ import {
 } from '../../data/reference/fieldMeasures.js';
 import { cropOfYear, planYears } from '../../application/rules/planView.js';
 import { sectionLayout, pageTitle } from '../ui/layout.js';
-import { errorBox, infoButton, loading } from '../ui/widgets.js';
+import { errorBox, loading } from '../ui/widgets.js';
+import { askRota, askRotaIcon } from '../ui/rota.js';
 import { farmPlan } from '../ui/farmPlan.js';
 import { selectedYear } from '../ui/planWidgets.js';
 
 const PERCENT = 100;
-const DECIMAL_COMMA = (v) => String(v).replace('.', ',');
+/** From this risk (in %), the bar turns to the warning colour. */
+const HIGH_RISK_PCT = 50;
+/** Values of the data services come with all their decimals: one is enough to read them. */
+const ONE_DECIMAL = 10;
+const DECIMAL_COMMA = (v) =>
+  String(typeof v === 'number' ? Math.round(v * ONE_DECIMAL) / ONE_DECIMAL : v).replace('.', ',');
 
 function riskCard(key, value) {
   const pct = Math.round(value * PERCENT);
+  const high = pct >= HIGH_RISK_PCT;
   return html`<div class="card stack-xs">
     <span class="muted small">${RISKS[key].label}</span>
-    <span class="h1 ${pct >= 50 ? 'text-warn' : ''}">${pct} %</span>
+    <span class="h1 ${high ? 'text-warn' : ''}">${pct} %</span>
     <div class="bar">
-      <div class="bar__fill ${pct >= 50 ? 'is-bad' : 'is-blue'}" style="width: ${pct}%"></div>
+      <div class="bar__fill ${high ? 'is-bad' : 'is-blue'}" style="width: ${pct}%"></div>
     </div>
-    <span class="muted small"
-      >Plus le risque est haut, plus la priorité « ${CRITERIA[RISKS[key].priority].label} » pèse
-      dans la note du plan.</span
-    >
   </div>`;
 }
 
-function measureCard(state, sectionId, key, value) {
-  const m = FIELD_MEASURES[key];
-  const infoKey = `${sectionId}:${key}`;
-  const open = state.ui.openInfo === infoKey;
-  const reported = !!state.ui.reported[infoKey];
-  return html`<article class="card metric">
-    <div class="row-between">
-      <span class="strong muted">${m.label}</span
-      >${infoButton('toggle-info', m.label, html`data-key="${infoKey}" aria-expanded="${String(open)}"`)}
+/** The satellite measures behind the erosion risk, in one card. */
+function measuresCard(measures) {
+  const known = Object.entries(measures).filter(([key]) => FIELD_MEASURES[key]);
+  return html`<section class="card stack-sm">
+    <h2 class="h2">Mesures par satellite</h2>
+    <div class="facts">
+      ${known.map(([key, value]) => {
+        const m = FIELD_MEASURES[key];
+        return html`<div class="stack-0">
+          <span class="muted small row gap-xs">${m.label}${askRotaIcon(`mesure-${key}`)}</span>
+          <strong>${DECIMAL_COMMA(value)} ${m.unit}</strong>
+        </div>`;
+      })}
     </div>
-    <div class="metric__value">
-      <span>${DECIMAL_COMMA(value)}</span><span class="muted">${m.unit}</span>
-    </div>
-    ${open ? html`<p class="explain">${m.explain}</p>` : ''}
-    <div class="row-between divider-top">
-      <span class="small muted">${m.source} · risque érosion</span>
-      <button
-        type="button"
-        class="report-btn ${reported ? 'is-on' : ''}"
-        data-action="toggle-report"
-        data-key="${infoKey}"
-      >
-        ${reported ? '✓ Signalé' : '⚑ Signaler'}
-      </button>
-    </div>
-  </article>`;
+  </section>`;
 }
 
-/** What the water pressure of the farm is made of, and where each part comes from. */
-function waterPressureCard(water, irrigated) {
+/** What the water pressure of the farm is made of. */
+function waterPressureCard(water) {
   const parts = Object.entries(water.components).filter(([k]) => WATER_COMPONENTS[k]);
   const missing = water.missing.filter((k) => WATER_COMPONENTS[k]);
   return html`<section class="card stack-sm">
     <div class="row-between wrap">
-      <h2 class="h2">La pression sur l’eau</h2>
-      <span class="muted small"
-        >${Math.round(water.pressure * PERCENT)}
-        %${water.aridityClass ? ` · climat ${water.aridityClass}` : ''}</span
-      >
+      <h2 class="h2">Pression sur l’eau · ${Math.round(water.pressure * PERCENT)} %</h2>
+      ${askRotaIcon('pression-eau')}
     </div>
     <div class="stack-sm">
       ${parts.map(
         ([k, v]) =>
           html`<div class="score">
             <div class="score__row">
-              <span class="score__label" title="${WATER_COMPONENTS[k].explain}"
-                >${WATER_COMPONENTS[k].label}</span
+              <span class="score__label">${WATER_COMPONENTS[k].label}</span
               ><span><strong>${Math.round(v * PERCENT)}</strong></span>
             </div>
             <div class="score__track">
@@ -96,25 +83,26 @@ function waterPressureCard(water, irrigated) {
       missing.length
         ? html`<span class="muted small"
             >Non mesuré ici :
-            ${missing.map((k) => WATER_COMPONENTS[k].label.toLowerCase()).join(', ')}. Les autres
-            composantes se partagent leur poids.</span
+            ${missing.map((k) => WATER_COMPONENTS[k].label.toLowerCase()).join(', ')}</span
           >`
         : ''
     }
-    ${
-      irrigated
-        ? html`<span class="muted small"
-            >Parcelle irriguée : le risque de manque d’eau ne garde que 40 % de cette
-            pression.</span
-          >`
-        : ''
-    }
-    <details class="small muted">
-      <summary>D’où viennent ces données</summary>
-      <ul>
-        ${Object.entries(water.sources).map(([k, v]) => html`<li><strong>${k}</strong> : ${v}</li>`)}
-      </ul>
-    </details>
+  </section>`;
+}
+
+function soilCard(soil, sectionId) {
+  return html`<section class="card stack-sm">
+    <div class="row-between wrap">
+      <h2 class="h2">Sol (0 à 30 cm)</h2>
+      ${askRotaIcon('sol')}
+    </div>
+    <div class="facts">
+      ${Object.entries(SOIL_PROPERTIES).map(([k, p]) => html`<div class="stack-0"><span class="muted small">${p.label}</span><strong>${DECIMAL_COMMA(soil[k])} ${p.unit}</strong></div>`)}
+    </div>
+    <span class="muted small"
+      >${soil.source} ·
+      <a href="#/section/${sectionId}/parcelle">Saisir mon analyse de sol</a></span
+    >
   </section>`;
 }
 
@@ -140,52 +128,25 @@ export default {
       ? html`<div class="grid grid--2">
             ${riskCard('erosion', field.risksToday.erosion)}${riskCard('water', field.risksToday.water)}
           </div>
-          <div class="grid grid--metrics">
-            ${Object.entries(field.measures)
-              .filter(([k]) => FIELD_MEASURES[k])
-              .map(([k, v]) => measureCard(state, id, k, v))}
-          </div>
-          ${field.waterPressure ? waterPressureCard(field.waterPressure, section.irrigated) : ''}
-          <section class="card stack-sm">
-            <div class="row-between wrap">
-              <h2 class="h2">Le sol (0 à 30 cm)</h2>
-              <span class="muted small">${field.soil.source}</span>
-            </div>
-            <div class="row-wrap gap-md">
-              ${Object.entries(SOIL_PROPERTIES).map(([k, p]) => html`<div class="stack-0"><span class="muted small">${p.label}</span><strong>${DECIMAL_COMMA(field.soil[k])} ${p.unit}</strong></div>`)}
-            </div>
-            <span class="muted small"
-              >Le sol sert à garder, chez les jumeaux climatiques, les champs au même sol que le
-              vôtre. <a href="#/section/${id}/parcelle">Saisir mon analyse de sol</a></span
-            >
-          </section>`
+          ${measuresCard(field.measures)}
+          ${field.waterPressure ? waterPressureCard(field.waterPressure) : ''}
+          ${soilCard(field.soil, id)}`
       : state.plan.status === 'error'
         ? errorBox(state.plan.error)
-        : loading('Lecture des données du champ…');
-    const body = html`${pageTitle('Mon champ', `Les points faibles de la section ${id}. Le risque d’eau ci-dessous est celui de la météo récente ; chaque cycle du plan a le sien, calculé sur son climat.`)}
+        : loading('Rota lit les données du champ', askRota('chargement'));
+    const body = html`${pageTitle('Mon champ', '', askRota('risques'))}
       <div class="row-wrap align-start gap-lg">
         <div class="grow-3 stack-md">${content}</div>
         <div class="card card--flush grow-1 section-map">
           ${map ?? html`<div class="pad muted small">Section non tracée. <a href="#/tracer">Tracer cette section</a></div>`}
-          <div class="pad stack-0">
+          <div class="pad">
             <strong
               >Section ${id} · ${section.areaHa} ha · ${crop ? nameOf(crop).toLowerCase() : 'rien'}
               en ${year}</strong
             >
-            <span class="muted small">${section.note ?? ''}</span>
           </div>
         </div>
-      </div>
-      <div class="actions-bar">
-        <a class="btn btn--secondary" href="#/section/${id}/parcelle">Ma parcelle</a
-        ><a class="btn btn--primary" href="#/section/${id}/plan">Voir le plan →</a>
       </div>`;
     return sectionLayout(state, section, 'champ', body);
-  },
-  actions: {
-    'toggle-info': (app, el) =>
-      app.update((s) => (s.ui.openInfo = s.ui.openInfo === el.dataset.key ? null : el.dataset.key)),
-    'toggle-report': (app, el) =>
-      app.update((s) => (s.ui.reported[el.dataset.key] = !s.ui.reported[el.dataset.key])),
   },
 };

@@ -10,6 +10,11 @@ Two requests of the same key at the same time wait for each other: the service i
 sections of a farm are planned in parallel and share the weather of their place). A failure is
 never kept: the service is tried again at the next request.
 
+Several processes share the folder (`services/parallel_plan_service.py`). Two of them may write the
+same answer at the same time; on Windows, replacing a file another process is replacing or reading
+is refused for a moment. The write is then tried again, and given up after a few tries: the answer
+stays in memory, and the other process has written the same one.
+
 The folder is `api/.cache_field_shift/` (excluded from git), or the one named by the environment
 variable FIELD_SHIFT_CACHE_DIR. Deleting it only means the services are read again.
 
@@ -23,6 +28,7 @@ import hashlib
 import json
 import os
 import threading
+import time
 import uuid
 from collections import OrderedDict
 from collections.abc import Callable
@@ -36,6 +42,9 @@ DEFAULT_CACHE_DIR: Final = Path(__file__).resolve().parents[2] / ".cache_field_s
 #: Answers kept in memory as well (the biggest, the weather of a place, is about 2 MB).
 MEMORY_ENTRIES: Final = 64
 _FILE_NAME_CHARS: Final = 32
+#: Tries to replace a file another process holds for a moment (Windows), and the wait between.
+REPLACE_ATTEMPTS: Final = 5
+REPLACE_WAIT_S: Final = 0.05
 
 
 class DataCache:
@@ -95,6 +104,11 @@ class DataCache:
         self._remember(entry, stored["value"])
         return stored["value"]
 
+    def remember(self, namespace: str, key: str, value: Any) -> None:
+        """Keeps the value in memory only, until the server stops: an answer the service may
+        complete later (a catalogue still being filled), read again at the next start."""
+        self._remember((namespace, key), value)
+
     def put(self, namespace: str, key: str, value: Any) -> None:
         """Keeps the value (atomically on disk: a file is never half written)."""
         self._remember((namespace, key), value)
@@ -108,7 +122,7 @@ class DataCache:
             temporary.write_text(
                 json.dumps({"key": key, "value": value}, ensure_ascii=False), encoding="utf-8"
             )
-            os.replace(temporary, path)
+            _replace(temporary, path)
         finally:
             temporary.unlink(missing_ok=True)
 
@@ -126,3 +140,15 @@ class DataCache:
                 value = fetch()
                 self.put(namespace, key, value)
         return value
+
+
+def _replace(temporary: Path, path: Path) -> None:
+    """Moves the written file in place; gives up quietly when another process keeps the file busy
+    (it is writing the same answer)."""
+    for attempt in range(REPLACE_ATTEMPTS):
+        try:
+            os.replace(temporary, path)
+            return
+        except PermissionError:
+            if attempt + 1 < REPLACE_ATTEMPTS:
+                time.sleep(REPLACE_WAIT_S * (attempt + 1))

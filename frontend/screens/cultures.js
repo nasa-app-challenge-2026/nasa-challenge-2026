@@ -9,18 +9,16 @@ import { onboardingHeader } from '../ui/layout.js';
 import { inPlaceEditor, seedActions, seedBank } from '../ui/seedsEditor.js';
 import { sectionInputProblems } from '../../application/rules/sectionInputs.js';
 import { alertBox } from '../ui/widgets.js';
+import { askRota, askRotaIcon } from '../ui/rota.js';
 
 export default {
   title: 'Mes cultures',
   render(state) {
     return html`${onboardingHeader(4)}
       <main class="page page--narrow stack-lg" id="main">
-        <div class="stack-xs">
+        <div class="row-between wrap">
           <h1 class="h1 h1--xl">Qu’est-ce que vous cultivez ?</h1>
-          <p class="lead">
-            Pour chaque section : ce qui pousse maintenant, quand ce sera récolté, et la rotation
-            que vous suivez. L’appli part de là pour construire votre plan.
-          </p>
+          ${askRota('cultures')}
         </div>
 
         ${state.farm.sections.map(
@@ -38,7 +36,7 @@ export default {
         <section class="card stack-md" aria-labelledby="seeds-title">
           <div class="step-head">
             <h2 class="h2" id="seeds-title">Ma réserve de semences</h2>
-            <span class="muted small">Les semences que vous avez déjà, sans les quantités</span>
+            ${askRotaIcon('reserve')}
           </div>
           ${seedBank(state)}
         </section>

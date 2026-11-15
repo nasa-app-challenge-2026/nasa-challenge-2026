@@ -167,6 +167,12 @@ def _shifted(day: date, years: int) -> date:
         return day.replace(year=day.year + years, day=day.day - 1)
 
 
+class ChainWithoutWaterError(ValueError):
+    """A chain `water_use` cannot simulate: a sold crop has no day before the next crop sown
+    (the planner counts in months, `water_use` in days). Its water is unknown, not an error of the
+    plan (see `WaterUseCycle.score`)."""
+
+
 def _without_overlaps(stands: list[_Stand], cycle_years: int) -> list[_Stand]:
     """The stands, each one ended the day before the next is sown (the rotation repeats: the
     last one is followed by the first, `cycle_years` later).
@@ -185,11 +191,17 @@ def _without_overlaps(stands: list[_Stand], cycle_years: int) -> list[_Stand]:
         if stand.last_day > stand.first_day:
             kept.append(stand)
         elif not stand.is_cover:
-            raise ValueError(
+            raise ChainWithoutWaterError(
                 f"chaîne impossible à noter pour l’eau : {stand.sheet_id} semé le "
                 f"{stand.first_day} n’a aucun jour avant la culture suivante"
             )
     return kept
+
+
+def has_sown_crop(steps: Sequence[ChainStep]) -> bool:
+    """Does the chain sow anything (a crop or a cover)? A chain of fallow only has no water to
+    simulate."""
+    return any(step.sowing is not None and step.sheet_id not in BARE_SOIL_IDS for step in steps)
 
 
 def rotation_of_chain(
@@ -678,9 +690,16 @@ class WaterUseCycle:
         irrigated: bool,
         partial: bool,
     ) -> WaterScore | None:
-        if partial:
+        if partial or not has_sown_crop(steps):
+            # Nothing sown (a current rotation none of whose crops can still be placed in this
+            # climate, replayed as fallow): its water is unknown, left out of its score.
             return None
-        rotation = rotation_of_chain(steps, start, end)
+        try:
+            rotation = rotation_of_chain(steps, start, end)
+        except ChainWithoutWaterError:
+            # The planner placed two crops on the same day: this chain's water is left unknown
+            # (left out of its score), the other chains are still compared on their water.
+            return None
         key = (
             rotation["duree_ans"],
             irrigated,

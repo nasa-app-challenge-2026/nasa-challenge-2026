@@ -9,6 +9,7 @@ import { DEMO_PLACES } from '../../data/reference/catalog.js';
 import { coordsLabel, sameCoord } from '../../application/rules/geo.js';
 import { onboardingHeader } from '../ui/layout.js';
 import { icon, ICONS } from '../ui/icons.js';
+import { askRota } from '../ui/rota.js';
 import { mapSlot, ensureMap, getMap, destroyMap, pinIcon, L } from '../ui/leafletMap.js';
 
 const KEY = 'localisation';
@@ -34,12 +35,9 @@ export default {
         ${mapSlot(KEY, 'Carte pour situer la ferme')}
         <div class="map-overlay">
           <div class="floating-card stack-sm">
-            <div class="stack-xs">
+            <div class="row-between wrap">
               <h1 class="h2 h2--lg">Où est votre ferme ?</h1>
-              <p class="muted small">
-                Cherchez une adresse, un rang ou un village, puis ajustez l’épingle : glissez-la ou
-                cliquez sur la carte.
-              </p>
+              ${askRota('localiser')}
             </div>
             <form class="search-form" data-submit="search-place">
               <label class="search"

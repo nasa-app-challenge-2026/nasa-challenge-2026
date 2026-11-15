@@ -16,4 +16,5 @@ Règles de code :
 - Les écrans n'appellent jamais le moteur ni le réseau directement : passez par `app` (`app.updateFarm`, `app.updateSection`, `app.searchPlaces`…).
 - Le contrat ne change qu'avec l'accord de Nour et Yanis ; `backend/contract/field-shift.schema.json`, `docs/ALGO_CONTRACT.md`, les modèles `api/field_shift/contract/` et les exemples (`python -m field_shift.tools.make_examples`) changent ensemble.
 - Aucun nom d'étude dans un texte affiché ailleurs que sur la page Sources.
+- Aucune explication écrite dans un écran : un bouton `askRota('sujet')` l'ouvre dans Rota (`docs/ROTA.md`). Aucun « bientôt » : une fonction hors du MVP ouvre Rota (`data-action="rota-mvp"`).
 - Chaque source utilisée (donnée, étude, police, icône, outil d'IA) est ajoutée à `data/reference/sources.js` ou au README.

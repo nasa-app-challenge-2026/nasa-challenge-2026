@@ -37,6 +37,7 @@ Le premier plan d'un nouveau lieu lit toutes ses données réelles : la météo 
 | `FIELD_SHIFT_DATA_SOURCES` | chemin du fichier JSON des adresses des services de données (voir [Sources de données](#sources-de-données))           | `data_sources.json` s'il existe dans le dossier de lancement        |
 | `FIELD_SHIFT_CACHE_DIR`    | dossier où le serveur garde les réponses des services de données (une requête n'est faite qu'une fois, même après un redémarrage ; un échec n'est jamais gardé) | `api/.cache_field_shift/` (exclu de git)                           |
 | `FIELD_SHIFT_URL_<SOURCE>` | adresse d'un service de données ; l'emporte sur le fichier                                                              | voir `GET /data-sources`                                            |
+| `FIELD_SHIFT_WORKERS` | nombre de processus qui calculent les sections d'une ferme en même temps ; `0` : une section après l'autre | un par autre processeur, 3 au plus |
 
 **Il n'y a pas de mode démo ni de valeur de repli.** Le serveur lit toujours les données réelles. Quand un service ne répond pas (NASA POWER pour `POST /plan` ; SoilGrids, Open-Meteo, NASA POWER ou MODIS pour le classement), la demande échoue avec un **`502`** dont le `detail` nomme la section et le service en cause ; le service est retenté à la demande suivante (un échec n'est jamais gardé en mémoire).
 
@@ -54,7 +55,14 @@ Le premier plan d'un nouveau lieu lit toutes ses données réelles : la météo 
 | `GET /crops` | les cultures qu'une rotation peut contenir, avec leurs notes de protection du sol. |
 | `GET /data-sources` | les services de données, leur jeu de données, leur publication de référence et leur adresse. |
 
-Un plan de 4 sections sur 12 ans prend environ 0,3 s (plus le premier téléchargement de la météo d'un lieu, une fois : 0,7 Mo, gardé en mémoire).
+Un plan de 4 sections sur 12 ans prend environ 12 s avec les vraies données déjà sur disque (mesuré le 15 novembre 2026, 30 s quand les sections sont calculées l'une après l'autre) : presque tout ce temps est la simulation de l'eau du sol des meilleures chaînes. Le même plan redemandé prend 0,3 s. Le premier plan d'un lieu attend en plus la lecture de ses données réelles, gardées ensuite sur disque.
+
+### Ce qui rend le plan rapide (sans toucher à l'algorithme)
+
+- **Les sections sont calculées en même temps**, chacune dans son processus (`services/parallel_plan_service.py`). Une section ne dépend jamais des autres : le plan est exactement celui d'un seul processus (`tests/test_parallel_plan_service.py`). Le serveur calcule la première section, un processus par autre section calcule les suivantes ; la même section retourne toujours au même processus, qui retrouve les notes d'eau qu'il a déjà simulées. `FIELD_SHIFT_WORKERS=0` revient à un seul processus, pour une machine qui a peu de mémoire : chaque processus garde sa copie du lieu.
+- **Le lieu est construit une fois** par le serveur avant de partager les sections : ce que répondent ses services de données est alors sur disque, et les autres processus le lisent là.
+- **Les réponses sont compressées** (gzip) : un plan fait environ 250 ko de JSON, 25 ko une fois compressé.
+- Côté navigateur, le dernier plan est gardé avec la ferme pour laquelle il a été calculé : à la visite suivante il s'affiche tout de suite pendant que le serveur le recalcule, et un réglage déjà calculé pendant la visite n'est pas redemandé (`application/app.js`).
 
 ## Organisation du code
 
@@ -65,6 +73,7 @@ field_shift/
                    et les deux traducteurs : entrée → objets de l'algorithme, résultats → plan
                    rotation_ranking.py et ranking_mapper.py : la même chose pour le classement
   services/        RankingService : réunit les conditions de chaque section, lance le classement
+                   ParallelPlanService : les sections d'une ferme calculées en même temps, dans plusieurs processus
                    PlanService : lit la requête, obtient la météo, lance l'algorithme, garde les lieux en mémoire
   data_access/     l'accès au réseau (aucune valeur de repli : un service en panne est une erreur)
                      data_source_config.py  TOUTES les adresses des services, au même endroit
