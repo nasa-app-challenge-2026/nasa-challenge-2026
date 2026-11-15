@@ -7,9 +7,9 @@ own unit (kg/ha for the yield, the RPI for the soil protection...).
     rendement        yield                          NOT WRITTEN YET
     eau              water demand                   NOT WRITTEN YET
     protection_sol   erosion and infiltration       `SoilProtectionMeasure`
-    ravageurs        pests and diseases             NOT WRITTEN YET
+    ravageurs        pests and diseases             `PestsMeasure` (algorithm/pests)
 
-To write one of the three missing measures: fill the `evaluate` method of its class below (it
+To write one of the two missing measures: fill the `evaluate` method of its class below (it
 receives everything the soil protection measure receives), return a `MeasureResult` with a score
 between 0 and 1, and set `implemented = True`. Nothing else changes: the ranking, the routes and
 the contract already carry the four measures.
@@ -20,6 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Protocol
 
+from field_shift.algorithm.pests.pest_measure import evaluate_pests, pest_note
 from field_shift.algorithm.rotation.rotation import Rotation
 from field_shift.algorithm.soil_protection.site_conditions import SiteConditions
 from field_shift.algorithm.soil_protection.soil_protection import (
@@ -145,13 +146,17 @@ class WaterDemandMeasure:
 
 
 class PestsMeasure:
-    """Pests and diseases pressure of the rotation. TODO: not written yet."""
+    """Pests and diseases pressure of the rotation (see `algorithm/pests/README.md`). No main
+    value: the score is the measure."""
 
     id = MEASURE_PESTS
-    implemented = False
+    implemented = True
 
     def evaluate(self, rotation: Rotation, context: SectionContext) -> MeasureResult:
-        raise MeasureNotImplementedError(self.id)
+        outcome = evaluate_pests(rotation)
+        if outcome.result is None:
+            return MeasureResult.unavailable(self.id, outcome.reason)
+        return MeasureResult(self.id, score=outcome.result.score, note=pest_note(outcome))
 
 
 def all_measures() -> tuple[Measure, ...]:
