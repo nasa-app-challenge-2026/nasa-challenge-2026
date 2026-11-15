@@ -4,7 +4,8 @@
     read_elevations    Copernicus DEM (Open-Meteo)   elevations of a list of points
     read_climatology   NASA POWER climatology        annual rain, soil moisture of the season
     read_storm         NASA POWER hourly             intensity of the reference storm
-    read_ndvi          MODIS MOD13Q1 (ORNL DAAC)     NDVI of the growing season
+    read_season_ndvi   MODIS MOD13Q1 / MYD13Q1       NDVI of the growing season (Planetary
+                       (Planetary Computer)          Computer: the whole year in one request)
     read_et_ratio      MODIS MOD16A2 (ORNL DAAC)     ET / PET of the growing season
 
 A reader never guesses: an error, an unexpected answer or a missing value raises `SourceError`,
@@ -15,6 +16,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Mapping, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from typing import Any, Final
 
@@ -38,11 +40,16 @@ from field_shift.algorithm.soil_protection.forcing import (
 )
 from field_shift.algorithm.soil_protection.site_conditions import SiteReading
 from field_shift.data_access.data_source_config import DataEndpoint
+from field_shift.data_access.modis_ndvi import ModisNdviClient, NdviUnavailableError
+from field_shift.data_access.soilgrids import NoSoilError, SoilGridsClient, SoilGridsError
 
 #: 6 decimals: 0.1 m, finer than any elevation model.
 COORDINATE_DECIMALS: Final = 6
 #: The hourly series of ten years is a large answer (about 90 000 values).
 SLOW_TIMEOUT_S: Final = 120.0
+#: The ORNL DAAC subset service takes 40 to 60 s a request (2026-11-15).
+ANNUAL_ET_DATASET: Final = "MODIS MOD16A3GF (NASA, Planetary Computer)"
+MODIS_TIMEOUT_S: Final = 180.0
 POWER_FILL_VALUE: Final = -999.0
 DAYS_PER_YEAR: Final = 365.25
 MONTH_KEYS: Final = ("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV",
@@ -127,50 +134,29 @@ def _real(value: Any, endpoint: DataEndpoint, what: str) -> float:
 # --- SoilGrids ------------------------------------------------------------------------------------
 
 
-def read_soil(
-    http: httpx.Client, endpoint: DataEndpoint, lat: float, lon: float
-) -> list[SiteReading]:
+def read_soil(soilgrids: SoilGridsClient, lat: float, lon: float) -> list[SiteReading]:
     """Sand and clay (%), and the organic matter (%) = organic carbon × 1.724, averaged over the
-    top 15 cm (weighted by the thickness of the layers)."""
-    params = [("lon", _coordinate(lon)), ("lat", _coordinate(lat)), ("value", "mean")]
-    params += [("property", name) for name in SOILGRIDS_UNITS]
-    params += [("depth", label) for label, _ in SOILGRIDS_DEPTHS]
-    document = get_json(http, endpoint, params)
-    layers = {layer.get("name"): layer for layer in _at(document, endpoint, "properties", "layers")}
-
-    def topsoil(name: str) -> float:
-        if name not in layers:
-            raise SourceError(endpoint.dataset, f"propriété {name} absente de la réponse")
-        layer = layers[name]
-        unit = _at(layer, endpoint, "unit_measure", "target_units")
-        if unit != SOILGRIDS_UNITS[name]:
-            raise SourceError(
-                endpoint.dataset, f"{name} en {unit}, {SOILGRIDS_UNITS[name]} attendu"
-            )
-        factor = float(_at(layer, endpoint, "unit_measure", "d_factor"))
-        by_depth = {depth.get("label"): depth for depth in _at(layer, endpoint, "depths")}
-        total = 0.0
-        for label, thickness in SOILGRIDS_DEPTHS:
-            value = _at(by_depth, endpoint, label, "values", "mean")
-            if value is None:
-                raise SourceError(
-                    endpoint.dataset,
-                    f"pas de donnée de sol au centre de la section ({name}, {label}) : eau, zone "
-                    "urbaine ou hors de la carte",
-                )
-            total += float(value) / factor * thickness
-        return total / TOPSOIL_DEPTH_CM
-
-    sand, clay, carbon_g_kg = topsoil("sand"), topsoil("clay"), topsoil("soc")
+    top 15 cm (weighted by the thickness of the layers). SoilGrids is read on its WCS (shared
+    with the plan: the same point is never read twice)."""
+    try:
+        means = soilgrids.mean_over(lat, lon, SOILGRIDS_DEPTHS, tuple(SOILGRIDS_UNITS))
+    except NoSoilError as error:
+        raise SourceError(
+            soilgrids.dataset,
+            "pas de donnée de sol au centre de la section : eau, zone urbaine ou hors de la carte",
+        ) from error
+    except SoilGridsError as error:
+        raise SourceError(soilgrids.dataset, str(error)) from error
+    sand, clay, carbon_g_kg = means["sand"], means["clay"], means["soc"]
     depth = "moyenne pondérée des couches 0–5 et 5–15 cm"
     organic_matter = carbon_g_kg / 10 * ORGANIC_MATTER_PER_CARBON
     return [
-        SiteReading("sand_pct", sand, endpoint.dataset, depth),
-        SiteReading("clay_pct", clay, endpoint.dataset, depth),
+        SiteReading("sand_pct", sand, soilgrids.dataset, depth),
+        SiteReading("clay_pct", clay, soilgrids.dataset, depth),
         SiteReading(
             "organic_matter_pct",
             organic_matter,
-            endpoint.dataset,
+            soilgrids.dataset,
             f"carbone organique du sol ({_number(carbon_g_kg)} g/kg, {depth}) × "
             f"{_number(ORGANIC_MATTER_PER_CARBON)} (facteur de Van Bemmelen)",
         ),
@@ -276,48 +262,81 @@ def _modis_date(day: date) -> str:
     return f"A{day.year}{day.timetuple().tm_yday:03d}"
 
 
-def _modis_series(
+def _modis_window(
     http: httpx.Client,
     endpoint: DataEndpoint,
     product: tuple[str, str, float, range],
     lat: float,
     lon: float,
-    season: Sequence[YearMonth],
+    window: tuple[date, date],
 ) -> dict[str, float]:
-    """The valid values of one band over the season (calendar date → scaled value)."""
+    """The valid values of one band over one window (calendar date → scaled value)."""
     name, band, scale, valid = product
+    start, end = window
+    params = {
+        "latitude": _coordinate(lat),
+        "longitude": _coordinate(lon),
+        "band": band,
+        "startDate": _modis_date(start),
+        "endDate": _modis_date(end),
+        "kmAboveBelow": 0,
+        "kmLeftRight": 0,
+    }
+    document = get_json(
+        http, endpoint, params, url=f"{endpoint.url}/{name}/subset", timeout=MODIS_TIMEOUT_S
+    )
     values: dict[str, float] = {}
-    for start, end in two_month_windows(season):
-        params = {
-            "latitude": _coordinate(lat),
-            "longitude": _coordinate(lon),
-            "band": band,
-            "startDate": _modis_date(start),
-            "endDate": _modis_date(end),
-            "kmAboveBelow": 0,
-            "kmLeftRight": 0,
-        }
-        document = get_json(http, endpoint, params, url=f"{endpoint.url}/{name}/subset")
-        for composite in _at(document, endpoint, "subset"):
-            raw = _at(composite, endpoint, "data", 0)
-            if isinstance(raw, int | float) and int(raw) in valid:
-                values[str(_at(composite, endpoint, "calendar_date"))] = raw * scale
+    for composite in _at(document, endpoint, "subset"):
+        raw = _at(composite, endpoint, "data", 0)
+        if isinstance(raw, int | float) and int(raw) in valid:
+            values[str(_at(composite, endpoint, "calendar_date"))] = raw * scale
     return values
 
 
-def read_ndvi(
-    http: httpx.Client, endpoint: DataEndpoint, lat: float, lon: float, season: Sequence[YearMonth]
+def _modis_bands(
+    http: httpx.Client,
+    endpoint: DataEndpoint,
+    products: Sequence[tuple[str, str, float, range]],
+    lat: float,
+    lon: float,
+    season: Sequence[YearMonth],
+) -> list[dict[str, float]]:
+    """The values of several bands over the season. The service gives one band and two months
+    per request, 40 to 60 s each (2026-11-15): every (band, window) is asked at the same time."""
+    windows = two_month_windows(season)
+    jobs = [(product, window) for product in products for window in windows]
+    with ThreadPoolExecutor(max_workers=len(jobs)) as pool:
+        parts = list(
+            pool.map(lambda job: _modis_window(http, endpoint, job[0], lat, lon, job[1]), jobs)
+        )
+    bands: list[dict[str, float]] = [{} for _ in products]
+    for (product, _), values in zip(jobs, parts, strict=True):
+        bands[list(products).index(product)].update(values)
+    return bands
+
+
+def read_season_ndvi(
+    client: ModisNdviClient, lat: float, lon: float, season: Sequence[YearMonth]
 ) -> SiteReading:
-    """Mean NDVI of the growing season at the centre of the section (250 m pixel)."""
-    values = _modis_series(http, endpoint, NDVI_PRODUCT, lat, lon, season)
+    """Mean NDVI of the growing season at the centre of the section (250 m pixel): the MODIS
+    composites of Terra and Aqua whose first day is in the season."""
+    months = set(season)
+    values: list[float] = []
+    try:
+        for year in sorted({year for year, _ in season}):
+            for day, ndvi in client.year_series(lat, lon, year):
+                if (int(day[:4]), int(day[5:7])) in months:
+                    values.append(ndvi)
+    except NdviUnavailableError as error:
+        raise SourceError(client.dataset, str(error)) from error
     if not values:
-        raise SourceError(endpoint.dataset, f"aucun NDVI valide ({season_label(season)})")
+        raise SourceError(client.dataset, f"aucun NDVI valide ({season_label(season)})")
     return SiteReading(
         "ndvi",
-        sum(values.values()) / len(values),
-        "MODIS MOD13Q1 (NASA, ORNL DAAC)",
-        f"moyenne des {len(values)} composites de 16 jours de {season_label(season)}, pixel "
-        "de 250 m au centre de la section",
+        sum(values) / len(values),
+        "MODIS MOD13Q1 / MYD13Q1 (NASA, Planetary Computer)",
+        f"moyenne des {len(values)} composites de 16 jours (Terra et Aqua) de "
+        f"{season_label(season)}, pixel de 250 m au centre de la section",
     )
 
 
@@ -325,8 +344,7 @@ def read_et_ratio(
     http: httpx.Client, endpoint: DataEndpoint, lat: float, lon: float, season: Sequence[YearMonth]
 ) -> SiteReading:
     """ΣET / ΣPET of the growing season at the centre of the section (500 m pixel)."""
-    actual = _modis_series(http, endpoint, ET_PRODUCT, lat, lon, season)
-    potential = _modis_series(http, endpoint, PET_PRODUCT, lat, lon, season)
+    actual, potential = _modis_bands(http, endpoint, (ET_PRODUCT, PET_PRODUCT), lat, lon, season)
     try:
         ratio = evapotranspiration_ratio(actual, potential)
     except SeriesError as error:
@@ -337,4 +355,24 @@ def read_et_ratio(
         "MODIS MOD16A2 (NASA, ORNL DAAC)",
         f"ET réelle / ET potentielle sur {len(set(actual) & set(potential))} composites de "
         f"8 jours de {season_label(season)}, pixel de 500 m, à la place d’ECOSTRESS",
+    )
+
+
+def read_annual_et_ratio(
+    client: ModisNdviClient, lat: float, lon: float, season: Sequence[YearMonth], why: str
+) -> SiteReading:
+    """ΣET / ΣPET of the year of the season, MODIS MOD16A3GF (Planetary Computer): when the
+    ORNL DAAC, which serves the 8-day composites of the season, does not answer (`why`)."""
+    try:
+        ratio, year = client.annual_et_ratio(lat, lon, season[-1][0])
+    except NdviUnavailableError as error:
+        raise SourceError(
+            ANNUAL_ET_DATASET, f"{error} (après l’échec de l’ORNL DAAC : {why})"
+        ) from error
+    return SiteReading(
+        "root_activity",
+        ratio,
+        ANNUAL_ET_DATASET,
+        f"ET réelle / ET potentielle de l’année {year} (et non de la saison : le service ORNL "
+        f"DAAC de MOD16A2 n’a pas répondu, {why}), pixel de 500 m, à la place d’ECOSTRESS",
     )

@@ -6,7 +6,7 @@ Projet de l'équipe **NASA-LARPERS** pour le [NASA Space Apps Challenge 2026](ht
 
 > « Pendant chacun de tes prochains cycles, ta ferme aura un climat qu'un autre endroit a déjà connu. Voici les rotations qui y ont marché, adaptées à ta parcelle, à tes semences et à tes priorités. »
 
-> **v3.0 · l'algorithme est un serveur Python.** L'algorithme _Field Shift v5.1_ tourne dans un serveur FastAPI (`backend/server/`), vérifié contre sa référence `field_shift.py` : l'appli lui envoie la ferme et affiche le plan. La météo de la ferme vient vraiment de NASA POWER ; les modèles climatiques, les jumeaux et les mesures satellites sont encore des données d'exemple (badge « Données d'exemple », détail en haut de chaque écran).
+> **v3.0 · l'algorithme est un serveur Python.** L'algorithme _Field Shift v5.1_ tourne dans un serveur FastAPI (`api/`), vérifié contre sa référence `field_shift.py` : l'appli lui envoie la ferme et affiche le plan. La météo de la ferme vient vraiment de NASA POWER ; les modèles climatiques, les jumeaux et les mesures satellites sont encore des données d'exemple (badge « Données d'exemple », détail en haut de chaque écran).
 
 ![Tableau de bord](docs/screenshots/tableau.png)
 
@@ -33,7 +33,7 @@ L'appli est faite de **deux programmes** : le front (Node.js 20 ou plus) et le s
 
 ```bash
 # 1. Le serveur de l'algorithme : http://localhost:8000
-cd backend/server
+cd api
 python -m venv .venv
 .venv\Scripts\activate          # Windows ; sous Linux et macOS : source .venv/bin/activate
 pip install -e ".[dev]"
@@ -55,7 +55,7 @@ Le front appelle le serveur à l'adresse `VITE_ALGO_URL` (`http://localhost:8000
 | `npm test`                                        | tests du front (contrat, écrans, couches)                                              |
 | `npm run lint` / `npm run format`                 | qualité du code JavaScript                                                             |
 | `npm run check:algo -- <url>`                     | vérifie qu'un serveur respecte le contrat                                              |
-| `pytest` · `ruff check .` (dans `backend/server`) | tests et qualité du code Python : l'algorithme contre sa référence, l'API, les couches |
+| `pytest` · `ruff check .` (dans `api`) | tests et qualité du code Python : l'algorithme contre sa référence, l'API, les couches |
 
 ## Architecture
 
@@ -64,19 +64,19 @@ Le code est rangé en **quatre couches**, une par dossier. Une couche n'importe 
 | Couche          | Dossier                        | Contenu                                                                                    |
 | --------------- | ------------------------------ | ------------------------------------------------------------------------------------------ |
 | **Frontend**    | [`frontend/`](frontend/)       | la page, les écrans, les composants, les styles                                            |
-| **Back end**    | [`backend/`](backend/)         | **le serveur de l'algorithme** (`backend/server/`, en Python), son client HTTP, le contrat |
+| **Back end**    | [`backend/`](backend/)         | **le serveur de l'algorithme** (`api/`, en Python), son client HTTP, le contrat |
 | **Application** | [`application/`](application/) | le contrôleur `app`, l'état, les règles des entrées du fermier, la lecture du plan         |
 | **Data**        | [`data/`](data/)               | noms et couleurs des cultures, critères, textes, ferme de démo, adresses, sauvegarde       |
 
-La logique métier vit seulement dans `backend/server/field_shift/algorithm/` : une cinquantaine de petits modules Python, une classe ou une fonction par rôle, toutes les constantes nommées dans `algorithm/config/`. Le front et le serveur ne se parlent qu'en HTTP, selon un contrat. Détails : [`docs/ALGORITHME.md`](docs/ALGORITHME.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) et [`backend/server/README.md`](backend/server/README.md).
+La logique métier vit seulement dans `api/field_shift/algorithm/` : une cinquantaine de petits modules Python, une classe ou une fonction par rôle, toutes les constantes nommées dans `algorithm/config/`. Le front et le serveur ne se parlent qu'en HTTP, selon un contrat. Détails : [`docs/ALGORITHME.md`](docs/ALGORITHME.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) et [`api/README.md`](api/README.md).
 
 ## L'algorithme et sa référence
 
-Le pipeline est décrit dans le document _Field Shift — pipeline v5.1_ et sa référence Python `field_shift.py`, en un seul fichier. Le serveur la redécoupe en classes et donne **les mêmes chaînes, décisions et notes** sur 17 plans de parcelles (9 scénarios) exportés de la référence : [`backend/server/tests/`](backend/server/tests/). Les rares écarts sont volontaires et listés dans [`docs/ALGORITHME.md`](docs/ALGORITHME.md#écarts-avec-la-référence).
+Le pipeline est décrit dans le document _Field Shift — pipeline v5.1_ et sa référence Python `field_shift.py`, en un seul fichier. Le serveur la redécoupe en classes et donne **les mêmes chaînes, décisions et notes** sur 17 plans de parcelles (9 scénarios) exportés de la référence : [`api/tests/`](api/tests/). Les rares écarts sont volontaires et listés dans [`docs/ALGORITHME.md`](docs/ALGORITHME.md#écarts-avec-la-référence).
 
 ## Mettre en ligne
 
-Le workflow [`deploy.yml`](.github/workflows/deploy.yml) publie le front sur GitHub Pages à chaque push sur `main`. Une fois : **Settings → Pages → Source : GitHub Actions**. **L'algorithme ne tourne pas dans le navigateur : il faut héberger le serveur** (`backend/server/`) quelque part, en HTTPS, et donner son adresse au front : variable `VITE_ALGO_URL` dans **Settings → Secrets and variables → Actions → Variables**. Sans elle, le site s'ouvre mais ne peut pas calculer de plan. Le serveur doit aussi autoriser l'adresse du site (`FIELD_SHIFT_CORS_ORIGINS`) : voir [`backend/server/README.md`](backend/server/README.md#héberger-le-serveur) et [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md).
+Le workflow [`deploy.yml`](.github/workflows/deploy.yml) publie le front sur GitHub Pages à chaque push sur `main`. Une fois : **Settings → Pages → Source : GitHub Actions**. **L'algorithme ne tourne pas dans le navigateur : il faut héberger le serveur** (`api/`) quelque part, en HTTPS, et donner son adresse au front : variable `VITE_ALGO_URL` dans **Settings → Secrets and variables → Actions → Variables**. Sans elle, le site s'ouvre mais ne peut pas calculer de plan. Le serveur doit aussi autoriser l'adresse du site (`FIELD_SHIFT_CORS_ORIGINS`) : voir [`api/README.md`](api/README.md#héberger-le-serveur) et [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md).
 
 ## Documentation
 
@@ -84,7 +84,7 @@ Le workflow [`deploy.yml`](.github/workflows/deploy.yml) publie le front sur Git
 | ------------------------------------------------------ | ----------------------------------------------------------------------------- |
 | [`docs/ALGORITHME.md`](docs/ALGORITHME.md)             | L'algorithme dans le code : étapes, fichiers, classes, données, écarts, tests |
 | [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md)       | Le contrat 2.0 entre l'interface et l'algorithme                              |
-| [`backend/server/README.md`](backend/server/README.md) | Lancer, régler, tester et héberger le serveur de l'algorithme                 |
+| [`api/README.md`](api/README.md) | Lancer, régler, tester et héberger le serveur de l'algorithme                 |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)         | Les quatre couches, qui importe quoi, les écrans                              |
 | [`docs/DESIGN.md`](docs/DESIGN.md)                     | Base commune : couleurs, textures, typo, liste « écran fini »                 |
 | [`docs/TEAM.md`](docs/TEAM.md)                         | Qui fait quoi, façon de travailler                                            |

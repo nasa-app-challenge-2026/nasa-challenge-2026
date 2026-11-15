@@ -34,7 +34,9 @@ from field_shift.data_access.field_shift_eau import (
 )
 from field_shift.reference.crops import CROP_SHEETS
 from field_shift.services.plan_service import PlanService
-from field_shift.tools.make_examples import (
+from tests.helpers.demo_field_data import DemoFieldDataSource
+from tests.helpers.reference_place import ReferencePlaceData
+from tests.helpers.example_plans import (
     ExampleWeatherProvider,
     example_plan_service,
     example_water_model,
@@ -445,10 +447,12 @@ class TestPlanWithWater:
         assert full.sections[0].model_dump(mode="json", by_alias=True) == plan["sections"][0]
 
     def test_a_soil_that_cannot_be_read_is_a_502_that_names_it(self, farm):
-        def no_soil(lat: float, lon: float):
+        def no_soil(lat: float, lon: float, farm_weather=None):
             raise WaterDataUnavailableError("le sol du champ n’a pas pu être lu")
 
-        service = PlanService(ExampleWeatherProvider(), no_soil)
+        service = PlanService(
+            ExampleWeatherProvider(), no_soil, ReferencePlaceData(), DemoFieldDataSource()
+        )
         response = TestClient(create_app(Settings(), service)).post("/plan", json=farm)
         assert response.status_code == 502
         assert "Sol" in response.json()["detail"][0]["source"]

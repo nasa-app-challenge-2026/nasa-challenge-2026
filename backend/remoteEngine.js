@@ -16,7 +16,9 @@ export class EngineError extends Error {
   }
 }
 
-const DEFAULT_TIMEOUT_MS = 30000;
+// The first plan of a new place downloads its NASA data and crop maps (minutes); the server
+// keeps them on disk, and every later plan of the place answers in seconds.
+const DEFAULT_TIMEOUT_MS = 300000;
 const HTTP_UNPROCESSABLE = 422;
 
 /** FastAPI's refusal of a body ({ detail: [{ loc, msg }] }) as a readable sentence. */

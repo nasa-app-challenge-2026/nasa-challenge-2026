@@ -51,7 +51,8 @@ export function computeClimateBaselineStats(historicalSeasons) {
   const meanTemp = meanOf(temps);
   const meanHeat = meanOf(heats);
   const meanRain = meanOf(rains);
-  const meanRoot = roots.length > 0 ? meanOf(roots) : 0.5;
+  // No measured root-zone moisture: unknown (null), never an invented value.
+  const meanRoot = roots.length > 0 ? meanOf(roots) : null;
 
   const stdGdd = stdOf(gdds, meanGdd);
   const stdTemp = stdOf(temps, meanTemp);
@@ -77,7 +78,7 @@ export function computeClimateBaselineStats(historicalSeasons) {
       meanTempC: Number(meanTemp.toFixed(2)),
       heatStressDays: Number(meanHeat.toFixed(1)),
       precipMm: Number(meanRain.toFixed(1)),
-      soilMoistureRoot: Number(meanRoot.toFixed(3)),
+      soilMoistureRoot: meanRoot === null ? null : Number(meanRoot.toFixed(3)),
     },
     stds: {
       gddBase10: Number(stdGdd.toFixed(1)),

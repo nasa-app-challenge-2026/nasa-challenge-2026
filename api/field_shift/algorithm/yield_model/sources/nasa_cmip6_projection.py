@@ -65,7 +65,8 @@ def compute_climate_baseline_stats(historical_seasons: list[dict]) -> dict:
     mean_temp = _mean(temps)
     mean_heat = _mean(heats)
     mean_rain = _mean(rains)
-    mean_root = _mean(roots) if roots else 0.5
+    # No measured root-zone moisture: unknown (None), never an invented value.
+    mean_root = _mean(roots) if roots else None
 
     std_gdd = _std(gdds, mean_gdd)
     std_temp = _std(temps, mean_temp)
@@ -93,7 +94,7 @@ def compute_climate_baseline_stats(historical_seasons: list[dict]) -> dict:
             "meanTempC": js_round(mean_temp, 2),
             "heatStressDays": js_round(mean_heat, 1),
             "precipMm": js_round(mean_rain, 1),
-            "soilMoistureRoot": js_round(mean_root, 3),
+            "soilMoistureRoot": None if mean_root is None else js_round(mean_root, 3),
         },
         "stds": {
             "gddBase10": js_round(std_gdd, 1),

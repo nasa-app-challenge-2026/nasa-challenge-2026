@@ -13,6 +13,7 @@ The answer says, value by value, where it came from and how it was computed.
 from __future__ import annotations
 
 from collections.abc import Sequence
+from concurrent.futures import ThreadPoolExecutor
 
 from field_shift.algorithm.ranking.measures import Measure, SectionContext, all_measures
 from field_shift.algorithm.ranking.rotation_ranker import rank_rotations
@@ -42,6 +43,9 @@ from field_shift.data_access.site_data import SiteDataProvider, SiteDataUnavaila
 from field_shift.reference.measures import MEASURE_IDS, MEASURE_NAMES
 
 COORDINATE_DECIMALS = 6
+#: Sections read at the same time: their data are requests to the services (MODIS of the
+#: ORNL DAAC takes up to a minute), not computation.
+MAX_PARALLEL_SECTIONS = 4
 AREA_DECIMALS = 4
 
 
@@ -96,9 +100,12 @@ class RankingService:
         weights = request.weights
         if only_measure is not None:
             weights = {measure: float(measure == only_measure) for measure in MEASURE_IDS}
-        sections = [
-            self._rank_section(section, request, weights) for section in ranking_input.sections
-        ]
+        sections_in = ranking_input.sections
+        workers = max(1, min(MAX_PARALLEL_SECTIONS, len(sections_in)))
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            sections = list(
+                pool.map(lambda section: self._rank_section(section, request, weights), sections_in)
+            )
         return RotationRanking(
             meta=RankingMetaOut(
                 simulation_years=ranking_input.simulation_years,

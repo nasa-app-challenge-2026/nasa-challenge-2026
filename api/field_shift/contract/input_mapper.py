@@ -10,7 +10,8 @@ from field_shift.algorithm.diagnostic.parcel_diagnostic import ParcelDiagnostic
 from field_shift.algorithm.planning.farmer_profile import FarmerProfile
 from field_shift.algorithm.planning.parcel import Parcel
 from field_shift.algorithm.planning.time_settings import TimeSettings
-from field_shift.algorithm.sources.field_data import FieldData, FieldDataSource
+from field_shift.algorithm.sources.data_source import DataSource
+from field_shift.algorithm.sources.field_data import FieldData, SectionPlace
 from field_shift.algorithm.timeline import month_time
 from field_shift.algorithm.twins.soil_comparison import Soil
 from field_shift.contract.farm_input import FarmInput, SectionInput
@@ -24,6 +25,23 @@ class FarmContext:
     farmer: FarmerProfile
     parcels: list[Parcel]
     field_data: dict[str, FieldData]
+    field_source: DataSource
+
+
+def section_place(section: SectionInput, lat: float, lon: float) -> SectionPlace:
+    """Where a section is: its outline when drawn (the contract writes [lat, lon] corners), else
+    the point of the farm."""
+    ring = section.ring
+    if not ring:
+        return SectionPlace(section.id, lat, lon)
+    shape = section.shape
+    centre_lon, centre_lat = shape.centroid
+    return SectionPlace(section.id, centre_lat, centre_lon, shape.ring)
+
+
+def soil_test_of(section: SectionInput) -> Soil | None:
+    """The soil test of the farmer, which replaces SoilGrids."""
+    return _soil_of(section)
 
 
 def harvest_time(year_month: str) -> float:
@@ -53,11 +71,11 @@ def _parcel_of(section: SectionInput, data: FieldData) -> Parcel:
     )
 
 
-def read_farm_input(farm_input: FarmInput, field_data_source: FieldDataSource) -> FarmContext:
+def read_farm_input(
+    farm_input: FarmInput, field_data: dict[str, FieldData], field_source: DataSource
+) -> FarmContext:
+    """The request read, with the measures of every section (already read, by section id)."""
     farm = farm_input.farm
-    field_data = {
-        s.id: field_data_source.field_data(s.id, _soil_of(s)) for s in farm_input.sections
-    }
     return FarmContext(
         time=TimeSettings(
             farm.time.cycle_years, farm.time.frequency_months, farm.time.horizon_years
@@ -71,4 +89,5 @@ def read_farm_input(farm_input: FarmInput, field_data_source: FieldDataSource) -
         ),
         parcels=[_parcel_of(s, field_data[s.id]) for s in farm_input.sections],
         field_data=field_data,
+        field_source=field_source,
     )

@@ -25,12 +25,17 @@ Le serveur fait deux choses : le **plan des rotations** par jumeau climatique (`
 
 Le front lit son adresse dans `VITE_ALGO_URL` (par défaut `http://localhost:8000` avec `npm run dev`).
 
+## Premier calcul d'un lieu
+
+Le premier plan d'un nouveau lieu lit toutes ses données réelles : la météo NASA POWER (une seule requête pour le plan et le bilan d'eau), la grille NASA POWER des jumeaux (42 requêtes en parallèle), les projections NEX-GDDP-CMIP6, les cartes de cultures des jumeaux candidats, SoilGrids, le relief et le NDVI des sections. Mesuré le 15 novembre 2026 sur la ferme de démo : **65 s** à froid, **0,7 s** ensuite, **11 s** après un redémarrage du serveur (tout est relu depuis le disque). Le classement (`/rotations/rank`) : 65 s à froid (MODIS de l'ORNL DAAC prend jusqu'à une minute par requête ; s'il ne répond pas, le ratio annuel MOD16A3GF de Planetary Computer le remplace et la lecture le dit), 0,1 s ensuite.
+
 ## Réglages (variables d'environnement)
 
 | Variable                   | Valeur                                                                                                                  | Par défaut                                                          |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | `FIELD_SHIFT_CORS_ORIGINS` | adresses des sites autorisés à appeler le serveur, séparées par des virgules (ex. `https://equipe.github.io`)           | les serveurs de développement du front (`localhost:5173` et `4173`) |
 | `FIELD_SHIFT_DATA_SOURCES` | chemin du fichier JSON des adresses des services de données (voir [Sources de données](#sources-de-données))           | `data_sources.json` s'il existe dans le dossier de lancement        |
+| `FIELD_SHIFT_CACHE_DIR`    | dossier où le serveur garde les réponses des services de données (une requête n'est faite qu'une fois, même après un redémarrage ; un échec n'est jamais gardé) | `api/.cache_field_shift/` (exclu de git)                           |
 | `FIELD_SHIFT_URL_<SOURCE>` | adresse d'un service de données ; l'emporte sur le fichier                                                              | voir `GET /data-sources`                                            |
 
 **Il n'y a pas de mode démo ni de valeur de repli.** Le serveur lit toujours les données réelles. Quand un service ne répond pas (NASA POWER pour `POST /plan` ; SoilGrids, Open-Meteo, NASA POWER ou MODIS pour le classement), la demande échoue avec un **`502`** dont le `detail` nomme la section et le service en cause ; le service est retenté à la demande suivante (un échec n'est jamais gardé en mémoire).
@@ -90,7 +95,6 @@ field_shift/
     ranking/         classement : les quatre mesures, les poids des priorités, le tri
   reference/       les données fixes : fiches des cultures, délais de retour et maladies, critères, limites
                    notes de protection du sol des cultures (soil_protection.py), les quatre mesures
-  tools/           make_examples : régénère les plans d'exemple du contrat
 water_use/         LE MODULE EAU, autonome : bilan d'eau du sol jour par jour (FAO-56, FAO-33, NRCS)
                    python -m water_use cultures | evaluer | connexions | valider
 exemples/          rotations d'exemple de water_use
@@ -139,7 +143,7 @@ python tests/fixtures/export_reference.py <chemin/vers/field_shift.py> tests/fix
 Après un changement de l'algorithme ou du contrat, régénérez les plans d'exemple (le test `test_plans_are_what_the_server_returns_now` le rappelle) :
 
 ```bash
-python -m field_shift.tools.make_examples
+python -m tests.helpers.example_plans
 ```
 
 ## Classement des rotations

@@ -117,7 +117,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.16,
+          "aridityIndex": 1.159,
           "aridityClass": "humide"
         }
       },
@@ -151,80 +151,80 @@
             "reliable": true,
             "cells": [
               {
-                "lat": 45.629,
-                "lon": -72.948,
+                "lat": 45.608,
+                "lon": -72.944,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.448,
+                "lat": 45.108,
+                "lon": -71.444,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.948,
+                "lat": 45.108,
+                "lon": -70.944,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.448,
+                "lat": 45.108,
+                "lon": -70.444,
                 "sigma": 0.006,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -74.948,
+                "lat": 45.108,
+                "lon": -74.944,
                 "sigma": 0.008,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 45.608,
+                "lon": -70.944,
                 "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
+                "lat": 46.108,
+                "lon": -71.944,
                 "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -73.948,
+                "lat": 45.108,
+                "lon": -73.944,
                 "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -71.948,
+                "lat": 44.608,
+                "lon": -71.944,
                 "sigma": 0.016,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -69.948,
+                "lat": 46.108,
+                "lon": -69.944,
                 "sigma": 0.016,
                 "sources": [
                   "NASA POWER"
@@ -262,7 +262,7 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.142,
+            "aridityIndex": 1.141,
             "aridityClass": "humide"
           },
           "weights": {
@@ -404,11 +404,11 @@
                 "C": 0.808,
                 "D": 0.89
               },
-              "demandMmPerYear": 563.996,
-              "shortfallMmPerYear": 30.473,
+              "demandMmPerYear": 564.062,
+              "shortfallMmPerYear": 30.492,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.835,
-              "waterAtSowingMm": 193.738,
+              "rainKeptPct": 80.83,
+              "waterAtSowingMm": 193.731,
               "alerts": [],
               "byModel": [
                 {
@@ -544,11 +544,11 @@
                 "C": 0.761,
                 "D": 0.957
               },
-              "demandMmPerYear": 481.364,
-              "shortfallMmPerYear": 38.737,
+              "demandMmPerYear": 481.396,
+              "shortfallMmPerYear": 38.757,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 76.076,
-              "waterAtSowingMm": 208.133,
+              "rainKeptPct": 76.07,
+              "waterAtSowingMm": 208.132,
               "alerts": [],
               "byModel": [
                 {
@@ -732,14 +732,14 @@
                 "subScores": {
                   "A": 0.483,
                   "B": 0.879,
-                  "C": 0.755,
+                  "C": 0.754,
                   "D": 0.89
                 },
-                "demandMmPerYear": 471.814,
-                "shortfallMmPerYear": 24.995,
+                "demandMmPerYear": 471.878,
+                "shortfallMmPerYear": 25.012,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 75.454,
-                "waterAtSowingMm": 193.738,
+                "rainKeptPct": 75.45,
+                "waterAtSowingMm": 193.731,
                 "alerts": [],
                 "byModel": [
                   {
@@ -872,14 +872,14 @@
                 "subScores": {
                   "A": 0.483,
                   "B": 0.879,
-                  "C": 0.755,
+                  "C": 0.754,
                   "D": 0.89
                 },
-                "demandMmPerYear": 471.814,
-                "shortfallMmPerYear": 24.995,
+                "demandMmPerYear": 471.878,
+                "shortfallMmPerYear": 25.012,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 75.454,
-                "waterAtSowingMm": 193.738,
+                "rainKeptPct": 75.45,
+                "waterAtSowingMm": 193.731,
                 "alerts": [],
                 "byModel": [
                   {
@@ -931,80 +931,80 @@
             "reliable": true,
             "cells": [
               {
-                "lat": 45.629,
-                "lon": -72.948,
+                "lat": 45.608,
+                "lon": -72.944,
                 "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.448,
+                "lat": 45.108,
+                "lon": -71.444,
                 "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.948,
+                "lat": 45.108,
+                "lon": -70.944,
                 "sigma": 0.002,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.448,
+                "lat": 45.108,
+                "lon": -70.444,
                 "sigma": 0.005,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -73.948,
+                "lat": 45.108,
+                "lon": -73.944,
                 "sigma": 0.008,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -71.948,
+                "lat": 44.608,
+                "lon": -71.944,
                 "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
+                "lat": 46.108,
+                "lon": -71.944,
                 "sigma": 0.012,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -74.948,
+                "lat": 45.108,
+                "lon": -74.944,
                 "sigma": 0.012,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 45.608,
+                "lon": -70.944,
                 "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.948,
+                "lat": 45.108,
+                "lon": -71.944,
                 "sigma": 0.017,
                 "sources": [
                   "NASA POWER"
@@ -1042,7 +1042,7 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.137,
+            "aridityIndex": 1.136,
             "aridityClass": "humide"
           },
           "weights": {
@@ -1182,11 +1182,11 @@
                 "C": 0.809,
                 "D": 0.889
               },
-              "demandMmPerYear": 571.329,
-              "shortfallMmPerYear": 32.483,
+              "demandMmPerYear": 571.397,
+              "shortfallMmPerYear": 32.502,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.916,
-              "waterAtSowingMm": 193.507,
+              "rainKeptPct": 80.911,
+              "waterAtSowingMm": 193.499,
               "alerts": [],
               "byModel": [
                 {
@@ -1322,11 +1322,11 @@
                 "C": 0.754,
                 "D": 0.956
               },
-              "demandMmPerYear": 477.57,
-              "shortfallMmPerYear": 39.304,
+              "demandMmPerYear": 477.6,
+              "shortfallMmPerYear": 39.322,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 75.444,
-              "waterAtSowingMm": 208.086,
+              "rainKeptPct": 75.438,
+              "waterAtSowingMm": 208.085,
               "alerts": [],
               "byModel": [
                 {
@@ -1525,11 +1525,11 @@
                   "C": 0.797,
                   "D": 0.89
                 },
-                "demandMmPerYear": 548.171,
-                "shortfallMmPerYear": 25.974,
+                "demandMmPerYear": 548.235,
+                "shortfallMmPerYear": 25.99,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.705,
-                "waterAtSowingMm": 193.591,
+                "rainKeptPct": 79.701,
+                "waterAtSowingMm": 193.584,
                 "alerts": [],
                 "byModel": [
                   {
@@ -1680,11 +1680,11 @@
                   "C": 0.792,
                   "D": 0.889
                 },
-                "demandMmPerYear": 545.995,
-                "shortfallMmPerYear": 27.11,
+                "demandMmPerYear": 546.058,
+                "shortfallMmPerYear": 27.124,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.199,
-                "waterAtSowingMm": 193.507,
+                "rainKeptPct": 79.194,
+                "waterAtSowingMm": 193.499,
                 "alerts": [],
                 "byModel": [
                   {
@@ -1766,7 +1766,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.16,
+          "aridityIndex": 1.159,
           "aridityClass": "humide"
         }
       },
@@ -1800,80 +1800,80 @@
             "reliable": true,
             "cells": [
               {
-                "lat": 45.629,
-                "lon": -72.948,
+                "lat": 45.608,
+                "lon": -72.944,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.448,
+                "lat": 45.108,
+                "lon": -71.444,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.948,
+                "lat": 45.108,
+                "lon": -70.944,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.448,
+                "lat": 45.108,
+                "lon": -70.444,
                 "sigma": 0.006,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -74.948,
+                "lat": 45.108,
+                "lon": -74.944,
                 "sigma": 0.008,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
+                "lat": 46.108,
+                "lon": -71.944,
                 "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 45.608,
+                "lon": -70.944,
                 "sigma": 0.012,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -73.948,
+                "lat": 45.108,
+                "lon": -73.944,
                 "sigma": 0.014,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -71.948,
+                "lat": 44.608,
+                "lon": -71.944,
                 "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -69.948,
+                "lat": 46.108,
+                "lon": -69.944,
                 "sigma": 0.017,
                 "sources": [
                   "NASA POWER"
@@ -2048,16 +2048,16 @@
               "note": 0.741,
               "worst": 0.741,
               "subScores": {
-                "A": 0.381,
+                "A": 0.382,
                 "B": 0.885,
                 "C": 0.809,
                 "D": 0.89
               },
-              "demandMmPerYear": 564.551,
-              "shortfallMmPerYear": 30.467,
+              "demandMmPerYear": 564.619,
+              "shortfallMmPerYear": 30.486,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.866,
-              "waterAtSowingMm": 193.672,
+              "rainKeptPct": 80.861,
+              "waterAtSowingMm": 193.664,
               "alerts": [],
               "byModel": [
                 {
@@ -2165,11 +2165,11 @@
                 "C": 0.84,
                 "D": 0.962
               },
-              "demandMmPerYear": 572.103,
-              "shortfallMmPerYear": 49.677,
+              "demandMmPerYear": 572.161,
+              "shortfallMmPerYear": 49.705,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 83.987,
-              "waterAtSowingMm": 209.309,
+              "rainKeptPct": 83.983,
+              "waterAtSowingMm": 209.307,
               "alerts": [],
               "byModel": [
                 {
@@ -2325,16 +2325,16 @@
                 "note": 0.741,
                 "worst": 0.741,
                 "subScores": {
-                  "A": 0.381,
+                  "A": 0.382,
                   "B": 0.885,
                   "C": 0.809,
                   "D": 0.89
                 },
-                "demandMmPerYear": 564.551,
-                "shortfallMmPerYear": 30.467,
+                "demandMmPerYear": 564.619,
+                "shortfallMmPerYear": 30.486,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 80.871,
-                "waterAtSowingMm": 193.672,
+                "rainKeptPct": 80.866,
+                "waterAtSowingMm": 193.664,
                 "alerts": [],
                 "byModel": [
                   {
@@ -2458,11 +2458,11 @@
                   "C": 0.759,
                   "D": 0.89
                 },
-                "demandMmPerYear": 476.886,
-                "shortfallMmPerYear": 25.347,
+                "demandMmPerYear": 476.952,
+                "shortfallMmPerYear": 25.364,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 75.875,
-                "waterAtSowingMm": 193.672,
+                "rainKeptPct": 75.87,
+                "waterAtSowingMm": 193.664,
                 "alerts": [],
                 "byModel": [
                   {
@@ -2514,80 +2514,80 @@
             "reliable": true,
             "cells": [
               {
-                "lat": 45.629,
-                "lon": -72.948,
+                "lat": 45.608,
+                "lon": -72.944,
                 "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.448,
+                "lat": 45.108,
+                "lon": -71.444,
                 "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.948,
+                "lat": 45.108,
+                "lon": -70.944,
                 "sigma": 0.002,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.448,
+                "lat": 45.108,
+                "lon": -70.444,
                 "sigma": 0.005,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -73.948,
+                "lat": 45.108,
+                "lon": -73.944,
                 "sigma": 0.008,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -71.948,
+                "lat": 44.608,
+                "lon": -71.944,
                 "sigma": 0.01,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -74.948,
+                "lat": 45.108,
+                "lon": -74.944,
                 "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
+                "lat": 46.108,
+                "lon": -71.944,
                 "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 45.608,
+                "lon": -70.944,
                 "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.948,
+                "lat": 45.108,
+                "lon": -71.944,
                 "sigma": 0.018,
                 "sources": [
                   "NASA POWER"
@@ -2765,11 +2765,11 @@
                 "C": 0.809,
                 "D": 0.889
               },
-              "demandMmPerYear": 572.019,
-              "shortfallMmPerYear": 32.521,
+              "demandMmPerYear": 572.087,
+              "shortfallMmPerYear": 32.54,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.914,
-              "waterAtSowingMm": 193.44,
+              "rainKeptPct": 80.91,
+              "waterAtSowingMm": 193.433,
               "alerts": [],
               "byModel": [
                 {
@@ -2875,11 +2875,11 @@
                 "C": 0.838,
                 "D": 0.962
               },
-              "demandMmPerYear": 573.462,
-              "shortfallMmPerYear": 51.008,
+              "demandMmPerYear": 573.519,
+              "shortfallMmPerYear": 51.035,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 83.772,
-              "waterAtSowingMm": 209.202,
+              "rainKeptPct": 83.767,
+              "waterAtSowingMm": 209.2,
               "alerts": [],
               "byModel": [
                 {
@@ -3038,11 +3038,11 @@
                   "C": 0.811,
                   "D": 0.889
                 },
-                "demandMmPerYear": 574.069,
-                "shortfallMmPerYear": 32.521,
+                "demandMmPerYear": 574.138,
+                "shortfallMmPerYear": 32.54,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 81.14,
-                "waterAtSowingMm": 193.44,
+                "rainKeptPct": 81.135,
+                "waterAtSowingMm": 193.433,
                 "alerts": [],
                 "byModel": [
                   {
@@ -3178,11 +3178,11 @@
                   "C": 0.796,
                   "D": 0.889
                 },
-                "demandMmPerYear": 547.822,
-                "shortfallMmPerYear": 25.758,
+                "demandMmPerYear": 547.887,
+                "shortfallMmPerYear": 25.774,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.624,
-                "waterAtSowingMm": 193.525,
+                "rainKeptPct": 79.62,
+                "waterAtSowingMm": 193.517,
                 "alerts": [],
                 "byModel": [
                   {
@@ -3269,7 +3269,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.16,
+          "aridityIndex": 1.159,
           "aridityClass": "humide"
         }
       },
@@ -3303,80 +3303,80 @@
             "reliable": true,
             "cells": [
               {
-                "lat": 45.629,
-                "lon": -72.948,
+                "lat": 45.608,
+                "lon": -72.944,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.448,
+                "lat": 45.108,
+                "lon": -71.444,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.948,
+                "lat": 45.108,
+                "lon": -70.944,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.448,
+                "lat": 45.108,
+                "lon": -70.444,
                 "sigma": 0.006,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -74.948,
+                "lat": 45.108,
+                "lon": -74.944,
                 "sigma": 0.008,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 45.608,
+                "lon": -70.944,
                 "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
+                "lat": 46.108,
+                "lon": -71.944,
                 "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -73.948,
+                "lat": 45.108,
+                "lon": -73.944,
                 "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -71.948,
+                "lat": 44.608,
+                "lon": -71.944,
                 "sigma": 0.016,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -69.948,
+                "lat": 46.108,
+                "lon": -69.944,
                 "sigma": 0.016,
                 "sources": [
                   "NASA POWER"
@@ -3414,7 +3414,7 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.142,
+            "aridityIndex": 1.141,
             "aridityClass": "humide"
           },
           "weights": {
@@ -3556,11 +3556,11 @@
                 "C": 0.812,
                 "D": 0.89
               },
-              "demandMmPerYear": 566.91,
-              "shortfallMmPerYear": 30.473,
+              "demandMmPerYear": 566.979,
+              "shortfallMmPerYear": 30.492,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 81.186,
-              "waterAtSowingMm": 193.738,
+              "rainKeptPct": 81.182,
+              "waterAtSowingMm": 193.731,
               "alerts": [],
               "byModel": [
                 {
@@ -3696,11 +3696,11 @@
                 "C": 0.796,
                 "D": 0.679
               },
-              "demandMmPerYear": 471.419,
-              "shortfallMmPerYear": 33.155,
+              "demandMmPerYear": 471.459,
+              "shortfallMmPerYear": 33.17,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 79.571,
-              "waterAtSowingMm": 147.762,
+              "rainKeptPct": 79.568,
+              "waterAtSowingMm": 147.753,
               "alerts": [],
               "byModel": [
                 {
@@ -3861,11 +3861,11 @@
                   "C": 0.815,
                   "D": 0.89
                 },
-                "demandMmPerYear": 569.998,
-                "shortfallMmPerYear": 30.473,
+                "demandMmPerYear": 570.068,
+                "shortfallMmPerYear": 30.492,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 81.476,
-                "waterAtSowingMm": 193.738,
+                "rainKeptPct": 81.471,
+                "waterAtSowingMm": 193.731,
                 "alerts": [],
                 "byModel": [
                   {
@@ -3880,7 +3880,7 @@
               "criteria": {
                 "rendement": 0.664,
                 "erosion": 0.873,
-                "eau": 0.752,
+                "eau": 0.751,
                 "fourrage": 0.229,
                 "azote": 0.369,
                 "matiere_org": 0.552,
@@ -3981,24 +3981,24 @@
               "seedsToBuy": [],
               "warnings": [],
               "water": {
-                "note": 0.752,
-                "worst": 0.752,
+                "note": 0.751,
+                "worst": 0.751,
                 "subScores": {
                   "A": 0.476,
                   "B": 0.879,
                   "C": 0.761,
                   "D": 0.89
                 },
-                "demandMmPerYear": 477.817,
-                "shortfallMmPerYear": 24.995,
+                "demandMmPerYear": 477.883,
+                "shortfallMmPerYear": 25.012,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 76.096,
-                "waterAtSowingMm": 193.738,
+                "rainKeptPct": 76.091,
+                "waterAtSowingMm": 193.731,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.752
+                    "note": 0.751
                   }
                 ]
               }
@@ -4045,80 +4045,80 @@
             "reliable": true,
             "cells": [
               {
-                "lat": 45.629,
-                "lon": -72.948,
+                "lat": 45.608,
+                "lon": -72.944,
                 "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.448,
+                "lat": 45.108,
+                "lon": -71.444,
                 "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.948,
+                "lat": 45.108,
+                "lon": -70.944,
                 "sigma": 0.002,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.448,
+                "lat": 45.108,
+                "lon": -70.444,
                 "sigma": 0.005,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -73.948,
+                "lat": 45.108,
+                "lon": -73.944,
                 "sigma": 0.008,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -71.948,
+                "lat": 44.608,
+                "lon": -71.944,
                 "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
+                "lat": 46.108,
+                "lon": -71.944,
                 "sigma": 0.012,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -74.948,
+                "lat": 45.108,
+                "lon": -74.944,
                 "sigma": 0.012,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 45.608,
+                "lon": -70.944,
                 "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.948,
+                "lat": 45.108,
+                "lon": -71.944,
                 "sigma": 0.017,
                 "sources": [
                   "NASA POWER"
@@ -4156,7 +4156,7 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.137,
+            "aridityIndex": 1.136,
             "aridityClass": "humide"
           },
           "weights": {
@@ -4296,11 +4296,11 @@
                 "C": 0.81,
                 "D": 0.889
               },
-              "demandMmPerYear": 572.381,
-              "shortfallMmPerYear": 32.483,
+              "demandMmPerYear": 572.449,
+              "shortfallMmPerYear": 32.502,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 81.012,
-              "waterAtSowingMm": 193.507,
+              "rainKeptPct": 81.007,
+              "waterAtSowingMm": 193.499,
               "alerts": [],
               "byModel": [
                 {
@@ -4436,11 +4436,11 @@
                 "C": 0.783,
                 "D": 0.804
               },
-              "demandMmPerYear": 479.167,
-              "shortfallMmPerYear": 35.972,
+              "demandMmPerYear": 479.204,
+              "shortfallMmPerYear": 35.989,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 78.284,
-              "waterAtSowingMm": 174.927,
+              "rainKeptPct": 78.279,
+              "waterAtSowingMm": 174.923,
               "alerts": [],
               "byModel": [
                 {
@@ -4599,11 +4599,11 @@
                   "C": 0.812,
                   "D": 0.889
                 },
-                "demandMmPerYear": 574.429,
-                "shortfallMmPerYear": 32.483,
+                "demandMmPerYear": 574.498,
+                "shortfallMmPerYear": 32.502,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 81.237,
-                "waterAtSowingMm": 193.507,
+                "rainKeptPct": 81.233,
+                "waterAtSowingMm": 193.499,
                 "alerts": [],
                 "byModel": [
                   {
@@ -4739,11 +4739,11 @@
                   "C": 0.798,
                   "D": 0.89
                 },
-                "demandMmPerYear": 549.222,
-                "shortfallMmPerYear": 25.974,
+                "demandMmPerYear": 549.287,
+                "shortfallMmPerYear": 25.99,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.801,
-                "waterAtSowingMm": 193.591,
+                "rainKeptPct": 79.796,
+                "waterAtSowingMm": 193.584,
                 "alerts": [],
                 "byModel": [
                   {
@@ -4830,7 +4830,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.16,
+          "aridityIndex": 1.159,
           "aridityClass": "humide"
         }
       },
@@ -4864,80 +4864,80 @@
             "reliable": true,
             "cells": [
               {
-                "lat": 45.629,
-                "lon": -72.948,
+                "lat": 45.608,
+                "lon": -72.944,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.448,
+                "lat": 45.108,
+                "lon": -71.444,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.948,
+                "lat": 45.108,
+                "lon": -70.944,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.448,
+                "lat": 45.108,
+                "lon": -70.444,
                 "sigma": 0.007,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -74.948,
+                "lat": 45.108,
+                "lon": -74.944,
                 "sigma": 0.008,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
+                "lat": 46.108,
+                "lon": -71.944,
                 "sigma": 0.01,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 45.608,
+                "lon": -70.944,
                 "sigma": 0.012,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -69.948,
+                "lat": 46.108,
+                "lon": -69.944,
                 "sigma": 0.015,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -75.948,
+                "lat": 45.108,
+                "lon": -75.944,
                 "sigma": 0.018,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -73.948,
+                "lat": 45.108,
+                "lon": -73.944,
                 "sigma": 0.019,
                 "sources": [
                   "NASA POWER"
@@ -5112,11 +5112,11 @@
                 "C": 0.761,
                 "D": 0.891
               },
-              "demandMmPerYear": 475.628,
-              "shortfallMmPerYear": 24.785,
+              "demandMmPerYear": 475.694,
+              "shortfallMmPerYear": 24.802,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 76.069,
-              "waterAtSowingMm": 193.856,
+              "rainKeptPct": 76.065,
+              "waterAtSowingMm": 193.849,
               "alerts": [],
               "byModel": [
                 {
@@ -5261,11 +5261,11 @@
                 "C": 0.709,
                 "D": 0.753
               },
-              "demandMmPerYear": 356.592,
-              "shortfallMmPerYear": 26.061,
+              "demandMmPerYear": 356.62,
+              "shortfallMmPerYear": 26.073,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 70.897,
-              "waterAtSowingMm": 163.94,
+              "rainKeptPct": 70.892,
+              "waterAtSowingMm": 163.934,
               "alerts": [],
               "byModel": [
                 {
@@ -5412,11 +5412,11 @@
                   "C": 0.761,
                   "D": 0.891
                 },
-                "demandMmPerYear": 475.628,
-                "shortfallMmPerYear": 24.785,
+                "demandMmPerYear": 475.694,
+                "shortfallMmPerYear": 24.802,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 76.069,
-                "waterAtSowingMm": 193.856,
+                "rainKeptPct": 76.065,
+                "waterAtSowingMm": 193.849,
                 "alerts": [],
                 "byModel": [
                   {
@@ -5573,11 +5573,11 @@
                   "C": 0.819,
                   "D": 0.754
                 },
-                "demandMmPerYear": 535.849,
-                "shortfallMmPerYear": 26.777,
+                "demandMmPerYear": 535.911,
+                "shortfallMmPerYear": 26.792,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 81.86,
-                "waterAtSowingMm": 164.007,
+                "rainKeptPct": 81.856,
+                "waterAtSowingMm": 163.998,
                 "alerts": [],
                 "byModel": [
                   {
@@ -5629,80 +5629,80 @@
             "reliable": true,
             "cells": [
               {
-                "lat": 45.129,
-                "lon": -71.448,
+                "lat": 45.108,
+                "lon": -71.444,
                 "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -72.948,
+                "lat": 45.608,
+                "lon": -72.944,
                 "sigma": 0.0,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.948,
+                "lat": 45.108,
+                "lon": -70.944,
                 "sigma": 0.001,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -70.448,
+                "lat": 45.108,
+                "lon": -70.444,
                 "sigma": 0.005,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -73.948,
+                "lat": 45.108,
+                "lon": -73.944,
                 "sigma": 0.006,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 44.629,
-                "lon": -71.948,
+                "lat": 44.608,
+                "lon": -71.944,
                 "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 46.129,
-                "lon": -71.948,
+                "lat": 46.108,
+                "lon": -71.944,
                 "sigma": 0.011,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.629,
-                "lon": -70.948,
+                "lat": 45.608,
+                "lon": -70.944,
                 "sigma": 0.012,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -74.948,
+                "lat": 45.108,
+                "lon": -74.944,
                 "sigma": 0.013,
                 "sources": [
                   "NASA POWER"
                 ]
               },
               {
-                "lat": 45.129,
-                "lon": -71.948,
+                "lat": 45.108,
+                "lon": -71.944,
                 "sigma": 0.019,
                 "sources": [
                   "NASA POWER"
@@ -5868,11 +5868,11 @@
                 "C": 0.757,
                 "D": 0.889
               },
-              "demandMmPerYear": 478.203,
-              "shortfallMmPerYear": 25.764,
+              "demandMmPerYear": 478.27,
+              "shortfallMmPerYear": 25.781,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 75.695,
-              "waterAtSowingMm": 193.499,
+              "rainKeptPct": 75.69,
+              "waterAtSowingMm": 193.492,
               "alerts": [],
               "byModel": [
                 {
@@ -6008,11 +6008,11 @@
                 "C": 0.784,
                 "D": 0.804
               },
-              "demandMmPerYear": 479.911,
-              "shortfallMmPerYear": 35.767,
+              "demandMmPerYear": 479.948,
+              "shortfallMmPerYear": 35.784,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 78.428,
-              "waterAtSowingMm": 174.965,
+              "rainKeptPct": 78.423,
+              "waterAtSowingMm": 174.961,
               "alerts": [],
               "byModel": [
                 {
@@ -6171,11 +6171,11 @@
                   "C": 0.809,
                   "D": 0.889
                 },
-                "demandMmPerYear": 568.595,
-                "shortfallMmPerYear": 30.975,
+                "demandMmPerYear": 568.664,
+                "shortfallMmPerYear": 30.994,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 80.922,
-                "waterAtSowingMm": 193.499,
+                "rainKeptPct": 80.917,
+                "waterAtSowingMm": 193.492,
                 "alerts": [],
                 "byModel": [
                   {
@@ -6186,7 +6186,7 @@
               }
             },
             {
-              "score": 76.123,
+              "score": 76.122,
               "criteria": {
                 "rendement": 0.6,
                 "erosion": 0.916,
@@ -6326,11 +6326,11 @@
                   "C": 0.793,
                   "D": 0.889
                 },
-                "demandMmPerYear": 544.868,
-                "shortfallMmPerYear": 25.933,
+                "demandMmPerYear": 544.931,
+                "shortfallMmPerYear": 25.948,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.314,
-                "waterAtSowingMm": 193.499,
+                "rainKeptPct": 79.309,
+                "waterAtSowingMm": 193.492,
                 "alerts": [],
                 "byModel": [
                   {

@@ -3,8 +3,8 @@
 Ce document dit **exactement** ce que l'interface envoie à l'algorithme et ce qu'elle reçoit. La version 2.0 suit l'algorithme _Field Shift — pipeline v5.1_ ; la version 1.0 (scores eau / sol / résilience / revenu, stress test, rotation éditée à la main) n'existe plus.
 
 - **Source de vérité :** [`backend/contract/field-shift.schema.json`](../backend/contract/field-shift.schema.json) (JSON Schema, draft-07)
-- **Exemples :** [`backend/contract/examples/`](../backend/contract/examples/) : une entrée par cas de référence (écrite à la main) et le plan que le serveur renvoie (avec la météo fictive, pour que les fichiers ne dépendent pas du réseau). `python -m field_shift.tools.make_examples`, dans `backend/server`, les régénère.
-- **Qui l'implémente :** le serveur FastAPI [`backend/server`](../backend/server/) ([`ALGORITHME.md`](ALGORITHME.md)). Ses modèles Pydantic suivent ce schéma, et ses tests le vérifient.
+- **Exemples :** [`backend/contract/examples/`](../backend/contract/examples/) : une entrée par cas de référence (écrite à la main) et le plan que le serveur renvoie (avec la météo fictive, pour que les fichiers ne dépendent pas du réseau). `python -m field_shift.tools.make_examples`, dans `api`, les régénère.
+- **Qui l'implémente :** le serveur FastAPI [`api`](../api/) ([`ALGORITHME.md`](ALGORITHME.md)). Ses modèles Pydantic suivent ce schéma, et ses tests le vérifient.
 - **Qui l'appelle :** [`backend/remoteEngine.js`](../backend/remoteEngine.js), le client HTTP du front.
 
 ## Les routes

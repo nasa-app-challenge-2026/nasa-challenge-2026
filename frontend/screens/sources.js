@@ -19,8 +19,9 @@ export default {
           <h1 class="h1 h1--xl">D’où viennent les chiffres</h1>
           <p class="lead">
             Les conseils de l’appli ne citent pas d’études, pour rester simples. Tout est ici : les
-            données de la NASA et des cartes de cultures, et les méthodes de l’algorithme. « Fictif
-            » veut dire que l’appli utilise pour l’instant des données d’exemple à la place.
+            données de la NASA et des cartes de cultures, et les méthodes de l’algorithme. « Pas
+            encore calculé » veut dire que la valeur reste inconnue, sans chiffre d’exemple à la
+            place.
           </p>
         </div>
         <div class="row-wrap gap-md align-stretch">
@@ -69,7 +70,7 @@ export default {
               >
                 <span class="pill ${s.kind === 'data' ? 'pill--info' : 'pill--ok'}"
                   >${s.kind === 'data' ? 'Données' : 'Méthode'}</span
-                >${s.status === 'fictif' ? html`<span class="pill pill--warn">fictif</span>` : ''}
+                >${s.status === 'absent' ? html`<span class="pill pill--warn">pas encore calculé</span>` : ''}
                 <span class="stack-0 grow"
                   ><strong>${s.title}</strong><span class="muted small">${s.use}</span></span
                 >

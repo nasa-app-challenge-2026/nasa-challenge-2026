@@ -20,7 +20,7 @@ from field_shift.api.app import create_app
 from field_shift.api.settings import Settings
 from field_shift.reference.measures import MEASURE_IDS
 from field_shift.services.ranking_service import RankingService
-from field_shift.tools.make_examples import example_plan_service
+from tests.helpers.example_plans import example_plan_service
 from tests.helpers.site_stub import TEST_ORIGIN, FixedSiteData, site, square
 
 REQUEST = {
@@ -360,6 +360,11 @@ class TestDataSourcesRoute:
             "soilgrids",
             "elevation",
             "modis",
+            "power_regional",
+            "power_projection",
+            "modis_ndvi",
+            "usda_cdl",
+            "aafc_crops",
         }
         assert sources["soilgrids"]["reference"].startswith("Poggio et al.")
         assert sources["elevation"]["url"] == "https://api.open-meteo.com/v1/elevation"

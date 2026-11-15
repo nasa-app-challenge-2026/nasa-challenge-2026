@@ -222,7 +222,7 @@ export default {
           </div>`,
         )}
         ${planStatus(state)}
-        ${state.plan.data ? '' : state.plan.status === 'error' ? errorBox(state.plan.error) : loading('L’algorithme prépare votre plan (climat NASA POWER, jumeaux climatiques)…')}
+        ${state.plan.data ? '' : state.plan.status === 'error' ? errorBox(state.plan.error) : loading('L’algorithme prépare votre plan (climat NASA POWER, jumeaux climatiques). Le premier calcul d’un nouveau lieu télécharge les données de la NASA et les cartes de cultures : quelques minutes, puis quelques secondes les fois suivantes.')}
         <div class="dash-toolbar">
           <span class="muted small row gap-xs"
             >${icon(GRIP, { size: 16, width: 3.2 })}Glissez les poignées pour réorganiser vos

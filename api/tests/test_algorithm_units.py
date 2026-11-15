@@ -12,18 +12,16 @@ from field_shift.algorithm.chain.chain_scorer import successions, yield_criterio
 from field_shift.algorithm.chain.crop_placer import place_crop
 from field_shift.algorithm.climate.cycle_climate import ClimateMethod, CycleClimate
 from field_shift.algorithm.planning.time_settings import TimeSettings
-from field_shift.algorithm.sources.demo_farm_weather import demo_farm_weather
-from field_shift.algorithm.sources.demo_twin_crops import demo_warming
-from field_shift.algorithm.sources.field_data import (
-    DEMO_SOIL_SOURCE,
-    SOIL_TEST_SOURCE,
-    DemoFieldDataSource,
-)
+from field_shift.algorithm.sources.field_data import SOIL_TEST_SOURCE, SectionPlace
 from field_shift.algorithm.timeline import month_time
 from field_shift.algorithm.twins.soil_comparison import Soil
 from field_shift.algorithm.weather.daily_weather import DailyWeather
 from field_shift.services.plan_service import MAX_PLACES, PlanService
-from field_shift.tools.make_examples import ExampleWeatherProvider, example_water_model
+from tests.helpers.demo_farm_weather import demo_farm_weather
+from tests.helpers.demo_twin_crops import demo_warming
+from tests.helpers.demo_field_data import DEMO_SOIL_SOURCE, DemoFieldDataSource
+from tests.helpers.example_plans import ExampleWeatherProvider, example_water_model
+from tests.helpers.reference_place import ReferencePlaceData
 
 
 class TestDeliberateDifferences:
@@ -142,14 +140,14 @@ class TestWeather:
 class TestDemoSources:
     def test_the_fictitious_measures_of_a_section_are_stable_and_differ_between_sections(self):
         source = DemoFieldDataSource()
-        a1, a2, b = (source.field_data(s, None) for s in ("A", "A", "B"))
+        a1, a2, b = (source.field_data(SectionPlace(s, 45.6, -72.9), None) for s in "AAB")
         assert a1 == a2
         assert a1.measures != b.measures
         assert a1.soil_source == DEMO_SOIL_SOURCE
 
     def test_a_soil_test_replaces_soilgrids(self):
         test = Soil(40, 20, 30, 7.0)
-        data = DemoFieldDataSource().field_data("A", test)
+        data = DemoFieldDataSource().field_data(SectionPlace("A", 45.6, -72.9), test)
         assert data.soil == test and data.soil_source == SOIL_TEST_SOURCE
 
     def test_the_twins_look_warmer_as_the_cycles_go(self):
@@ -172,7 +170,9 @@ class TestPlacesAreKept:
 
         from field_shift.contract.farm_input import FarmInput
 
-        service = PlanService(CountingWeather(), example_water_model)
+        service = PlanService(
+            CountingWeather(), example_water_model, ReferencePlaceData(), DemoFieldDataSource()
+        )
         farm = deepcopy(example_inputs["cycle-5-ans"])
         farm["sections"] = farm["sections"][:1]
 

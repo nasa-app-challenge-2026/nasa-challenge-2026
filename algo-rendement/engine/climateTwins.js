@@ -290,6 +290,7 @@ function resolvePairEffectForRegion(pairStat, projectedSeason, referenceBaseline
   ) {
     const normalEvidence = resolvePairEvidence(pairStat, 'normal');
     const stressDelta = evidence.meanEffectPct - normalEvidence.meanEffectPct;
+    // Unknown moisture: 0.55 gives a factor of exactly 1, no modulation (not a measured value).
     const rootWetness = referenceBaselineStats?.means?.soilMoistureRoot ?? 0.55;
     const soilVulnerabilityFactor = Math.max(0.75, Math.min(1.35, (1 - rootWetness) / 0.45));
     const regionRainMean = referenceBaselineStats?.means?.precipMm ?? projectedSeason.precipMm;

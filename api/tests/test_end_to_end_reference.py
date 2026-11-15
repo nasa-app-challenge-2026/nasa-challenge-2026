@@ -13,12 +13,12 @@ import pytest
 from field_shift.algorithm.climate.target_climate_projector import TargetClimateProjector
 from field_shift.algorithm.planning.parcel_planner import ParcelPlanner
 from field_shift.algorithm.sources.cycle_data_provider import CycleDataProvider
-from field_shift.algorithm.sources.demo_climate_models import demo_climate_models
-from field_shift.algorithm.sources.demo_farm_weather import demo_farm_weather
-from field_shift.algorithm.sources.demo_twin_atlas import demo_twin_atlas
-from field_shift.algorithm.sources.demo_twin_crops import demo_twin_evidence
 from field_shift.algorithm.twins.climate_twin_finder import ClimateTwinFinder
-from field_shift.tools.make_examples import example_water_model
+from tests.helpers.demo_climate_models import demo_climate_models
+from tests.helpers.demo_farm_weather import demo_farm_weather
+from tests.helpers.demo_twin_atlas import demo_twin_atlas
+from tests.helpers.demo_twin_crops import demo_twin_evidence
+from tests.helpers.example_plans import example_water_model
 from tests.helpers.reference_names import fixture
 from tests.helpers.reference_plan import inputs_of
 from tests.helpers.reference_water import WithReferenceWater
@@ -32,7 +32,7 @@ WEATHER = demo_farm_weather()
 DATA = CycleDataProvider(
     projector=TargetClimateProjector(WEATHER, CURRENT_YEAR, demo_climate_models(WEATHER)),
     twin_finder=ClimateTwinFinder(demo_twin_atlas(*FARM, WEATHER)),
-    evidence_for=demo_twin_evidence,
+    evidence_for=lambda first, last, twins, soil: demo_twin_evidence(first, last, twins),
     water=example_water_model(*FARM),
 )
 

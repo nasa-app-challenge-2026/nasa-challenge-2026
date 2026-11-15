@@ -8,13 +8,15 @@ from datetime import date
 import httpx
 from fastapi.testclient import TestClient
 
-from field_shift.algorithm.sources.demo_farm_weather import demo_farm_weather
 from field_shift.api.app import create_app
 from field_shift.api.settings import DEFAULT_CORS_ORIGINS, Settings
 from field_shift.data_access.nasa_power import FILL_VALUE
 from field_shift.data_access.weather_providers import NasaPowerWeatherProvider
 from field_shift.services.plan_service import PlanService
-from field_shift.tools.make_examples import example_water_model
+from tests.helpers.demo_farm_weather import demo_farm_weather
+from tests.helpers.demo_field_data import DemoFieldDataSource
+from tests.helpers.example_plans import example_water_model
+from tests.helpers.reference_place import ReferencePlaceData
 from tests.helpers.nasa_power_stub import StubbedPower, power_body
 from tests.test_contract import errors
 
@@ -64,6 +66,8 @@ def test_today_comes_from_the_request_or_from_the_server_clock(example_inputs):
     service = PlanService(
         NasaPowerWeatherProvider(StubbedPower().client),
         example_water_model,
+        ReferencePlaceData(),
+        DemoFieldDataSource(),
         clock=lambda: date(2026, 11, 13),
     )
     client = TestClient(create_app(Settings(), service))
@@ -161,7 +165,12 @@ class TestCors:
 
 class TestWeatherSource:
     def client_for(self, power: StubbedPower) -> TestClient:
-        service = PlanService(NasaPowerWeatherProvider(power.client), example_water_model)
+        service = PlanService(
+            NasaPowerWeatherProvider(power.client),
+            example_water_model,
+            ReferencePlaceData(),
+            DemoFieldDataSource(),
+        )
         return TestClient(create_app(Settings(), service))
 
     def test_nasa_power_is_read_once_per_place_and_the_plan_says_so(self, example_inputs):
@@ -173,8 +182,8 @@ class TestWeatherSource:
         assert len(power.requests) == 1
         params = power.requests[0].url.params
         assert (
-            params["latitude"] == "45.6287"
-            and params["start"] == "19850101"
+            params["latitude"] == "45.6077"
+            and params["start"] == "19840101"  # one year more: the soil of water_use fills up
             and params["end"] == "20241231"
         )
         assert first["meta"]["sources"]["farmWeather"]["real"] is True

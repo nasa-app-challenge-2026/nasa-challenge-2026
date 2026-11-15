@@ -1,7 +1,9 @@
 /**
  * Demo farm used on first launch and in tests: four sections near Saint-Hyacinthe
- * (Montérégie), drawn on a 600 m × 600 m block (36 ha). The shape is exactly the
- * FarmInput v2 of docs/ALGO_CONTRACT.md.
+ * (Montérégie), drawn on a 600 m × 600 m block (36 ha) of real cropland: the AAFC Annual Crop
+ * Inventory sees maize, soybean and wheat on all of it every year from 2019 to 2025 (the first
+ * outline, 2.4 km north, was on the town: no soil in SoilGrids, no crop in the maps). The
+ * shape is exactly the FarmInput v2 of docs/ALGO_CONTRACT.md.
  *
  * Sections A and B are the two fields of the algorithm's worked example
  * (field_shift.py v5.1): corn harvested in October 2026 in a corn → soybean
@@ -13,12 +15,12 @@ export const DEMO_FARM = {
     id: 'demo',
     name: 'Ferme du rang Saint-Pierre',
     type: 'grandes-cultures',
-    location: { lat: 45.6287, lon: -72.94815, label: 'Saint-Hyacinthe, QC' },
+    location: { lat: 45.6077, lon: -72.94395, label: 'Saint-Hyacinthe, QC' },
     boundary: [
-      [45.6314, -72.952],
-      [45.6314, -72.9443],
-      [45.626, -72.9443],
-      [45.626, -72.952],
+      [45.6104, -72.9478],
+      [45.6104, -72.9401],
+      [45.605, -72.9401],
+      [45.605, -72.9478],
     ],
     time: { cycleYears: 4, frequencyMonths: 12, horizonYears: 12 },
     priorities: ['erosion', 'rendement', 'azote', 'reserve', 'matiere_org', 'marche'],
@@ -32,10 +34,10 @@ export const DEMO_FARM = {
       areaHa: 12,
       note: 'côté route',
       polygon: [
-        [45.6314, -72.952],
-        [45.6314, -72.94686],
-        [45.6287, -72.94686],
-        [45.6287, -72.952],
+        [45.6104, -72.9478],
+        [45.6104, -72.94266],
+        [45.6077, -72.94266],
+        [45.6077, -72.9478],
       ],
       currentCrop: 'mais',
       currentHarvest: '2026-10',
@@ -55,10 +57,10 @@ export const DEMO_FARM = {
       areaHa: 8,
       note: 'sol plus sableux',
       polygon: [
-        [45.6287, -72.94772],
-        [45.6287, -72.9443],
-        [45.626, -72.9443],
-        [45.626, -72.94772],
+        [45.6077, -72.94352],
+        [45.6077, -72.9401],
+        [45.605, -72.9401],
+        [45.605, -72.94352],
       ],
       currentCrop: 'luzerne-3',
       currentHarvest: '2027-09',
@@ -77,10 +79,10 @@ export const DEMO_FARM = {
       areaHa: 10,
       note: 'près du ruisseau',
       polygon: [
-        [45.6287, -72.952],
-        [45.6287, -72.94772],
-        [45.626, -72.94772],
-        [45.626, -72.952],
+        [45.6077, -72.9478],
+        [45.6077, -72.94352],
+        [45.605, -72.94352],
+        [45.605, -72.9478],
       ],
       currentCrop: 'soya',
       currentHarvest: '2026-09',
@@ -100,10 +102,10 @@ export const DEMO_FARM = {
       areaHa: 6,
       note: 'derrière la grange',
       polygon: [
-        [45.6314, -72.94686],
-        [45.6314, -72.9443],
-        [45.6287, -72.9443],
-        [45.6287, -72.94686],
+        [45.6104, -72.94266],
+        [45.6104, -72.9401],
+        [45.6077, -72.9401],
+        [45.6077, -72.94266],
       ],
       currentCrop: 'ble-automne',
       currentHarvest: '2026-07',

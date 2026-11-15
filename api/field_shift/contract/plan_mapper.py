@@ -312,13 +312,14 @@ def farm_plan_out(
 ) -> FarmPlan:
     """The plan of the whole farm: settings and weights once, then one plan per section."""
     time = context.time
+    sources = (*algorithm.data_sources, context.field_source)
     return FarmPlan(
         meta=PlanMeta(
             engine=ENGINE_NAME,
             algorithm=ALGORITHM_VERSION,
-            demo=algorithm.is_demo,
+            demo=any(not source.real for source in sources),
             generated_at=generated_at or datetime.now(UTC),
-            sources={s.key: SourceInfo(real=s.real, label=s.label) for s in algorithm.data_sources},
+            sources={s.key: SourceInfo(real=s.real, label=s.label) for s in sources},
         ),
         settings=PlanSettings(
             cycle_years=time.cycle_years,

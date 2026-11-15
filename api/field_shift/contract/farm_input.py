@@ -14,6 +14,7 @@ from typing import Annotated, Literal
 from pydantic import AfterValidator, Field, model_validator
 
 from field_shift.algorithm.planning.time_settings import TimeSettings
+from field_shift.algorithm.terrain.section_shape import SectionShape, ShapeError
 from field_shift.contract.base import CamelModel
 from field_shift.reference.criteria import CRITERIA_IDS
 from field_shift.reference.crops import EQUIPMENT_FORAGE, SHEETS, is_known_crop
@@ -25,6 +26,8 @@ YEAR_MONTH = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
 MAX_SECTION_ID_LENGTH = 3
 MIN_PH, MAX_PH = 3, 10
 PERCENT_RANGE = {"ge": 0, "le": 100}
+#: Fewer distinct corners than this: the section is not drawn yet.
+MIN_POLYGON_CORNERS = 3
 
 
 def _one_of(allowed, what: str):
@@ -107,10 +110,14 @@ class SoilTestInput(CamelModel):
 
 
 class SectionInput(CamelModel):
-    """Step 1, block A: what the farmer knows about one field."""
+    """Step 1, block A: what the farmer knows about one field.
+
+    `polygon` is its outline as the screens draw it, [lat, lon] corners (the measures of the field
+    are read over it); empty or absent: not drawn yet, the point of the farm is used."""
 
     id: str = Field(min_length=1, max_length=MAX_SECTION_ID_LENGTH)
     area_ha: float = Field(gt=0)
+    polygon: list[tuple[float, float]] | None = None
     current_crop: CropId | None = None
     current_harvest: str | None = Field(
         default=None, description="Month of harvest (or end of a perennial), YYYY-MM."
@@ -126,6 +133,29 @@ class SectionInput(CamelModel):
     def check_harvest_month(self) -> SectionInput:
         if self.current_harvest is not None and not YEAR_MONTH.match(self.current_harvest):
             raise ValueError("current_harvest doit s’écrire AAAA-MM")
+        return self
+
+    @property
+    def ring(self) -> tuple[tuple[float, float], ...]:
+        """The outline as a closed ring of (lon, lat) points; empty when not drawn."""
+        corners = [(float(lon), float(lat)) for lat, lon in self.polygon or ()]
+        if len(set(corners)) < MIN_POLYGON_CORNERS:
+            return ()
+        if corners[0] != corners[-1]:
+            corners.append(corners[0])
+        return tuple(corners)
+
+    @property
+    def shape(self) -> SectionShape:
+        return SectionShape.from_coordinates(self.ring)
+
+    @model_validator(mode="after")
+    def check_polygon(self) -> SectionInput:
+        if self.ring:
+            try:
+                self.shape  # noqa: B018 (the outline is checked here: a 422 that says why)
+            except ShapeError as error:
+                raise ValueError(f"section {self.id}, polygon : {error}") from error
         return self
 
 

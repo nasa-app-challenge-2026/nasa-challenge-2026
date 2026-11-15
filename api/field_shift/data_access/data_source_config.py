@@ -7,7 +7,7 @@ token) can be set WITHOUT TOUCHING THE CODE, in two ways:
 1. A JSON file (copy `data_sources.example.json` to `data_sources.json` in `api/`):
 
        {
-         "soilgrids": "https://rest.isric.org/soilgrids/v2.0/properties/query",
+         "soilgrids": "https://maps.isric.org/mapserv",
          "modis": {"url": "https://modis.ornl.gov/rst/api/v1", "headers": {"Authorization": "…"}}
        }
 
@@ -40,9 +40,14 @@ URL_ENV_PREFIX: Final = "FIELD_SHIFT_URL_"
 POWER_DAILY: Final = "power_daily"
 POWER_CLIMATOLOGY: Final = "power_climatology"
 POWER_HOURLY: Final = "power_hourly"
+POWER_REGIONAL: Final = "power_regional"
+POWER_PROJECTION: Final = "power_projection"
 SOILGRIDS: Final = "soilgrids"
 ELEVATION: Final = "elevation"
 MODIS: Final = "modis"
+MODIS_NDVI: Final = "modis_ndvi"
+USDA_CDL: Final = "usda_cdl"
+AAFC_CROPS: Final = "aafc_crops"
 
 
 @dataclass(frozen=True)
@@ -89,11 +94,34 @@ DATA_SOURCES: Final[tuple[DataEndpoint, ...]] = (
         url="https://power.larc.nasa.gov/api/temporal/hourly/point",
     ),
     DataEndpoint(
+        POWER_REGIONAL,
+        dataset="NASA POWER (MERRA-2)",
+        provides=(
+            "Climat observé 2011–2024 de chaque case de 0,5° autour de la ferme : recherche des "
+            "jumeaux climatiques (POST /plan)"
+        ),
+        reference="Stackhouse et al., NASA POWER, https://power.larc.nasa.gov/docs/",
+        url="https://power.larc.nasa.gov/api/temporal/daily/regional",
+    ),
+    DataEndpoint(
+        POWER_PROJECTION,
+        dataset="NASA NEX-GDDP-CMIP6 (ensemble des modèles, via NASA POWER)",
+        provides=(
+            "Climat projeté jour par jour (SSP1-2.6, SSP2-4.5, SSP3-7.0) : cycles à plus de "
+            "10 ans (POST /plan)"
+        ),
+        reference="Thrasher et al., Scientific Data 9, 262, 2022 (NEX-GDDP-CMIP6)",
+        url="https://power.larc.nasa.gov/api/projection/daily/point",
+    ),
+    DataEndpoint(
         SOILGRIDS,
         dataset="SoilGrids 2.0 (ISRIC)",
-        provides="Sable, argile et carbone organique du sol, 0 à 15 cm",
+        provides=(
+            "Sable, argile, carbone organique et pH du sol, couche par couche (service WCS) : "
+            "sol des sections, des jumeaux, de la protection du sol et du bilan d’eau"
+        ),
         reference="Poggio et al., SOIL 7, 217–240, 2021",
-        url="https://rest.isric.org/soilgrids/v2.0/properties/query",
+        url="https://maps.isric.org/mapserv",
     ),
     DataEndpoint(
         ELEVATION,
@@ -111,6 +139,33 @@ DATA_SOURCES: Final[tuple[DataEndpoint, ...]] = (
             "MOD16A2 v061, 2021, doi:10.5067/MODIS/MOD16A2.061 ; Mu et al., RSE 115, 2011"
         ),
         url="https://modis.ornl.gov/rst/api/v1",
+    ),
+    DataEndpoint(
+        MODIS_NDVI,
+        dataset="MODIS MOD13Q1 / MYD13Q1 (NASA, Microsoft Planetary Computer)",
+        provides=(
+            "NDVI de tous les composites d’une année en un point : NDVI de la saison (POST "
+            "/rotations/rank) et jours de sol nu de chaque section (POST /plan)"
+        ),
+        reference="Didan, MOD13Q1 v061, 2021, doi:10.5067/MODIS/MOD13Q1.061",
+        url="https://planetarycomputer.microsoft.com/api/data/v1",
+    ),
+    DataEndpoint(
+        USDA_CDL,
+        dataset="USDA NASS Cropland Data Layer (Microsoft Planetary Computer)",
+        provides="Culture de chaque pixel de 30 m, année par année : champs jumeaux aux États-Unis",
+        reference="USDA NASS, Cropland Data Layer, https://www.nass.usda.gov/Research_and_Science/Cropland/",
+        url="https://planetarycomputer.microsoft.com/api",
+    ),
+    DataEndpoint(
+        AAFC_CROPS,
+        dataset="Inventaire annuel des cultures (Agriculture et Agroalimentaire Canada)",
+        provides="Culture de chaque pixel de 30 m, année par année : champs jumeaux au Canada",
+        reference=(
+            "AAC, Inventaire annuel des cultures, "
+            "https://open.canada.ca/data/fr/dataset/ba2645d5-4458-414d-b196-6303ac06c1c9"
+        ),
+        url="https://agriculture.canada.ca/imagery-images/rest/services/annual_crop_inventory",
     ),
 )
 
@@ -154,6 +209,11 @@ class DataSourceConfig:
     def power_daily_url(self) -> str:
         """Address of the NASA POWER daily point service (the weather of the farm)."""
         return self.sources[POWER_DAILY].url
+
+    @property
+    def power_projection_url(self) -> str:
+        """Address of the NASA POWER projection service (NEX-GDDP-CMIP6)."""
+        return self.sources[POWER_PROJECTION].url
 
 
 def _read_file(env: Mapping[str, str]) -> dict[str, Any]:

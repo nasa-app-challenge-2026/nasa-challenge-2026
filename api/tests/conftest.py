@@ -12,7 +12,7 @@ from field_shift.api.app import create_app
 from field_shift.api.settings import Settings
 from field_shift.services.plan_service import PlanService
 from field_shift.services.ranking_service import RankingService
-from field_shift.tools.make_examples import example_plan_service
+from tests.helpers.example_plans import example_plan_service
 from tests.helpers.site_stub import FixedSiteData
 
 CONTRACT_DIR = Path(__file__).resolve().parents[2] / "backend" / "contract"

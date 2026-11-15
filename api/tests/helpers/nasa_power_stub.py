@@ -9,9 +9,10 @@ import httpx
 import numpy as np
 
 from field_shift.algorithm.config.climate import FARM_WEATHER_YEARS
-from field_shift.algorithm.sources.demo_farm_weather import demo_farm_weather
 from field_shift.algorithm.weather.daily_weather import DailyWeather
+from field_shift.data_access.disk_cache import DataCache
 from field_shift.data_access.nasa_power import FILL_VALUE, NasaPowerClient
+from tests.helpers.demo_farm_weather import demo_farm_weather
 
 
 def power_body(weather: DailyWeather, missing_days: int = 0) -> str:
@@ -45,7 +46,9 @@ class StubbedPower:
         self.body = power_body(demo_farm_weather(FARM_WEATHER_YEARS))
         self._respond = respond or (lambda request: httpx.Response(200, content=self.body))
         transport = httpx.MockTransport(self._handle)
-        self.client = NasaPowerClient(http=httpx.Client(transport=transport))
+        self.client = NasaPowerClient(
+            http=httpx.Client(transport=transport), cache=DataCache.in_memory()
+        )
 
     def _handle(self, request: httpx.Request) -> httpx.Response:
         self.requests.append(request)

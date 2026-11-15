@@ -29,5 +29,10 @@ data_sources.json
 .cache_donnees/
 resultats/
 
+# Réponses des services de données gardées sur disque par le serveur (api/.cache_field_shift)
+# et par le modèle de rendement (algo-rendement/.cache) : se recréent seules
+.cache_field_shift/
+algo-rendement/.cache/
+
 # Cache satellite local algo-rendement
 algo-rendement/.cache/

@@ -125,11 +125,13 @@ def lire_reponse_ssurgo(js) -> Sol | None:
     haut = min(haut, aws0150 * 10.0)
     bas = max(aws0150 * 10.0 - haut, 0.0)
     grp = (lignes.get("hydgrpdcd") or "").strip().upper()
-    groupe = grp[0] if grp[:1] in ("A", "B", "C", "D") else "B"
+    # "B/D" (drainé / non drainé) : la première lettre, celle du sol drainé. Sans groupe, il reste
+    # vide : trouver_sol le lit dans la texture SoilGrids du même point (jamais une valeur fixe).
+    groupe = grp[0] if grp[:1] in ("A", "B", "C", "D") else ""
     return Sol(haut, bas, groupe, source="SSURGO (USDA Soil Data Access)",
                details=dict(mukey=lignes.get("mukey"), unite=lignes.get("muname"),
                             aws0_25_cm=aws025, aws0_150_cm=aws0150,
-                            groupe_brut=grp or "inconnu (B par défaut)"))
+                            groupe_brut=grp or "absent de SSURGO"))
 
 
 def sol_ssurgo(lat: float, lon: float, utiliser_cache: bool = True) -> Sol | None:
@@ -154,7 +156,10 @@ def lire_reponse_soilgrids(js: dict) -> Sol:
         raise ErreurDonnees(f"Réponse SoilGrids inattendue : {str(js)[:300]}")
     valeurs = {}
     for c in couches:
-        facteur = float(c.get("unit_measure", {}).get("d_factor", 10) or 10)
+        facteur = c.get("unit_measure", {}).get("d_factor")
+        if not facteur:
+            raise ErreurDonnees(f"Réponse SoilGrids sans facteur d'unité pour {c.get('name')}.")
+        facteur = float(facteur)
         for d in c.get("depths", []):
             v = d.get("values", {}).get("mean")
             valeurs[(c["name"], d["label"])] = None if v is None else v / facteur
@@ -168,7 +173,10 @@ def lire_reponse_soilgrids(js: dict) -> Sol:
             raise ErreurDonnees(
                 "SoilGrids n'a pas de texture à ce point (eau, ville ou roche ?). "
                 "Vérifiez les coordonnées ou utilisez --sol-manuel.")
-        mo = (soc or 0.0) / 10.0 * 1.724                  # g C/kg -> % de matière organique
+        if soc is None:
+            raise ErreurDonnees(
+                "SoilGrids n'a pas de carbone organique à ce point (eau, ville ou roche ?).")
+        mo = soc / 10.0 * 1.724                             # g C/kg -> % de matière organique
         eu = saxton_rawls(s, a, mo)["eau_utile"]
         detail[prof] = dict(sable_pct=round(s, 1), argile_pct=round(a, 1), mo_pct=round(mo, 2),
                             eau_utile_mm_par_m=round(eu * 1000, 1))
@@ -217,6 +225,9 @@ def trouver_sol(lat: float, lon: float, manuel: dict | None = None, groupe: str 
             if s is not None:
                 if groupe:
                     s.groupe_hydro = groupe.upper()
+                elif not s.groupe_hydro:   # SSURGO sans groupe : celui de la texture SoilGrids
+                    s.groupe_hydro = sol_soilgrids(lat, lon, utiliser_cache).groupe_hydro
+                    s.details["groupe_hydro"] = "SoilGrids (texture 0-30 cm), absent de SSURGO"
                 return s
             journal("  SSURGO : aucune donnée à ce point (hors États-Unis ?) -> SoilGrids")
         except ErreurDonnees as e:

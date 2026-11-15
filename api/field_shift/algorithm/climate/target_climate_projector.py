@@ -5,6 +5,14 @@ The last year of the cycle decides:
   - later → case 2, 3 to 5 NEX-GDDP-CMIP6 models applied to NASA POWER by the delta method,
     on a 20-year window centred on the cycle. Each model gives its own target climate (the
     twins are searched model by model, step 4); the calendar of step 9b is the mean of the models.
+
+The change of a model is measured from its reference period (`ModelSimulation.reference`) and
+added to the observed weather of the same period:
+  - 1985–2014, the historical runs of the models: the NASA POWER years 1985–2014 of the farm
+    (the reference method of field_shift.py);
+  - a later period (2015–2034: the NASA POWER projection service has no historical runs): the 20
+    most recent NASA POWER years, moved by the observed trend to the middle of that period, as in
+    case 1. The observed warming up to the reference period, then the change of the model.
 """
 
 from __future__ import annotations
@@ -29,6 +37,7 @@ from field_shift.algorithm.config.climate import (
     MODEL_BASELINE,
     RECENT_WINDOW,
     SHORT_TERM_HORIZON_YEARS,
+    YearRange,
 )
 from field_shift.algorithm.numerics.ratios import percent_change
 from field_shift.algorithm.weather.daily_weather import DailyWeather
@@ -39,10 +48,13 @@ TREND_TARGET_SOURCE = "NASA POWER"
 
 @dataclass(frozen=True)
 class ModelSimulation:
-    """A climate model on 1985–2014 and on the future window (°C and mm/day)."""
+    """A climate model on its reference period and on the future window (°C and mm/day).
+
+    `historical` is the model on `reference` (1985–2014 for the historical runs)."""
 
     historical: DailyWeather
     future: DailyWeather
+    reference: YearRange = MODEL_BASELINE
 
 
 class ClimateModel(Protocol):
@@ -51,7 +63,7 @@ class ClimateModel(Protocol):
     name: str
 
     def simulate(self, first_year: int, last_year: int) -> ModelSimulation:
-        """The model on 1985–2014 and on the window `first_year`–`last_year`."""
+        """The model on its reference period and on the window `first_year`–`last_year`."""
         ...
 
 
@@ -82,10 +94,14 @@ class TargetClimateProjector:
         farm_weather: DailyWeather,
         current_year: int,
         models: Sequence[ClimateModel] = (),
+        models_label: str | None = None,
     ) -> None:
+        """`models_label` names the mean of the models in the plan (default: "NEX-GDDP-CMIP6
+        (deltas, moyenne de N modèles)")."""
         self._farm_weather = farm_weather
         self._current_year = current_year
         self._models = tuple(models)
+        self._models_label = models_label
         self._trend = TemperatureTrend(farm_weather)
         self._cache: dict[tuple[int, int], ProjectedClimate] = {}
 
@@ -113,13 +129,22 @@ class TargetClimateProjector:
             weathers=((TREND_SOURCE, weather),),
         )
 
+    def _observed_base(self, reference: YearRange) -> DailyWeather:
+        """The observed weather a model's change is added to: the NASA POWER years of the
+        model's reference period when the farm has them, else the most recent years moved by
+        the observed trend to the middle of that period (see the module docstring)."""
+        weather = self._farm_weather
+        if weather.first_year <= reference.first and reference.last <= weather.last_year:
+            return weather.between(reference.first, reference.last)
+        moved, _ = self._trend.extend_to((reference.first + reference.last) / 2)
+        return moved
+
     def _from_models(self, first_year: int, last_year: int) -> ProjectedClimate:
         if not self._models:
             raise ValueError(
                 f"Cycle {first_year}-{last_year} au-delà de {SHORT_TERM_HORIZON_YEARS} ans : "
                 "il faut des modèles climatiques"
             )
-        observed = self._farm_weather.between(MODEL_BASELINE.first, MODEL_BASELINE.last)
         recent = self._farm_weather.between(RECENT_WINDOW.first, RECENT_WINDOW.last)
         recent_temperature = mean_temperature(recent)
         recent_summer_rain = mean_summer_rain(recent)
@@ -129,6 +154,7 @@ class TargetClimateProjector:
             simulation = model.simulate(
                 centre - CLIMATE_WINDOW_BEFORE_YEARS, centre + CLIMATE_WINDOW_AFTER_YEARS
             )
+            observed = self._observed_base(simulation.reference)
             weather = apply_deltas(observed, simulation.historical, simulation.future)
             targets.append(ClimateTarget(model.name, IndicatorTable.from_weather(weather)))
             weathers.append((model.name, weather))
@@ -144,7 +170,9 @@ class TargetClimateProjector:
                     models=(model.name,),
                 )
             )
-        source = f"NEX-GDDP-CMIP6 (deltas, moyenne de {len(climates)} modèles)"
+        source = self._models_label or (
+            f"NEX-GDDP-CMIP6 (deltas, moyenne de {len(climates)} modèles)"
+        )
         return ProjectedClimate(
             targets=tuple(targets),
             climate=average_climates(climates, method=ClimateMethod.MODELS, source=source),

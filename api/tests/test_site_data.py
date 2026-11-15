@@ -34,6 +34,7 @@ from field_shift.data_access.data_source_config import (
 )
 from field_shift.data_access.site_data import RemoteSiteData, SiteDataUnavailableError
 from tests.helpers.site_stub import TEST_VALUES, square
+from tests.helpers.soilgrids_stub import WCS_HOST, wcs_answer
 
 TODAY = date(2026, 11, 14)
 
@@ -169,24 +170,11 @@ class TestForcing:
 
 # --- The readers, on fake services ----------------------------------------------------------------
 
-SOILGRIDS_ANSWER = {
-    "properties": {
-        "layers": [
-            {
-                "name": name,
-                "unit_measure": {"d_factor": 10, "target_units": unit},
-                "depths": [
-                    {"label": "0-5cm", "values": {"mean": top}},
-                    {"label": "5-15cm", "values": {"mean": below}},
-                ],
-            }
-            for name, unit, top, below in (
-                ("sand", "%", 340, 310),
-                ("clay", "%", 330, 360),
-                ("soc", "g/kg", 600, 450),
-            )
-        ]
-    }
+#: The maps of SoilGrids at the section (mapped units: g/kg, dg/kg).
+SOILGRIDS_MAPS = {
+    "sand": {"0-5cm": 340, "5-15cm": 310},
+    "clay": {"0-5cm": 330, "5-15cm": 360},
+    "soc": {"0-5cm": 600, "5-15cm": 450},
 }
 
 
@@ -218,6 +206,16 @@ def modis_answer(request: httpx.Request) -> dict:
     }
 
 
+def ndvi_point_answer() -> dict:
+    """Every Terra composite of 2026 at 0.7, and one without a valid value."""
+    values = [
+        [f"modis-13Q1-061/MOD13Q1.A2026{day:03d}.h12v04.061.2026001", [7000], ["NDVI"]]
+        for day in range(1, 366, 16)
+    ]
+    values.append(["modis-13Q1-061/MOD13Q1.A2026353.h12v04.061.2026001", [-3000], ["NDVI"]])
+    return {"values": values}
+
+
 class FakeServices:
     """The six services, answering from memory; `down` names hosts that answer 503."""
 
@@ -231,8 +229,8 @@ class FakeServices:
         host, path = request.url.host, request.url.path
         if host in self.down:
             return httpx.Response(503)
-        if host == "rest.isric.org":
-            return httpx.Response(200, json=SOILGRIDS_ANSWER)
+        if host == WCS_HOST:
+            return wcs_answer(SOILGRIDS_MAPS)(request)
         if host == "api.open-meteo.com":
             lats = [float(v) for v in request.url.params["latitude"].split(",")]
             # 2 % down towards the north: elevation falls 2 m per 100 m of latitude.
@@ -245,6 +243,16 @@ class FakeServices:
             return httpx.Response(200, content=json.dumps(hourly_answer()))
         if host == "modis.ornl.gov":
             return httpx.Response(200, json=modis_answer(request))
+        if host == "planetarycomputer.microsoft.com":
+            if path.endswith("/mosaic/register"):
+                return httpx.Response(200, json={"searchid": "recherche-test"})
+            if path.endswith("/stac/v1/search"):  # MOD16A3GF, the annual ET of MODIS
+                ids = ["MOD16A3GF.A2026001.h12v04.061.1", "MYD16A3GF.A2026001.h12v04.061.1"]
+                return httpx.Response(200, json={"features": [{"id": i} for i in ids]})
+            if "/item/point/" in path:
+                raw = {"ET_500m": 4000, "PET_500m": 10000}[request.url.params["assets"]]
+                return httpx.Response(200, json={"values": [raw]})
+            return httpx.Response(200, json=ndvi_point_answer())
         return httpx.Response(404)
 
 
@@ -291,45 +299,62 @@ class TestReaders:
     def test_the_requests_are_made_at_the_centre_of_the_section(self):
         services = FakeServices()
         provider(services).site_readings(shape_of(square(46.0, -72.0)), ["sand_pct", "ndvi"])
-        soil = next(r for r in services.requests if r.url.host == "rest.isric.org")
-        assert soil.url.params["lat"] == "46.000000" and soil.url.params["lon"] == "-72.000000"
-        modis = [r for r in services.requests if r.url.host == "modis.ornl.gov"]
-        assert [r.url.params["startDate"] for r in modis] == ["A2026121", "A2026182", "A2026244"]
+        soil = next(r for r in services.requests if r.url.host == WCS_HOST)
+        long_subset, lat_subset = soil.url.params.get_list("SUBSET")
+        assert "-72.001500,-71.998500" in long_subset and "45.998500,46.001500" in lat_subset
+        point = next(r for r in services.requests if "/point/" in r.url.path)
+        assert point.url.path.endswith("/point/-72.0,46.0")
 
     def test_only_the_services_of_the_needed_variables_are_called(self):
         services = FakeServices()
         provider(services).site_readings(shape_of(square()), ["sand_pct", "clay_pct"])
-        assert {r.url.host for r in services.requests} == {"rest.isric.org"}
+        assert {r.url.host for r in services.requests} == {WCS_HOST}
 
     def test_a_place_already_read_is_not_read_again(self):
         services = FakeServices()
         reader = provider(services)
         reader.site_readings(shape_of(square()), ["sand_pct"])
+        first = len(services.requests)  # one coverage per property and layer
         reader.site_readings(shape_of(square(45.50001, -73.00001)), ["sand_pct"])  # ~1 m away
-        assert len(services.requests) == 1
+        assert first == 6 and len(services.requests) == first
 
     def test_a_failed_service_fails_the_section_and_every_failure_is_named(self):
-        services = FakeServices(down=("rest.isric.org", "modis.ornl.gov"))
+        services = FakeServices(
+            down=(WCS_HOST, "modis.ornl.gov", "planetarycomputer.microsoft.com")
+        )
         with pytest.raises(SiteDataUnavailableError) as raised:
             provider(services).site_readings(shape_of(square()), ALL_KEYS)
         datasets = sorted(failure.dataset for failure in raised.value.failures)
-        assert datasets == ["MODIS (NASA, ORNL DAAC)"] * 2 + ["SoilGrids 2.0 (ISRIC)"]
+        assert datasets == [
+            "MODIS MOD13Q1 / MYD13Q1 (NASA, Microsoft Planetary Computer)",
+            "MODIS MOD16A3GF (NASA, Planetary Computer)",  # ORNL down, then its replacement
+            "SoilGrids 2.0 (ISRIC)",
+        ]
         assert all("503" in failure.reason for failure in raised.value.failures)
 
+    def test_without_the_ornl_daac_the_ratio_of_the_year_replaces_the_season(self):
+        services = FakeServices(down=("modis.ornl.gov",))
+        (reading,) = provider(services).site_readings(shape_of(square()), ["root_activity"])
+        assert reading.value == pytest.approx(0.4)
+        assert reading.origin == "MODIS MOD16A3GF (NASA, Planetary Computer)"
+        assert "ORNL DAAC" in reading.method and "2026" in reading.method
+
     def test_a_failure_is_not_remembered(self):
-        services = FakeServices(down=("rest.isric.org",))
+        services = FakeServices(down=(WCS_HOST,))
         reader = provider(services)
-        for _ in range(2):
-            with pytest.raises(SiteDataUnavailableError):
-                reader.site_readings(shape_of(square()), ["sand_pct"])
-        assert len(services.requests) == 2
+        with pytest.raises(SiteDataUnavailableError):
+            reader.site_readings(shape_of(square()), ["sand_pct"])
+        first = len(services.requests)
+        with pytest.raises(SiteDataUnavailableError):
+            reader.site_readings(shape_of(square()), ["sand_pct"])
+        assert len(services.requests) == 2 * first  # asked again
 
     def test_no_soil_at_the_point_is_an_error(self):
-        answer = json.loads(json.dumps(SOILGRIDS_ANSWER))
-        answer["properties"]["layers"][0]["depths"][0]["values"]["mean"] = None
+        maps = {name: dict(layers) for name, layers in SOILGRIDS_MAPS.items()}
+        maps["sand"]["0-5cm"] = 0  # no soil: SoilGrids writes 0
 
         def handle(request: httpx.Request) -> httpx.Response:
-            return httpx.Response(200, json=answer)
+            return wcs_answer(maps)(request)
 
         http = httpx.Client(transport=httpx.MockTransport(handle))
         reader = RemoteSiteData(DataSourceConfig.load({}), http, today=lambda: TODAY)

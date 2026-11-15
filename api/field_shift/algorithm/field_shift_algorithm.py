@@ -12,10 +12,10 @@ number of fields:
     step 9b    best chains                   chain/
     step 10    plan, cycle by cycle          planning/
 
-The data sources are given when it is built: the farm weather (real NASA POWER or the demo
-series), the water model of the place (`algorithm/water`: water score of the chains, water
-pressure of the farm) and, for now, fictitious climate models, twins and satellite measures
-(`sources/demo_*`).
+Every data source is given when it is built: the farm weather (NASA POWER), the water model of
+the place (`algorithm/water`: water score of the chains, water pressure of the farm) and the
+sources of steps 3 to 7 (`PlaceSources`: climate models, grid of observed climates, crops of the
+twins). The algorithm contains no data of its own.
 """
 
 from __future__ import annotations
@@ -29,10 +29,9 @@ from field_shift.algorithm.planning.parcel_planner import ParcelPlanner
 from field_shift.algorithm.planning.time_settings import TimeSettings
 from field_shift.algorithm.sources.cycle_data_provider import CycleDataProvider
 from field_shift.algorithm.sources.data_source import DataSource
-from field_shift.algorithm.sources.demo_climate_models import demo_climate_models
-from field_shift.algorithm.sources.demo_twin_atlas import demo_twin_atlas
-from field_shift.algorithm.sources.demo_twin_crops import demo_twin_evidence
+from field_shift.algorithm.sources.place_sources import PlaceSources
 from field_shift.algorithm.twins.climate_twin_finder import ClimateTwinFinder
+from field_shift.algorithm.twins.soil_comparison import Soil
 from field_shift.algorithm.water.water_model import WaterModel, WaterPressure
 from field_shift.algorithm.weather.daily_weather import DailyWeather
 
@@ -42,50 +41,48 @@ ALGORITHM_VERSION = "field_shift v5.1"
 class FieldShiftAlgorithm:
     """The algorithm for the farm of one place."""
 
-    #: What is fictitious for now (replaced by real data one by one, see docs/ALGORITHME.md).
-    DEMO_SOURCES = (
-        DataSource(
-            "climateModels", False, "3 modèles climatiques fictifs (à la place de NEX-GDDP-CMIP6)"
-        ),
-        DataSource("twins", False, "Grille de climats et cultures des jumeaux fictive"),
-        DataSource("fieldMeasures", False, "Mesures satellites de l’érosion et sol fictifs"),
-    )
-
     def __init__(
         self,
         farm_weather: DailyWeather,
         weather_source: DataSource,
-        lat: float,
-        lon: float,
         current_year: int,
         water: WaterModel,
+        place: PlaceSources,
     ) -> None:
         self.weather_source = weather_source
         self.water_source = water.source
+        self.place_sources = place.sources
+        self.notes = place.notes
         #: The water pressure of the farm today: the one of its most recent weather.
         self.water_today: WaterPressure = water.for_cycle(
             ((weather_source.label, farm_weather.between(*RECENT_WINDOW)),)
         ).pressure
         self._data = CycleDataProvider(
             projector=TargetClimateProjector(
-                farm_weather, current_year, models=demo_climate_models(farm_weather)
+                farm_weather, current_year, models=place.models, models_label=place.models_label
             ),
-            twin_finder=ClimateTwinFinder(demo_twin_atlas(lat, lon, farm_weather)),
-            evidence_for=demo_twin_evidence,
+            twin_finder=ClimateTwinFinder(place.grid, cultivation=place.cultivation),
+            evidence_for=place.evidence_for,
             water=water,
         )
 
     @property
     def data_sources(self) -> tuple[DataSource, ...]:
         """All the data sources of a plan, the farm weather first."""
-        return (self.weather_source, self.water_source, *self.DEMO_SOURCES)
+        return (self.weather_source, self.water_source, *self.place_sources)
 
     @property
     def is_demo(self) -> bool:
         return any(not source.real for source in self.data_sources)
 
     def plan_parcel(
-        self, parcel: Parcel, time: TimeSettings, farmer: FarmerProfile, today: float
+        self,
+        parcel: Parcel,
+        time: TimeSettings,
+        farmer: FarmerProfile,
+        today: float,
+        soil: Soil | None = None,
     ) -> ParcelPlan:
-        """The plan of one field, cycle after cycle. `today` is an absolute month."""
-        return ParcelPlanner(time, farmer, self._data, today).plan(parcel)
+        """The plan of one field, cycle after cycle. `today` is an absolute month; `soil` is the
+        soil of the field (step 5 keeps the twin fields of a comparable soil)."""
+        return ParcelPlanner(time, farmer, self._data.for_soil(soil), today).plan(parcel)

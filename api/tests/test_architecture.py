@@ -27,7 +27,6 @@ ALLOWED_PACKAGES = {
     "data_access": {"algorithm"},
     "services": {"algorithm", "contract", "data_access", "reference"},
     "api": {"algorithm", "contract", "data_access", "reference", "services"},
-    "tools": {"algorithm", "contract", "data_access", "reference", "services"},
 }
 
 # The libraries (outside the standard library) that each package may use.
@@ -38,7 +37,6 @@ ALLOWED_LIBRARIES = {
     "data_access": {"httpx", "numpy", "water_use"},
     "services": set(),
     "api": {"fastapi"},
-    "tools": set(),
 }
 
 PACKAGE_NAMES = sorted(ALLOWED_PACKAGES)

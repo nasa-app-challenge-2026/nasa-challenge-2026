@@ -1,5 +1,5 @@
 {
-  "soilgrids": "https://rest.isric.org/soilgrids/v2.0/properties/query",
+  "soilgrids": "https://maps.isric.org/mapserv",
   "elevation": "https://api.open-meteo.com/v1/elevation",
   "modis": {
     "url": "https://modis.ornl.gov/rst/api/v1",

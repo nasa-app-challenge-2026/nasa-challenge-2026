@@ -329,6 +329,7 @@ def _resolve_pair_effect_for_region(
         stress_delta = evidence["meanEffectPct"] - normal_evidence["meanEffectPct"]
         means = (reference_baseline_stats or {}).get("means") or {}
         stds = (reference_baseline_stats or {}).get("stds") or {}
+        # Unknown moisture: 0.55 gives a factor of exactly 1, no modulation (not a measure).
         root_wetness = (
             means["soilMoistureRoot"]
             if means.get("soilMoistureRoot") is not None

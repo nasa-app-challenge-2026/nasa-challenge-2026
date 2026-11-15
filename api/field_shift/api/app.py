@@ -20,13 +20,25 @@ from fastapi.responses import JSONResponse
 
 from field_shift import __version__
 from field_shift.algorithm.field_shift_algorithm import ALGORITHM_VERSION
+from field_shift.algorithm.sources.field_data import FieldDataUnavailableError
 from field_shift.api.ranking_routes import ranking_router
 from field_shift.api.settings import Settings
 from field_shift.contract.farm_input import FarmInput
 from field_shift.contract.farm_plan import FarmPlan
-from field_shift.data_access.field_shift_eau import WaterDataUnavailableError
+from field_shift.data_access.data_source_config import SOILGRIDS
+from field_shift.data_access.disk_cache import DataCache
+from field_shift.data_access.field_measures import RemoteFieldData
+from field_shift.data_access.field_shift_eau import (
+    WaterDataUnavailableError,
+    water_models,
+)
 from field_shift.data_access.nasa_power import NasaPowerClient, WeatherUnavailableError
+from field_shift.data_access.place_data import RemotePlaceData
+from field_shift.data_access.power_grid import GridUnavailableError
+from field_shift.data_access.power_projection import ProjectionUnavailableError
 from field_shift.data_access.site_data import RemoteSiteData
+from field_shift.data_access.soilgrids import SoilGridsClient
+from field_shift.data_access.twin_crops import CropMapsUnavailableError
 from field_shift.data_access.weather_providers import NasaPowerWeatherProvider
 from field_shift.services.plan_service import PlanService
 from field_shift.services.ranking_service import RankingService
@@ -52,14 +64,32 @@ and MODIS; a service that fails gives a **502** naming it.
 
 
 def plan_service_for(settings: Settings) -> PlanService:
-    """The plan service on the NASA POWER weather."""
-    client = NasaPowerClient(url=settings.data_sources.power_daily_url)
-    return PlanService(NasaPowerWeatherProvider(client))
+    """The plan service on the real data services, their answers kept on disk."""
+    cache = DataCache.default()
+    sources = settings.data_sources
+    client = NasaPowerClient(url=sources.power_daily_url, cache=cache)
+    return PlanService(
+        NasaPowerWeatherProvider(client),
+        water_models(SoilGridsClient(sources[SOILGRIDS], cache=cache)),
+        RemotePlaceData(sources, cache=cache),
+        RemoteFieldData(sources, cache=cache),
+    )
 
 
 def ranking_service_for(settings: Settings) -> RankingService:
     """The ranking service on the configured data services."""
-    return RankingService(RemoteSiteData(settings.data_sources))
+    return RankingService(RemoteSiteData(settings.data_sources, cache=DataCache.default()))
+
+
+#: Failures of a data service, the service they name (each answered 502).
+SERVICE_FAILURES = (
+    (WeatherUnavailableError, "NASA POWER (MERRA-2)"),
+    (WaterDataUnavailableError, "Sol (SSURGO / SoilGrids)"),
+    (ProjectionUnavailableError, "NASA NEX-GDDP-CMIP6 (NASA POWER)"),
+    (GridUnavailableError, "NASA POWER (grille régionale)"),
+    (CropMapsUnavailableError, "Cartes de cultures (AAC / USDA CDL)"),
+    (FieldDataUnavailableError, "Mesures de la section"),
+)
 
 
 def get_plan_service(request: Request) -> PlanService:
@@ -85,19 +115,17 @@ def create_app(
     app.state.plan_service = plan_service or plan_service_for(settings)
     app.state.ranking_service = ranking_service or ranking_service_for(settings)
 
-    @app.exception_handler(WeatherUnavailableError)
-    def weather_unavailable(request: Request, error: WeatherUnavailableError) -> JSONResponse:
-        return JSONResponse(
-            status_code=BAD_GATEWAY,
-            content={"detail": [{"source": "NASA POWER (MERRA-2)", "msg": str(error)}]},
-        )
+    def answer_bad_gateway(source: str):
+        def handler(request: Request, error: Exception) -> JSONResponse:
+            return JSONResponse(
+                status_code=BAD_GATEWAY,
+                content={"detail": [{"source": source, "msg": str(error)}]},
+            )
 
-    @app.exception_handler(WaterDataUnavailableError)
-    def water_unavailable(request: Request, error: WaterDataUnavailableError) -> JSONResponse:
-        return JSONResponse(
-            status_code=BAD_GATEWAY,
-            content={"detail": [{"source": "Sol (SSURGO / SoilGrids)", "msg": str(error)}]},
-        )
+        return handler
+
+    for failure, source in SERVICE_FAILURES:
+        app.add_exception_handler(failure, answer_bad_gateway(source))
 
     router = APIRouter()
 
@@ -109,7 +137,7 @@ def create_app(
         "/plan",
         response_model=FarmPlan,
         summary="Plan every section of a farm",
-        responses={BAD_GATEWAY: {"description": "NASA POWER or the soil could not be read."}},
+        responses={BAD_GATEWAY: {"description": "A data service could not be read (named)."}},
     )
     def plan(farm_input: FarmInput, service: PlanService = Depends(get_plan_service)) -> FarmPlan:
         return service.plan_farm(farm_input)

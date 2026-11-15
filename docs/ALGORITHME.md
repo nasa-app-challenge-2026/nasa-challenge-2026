@@ -2,7 +2,7 @@
 
 Ce document explique comment l'algorithme de rotations (_Field Shift — pipeline v5.1_, référence `field_shift.py`) est codé dans ce dépôt, où trouver chaque étape et comment le faire évoluer.
 
-- **Où :** [`backend/server/field_shift/algorithm/`](../backend/server/field_shift/algorithm/), servi par un serveur **FastAPI** ([`backend/server/`](../backend/server/)).
+- **Où :** [`api/field_shift/algorithm/`](../api/field_shift/algorithm/), servi par un serveur **FastAPI** ([`api/`](../api/)).
 - **Langage :** Python 3.11+, avec numpy et scipy pour le calcul. L'algorithme n'importe ni FastAPI ni Pydantic : il reçoit et rend des objets Python ordinaires.
 - **Fidélité :** sur les mêmes entrées, il donne les mêmes chaînes, décisions et notes que `field_shift.py` (à 10⁻⁹ près). 17 plans de parcelles, sur 9 scénarios, sont vérifiés à chaque `pytest`, et la chaîne complète de la météo au plan aussi (voir [Tests](#tests)).
 
@@ -18,7 +18,7 @@ front end (navigateur)
    ▼
 api/app.py ─────────► services/plan_service.py                 PlanService.plan_farm
                          │ 1. météo de la ferme               data_access/weather_providers.py
-                         │    (NASA POWER, ou météo fictive si l'API ne répond pas)
+                         │    (NASA POWER : une requête par lieu, gardée sur disque)
                          │ 2. un FieldShiftAlgorithm par lieu, gardé en mémoire (8 lieux)
                          │ 3. entrée → objets de l'algorithme  contract/input_mapper.py
                          │ 4. pour chaque section :            algorithm/field_shift_algorithm.py
@@ -32,7 +32,7 @@ Un plan complet (4 sections, 3 cycles, une culture par an) prend environ 0,3 s. 
 
 ## Les étapes et leurs fichiers
 
-Chemins relatifs à `backend/server/field_shift/`.
+Chemins relatifs à `api/field_shift/`.
 
 | Étape du PDF                    | Ce qu'elle fait                                                                                                  | Fichiers                                                                                                                                                                              |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -59,7 +59,7 @@ Autres dossiers de `algorithm/` :
 - `sources/` : d'où viennent les données (voir la section suivante).
 - `field_shift_algorithm.py` : la façade. Elle se construit une fois par lieu et planifie autant de parcelles qu'on veut.
 
-Les données fixes sont dans `reference/` : [`crops.py`](../backend/server/field_shift/reference/crops.py) (cultures et **fiches** : fenêtre de semis, degrés-jours, date de récolte fixe, années de production, minimum de janvier, équipement, valeurs des critères), [`return_delays.py`](../backend/server/field_shift/reference/return_delays.py) (table Fruchtfolge + SARE et les 20 maladies du sol), `criteria.py` (les 9 critères), `planning.py` (cycle 2 à 6 ans, fréquences 12 / 6 / 4 mois, 2060, modes de la réserve).
+Les données fixes sont dans `reference/` : [`crops.py`](../api/field_shift/reference/crops.py) (cultures et **fiches** : fenêtre de semis, degrés-jours, date de récolte fixe, années de production, minimum de janvier, équipement, valeurs des critères), [`return_delays.py`](../api/field_shift/reference/return_delays.py) (table Fruchtfolge + SARE et les 20 maladies du sol), `criteria.py` (les 9 critères), `planning.py` (cycle 2 à 6 ans, fréquences 12 / 6 / 4 mois, 2060, modes de la réserve).
 
 ## Les classes principales
 
@@ -83,29 +83,21 @@ Les données fixes sont dans `reference/` : [`crops.py`](../backend/server/field
 
 L'algorithme reçoit ses données par **injection** : `ParcelPlanner` ne connaît que `data.cycle_data(a0, a1)`, et chaque parcelle porte son diagnostic. Changer de source ne touche pas au cœur.
 
-| Donnée                                    | Aujourd'hui                                                                                                                                                            | Fichier                                             |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| Météo de la ferme 1985–2024 (étapes 2–3)  | **réelle : API NASA POWER** au point de la ferme, lue par le serveur ; si l'API ne répond pas, série fictive, et le plan le dit                                        | `data_access/nasa_power.py`, `weather_providers.py` |
-| Modèles NEX-GDDP-CMIP6 (cas 2)            | **fictifs** : 3 modèles (réchauffement × 0,8 / 1 / 1,3, pluie × 1,05 / 1 / 0,92, biais de +1 °C), ceux de la démo de la référence                                      | `algorithm/sources/demo_climate_models.py`          |
-| Climat observé de la grille (étape 4)     | **fictif** : grille de 0,5° autour de la ferme, ancrée sur le climat réel de la ferme et déplacée par des gradients plausibles ; la vraie recherche sigma s'y applique | `algorithm/sources/demo_twin_atlas.py`              |
-| Cultures et précédents des jumeaux (5–7)  | **fictifs** : la table de la démo de la référence (canola tant que le cycle est à moins de 1,5 °C de 2015, double culture blé-soya ensuite)                            | `algorithm/sources/demo_twin_crops.py`              |
-| Mesures satellites et sol (étapes 5 et 8) | **fictifs** : les valeurs de la démo de la référence, un peu différentes d'une section à l'autre ; l'analyse de sol du fermier remplace SoilGrids                      | `algorithm/sources/field_data.py`                   |
+| Donnée                                    | Source (toutes réelles, lues en direct puis gardées sur disque)                                                                                                                                                                                                                  | Fichier                                               |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Météo de la ferme 1985–2024 (étapes 2–3)  | **NASA POWER** au point de la ferme, une seule requête par lieu pour le plan et pour le bilan d'eau (température, pluie, humidité, vent, rayonnement, humidité racinaire MERRA-2, 1984–2024)                                                                                       | `data_access/nasa_power.py`, `weather_providers.py`   |
+| Modèles climatiques (cas 2)               | **NASA NEX-GDDP-CMIP6** par le service de projections de NASA POWER : l'ensemble des modèles, 3 scénarios (SSP1-2.6, SSP2-4.5, SSP3-7.0) cherchés comme 3 modèles. Deltas mensuels mesurés depuis 2015–2034 (le service n'a pas les runs historiques), ajoutés à la météo récente avancée par la tendance jusqu'à 2015–2034 | `data_access/power_projection.py`                     |
+| Climat observé de la grille (étape 4)     | **NASA POWER regional** : les ~350 cases de 0,5° × 0,625° d'une boîte de 10° × 10° autour de la ferme, leurs 5 indicateurs de 2011 à 2024 (42 requêtes en parallèle, une fois par région)                                                                                         | `data_access/power_grid.py`                           |
+| Cases cultivées, cultures et enchaînements des jumeaux (4–6) | **AAC, Inventaire annuel des cultures** (Canada, 2017–2024) et **USDA Cropland Data Layer** (États-Unis, Planetary Computer, 2014–2021) : 4 096 points par case, lus seulement pour les cases candidates ; sol des jumeaux : **SoilGrids 2.0** | `data_access/twin_crops.py`                           |
+| Valeur du précédent (étape 7)             | **pas encore calculée** (verdure NASA HLS) : laissée inconnue, le critère rendement est neutre et le plan liste les lacunes ; aucun chiffre d'exemple                                                                                                                              | —                                                     |
+| Mesures et sol des sections (étapes 5 et 8) | pente **Copernicus DEM** (Open-Meteo) sur le contour, jours de forte pluie **NASA POWER**, jours de sol nu **NDVI MODIS** (Planetary Computer, une requête par an), sol **SoilGrids 2.0** 0–30 cm au centre ; l'analyse de sol du fermier remplace SoilGrids                       | `data_access/field_measures.py`, `soilgrids.py`, `modis_ndvi.py` |
+Le plan dit toujours d'où viennent ses chiffres (`meta.sources`, affiché en haut des écrans). `meta.demo` vaut `false` avec le serveur ; seuls les tests utilisent encore les données fictives de la référence `field_shift.py` (`tests/helpers/`, jamais le serveur), pour vérifier que l'algorithme donne les mêmes plans qu'elle.
 
-Le plan dit toujours d'où viennent ses chiffres (`meta.sources`, affiché en haut des écrans) et `meta.demo` vaut `true` tant qu'une source est fictive (badge « Données d'exemple »).
+### Les sources d'un lieu
 
-### Brancher une vraie source
+L'algorithme ne lit aucun service lui-même : `PlanService` lui donne la météo de la ferme, le modèle d'eau du lieu et ses `PlaceSources` (modèles climatiques, grille de climats observés, vérification des cases cultivées, preuves des jumeaux), lues par `data_access/place_data.py`. Les tests lui donnent celles de la référence (`tests/helpers/reference_place.py`).
 
-Les fichiers de NEX-GDDP-CMIP6, des cartes de cultures (USDA, AAC) et de NASA HLS pèsent des centaines de Mo : ils se **préparent hors ligne** (un script qui écrit de petits fichiers de résultats), puis le serveur les lit. Chaque source a une petite interface à remplir :
-
-| Source                     | À fournir                                                                                                                                                                                       | Passe par                           |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| Modèles climatiques        | des objets `ClimateModel` : un `name` et `simulate(début, fin) → ModelSimulation(historical, future)` (deux `DailyWeather` en °C et mm/jour)                                                    | `TargetClimateProjector(models=…)`  |
-| Grille de climats observés | une liste de `GridCell(id, lat, lon, cultivated, indicators)` avec les 5 indicateurs de 2011 à 2024 (`IndicatorTable`)                                                                          | `ClimateTwinFinder(cells)`          |
-| Cultures et précédents     | une fonction `evidence_for(première année, dernière année, jumeaux) → TwinEvidence`, qui appelle `SoilFilter` (étape 5) puis `build_twin_evidence(champs, champs_années, jumeaux)` (étapes 6–7) | `CycleDataProvider(evidence_for=…)` |
-| Mesures de la parcelle     | un `FieldDataSource` : `field_data(id de la section, analyse de sol) → FieldData(measures, soil, soil_source)`                                                                                  | `PlanService(field_data=…)`         |
-| Météo de la ferme          | un `WeatherProvider` : `farm_weather(lat, lon) → FarmWeather`                                                                                                                                   | `PlanService(weather)`              |
-
-Les trois premières se branchent dans le constructeur de `FieldShiftAlgorithm` (`algorithm/field_shift_algorithm.py`), qui n'a aujourd'hui que les sources de démonstration.
+Tout ce que répondent les services est gardé sur disque (`data_access/disk_cache.py`, dossier `api/.cache_field_shift/`, exclu de git) : une requête n'est faite qu'une fois, même après un redémarrage du serveur ; un échec n'est jamais gardé.
 
 ## Les règles importantes, en bref
 
@@ -146,7 +138,7 @@ Ils viennent de l'algorithme lui-même, pas du portage :
 
 ## Tests
 
-`pytest`, dans [`backend/server/tests/`](../backend/server/tests/) :
+`pytest`, dans [`api/tests/`](../api/tests/) :
 
 | Fichier                        | Ce qu'il vérifie                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

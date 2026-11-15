@@ -19,8 +19,8 @@ from field_shift.reference.planning import (
     ReserveMode,
 )
 from field_shift.reference.return_delays import SOIL_DISEASES
-from field_shift.tools.make_examples import example_plans
 from tests.conftest import EXAMPLES_DIR
+from tests.helpers.example_plans import example_plans
 
 
 def validator(schema: dict, definition: str) -> Draft7Validator:
@@ -83,7 +83,7 @@ class TestExamples:
 
     def test_plans_are_what_the_server_returns_now(self):
         """A plan not regenerated after a change of the algorithm would mislead the front end:
-        run `python -m field_shift.tools.make_examples`."""
+        run `python -m tests.helpers.example_plans`."""
         for name, plan in example_plans().items():
             written = json.loads((EXAMPLES_DIR / f"{name}.plan.json").read_text(encoding="utf-8"))
             assert plan.model_dump(mode="json", by_alias=True) == written, name

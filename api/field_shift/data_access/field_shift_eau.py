@@ -40,11 +40,18 @@ from field_shift.algorithm.water.water_model import (
     WaterScore,
 )
 from field_shift.algorithm.weather.daily_weather import DailyWeather
+from field_shift.data_access.soilgrids import (
+    ALL_DEPTHS,
+    D_FACTOR,
+    SoilGridsClient,
+    SoilGridsError,
+)
+from field_shift.data_access.weather_providers import FarmWeather
 from water_use import earthdata
 from water_use.cultures import CULTURES
 from water_use.et0 import et0_meteo
 from water_use.humidite import secheresse_merra2
-from water_use.meteo import Meteo, telecharger_power
+from water_use.meteo import Meteo, lire_reponse_power, telecharger_power
 from water_use.nappes import nappes_usgs
 from water_use.notes import (
     evaluer_rotation,
@@ -53,7 +60,7 @@ from water_use.notes import (
 )
 from water_use.reseau import ErreurDonnees
 from water_use.rotation import Rotation, rotation_depuis_dict
-from water_use.sol import Sol, sol_manuel, trouver_sol
+from water_use.sol import Sol, lire_reponse_soilgrids, sol_manuel, sol_ssurgo, trouver_sol
 from water_use.terrain import terrain_srtm
 
 #: Sheet of the plan → crop code of `water_use` (`python -m water_use cultures`).
@@ -285,16 +292,76 @@ def meteo_of_weather(
 # Soil and slope of a place
 # --------------------------------------------------------------------------------------------------
 _soils: dict[tuple[int, int], Sol] = {}
+#: Reads the soil of a place (lat, lon) → Sol; raises ErreurDonnees.
+SoilReader = Callable[[float, float], Sol]
+#: The box where water_use asks SSURGO first (the United States, wide).
+SSURGO_BOX: Final = ((18.0, 72.0), (-180.0, -65.0))
 
 
-def soil_of_place(lat: float, lon: float) -> Sol:
+def _water_use_soil(lat: float, lon: float) -> Sol:
+    """SSURGO, then SoilGrids, as water_use reads them (its REST requests)."""
+    return trouver_sol(lat, lon, journal=_silent)
+
+
+def _soilgrids_answer(client: SoilGridsClient, lat: float, lon: float) -> dict[str, Any]:
+    """SoilGrids read on its WCS, written as its REST API answers (what water_use reads)."""
+    layers = client.layers(lat, lon, ALL_DEPTHS, ("sand", "clay", "soc"))
+    return {
+        "properties": {
+            "layers": [
+                {
+                    "name": name,
+                    "unit_measure": {"d_factor": D_FACTOR},
+                    "depths": [
+                        {
+                            "label": label,
+                            "values": {"mean": None if value is None else value * D_FACTOR},
+                        }
+                        for label, value in by_depth.items()
+                    ],
+                }
+                for name, by_depth in layers.items()
+            ]
+        }
+    }
+
+
+def soilgrids_soil_reader(client: SoilGridsClient) -> SoilReader:
+    """The soil of a place with SoilGrids read on its WCS (the REST API water_use asks did not
+    answer for minutes on 2026-11-15): SSURGO first in the United States, as water_use does, then
+    SoilGrids. The formulas of water_use are the same (`lire_reponse_soilgrids`)."""
+
+    def read(lat: float, lon: float) -> Sol:
+        (lat_min, lat_max), (lon_min, lon_max) = SSURGO_BOX
+        if lat_min <= lat <= lat_max and lon_min <= lon <= lon_max:
+            try:
+                soil = sol_ssurgo(lat, lon)
+            except ErreurDonnees:
+                soil = None
+            if soil is not None:
+                if not soil.groupe_hydro:  # SSURGO has no group here: the texture's
+                    soil.groupe_hydro = read_soilgrids(lat, lon).groupe_hydro
+                    soil.details["groupe_hydro"] = "SoilGrids (texture 0-30 cm), absent de SSURGO"
+                return soil
+        return read_soilgrids(lat, lon)
+
+    def read_soilgrids(lat: float, lon: float) -> Sol:
+        try:
+            return lire_reponse_soilgrids(_soilgrids_answer(client, lat, lon))
+        except SoilGridsError as error:
+            raise ErreurDonnees(str(error)) from error
+
+    return read
+
+
+def soil_of_place(lat: float, lon: float, read: SoilReader | None = None) -> Sol:
     """The soil of the place (SSURGO in the United States, SoilGrids elsewhere) with its slope
     (SRTM). The slope is optional: without it, the runoff tables are used as they are. Read once
     per place. Raises WaterDataUnavailableError when no soil base answers."""
     key = (round(lat * PLACE_PRECISION), round(lon * PLACE_PRECISION))
     if key not in _soils:
         try:
-            soil = trouver_sol(lat, lon, journal=_silent)
+            soil = (read or _water_use_soil)(lat, lon)
         except ErreurDonnees as error:
             raise WaterDataUnavailableError(
                 f"le sol du champ n’a pas pu être lu pour la note eau : {error}"
@@ -621,18 +688,31 @@ class WaterUseModel:
         return cls(lat, lon, soil, sources=sources, real=False)
 
     @classmethod
-    def from_data_bases(cls, lat: float, lon: float) -> WaterUseModel:
+    def from_data_bases(
+        cls,
+        lat: float,
+        lon: float,
+        power_series: Mapping[str, Any] | None = None,
+        soil_reader: SoilReader | None = None,
+    ) -> WaterUseModel:
         """The model of a place, read from the real data bases.
+
+        `power_series` is the NASA POWER daily answer the plan already read at the place (every
+        variable, from one year before the scored years): given, NASA POWER is not asked again.
+        `soil_reader` reads the soil (default: as water_use reads it).
 
         Raises WaterDataUnavailableError when the soil cannot be read. Everything else is
         optional and named in `sources` when it is missing.
         """
-        soil = soil_of_place(lat, lon)
+        soil = soil_of_place(lat, lon, soil_reader)
         sources = {
             "pente": "SRTM 30 m (NASA)" if soil.pente is not None else "non lue : tables NRCS",
         }
         first, last = FARM_WEATHER_YEARS.first - SPIN_UP_YEARS, FARM_WEATHER_YEARS.last
-        observed, why = _attempt(lambda: telecharger_power(lat, lon, first, last))
+        if power_series is not None:
+            observed, why = _attempt(lambda: lire_reponse_power(dict(power_series), lat, lon))
+        else:
+            observed, why = _attempt(lambda: telecharger_power(lat, lon, first, last))
         sources["et0"] = (
             "Penman-Monteith FAO-56 (humidité, vent et rayonnement de NASA POWER)"
             if observed is not None
@@ -645,3 +725,16 @@ class WaterUseModel:
 
     def for_cycle(self, weathers: Sequence[NamedWeather]) -> WaterUseCycle:
         return WaterUseCycle(self, weathers)
+
+
+def water_models(
+    soilgrids: SoilGridsClient,
+) -> Callable[[float, float, FarmWeather], WaterUseModel]:
+    """The water model of each place, on the NASA POWER answer the plan already read there and
+    on the soil of SSURGO / SoilGrids (WCS)."""
+    reader = soilgrids_soil_reader(soilgrids)
+
+    def model(lat: float, lon: float, farm_weather: FarmWeather) -> WaterUseModel:
+        return WaterUseModel.from_data_bases(lat, lon, farm_weather.power_series, reader)
+
+    return model
