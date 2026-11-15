@@ -1,107 +1,66 @@
 /**
- * Pie chart (camembert) for the farm mix: shows the share of each crop by area.
- * Pure SVG, no dependencies beyond the html helper.
+ * A pie chart (camembert) in plain SVG: one slice per value, clockwise from the top.
+ *
+ *   pieChart([{ label: 'Maïs', value: 12, color: '#F2C14E' }, …], { label: 'Cultures en 2027' })
  */
 import { html } from '../lib/html.js';
-import { colorOf, nameOf } from '../../data/reference/crops.js';
 
-const TAU = Math.PI * 2;
-const R = 90;
-const CX = 110;
-const CY = 110;
-const SIZE = 220;
+const TURN = Math.PI * 2;
+/** The pie is drawn in a 100 × 100 box. */
+const CENTER = 50;
+const RADIUS = 48;
+const HALF_TURN = 0.5;
 
-function polarToXY(angle, radius = R) {
-  return [
-    CX + radius * Math.sin(angle),
-    CY - radius * Math.cos(angle),
-  ];
+const round = (n) => Math.round(n * 100) / 100;
+
+/** Point of the edge of the pie at `turn` (0 = top, clockwise, 1 = a full turn). */
+const edge = (turn) => [
+  round(CENTER + RADIUS * Math.sin(turn * TURN)),
+  round(CENTER - RADIUS * Math.cos(turn * TURN)),
+];
+
+/** The share of each slice, as [{ …slice, from, to }] in turns. Slices of 0 are left out. */
+export function pieShares(slices) {
+  const shown = slices.filter((slice) => slice.value > 0);
+  const total = shown.reduce((sum, slice) => sum + slice.value, 0);
+  let from = 0;
+  return shown.map((slice) => {
+    const to = from + slice.value / total;
+    const share = { ...slice, from, to };
+    from = to;
+    return share;
+  });
 }
 
-/**
- * Renders a pie chart of the crop mix.
- * @param {Object<string, number>} area  cropId → hectares
- * @param {number} year
- */
-export function pieChart(area, year) {
-  const entries = Object.entries(area);
-  if (!entries.length) {
-    return html`<div class="pie-empty">
-      <span class="pie-empty__text">Pas encore de plan</span>
-    </div>`;
-  }
+function slicePath({ from, to }) {
+  const [x0, y0] = edge(from);
+  const [x1, y1] = edge(to);
+  const large = to - from > HALF_TURN ? 1 : 0;
+  return `M${CENTER} ${CENTER}L${x0} ${y0}A${RADIUS} ${RADIUS} 0 ${large} 1 ${x1} ${y1}Z`;
+}
 
-  const total = entries.reduce((s, [, ha]) => s + ha, 0);
-  let angle = 0;
-  const slices = [];
-  const labels = [];
-
-  entries.forEach(([cropId, ha], i) => {
-    const share = ha / total;
-    const startAngle = angle;
-    const endAngle = angle + share * TAU;
-    const midAngle = (startAngle + endAngle) / 2;
-    const large = share > 0.5 ? 1 : 0;
-
-    const [x0, y0] = polarToXY(startAngle);
-    const [x1, y1] = polarToXY(endAngle);
-    const color = colorOf(cropId);
-
-    // Slightly pull slice out for a donut gap effect
-    const gapPx = 1.5;
-    const gx = gapPx * Math.sin(midAngle);
-    const gy = -gapPx * Math.cos(midAngle);
-
-    if (entries.length === 1) {
-      slices.push(
-        html`<circle cx="${CX}" cy="${CY}" r="${R}" fill="${color}" class="pie-slice">
-          <title>${nameOf(cropId)} · ${ha} ha (100%)</title>
-        </circle>`,
-      );
-    } else {
-      slices.push(
-        html`<path
-          d="M${CX + gx} ${CY + gy}L${x0 + gx} ${y0 + gy}A${R} ${R} 0 ${large} 1 ${x1 + gx} ${y1 + gy}Z"
-          fill="${color}"
-          class="pie-slice"
-          style="--i: ${i}"
-        >
-          <title>${nameOf(cropId)} · ${ha} ha (${Math.round(share * 100)}%)</title>
-        </path>`,
-      );
+export function pieChart(slices, { label, size = 96 }) {
+  const shares = pieShares(slices);
+  const title = (s) => html`<title>${s.label} · ${Math.round((s.to - s.from) * 100)} %</title>`;
+  return html`<svg
+    class="pie"
+    viewBox="0 0 100 100"
+    width="${size}"
+    height="${size}"
+    role="img"
+    aria-label="${label} : ${shares.map((s) => s.label).join(', ')}"
+  >
+    ${
+      shares.length === 1
+        ? html`<circle cx="${CENTER}" cy="${CENTER}" r="${RADIUS}" fill="${shares[0].color}">
+            ${title(shares[0])}
+          </circle>`
+        : shares.map(
+            (s) =>
+              html`<path d="${slicePath(s)}" fill="${s.color}" class="pie__slice"
+                >${title(s)}</path
+              >`,
+          )
     }
-
-    // Label at midpoint outside the pie
-    if (share > 0.06) {
-      const labelR = R + 22;
-      const [lx, ly] = polarToXY(midAngle, labelR);
-      const anchor = lx > CX ? 'start' : lx < CX - 2 ? 'end' : 'middle';
-      labels.push(
-        html`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anchor}" class="pie-label">
-          ${Math.round(share * 100)}%
-        </text>`,
-      );
-    }
-
-    angle = endAngle;
-  });
-
-  return html`<div class="pie-container">
-    <svg class="pie-svg" viewBox="0 0 ${SIZE} ${SIZE}" aria-label="Répartition des cultures en ${year}">
-      ${slices}
-      ${labels}
-      <text x="${CX}" y="${CY - 4}" text-anchor="middle" class="pie-center-year">${year}</text>
-      <text x="${CX}" y="${CY + 14}" text-anchor="middle" class="pie-center-total">${total} ha</text>
-    </svg>
-    <div class="pie-legend">
-      ${entries.map(
-        ([cropId, ha]) =>
-          html`<span class="pie-legend__item">
-            <span class="dot" style="background: ${colorOf(cropId)}"></span>
-            <span>${nameOf(cropId)}</span>
-            <strong>${ha} ha</strong>
-          </span>`,
-      )}
-    </div>
-  </div>`;
+  </svg>`;
 }

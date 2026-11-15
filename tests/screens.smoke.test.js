@@ -130,6 +130,18 @@ describe('the other screens', () => {
     expect(page).toContain('Voir les rotations');
   });
 
+  it('the dashboard puts the weather on top, then the 3D farm (with its pie) left of the sections', () => {
+    const page = render(tableau, stateWithPlan());
+    const at = (text) => page.indexOf(text);
+    expect(at('Météo à la ferme')).toBeGreaterThan(-1);
+    expect(at('Météo à la ferme')).toBeLessThan(at('Ma ferme en 3D'));
+    expect(at('Ma ferme en 3D')).toBeLessThan(at('class="dash-sections"'));
+    // The pie chart of the crops of the year is inside the 3D view, before the section cards.
+    expect(at('data-farm3d')).toBeLessThan(at('class="pie"'));
+    expect(at('class="pie"')).toBeLessThan(at('class="dash-sections"'));
+    expect(count(page, /class="pie__slice"/g)).toBeGreaterThan(1);
+  });
+
   it('a farm type out of the MVP opens Rota instead of saying "coming soon"', () => {
     const page = render(typeFerme, stateWithPlan());
     const outOfMvp = FARM_TYPES.filter((type) => !type.available);

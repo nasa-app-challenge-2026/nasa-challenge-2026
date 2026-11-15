@@ -59,4 +59,4 @@
 - [ ] Interface en anglais (la soumission est en anglais)
 - [ ] Les autres types de ferme : maraîchage, cultures et élevage, pâturage tournant, vergers et vignes
 - [ ] Corriger les dates de gel avec celles que le fermier connaît (la grille NASA POWER lisse les gels locaux)
-- [ ] Vraie 3D (Three.js) à la place de la vue isométrique
+- [x] Vraie 3D (three.js) sur le tableau de bord : sections à leur vraie forme, semées de la culture de l'année, qu'on fait tourner à la souris ; la vue isométrique reste le repli sans WebGL

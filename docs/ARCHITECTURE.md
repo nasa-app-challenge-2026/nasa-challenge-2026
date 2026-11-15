@@ -46,7 +46,7 @@ frontend/              COUCHE PRÉSENTATION
   router.js              routes en #/… (marche sur GitHub Pages sans configuration)
   actions.js             actions communes à tous les écrans (Rota, sélection, année, cycle, rotation affichée)
   screens/               un fichier par écran
-  ui/                    composants : en-têtes, widgets, rotations (roue, liste, frise), priorités, éditeurs des entrées, cartes Leaflet, vue 3D, textures, Rota
+  ui/                    composants : en-têtes, widgets, rotations (roue, liste, frise), priorités, éditeurs des entrées, cartes Leaflet, ferme en 3D (`farm3d/`, three.js chargé à la demande), camembert, textures, Rota
   styles/                tokens (base commune), base, composants, écrans
   lib/                   gabarit HTML sûr, ordre des blocs du tableau de bord
 backend/               COUCHE BACK END
@@ -76,22 +76,22 @@ docs/                  documentation
 
 ## Les écrans
 
-| Route                  | Écran               | Contenu                                                                                                                                                                                            |
-| ---------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `#/connexion`          | Connexion           | compte de démo                                                                                                                                                                                     |
-| `#/type-de-ferme`      | Type de ferme       | grandes cultures ; toucher un autre type ouvre Rota (« Hors de portée du MVP. »)                                                                                                                   |
-| `#/localisation`       | Localisation        | point de la ferme (météo NASA POWER, centre des jumeaux)                                                                                                                                           |
-| `#/tracer`             | Tracer la ferme     | contour et sections                                                                                                                                                                                |
-| `#/cultures`           | Mes cultures        | culture en place, mois de récolte, rotation actuelle de chaque section ; réserve de semences                                                                                                       |
-| `#/temps`              | Cycle et horizon    | cycle, fréquence, horizon                                                                                                                                                                          |
-| `#/priorites`          | Priorités           | classement des 4 priorités, équipement                                                                                                                                                             |
-| `#/tableau`            | Tableau de bord     | année affichée, météo du jour, vue 3D, toute la ferme, une carte par section (rotation du cycle, garder/changer, note)                                                                             |
-| `#/section/A/parcelle` | Ma parcelle         | toutes les entrées de la section, années précédentes, maladies, irrigation, analyse de sol                                                                                                         |
-| `#/section/A/champ`    | Mon champ           | risques érosion et eau, mesures satellites, sol                                                                                                                                                    |
-| `#/section/A/plan`     | Rotations proposées | les 3 rotations du cycle côte à côte (roue, cultures, 4 priorités), la rotation actuelle, puis le détail de celle qu'on touche : frise des cultures et dates, 4 priorités, eau, ravageurs, alertes |
-| `#/section/A/jumeaux`  | Climat et jumeaux   | climat visé du cycle, jumeaux et carte (une flèche par modèle)                                                                                                                                     |
-| `#/sources`            | Détail et sources   | données et méthodes, réelles ou fictives                                                                                                                                                           |
-| `#/compte`             | Compte et réglages  | profil, ferme, semences, cycle et horizon, priorités                                                                                                                                               |
+| Route                  | Écran               | Contenu                                                                                                                                                                                                            |
+| ---------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `#/connexion`          | Connexion           | compte de démo                                                                                                                                                                                                     |
+| `#/type-de-ferme`      | Type de ferme       | grandes cultures ; toucher un autre type ouvre Rota (« Hors de portée du MVP. »)                                                                                                                                   |
+| `#/localisation`       | Localisation        | point de la ferme (météo NASA POWER, centre des jumeaux)                                                                                                                                                           |
+| `#/tracer`             | Tracer la ferme     | contour et sections                                                                                                                                                                                                |
+| `#/cultures`           | Mes cultures        | culture en place, mois de récolte, rotation actuelle de chaque section ; réserve de semences                                                                                                                       |
+| `#/temps`              | Cycle et horizon    | cycle, fréquence, horizon                                                                                                                                                                                          |
+| `#/priorites`          | Priorités           | classement des 4 priorités, équipement                                                                                                                                                                             |
+| `#/tableau`            | Tableau de bord     | météo du jour sur toute la largeur, année affichée, ferme en 3D à gauche (avec le camembert des cultures de l'année), une carte par section à droite (culture de l'année, rotation du cycle, garder/changer, note) |
+| `#/section/A/parcelle` | Ma parcelle         | toutes les entrées de la section, années précédentes, maladies, irrigation, analyse de sol                                                                                                                         |
+| `#/section/A/champ`    | Mon champ           | risques érosion et eau, mesures satellites, sol                                                                                                                                                                    |
+| `#/section/A/plan`     | Rotations proposées | les 3 rotations du cycle côte à côte (roue, cultures, 4 priorités), la rotation actuelle, puis le détail de celle qu'on touche : frise des cultures et dates, 4 priorités, eau, ravageurs, alertes                 |
+| `#/section/A/jumeaux`  | Climat et jumeaux   | climat visé du cycle, jumeaux et carte (une flèche par modèle)                                                                                                                                                     |
+| `#/sources`            | Détail et sources   | données et méthodes, réelles ou fictives                                                                                                                                                                           |
+| `#/compte`             | Compte et réglages  | profil, ferme, semences, cycle et horizon, priorités                                                                                                                                                               |
 
 ## Où mettre du nouveau code
 

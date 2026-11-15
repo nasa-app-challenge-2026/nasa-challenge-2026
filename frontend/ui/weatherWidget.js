@@ -1,5 +1,5 @@
 /**
- * Dashboard card: weather now and for the week at the farm (Open-Meteo).
+ * Dashboard band, across the page: weather now and for the week at the farm (Open-Meteo).
  * The forecast is fetched by the application (app.loadWeather, data/access/weather.js).
  */
 import { html } from '../lib/html.js';
@@ -58,7 +58,7 @@ export function weatherWidget(state) {
   const today = w.data.daily[0];
   return html`<section class="card stack-sm weather" aria-label="Météo à la ferme">
     ${head}
-    <div class="weather__top">
+    <div class="weather__band">
       <div class="weather__now">
         <span class="weather__icon">${icon(W_ICONS[c.icon] ?? W_ICONS.cloud, { size: 44 })}</span>
         <span class="weather__temp">${deg(c.temp)}</span>
@@ -84,17 +84,17 @@ export function weatherWidget(state) {
           <dd>${mm(today?.rain)}</dd>
         </div>
       </dl>
+      <ol class="weather__week" aria-label="Prévisions sur 7 jours">
+        ${w.data.daily.map(
+          (d, i) =>
+            html`<li title="${d.label} · pluie ${mm(d.rain)}">
+              <span class="muted small">${dayLabel(d.date, i)}</span>
+              ${icon(W_ICONS[d.icon] ?? W_ICONS.cloud, { size: 20 })}
+              <strong class="small">${deg(d.tmax)}</strong>
+              <span class="muted small">${deg(d.tmin)}</span>
+            </li>`,
+        )}
+      </ol>
     </div>
-    <ol class="weather__week" aria-label="Prévisions sur 7 jours">
-      ${w.data.daily.map(
-        (d, i) =>
-          html`<li title="${d.label} · pluie ${mm(d.rain)}">
-            <span class="muted small">${dayLabel(d.date, i)}</span>
-            ${icon(W_ICONS[d.icon] ?? W_ICONS.cloud, { size: 20 })}
-            <strong class="small">${deg(d.tmax)}</strong>
-            <span class="muted small">${deg(d.tmin)}</span>
-          </li>`,
-      )}
-    </ol>
   </section>`;
 }

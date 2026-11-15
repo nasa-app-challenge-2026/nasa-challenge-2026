@@ -90,7 +90,7 @@ const EROSION =
 const WATER_RISK =
   'Le risque d’eau est la pression sur l’eau de la ferme pendant le cycle : l’aridité de sa météo (pluie comparée à l’eau que l’air peut prendre), la baisse de la pluie d’été, le niveau des nappes et le stress mesuré (sol sec, stress des plantes) quand ces mesures existent. Une parcelle irriguée en garde 40 %. La note eau d’une suite de cultures vient d’une simulation de l’eau du sol jour par jour.';
 const DASHBOARD =
-  'Chaque carte est une section de votre ferme : sa rotation du cycle en cours, la culture de l’année choisie (entourée) et la note du plan sur 100. Le curseur des années fait avancer toute la page. Dans la vue 3D, la texture de chaque section est celle de sa culture cette année-là, et la section choisie se soulève. Vous pouvez réorganiser les blocs en glissant leur poignée.';
+  'En haut, la météo de la semaine à la ferme. Les boutons des années font avancer toute la page. À gauche, votre ferme en 3D : chaque section porte la culture de l’année choisie ; glissez pour la faire tourner, utilisez la molette pour zoomer, et touchez une section pour la choisir (elle se soulève). Le camembert dans le coin montre la part de chaque culture sur la ferme cette année-là. À droite, une carte par section : la culture de l’année, la rotation du cycle en cours (la culture de l’année est entourée) et la note du plan sur 100. Vous pouvez réordonner les cartes en glissant leur poignée.';
 const PRIORITIES = `Classez les quatre priorités, de la plus importante à la moins importante. ${CRITERIA_IDS.map(
   (id) => `${CRITERIA[id].label} : ${CRITERIA[id].text}`,
 ).join(
@@ -280,7 +280,7 @@ export const INTENTS = [
   { keys: ['rotation actuelle', 'reference', 'actuelle'], text: CURRENT_ROTATION },
   { keys: ['erosion', 'protection du sol'], text: EROSION, sources: true },
   { keys: ['risque d eau', 'eau', 'secheresse'], text: WATER_RISK, sources: true },
-  { keys: ['3d', 'vue', 'losange', 'souleve'], text: DASHBOARD },
+  { keys: ['3d', 'vue', 'camembert', 'souleve'], text: DASHBOARD },
   {
     keys: ['donnee', 'source', 'nasa', 'vient', 'satellite', 'chiffre'],
     text: 'La météo de la ferme vient de NASA POWER, les modèles climatiques de NEX-GDDP-CMIP6, les jumeaux de la grille NASA POWER et des cartes de cultures (AAC, USDA), le sol de SoilGrids, la pente de Copernicus DEM et le sol nu de MODIS. L’eau utilise aussi les puits USGS, SMAP et ECOSTRESS quand ils sont disponibles. Tout est dans Détail et sources.',
