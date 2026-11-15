@@ -7,7 +7,7 @@ import math
 from collections.abc import Mapping, Sequence
 from datetime import UTC, date, datetime
 
-from field_shift.algorithm.chain.chain_scorer import ScoredChain
+from field_shift.algorithm.chain.chain_scorer import ChainPests, ScoredChain
 from field_shift.algorithm.chain.chain_step import ChainStep, sheet_ids
 from field_shift.algorithm.config.timing import DAYS_PER_MONTH
 from field_shift.algorithm.delays.occupation import Occupation
@@ -38,6 +38,7 @@ from field_shift.contract.farm_plan import (
     HistoryEntry,
     ModelNoteOut,
     MonthDayOut,
+    PestsOut,
     PlanMeta,
     PlanSettings,
     ReferenceAlertOut,
@@ -144,6 +145,17 @@ def _water_out(water: WaterScore | None, irrigated: bool) -> WaterOut | None:
     )
 
 
+def _pests_out(pests: ChainPests | None) -> PestsOut | None:
+    if pests is None:
+        return None
+    return PestsOut(
+        score=rounded(pests.score),
+        confidence=rounded(pests.confidence),
+        crops_without_data=list(pests.crops_without_data),
+        sentences=list(pests.sentences),
+    )
+
+
 def chain_out(scored: ScoredChain | None, irrigated: bool = False) -> ChainOut | None:
     if scored is None:
         return None
@@ -153,7 +165,15 @@ def chain_out(scored: ScoredChain | None, irrigated: bool = False) -> ChainOut |
         label=chain_label(scored.chain, scored.covers),
         sheets=sheet_ids(scored.chain),
         steps=_steps_in_calendar_order(scored),
-        gaps=[GapOut(previous=a, next=b, message=succession_text(a, b)) for a, b in scored.gaps],
+        gaps=[
+            GapOut(
+                previous=a,
+                next=b,
+                message=succession_text(a, b),
+                assumed_pct=rounded(scored.gap_value),
+            )
+            for a, b in scored.gaps
+        ],
         seeds_to_buy=scored.seeds_to_buy,
         warnings=[
             SharedDiseaseOut(
@@ -167,6 +187,7 @@ def chain_out(scored: ScoredChain | None, irrigated: bool = False) -> ChainOut |
             for w in scored.warnings
         ],
         water=_water_out(scored.water, irrigated),
+        pests=_pests_out(scored.pests),
     )
 
 

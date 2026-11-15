@@ -46,8 +46,9 @@ def disease_id_of(name: str) -> str:
     return _DISEASE_TO_ID[plain(name)]
 
 
-#: field_shift.py v5.1 calls the soil criterion `erosion`; this project, `protection_sol`.
-_CRITERION_TO_ID = {"erosion": "protection_sol"}
+#: field_shift.py v5.1 calls the soil criterion `erosion` (here `protection_sol`), and its pests
+#: criterion, the return delays, `ravageurs` (here `delais_retour`: `ravageurs` is the pests model).
+_CRITERION_TO_ID = {"erosion": "protection_sol", "ravageurs": "delais_retour"}
 
 
 def criterion_id_of(name: str) -> str:

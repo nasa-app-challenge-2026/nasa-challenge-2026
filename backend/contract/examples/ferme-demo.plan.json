@@ -92,14 +92,14 @@
         },
         "risksToday": {
           "erosion": 0.718,
-          "water": 0.011
+          "water": 0.0
         },
         "waterPressure": {
-          "pressure": 0.011,
-          "worst": 0.011,
+          "pressure": 0.0,
+          "worst": 0.0,
           "components": {
             "aridite": 0.0,
-            "pluie_ete": 0.032
+            "pluie_ete": 0.0
           },
           "missing": [
             "nappes",
@@ -110,7 +110,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.159,
+          "aridityIndex": 1.158,
           "aridityClass": "humide"
         }
       },
@@ -237,14 +237,14 @@
           },
           "risks": {
             "erosion": 0.718,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -255,22 +255,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.141,
+            "aridityIndex": 1.14,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.521,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.465,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 66.179,
+            "score": 65.513,
             "criteria": {
               "rendement": 0.656,
               "eau": 0.798,
               "protection_sol": 0.579,
-              "ravageurs": 1.0
+              "ravageurs": 0.875
             },
             "label": "(seigle) → Jachère → Soya (+ seigle) → Jachère → Blé d’automne",
             "sheets": [
@@ -351,13 +351,13 @@
                 "A": 0.684,
                 "B": 0.902,
                 "C": 0.657,
-                "D": 0.949
+                "D": 0.95
               },
-              "demandMmPerYear": 288.281,
-              "shortfallMmPerYear": 17.129,
+              "demandMmPerYear": 287.748,
+              "shortfallMmPerYear": 16.959,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 65.7,
-              "waterAtSowingMm": 206.406,
+              "rainKeptPct": 65.672,
+              "waterAtSowingMm": 206.707,
               "alerts": [],
               "byModel": [
                 {
@@ -365,15 +365,23 @@
                   "note": 0.798
                 }
               ]
+            },
+            "pests": {
+              "score": 0.875,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Soya 2025 puis Soya 2028 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
+              ]
             }
           },
           "reference": {
-            "score": 55.462,
+            "score": 55.308,
             "criteria": {
               "rendement": 0.694,
               "eau": 0.767,
               "protection_sol": 0.317,
-              "ravageurs": 0.667
+              "ravageurs": 0.643
             },
             "label": "Soya → Maïs → Soya → Maïs",
             "sheets": [
@@ -436,21 +444,30 @@
               "worst": 0.767,
               "subScores": {
                 "A": 0.471,
-                "B": 0.878,
+                "B": 0.877,
                 "C": 0.761,
                 "D": 0.957
               },
-              "demandMmPerYear": 481.396,
-              "shortfallMmPerYear": 38.757,
+              "demandMmPerYear": 480.635,
+              "shortfallMmPerYear": 39.41,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 76.07,
-              "waterAtSowingMm": 208.132,
+              "rainKeptPct": 76.113,
+              "waterAtSowingMm": 208.222,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
                   "note": 0.767
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.643,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Soya 2025 puis Soya 2027 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne.",
+                "Soya 2027 puis Soya 2029 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -518,12 +535,12 @@
           ],
           "alternatives": [
             {
-              "score": 63.692,
+              "score": 63.24,
               "criteria": {
                 "rendement": 0.57,
                 "eau": 0.775,
                 "protection_sol": 0.619,
-                "ravageurs": 1.0
+                "ravageurs": 0.917
               },
               "label": "(seigle) → Jachère → Soya (+ seigle) → Sarrasin → Blé d’automne",
               "sheets": [
@@ -598,12 +615,14 @@
                 {
                   "previous": "soya",
                   "next": "sarrasin",
-                  "message": "Soya → Sarrasin"
+                  "message": "Soya → Sarrasin",
+                  "assumedPct": 0.0
                 },
                 {
                   "previous": "sarrasin",
                   "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [
@@ -615,15 +634,15 @@
                 "worst": 0.775,
                 "subScores": {
                   "A": 0.626,
-                  "B": 0.934,
+                  "B": 0.935,
                   "C": 0.692,
-                  "D": 0.846
+                  "D": 0.847
                 },
-                "demandMmPerYear": 340.886,
-                "shortfallMmPerYear": 17.145,
+                "demandMmPerYear": 340.242,
+                "shortfallMmPerYear": 16.975,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 69.206,
-                "waterAtSowingMm": 184.159,
+                "rainKeptPct": 69.167,
+                "waterAtSowingMm": 184.293,
                 "alerts": [],
                 "byModel": [
                   {
@@ -631,24 +650,42 @@
                     "note": 0.775
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.917,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Soya 2025 puis Soya 2028 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
+                ]
               }
             },
             {
-              "score": 63.191,
+              "score": 63.237,
               "criteria": {
-                "rendement": 0.672,
-                "eau": 0.737,
-                "protection_sol": 0.504,
-                "ravageurs": 1.0
+                "rendement": 0.594,
+                "eau": 0.773,
+                "protection_sol": 0.592,
+                "ravageurs": 0.929
               },
-              "label": "(seigle) → Jachère → Soya → Blé d’automne → Maïs",
+              "label": "Luzerne ×2 [2 pos.] (+ seigle) → Jachère → Maïs",
               "sheets": [
+                "luzerne-2",
                 "jachere",
-                "soya",
-                "ble-automne",
                 "mais"
               ],
               "steps": [
+                {
+                  "sheet": "luzerne-2",
+                  "crop": "luzerne",
+                  "kind": "culture",
+                  "sowing": "2027-04-23",
+                  "harvest": "2028-09-22",
+                  "positions": [
+                    1,
+                    2
+                  ]
+                },
                 {
                   "sheet": "jachere",
                   "crop": "jachere",
@@ -656,39 +693,17 @@
                   "sowing": null,
                   "harvest": null,
                   "positions": [
-                    1,
-                    1
+                    3,
+                    3
                   ]
                 },
                 {
                   "sheet": "seigle-couvert",
                   "crop": "seigle",
                   "kind": "couvert",
-                  "sowing": "2026-10-23",
-                  "harvest": "2027-05-08",
+                  "sowing": "2028-09-30",
+                  "harvest": "2029-05-08",
                   "positions": null
-                },
-                {
-                  "sheet": "soya",
-                  "crop": "soya",
-                  "kind": "culture",
-                  "sowing": "2028-05-16",
-                  "harvest": "2028-08-29",
-                  "positions": [
-                    2,
-                    2
-                  ]
-                },
-                {
-                  "sheet": "ble-automne",
-                  "crop": "ble-automne",
-                  "kind": "culture",
-                  "sowing": "2028-09-16",
-                  "harvest": "2029-07-19",
-                  "positions": [
-                    3,
-                    3
-                  ]
                 },
                 {
                   "sheet": "mais",
@@ -702,30 +717,45 @@
                   ]
                 }
               ],
-              "gaps": [],
-              "seedsToBuy": [],
+              "gaps": [
+                {
+                  "previous": "mais",
+                  "next": "luzerne",
+                  "message": "Maïs → Luzerne",
+                  "assumedPct": 0.0
+                }
+              ],
+              "seedsToBuy": [
+                "luzerne"
+              ],
               "warnings": [],
               "water": {
-                "note": 0.737,
-                "worst": 0.737,
+                "note": 0.773,
+                "worst": 0.773,
                 "subScores": {
-                  "A": 0.582,
-                  "B": 0.893,
-                  "C": 0.72,
-                  "D": 0.754
+                  "A": 0.467,
+                  "B": 0.865,
+                  "C": 0.792,
+                  "D": 0.967
                 },
-                "demandMmPerYear": 380.974,
-                "shortfallMmPerYear": 25.996,
+                "demandMmPerYear": 484.854,
+                "shortfallMmPerYear": 39.371,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 71.989,
-                "waterAtSowingMm": 164.063,
+                "rainKeptPct": 79.159,
+                "waterAtSowingMm": 210.354,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.737
+                    "note": 0.773
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.929,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": []
               }
             }
           ],
@@ -738,7 +768,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 66.179,
+          "robustness": 65.513,
           "becomesInfeasibleLater": false
         },
         {
@@ -863,14 +893,14 @@
           },
           "risks": {
             "erosion": 0.718,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -881,22 +911,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.136,
+            "aridityIndex": 1.135,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.521,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.465,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 72.034,
+            "score": 71.911,
             "criteria": {
               "rendement": 0.588,
               "eau": 0.725,
               "protection_sol": 0.852,
-              "ravageurs": 0.833
+              "ravageurs": 0.809
             },
             "label": "(seigle) → Soya → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
             "sheets": [
@@ -971,12 +1001,14 @@
               {
                 "previous": "ble-automne",
                 "next": "sarrasin",
-                "message": "Blé d’automne → Sarrasin"
+                "message": "Blé d’automne → Sarrasin",
+                "assumedPct": 0.0
               },
               {
                 "previous": "sarrasin",
                 "next": "ble-automne",
-                "message": "Sarrasin → Blé d’automne"
+                "message": "Sarrasin → Blé d’automne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
@@ -988,13 +1020,13 @@
                 "A": 0.491,
                 "B": 0.918,
                 "C": 0.789,
-                "D": 0.702
+                "D": 0.703
               },
-              "demandMmPerYear": 466.144,
-              "shortfallMmPerYear": 26.506,
+              "demandMmPerYear": 465.243,
+              "shortfallMmPerYear": 25.908,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 78.901,
-              "waterAtSowingMm": 152.694,
+              "rainKeptPct": 78.855,
+              "waterAtSowingMm": 152.919,
               "alerts": [],
               "byModel": [
                 {
@@ -1002,15 +1034,25 @@
                   "note": 0.725
                 }
               ]
+            },
+            "pests": {
+              "score": 0.809,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Blé d’automne 2030 puis Blé d’automne 2032 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Blé d’automne 2032 puis Blé d’automne 2034 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Soya 2028 puis Soya 2031 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
+              ]
             }
           },
           "reference": {
-            "score": 67.369,
+            "score": 67.237,
             "criteria": {
               "rendement": 0.694,
-              "eau": 0.747,
+              "eau": 0.748,
               "protection_sol": 0.629,
-              "ravageurs": 0.667
+              "ravageurs": 0.643
             },
             "label": "(seigle) → Soya → Maïs (+ seigle) → Soya → Maïs",
             "sheets": [
@@ -1085,25 +1127,34 @@
             "seedsToBuy": [],
             "warnings": [],
             "water": {
-              "note": 0.747,
-              "worst": 0.747,
+              "note": 0.748,
+              "worst": 0.748,
               "subScores": {
                 "A": 0.409,
-                "B": 0.868,
+                "B": 0.867,
                 "C": 0.79,
-                "D": 0.923
+                "D": 0.925
               },
-              "demandMmPerYear": 541.041,
-              "shortfallMmPerYear": 42.481,
+              "demandMmPerYear": 540.183,
+              "shortfallMmPerYear": 42.932,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 79.006,
-              "waterAtSowingMm": 200.732,
+              "rainKeptPct": 79.009,
+              "waterAtSowingMm": 201.192,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
-                  "note": 0.747
+                  "note": 0.748
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.643,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Soya 2029 puis Soya 2031 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne.",
+                "Soya 2031 puis Soya 2033 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -1171,12 +1222,12 @@
           ],
           "alternatives": [
             {
-              "score": 71.244,
+              "score": 71.081,
               "criteria": {
                 "rendement": 0.609,
                 "eau": 0.729,
                 "protection_sol": 0.814,
-                "ravageurs": 0.778
+                "ravageurs": 0.746
               },
               "label": "(seigle) → Soya → Blé d’automne (+ seigle) → Jachère → Blé d’automne",
               "sheets": [
@@ -1255,15 +1306,15 @@
                 "worst": 0.729,
                 "subScores": {
                   "A": 0.547,
-                  "B": 0.89,
+                  "B": 0.891,
                   "C": 0.755,
-                  "D": 0.722
+                  "D": 0.724
                 },
-                "demandMmPerYear": 414.987,
-                "shortfallMmPerYear": 26.492,
+                "demandMmPerYear": 414.194,
+                "shortfallMmPerYear": 25.894,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 75.533,
-                "waterAtSowingMm": 157.147,
+                "rainKeptPct": 75.498,
+                "waterAtSowingMm": 157.508,
                 "alerts": [],
                 "byModel": [
                   {
@@ -1271,63 +1322,62 @@
                     "note": 0.729
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.746,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2030 puis Blé d’automne 2032 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2032 puis Blé d’automne 2034 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Soya 2028 puis Soya 2031 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
+                ]
               }
             },
             {
-              "score": 71.076,
+              "score": 70.938,
               "criteria": {
-                "rendement": 0.68,
-                "eau": 0.773,
-                "protection_sol": 0.687,
-                "ravageurs": 1.0
+                "rendement": 0.562,
+                "eau": 0.725,
+                "protection_sol": 0.852,
+                "ravageurs": 0.831
               },
-              "label": "Maïs (+ seigle) → Soya (+ seigle) → Jachère → Blé d’automne",
+              "label": "(seigle) → Sarrasin → Blé d’automne (+ seigle) → Soya → Blé d’automne",
               "sheets": [
-                "mais",
+                "sarrasin",
+                "ble-automne",
                 "soya",
-                "jachere",
                 "ble-automne"
               ],
               "steps": [
                 {
-                  "sheet": "mais",
-                  "crop": "mais",
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2030-09-16",
+                  "harvest": "2031-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "sarrasin",
+                  "crop": "sarrasin",
                   "kind": "culture",
-                  "sowing": "2031-05-08",
-                  "harvest": "2031-09-10",
+                  "sowing": "2031-06-16",
+                  "harvest": "2031-08-11",
                   "positions": [
                     1,
                     1
                   ]
                 },
                 {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "couvert",
-                  "sowing": "2031-09-17",
-                  "harvest": "2032-05-08",
-                  "positions": null
-                },
-                {
-                  "sheet": "soya",
-                  "crop": "soya",
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
                   "kind": "culture",
-                  "sowing": "2032-05-16",
-                  "harvest": "2032-08-28",
+                  "sowing": "2031-09-16",
+                  "harvest": "2032-07-19",
                   "positions": [
                     2,
                     2
-                  ]
-                },
-                {
-                  "sheet": "jachere",
-                  "crop": "jachere",
-                  "kind": "jachere",
-                  "sowing": null,
-                  "harvest": null,
-                  "positions": [
-                    3,
-                    3
                   ]
                 },
                 {
@@ -1337,6 +1387,17 @@
                   "sowing": "2032-09-16",
                   "harvest": "2033-05-08",
                   "positions": null
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2033-05-16",
+                  "harvest": "2033-08-28",
+                  "positions": [
+                    3,
+                    3
+                  ]
                 },
                 {
                   "sheet": "ble-automne",
@@ -1350,29 +1411,51 @@
                   ]
                 }
               ],
-              "gaps": [],
+              "gaps": [
+                {
+                  "previous": "ble-automne",
+                  "next": "sarrasin",
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
+                },
+                {
+                  "previous": "sarrasin",
+                  "next": "ble-automne",
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
+                }
+              ],
               "seedsToBuy": [],
               "warnings": [],
               "water": {
-                "note": 0.773,
-                "worst": 0.773,
+                "note": 0.725,
+                "worst": 0.725,
                 "subScores": {
-                  "A": 0.541,
-                  "B": 0.881,
-                  "C": 0.741,
-                  "D": 0.929
+                  "A": 0.491,
+                  "B": 0.918,
+                  "C": 0.789,
+                  "D": 0.703
                 },
-                "demandMmPerYear": 420.653,
-                "shortfallMmPerYear": 28.386,
+                "demandMmPerYear": 465.243,
+                "shortfallMmPerYear": 25.908,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 74.128,
-                "waterAtSowingMm": 202.091,
+                "rainKeptPct": 78.855,
+                "waterAtSowingMm": 152.919,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.773
+                    "note": 0.725
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.831,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2030 puis Blé d’automne 2032 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2032 puis Blé d’automne 2034 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
                 ]
               }
             }
@@ -1386,7 +1469,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 71.767,
+          "robustness": 71.707,
           "becomesInfeasibleLater": false
         },
         {
@@ -1647,12 +1730,12 @@
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 71.767,
+            "score": 71.707,
             "criteria": {
               "rendement": 0.588,
-              "eau": 0.719,
+              "eau": 0.718,
               "protection_sol": 0.847,
-              "ravageurs": 0.833
+              "ravageurs": 0.824
             },
             "label": "(seigle) → Soya → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
             "sheets": [
@@ -1727,54 +1810,65 @@
               {
                 "previous": "ble-automne",
                 "next": "sarrasin",
-                "message": "Blé d’automne → Sarrasin"
+                "message": "Blé d’automne → Sarrasin",
+                "assumedPct": 0.0
               },
               {
                 "previous": "sarrasin",
                 "next": "ble-automne",
-                "message": "Sarrasin → Blé d’automne"
+                "message": "Sarrasin → Blé d’automne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
             "warnings": [],
             "water": {
-              "note": 0.719,
+              "note": 0.718,
               "worst": 0.7,
               "subScores": {
-                "A": 0.496,
+                "A": 0.497,
                 "B": 0.921,
-                "C": 0.781,
-                "D": 0.677
+                "C": 0.782,
+                "D": 0.673
               },
-              "demandMmPerYear": 466.09,
-              "shortfallMmPerYear": 25.797,
+              "demandMmPerYear": 464.96,
+              "shortfallMmPerYear": 26.39,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 78.125,
-              "waterAtSowingMm": 147.282,
+              "rainKeptPct": 78.199,
+              "waterAtSowingMm": 146.486,
               "alerts": [],
               "byModel": [
                 {
                   "model": "modèle A (fictif)",
-                  "note": 0.735
+                  "note": 0.734
                 },
                 {
                   "model": "modèle B (fictif)",
-                  "note": 0.722
+                  "note": 0.721
                 },
                 {
                   "model": "modèle C (fictif)",
                   "note": 0.7
                 }
               ]
+            },
+            "pests": {
+              "score": 0.824,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Blé d’automne 2034 puis Blé d’automne 2036 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Blé d’automne 2036 puis Blé d’automne 2038 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+              ]
             }
           },
           "reference": {
-            "score": 66.982,
+            "score": 66.852,
             "criteria": {
               "rendement": 0.694,
               "eau": 0.744,
               "protection_sol": 0.62,
-              "ravageurs": 0.667
+              "ravageurs": 0.643
             },
             "label": "(seigle) → Soya → Maïs (+ seigle) → Soya → Maïs",
             "sheets": [
@@ -1853,15 +1947,15 @@
               "worst": 0.729,
               "subScores": {
                 "A": 0.422,
-                "B": 0.864,
+                "B": 0.863,
                 "C": 0.774,
-                "D": 0.918
+                "D": 0.916
               },
-              "demandMmPerYear": 534.745,
-              "shortfallMmPerYear": 47.927,
+              "demandMmPerYear": 533.691,
+              "shortfallMmPerYear": 48.517,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 77.397,
-              "waterAtSowingMm": 199.742,
+              "rainKeptPct": 77.449,
+              "waterAtSowingMm": 199.388,
               "alerts": [],
               "byModel": [
                 {
@@ -1876,6 +1970,15 @@
                   "model": "modèle C (fictif)",
                   "note": 0.729
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.643,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Soya 2033 puis Soya 2035 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne.",
+                "Soya 2035 puis Soya 2037 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -1943,12 +2046,12 @@
           ],
           "alternatives": [
             {
-              "score": 71.001,
+              "score": 70.927,
               "criteria": {
                 "rendement": 0.609,
-                "eau": 0.725,
+                "eau": 0.724,
                 "protection_sol": 0.809,
-                "ravageurs": 0.778
+                "ravageurs": 0.765
               },
               "label": "(seigle) → Soya → Blé d’automne (+ seigle) → Jachère → Blé d’automne",
               "sheets": [
@@ -2023,19 +2126,19 @@
               "seedsToBuy": [],
               "warnings": [],
               "water": {
-                "note": 0.725,
-                "worst": 0.708,
+                "note": 0.724,
+                "worst": 0.707,
                 "subScores": {
                   "A": 0.552,
-                  "B": 0.895,
-                  "C": 0.748,
-                  "D": 0.705
+                  "B": 0.894,
+                  "C": 0.749,
+                  "D": 0.701
                 },
-                "demandMmPerYear": 414.631,
-                "shortfallMmPerYear": 25.695,
+                "demandMmPerYear": 413.577,
+                "shortfallMmPerYear": 26.291,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 74.773,
-                "waterAtSowingMm": 153.281,
+                "rainKeptPct": 74.864,
+                "waterAtSowingMm": 152.565,
                 "alerts": [],
                 "byModel": [
                   {
@@ -2048,66 +2151,64 @@
                   },
                   {
                     "model": "modèle C (fictif)",
-                    "note": 0.708
+                    "note": 0.707
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.765,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2034 puis Blé d’automne 2036 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2036 puis Blé d’automne 2038 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
                 ]
               }
             },
             {
-              "score": 70.782,
+              "score": 70.614,
               "criteria": {
-                "rendement": 0.68,
-                "eau": 0.77,
-                "protection_sol": 0.681,
-                "ravageurs": 1.0
+                "rendement": 0.562,
+                "eau": 0.718,
+                "protection_sol": 0.847,
+                "ravageurs": 0.823
               },
-              "label": "Maïs (+ seigle) → Soya (+ seigle) → Jachère → Blé d’automne",
+              "label": "(seigle) → Sarrasin → Blé d’automne (+ seigle) → Soya → Blé d’automne",
               "sheets": [
-                "mais",
+                "sarrasin",
+                "ble-automne",
                 "soya",
-                "jachere",
                 "ble-automne"
               ],
               "steps": [
                 {
-                  "sheet": "mais",
-                  "crop": "mais",
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2034-09-16",
+                  "harvest": "2035-05-07",
+                  "positions": null
+                },
+                {
+                  "sheet": "sarrasin",
+                  "crop": "sarrasin",
                   "kind": "culture",
-                  "sowing": "2035-05-08",
-                  "harvest": "2035-09-05",
+                  "sowing": "2035-06-16",
+                  "harvest": "2035-08-11",
                   "positions": [
                     1,
                     1
                   ]
                 },
                 {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "couvert",
-                  "sowing": "2035-09-16",
-                  "harvest": "2036-05-07",
-                  "positions": null
-                },
-                {
-                  "sheet": "soya",
-                  "crop": "soya",
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
                   "kind": "culture",
-                  "sowing": "2036-05-16",
-                  "harvest": "2036-08-25",
+                  "sowing": "2035-09-16",
+                  "harvest": "2036-07-17",
                   "positions": [
                     2,
                     2
-                  ]
-                },
-                {
-                  "sheet": "jachere",
-                  "crop": "jachere",
-                  "kind": "jachere",
-                  "sowing": null,
-                  "harvest": null,
-                  "positions": [
-                    3,
-                    3
                   ]
                 },
                 {
@@ -2117,6 +2218,17 @@
                   "sowing": "2036-09-16",
                   "harvest": "2037-05-07",
                   "positions": null
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2037-05-16",
+                  "harvest": "2037-08-25",
+                  "positions": [
+                    3,
+                    3
+                  ]
                 },
                 {
                   "sheet": "ble-automne",
@@ -2130,37 +2242,59 @@
                   ]
                 }
               ],
-              "gaps": [],
+              "gaps": [
+                {
+                  "previous": "ble-automne",
+                  "next": "sarrasin",
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
+                },
+                {
+                  "previous": "sarrasin",
+                  "next": "ble-automne",
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
+                }
+              ],
               "seedsToBuy": [],
               "warnings": [],
               "water": {
-                "note": 0.77,
-                "worst": 0.755,
+                "note": 0.718,
+                "worst": 0.7,
                 "subScores": {
-                  "A": 0.548,
-                  "B": 0.879,
-                  "C": 0.73,
-                  "D": 0.922
+                  "A": 0.497,
+                  "B": 0.921,
+                  "C": 0.782,
+                  "D": 0.673
                 },
-                "demandMmPerYear": 418.067,
-                "shortfallMmPerYear": 30.24,
+                "demandMmPerYear": 464.96,
+                "shortfallMmPerYear": 26.39,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 72.973,
-                "waterAtSowingMm": 200.71,
+                "rainKeptPct": 78.199,
+                "waterAtSowingMm": 146.486,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "modèle A (fictif)",
-                    "note": 0.783
+                    "note": 0.734
                   },
                   {
                     "model": "modèle B (fictif)",
-                    "note": 0.772
+                    "note": 0.721
                   },
                   {
                     "model": "modèle C (fictif)",
-                    "note": 0.755
+                    "note": 0.7
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.823,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2034 puis Blé d’automne 2036 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2036 puis Blé d’automne 2038 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
                 ]
               }
             }
@@ -2218,14 +2352,14 @@
         },
         "risksToday": {
           "erosion": 0.557,
-          "water": 0.011
+          "water": 0.0
         },
         "waterPressure": {
-          "pressure": 0.011,
-          "worst": 0.011,
+          "pressure": 0.0,
+          "worst": 0.0,
           "components": {
             "aridite": 0.0,
-            "pluie_ete": 0.032
+            "pluie_ete": 0.0
           },
           "missing": [
             "nappes",
@@ -2236,7 +2370,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.159,
+          "aridityIndex": 1.158,
           "aridityClass": "humide"
         }
       },
@@ -2363,14 +2497,14 @@
           },
           "risks": {
             "erosion": 0.557,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -2381,17 +2515,17 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.14,
+            "aridityIndex": 1.138,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.521,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.422,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 67.42,
+            "score": 67.409,
             "criteria": {
               "rendement": 0.688,
               "eau": 0.772,
@@ -2451,7 +2585,8 @@
               {
                 "previous": "mais",
                 "next": "luzerne",
-                "message": "Maïs → Luzerne"
+                "message": "Maïs → Luzerne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [
@@ -2464,14 +2599,14 @@
               "subScores": {
                 "A": 0.465,
                 "B": 0.865,
-                "C": 0.792,
+                "C": 0.793,
                 "D": 0.966
               },
-              "demandMmPerYear": 487.957,
-              "shortfallMmPerYear": 39.543,
+              "demandMmPerYear": 487.158,
+              "shortfallMmPerYear": 39.588,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 79.219,
-              "waterAtSowingMm": 210.138,
+              "rainKeptPct": 79.255,
+              "waterAtSowingMm": 210.226,
               "alerts": [],
               "byModel": [
                 {
@@ -2479,15 +2614,21 @@
                   "note": 0.772
                 }
               ]
+            },
+            "pests": {
+              "score": 0.875,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": []
             }
           },
           "reference": {
-            "score": 61.967,
+            "score": 63.743,
             "criteria": {
               "rendement": 0.68,
               "eau": 0.762,
               "protection_sol": 0.505,
-              "ravageurs": 0.556
+              "ravageurs": 0.886
             },
             "label": "Maïs → Soya → Luzerne ×2 [2 pos.]",
             "sheets": [
@@ -2534,7 +2675,8 @@
               {
                 "previous": "soya",
                 "next": "luzerne",
-                "message": "Soya → Luzerne"
+                "message": "Soya → Luzerne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [
@@ -2548,13 +2690,13 @@
                 "A": 0.373,
                 "B": 0.874,
                 "C": 0.84,
-                "D": 0.962
+                "D": 0.963
               },
-              "demandMmPerYear": 572.161,
-              "shortfallMmPerYear": 49.705,
+              "demandMmPerYear": 571.198,
+              "shortfallMmPerYear": 49.883,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 83.983,
-              "waterAtSowingMm": 209.307,
+              "rainKeptPct": 84.036,
+              "waterAtSowingMm": 209.413,
               "alerts": [],
               "byModel": [
                 {
@@ -2562,6 +2704,12 @@
                   "note": 0.762
                 }
               ]
+            },
+            "pests": {
+              "score": 0.886,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": []
             }
           },
           "referenceAlerts": [
@@ -2588,12 +2736,12 @@
           ],
           "alternatives": [
             {
-              "score": 67.31,
+              "score": 67.324,
               "criteria": {
                 "rendement": 0.688,
-                "eau": 0.772,
+                "eau": 0.773,
                 "protection_sol": 0.591,
-                "ravageurs": 0.875
+                "ravageurs": 0.88
               },
               "label": "(seigle) → Jachère → Maïs → Luzerne ×2 [2 pos.]",
               "sheets": [
@@ -2648,7 +2796,8 @@
                 {
                   "previous": "mais",
                   "next": "luzerne",
-                  "message": "Maïs → Luzerne"
+                  "message": "Maïs → Luzerne",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [
@@ -2656,35 +2805,41 @@
               ],
               "warnings": [],
               "water": {
-                "note": 0.772,
-                "worst": 0.772,
+                "note": 0.773,
+                "worst": 0.773,
                 "subScores": {
-                  "A": 0.467,
+                  "A": 0.466,
                   "B": 0.865,
                   "C": 0.792,
-                  "D": 0.966
+                  "D": 0.967
                 },
-                "demandMmPerYear": 486.817,
-                "shortfallMmPerYear": 39.543,
+                "demandMmPerYear": 486.025,
+                "shortfallMmPerYear": 39.588,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.188,
-                "waterAtSowingMm": 210.247,
+                "rainKeptPct": 79.231,
+                "waterAtSowingMm": 210.344,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.772
+                    "note": 0.773
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.88,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": []
               }
             },
             {
-              "score": 65.984,
+              "score": 65.876,
               "criteria": {
                 "rendement": 0.703,
-                "eau": 0.786,
+                "eau": 0.787,
                 "protection_sol": 0.528,
-                "ravageurs": 0.889
+                "ravageurs": 0.872
               },
               "label": "Maïs → Soya (+ seigle) → Jachère → Blé d’automne",
               "sheets": [
@@ -2751,25 +2906,33 @@
               "seedsToBuy": [],
               "warnings": [],
               "water": {
-                "note": 0.786,
-                "worst": 0.786,
+                "note": 0.787,
+                "worst": 0.787,
                 "subScores": {
                   "A": 0.575,
                   "B": 0.893,
                   "C": 0.725,
-                  "D": 0.952
+                  "D": 0.953
                 },
-                "demandMmPerYear": 387.409,
-                "shortfallMmPerYear": 25.982,
+                "demandMmPerYear": 386.732,
+                "shortfallMmPerYear": 25.986,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 72.549,
-                "waterAtSowingMm": 207.086,
+                "rainKeptPct": 72.548,
+                "waterAtSowingMm": 207.303,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.786
+                    "note": 0.787
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.872,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Au cycle suivant, Blé d’automne 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             }
@@ -2783,7 +2946,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 67.314,
+          "robustness": 67.297,
           "becomesInfeasibleLater": false
         },
         {
@@ -2908,14 +3071,14 @@
           },
           "risks": {
             "erosion": 0.557,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -2926,17 +3089,17 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.135,
+            "aridityIndex": 1.133,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.521,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.422,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 67.539,
+            "score": 67.528,
             "criteria": {
               "rendement": 0.688,
               "eau": 0.771,
@@ -2996,7 +3159,8 @@
               {
                 "previous": "mais",
                 "next": "luzerne",
-                "message": "Maïs → Luzerne"
+                "message": "Maïs → Luzerne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
@@ -3006,15 +3170,15 @@
               "worst": 0.771,
               "subScores": {
                 "A": 0.465,
-                "B": 0.863,
-                "C": 0.79,
-                "D": 0.965
+                "B": 0.862,
+                "C": 0.791,
+                "D": 0.966
               },
-              "demandMmPerYear": 490.044,
-              "shortfallMmPerYear": 40.599,
+              "demandMmPerYear": 489.236,
+              "shortfallMmPerYear": 40.645,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 79.044,
-              "waterAtSowingMm": 210.005,
+              "rainKeptPct": 79.075,
+              "waterAtSowingMm": 210.099,
               "alerts": [],
               "byModel": [
                 {
@@ -3022,15 +3186,21 @@
                   "note": 0.771
                 }
               ]
+            },
+            "pests": {
+              "score": 0.875,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": []
             }
           },
           "reference": {
-            "score": 67.773,
+            "score": 69.476,
             "criteria": {
               "rendement": 0.68,
               "eau": 0.75,
               "protection_sol": 0.668,
-              "ravageurs": 0.556
+              "ravageurs": 0.87
             },
             "label": "Maïs (+ seigle) → Soya → Luzerne ×2 [2 pos.]",
             "sheets": [
@@ -3085,7 +3255,8 @@
               {
                 "previous": "soya",
                 "next": "luzerne",
-                "message": "Soya → Luzerne"
+                "message": "Soya → Luzerne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
@@ -3095,15 +3266,15 @@
               "worst": 0.75,
               "subScores": {
                 "A": 0.339,
-                "B": 0.866,
-                "C": 0.855,
-                "D": 0.939
+                "B": 0.865,
+                "C": 0.856,
+                "D": 0.941
               },
-              "demandMmPerYear": 605.755,
-              "shortfallMmPerYear": 52.881,
+              "demandMmPerYear": 604.732,
+              "shortfallMmPerYear": 52.969,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 85.525,
-              "waterAtSowingMm": 204.28,
+              "rainKeptPct": 85.557,
+              "waterAtSowingMm": 204.637,
               "alerts": [],
               "byModel": [
                 {
@@ -3111,6 +3282,12 @@
                   "note": 0.75
                 }
               ]
+            },
+            "pests": {
+              "score": 0.87,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": []
             }
           },
           "referenceAlerts": [
@@ -3137,12 +3314,12 @@
           ],
           "alternatives": [
             {
-              "score": 71.62,
+              "score": 71.561,
               "criteria": {
                 "rendement": 0.703,
-                "eau": 0.773,
+                "eau": 0.774,
                 "protection_sol": 0.687,
-                "ravageurs": 0.889
+                "ravageurs": 0.878
               },
               "label": "Maïs (+ seigle) → Soya (+ seigle) → Jachère → Blé d’automne",
               "sheets": [
@@ -3217,35 +3394,43 @@
               "seedsToBuy": [],
               "warnings": [],
               "water": {
-                "note": 0.773,
-                "worst": 0.773,
+                "note": 0.774,
+                "worst": 0.774,
                 "subScores": {
                   "A": 0.542,
                   "B": 0.882,
-                  "C": 0.741,
-                  "D": 0.929
+                  "C": 0.74,
+                  "D": 0.931
                 },
-                "demandMmPerYear": 419.857,
-                "shortfallMmPerYear": 28.139,
+                "demandMmPerYear": 419.135,
+                "shortfallMmPerYear": 28.055,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 74.052,
-                "waterAtSowingMm": 202.049,
+                "rainKeptPct": 74.031,
+                "waterAtSowingMm": 202.517,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.773
+                    "note": 0.774
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.878,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Au cycle suivant, Blé d’automne 2035 puis Maïs 2036 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             },
             {
-              "score": 71.241,
+              "score": 70.537,
               "criteria": {
                 "rendement": 0.703,
                 "eau": 0.724,
                 "protection_sol": 0.677,
-                "ravageurs": 1.0
+                "ravageurs": 0.87
               },
               "label": "(seigle) → Jachère → Maïs (+ seigle) → Soya → Blé d’automne",
               "sheets": [
@@ -3325,14 +3510,14 @@
                 "subScores": {
                   "A": 0.546,
                   "B": 0.882,
-                  "C": 0.738,
-                  "D": 0.728
+                  "C": 0.737,
+                  "D": 0.729
                 },
-                "demandMmPerYear": 416.26,
-                "shortfallMmPerYear": 28.139,
+                "demandMmPerYear": 415.546,
+                "shortfallMmPerYear": 28.055,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 73.761,
-                "waterAtSowingMm": 158.497,
+                "rainKeptPct": 73.737,
+                "waterAtSowingMm": 158.714,
                 "alerts": [],
                 "byModel": [
                   {
@@ -3340,6 +3525,12 @@
                     "note": 0.724
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.87,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": []
               }
             }
           ],
@@ -3596,7 +3787,7 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.106,
+            "aridityIndex": 1.105,
             "aridityClass": "humide"
           },
           "weights": {
@@ -3606,10 +3797,10 @@
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 67.314,
+            "score": 67.297,
             "criteria": {
               "rendement": 0.688,
-              "eau": 0.768,
+              "eau": 0.767,
               "protection_sol": 0.593,
               "ravageurs": 0.875
             },
@@ -3666,49 +3857,56 @@
               {
                 "previous": "mais",
                 "next": "luzerne",
-                "message": "Maïs → Luzerne"
+                "message": "Maïs → Luzerne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
             "warnings": [],
             "water": {
-              "note": 0.768,
-              "worst": 0.754,
+              "note": 0.767,
+              "worst": 0.753,
               "subScores": {
                 "A": 0.469,
-                "B": 0.861,
-                "C": 0.779,
-                "D": 0.963
+                "B": 0.855,
+                "C": 0.78,
+                "D": 0.962
               },
-              "demandMmPerYear": 492.728,
-              "shortfallMmPerYear": 48.327,
+              "demandMmPerYear": 491.795,
+              "shortfallMmPerYear": 49.1,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 77.941,
-              "waterAtSowingMm": 209.451,
+              "rainKeptPct": 77.989,
+              "waterAtSowingMm": 209.4,
               "alerts": [],
               "byModel": [
                 {
                   "model": "modèle A (fictif)",
-                  "note": 0.78
+                  "note": 0.778
                 },
                 {
                   "model": "modèle B (fictif)",
-                  "note": 0.77
+                  "note": 0.769
                 },
                 {
                   "model": "modèle C (fictif)",
-                  "note": 0.754
+                  "note": 0.753
                 }
               ]
+            },
+            "pests": {
+              "score": 0.875,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": []
             }
           },
           "reference": {
-            "score": 67.476,
+            "score": 69.174,
             "criteria": {
               "rendement": 0.68,
-              "eau": 0.747,
+              "eau": 0.746,
               "protection_sol": 0.661,
-              "ravageurs": 0.556
+              "ravageurs": 0.87
             },
             "label": "Maïs (+ seigle) → Soya → Luzerne ×2 [2 pos.]",
             "sheets": [
@@ -3763,25 +3961,26 @@
               {
                 "previous": "soya",
                 "next": "luzerne",
-                "message": "Soya → Luzerne"
+                "message": "Soya → Luzerne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
             "warnings": [],
             "water": {
-              "note": 0.747,
-              "worst": 0.733,
+              "note": 0.746,
+              "worst": 0.731,
               "subScores": {
                 "A": 0.346,
-                "B": 0.864,
+                "B": 0.861,
                 "C": 0.843,
-                "D": 0.935
+                "D": 0.934
               },
-              "demandMmPerYear": 606.507,
-              "shortfallMmPerYear": 61.681,
+              "demandMmPerYear": 605.418,
+              "shortfallMmPerYear": 62.669,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 84.294,
-              "waterAtSowingMm": 203.445,
+              "rainKeptPct": 84.318,
+              "waterAtSowingMm": 203.196,
               "alerts": [],
               "byModel": [
                 {
@@ -3790,13 +3989,19 @@
                 },
                 {
                   "model": "modèle B (fictif)",
-                  "note": 0.749
+                  "note": 0.748
                 },
                 {
                   "model": "modèle C (fictif)",
-                  "note": 0.733
+                  "note": 0.731
                 }
               ]
+            },
+            "pests": {
+              "score": 0.87,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": []
             }
           },
           "referenceAlerts": [
@@ -3823,12 +4028,12 @@
           ],
           "alternatives": [
             {
-              "score": 71.277,
+              "score": 71.219,
               "criteria": {
                 "rendement": 0.703,
                 "eau": 0.769,
                 "protection_sol": 0.679,
-                "ravageurs": 0.889
+                "ravageurs": 0.879
               },
               "label": "Maïs (+ seigle) → Soya (+ seigle) → Jachère → Blé d’automne",
               "sheets": [
@@ -3904,18 +4109,18 @@
               "warnings": [],
               "water": {
                 "note": 0.769,
-                "worst": 0.754,
+                "worst": 0.753,
                 "subScores": {
-                  "A": 0.548,
-                  "B": 0.878,
-                  "C": 0.728,
-                  "D": 0.922
+                  "A": 0.549,
+                  "B": 0.877,
+                  "C": 0.729,
+                  "D": 0.92
                 },
-                "demandMmPerYear": 418.939,
-                "shortfallMmPerYear": 30.631,
+                "demandMmPerYear": 417.963,
+                "shortfallMmPerYear": 31.122,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 72.832,
-                "waterAtSowingMm": 200.577,
+                "rainKeptPct": 72.912,
+                "waterAtSowingMm": 200.086,
                 "alerts": [],
                 "byModel": [
                   {
@@ -3924,22 +4129,30 @@
                   },
                   {
                     "model": "modèle B (fictif)",
-                    "note": 0.772
+                    "note": 0.771
                   },
                   {
                     "model": "modèle C (fictif)",
-                    "note": 0.754
+                    "note": 0.753
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.879,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Au cycle suivant, Blé d’automne 2039 puis Maïs 2040 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             },
             {
-              "score": 70.885,
+              "score": 70.178,
               "criteria": {
                 "rendement": 0.703,
                 "eau": 0.717,
                 "protection_sol": 0.67,
-                "ravageurs": 1.0
+                "ravageurs": 0.871
               },
               "label": "(seigle) → Jachère → Maïs (+ seigle) → Soya → Blé d’automne",
               "sheets": [
@@ -4017,21 +4230,21 @@
                 "note": 0.717,
                 "worst": 0.7,
                 "subScores": {
-                  "A": 0.552,
-                  "B": 0.878,
-                  "C": 0.725,
-                  "D": 0.712
+                  "A": 0.553,
+                  "B": 0.877,
+                  "C": 0.726,
+                  "D": 0.71
                 },
-                "demandMmPerYear": 415.41,
-                "shortfallMmPerYear": 30.631,
+                "demandMmPerYear": 414.429,
+                "shortfallMmPerYear": 31.122,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 72.546,
-                "waterAtSowingMm": 155.02,
+                "rainKeptPct": 72.628,
+                "waterAtSowingMm": 154.538,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "modèle A (fictif)",
-                    "note": 0.732
+                    "note": 0.731
                   },
                   {
                     "model": "modèle B (fictif)",
@@ -4042,6 +4255,12 @@
                     "note": 0.7
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.871,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": []
               }
             }
           ],
@@ -4103,14 +4322,14 @@
         },
         "risksToday": {
           "erosion": 0.714,
-          "water": 0.011
+          "water": 0.0
         },
         "waterPressure": {
-          "pressure": 0.011,
-          "worst": 0.011,
+          "pressure": 0.0,
+          "worst": 0.0,
           "components": {
             "aridite": 0.0,
-            "pluie_ete": 0.032
+            "pluie_ete": 0.0
           },
           "missing": [
             "nappes",
@@ -4121,7 +4340,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.159,
+          "aridityIndex": 1.158,
           "aridityClass": "humide"
         }
       },
@@ -4248,14 +4467,14 @@
           },
           "risks": {
             "erosion": 0.714,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -4266,22 +4485,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.141,
+            "aridityIndex": 1.14,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.521,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.464,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 69.016,
+            "score": 68.946,
             "criteria": {
               "rendement": 0.537,
               "eau": 0.766,
               "protection_sol": 0.818,
-              "ravageurs": 0.833
+              "ravageurs": 0.821
             },
             "label": "Blé d’automne (+ seigle) → Sarrasin → Blé d’automne (+ seigle) → Sarrasin",
             "sheets": [
@@ -4356,12 +4575,14 @@
               {
                 "previous": "ble-automne",
                 "next": "sarrasin",
-                "message": "Blé d’automne → Sarrasin"
+                "message": "Blé d’automne → Sarrasin",
+                "assumedPct": 0.0
               },
               {
                 "previous": "sarrasin",
                 "next": "ble-automne",
-                "message": "Sarrasin → Blé d’automne"
+                "message": "Sarrasin → Blé d’automne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [
@@ -4373,15 +4594,15 @@
               "worst": 0.766,
               "subScores": {
                 "A": 0.562,
-                "B": 0.948,
-                "C": 0.757,
+                "B": 0.949,
+                "C": 0.756,
                 "D": 0.797
               },
-              "demandMmPerYear": 399.814,
-              "shortfallMmPerYear": 13.797,
+              "demandMmPerYear": 399.025,
+              "shortfallMmPerYear": 13.173,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 75.696,
-              "waterAtSowingMm": 173.41,
+              "rainKeptPct": 75.648,
+              "waterAtSowingMm": 173.496,
               "alerts": [],
               "byModel": [
                 {
@@ -4389,15 +4610,24 @@
                   "note": 0.766
                 }
               ]
+            },
+            "pests": {
+              "score": 0.821,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Blé d’automne 2025 puis Blé d’automne 2027 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Blé d’automne 2027 puis Blé d’automne 2029 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+              ]
             }
           },
           "reference": {
-            "score": 63.082,
+            "score": 62.532,
             "criteria": {
               "rendement": 0.644,
               "eau": 0.713,
               "protection_sol": 0.574,
-              "ravageurs": 0.75
+              "ravageurs": 0.647
             },
             "label": "Blé d’automne → Maïs → Soya → Blé d’automne",
             "sheets": [
@@ -4462,19 +4692,30 @@
                 "A": 0.483,
                 "B": 0.895,
                 "C": 0.796,
-                "D": 0.679
+                "D": 0.678
               },
-              "demandMmPerYear": 471.459,
-              "shortfallMmPerYear": 33.17,
+              "demandMmPerYear": 470.614,
+              "shortfallMmPerYear": 32.872,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 79.568,
-              "waterAtSowingMm": 147.753,
+              "rainKeptPct": 79.575,
+              "waterAtSowingMm": 147.596,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
                   "note": 0.713
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.647,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Au cycle suivant, Blé d’automne 2030 puis Blé d’automne 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2025 puis Blé d’automne 2027 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Soya 2026 puis Soya 2029 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -4502,128 +4743,12 @@
           ],
           "alternatives": [
             {
-              "score": 67.773,
+              "score": 68.076,
               "criteria": {
                 "rendement": 0.547,
                 "eau": 0.78,
                 "protection_sol": 0.778,
-                "ravageurs": 0.778
-              },
-              "label": "Blé d’automne (+ seigle) → Jachère → Blé d’automne (+ seigle) → Sarrasin",
-              "sheets": [
-                "ble-automne",
-                "jachere",
-                "ble-automne",
-                "sarrasin"
-              ],
-              "steps": [
-                {
-                  "sheet": "ble-automne",
-                  "crop": "ble-automne",
-                  "kind": "culture",
-                  "sowing": "2026-09-23",
-                  "harvest": "2027-07-19",
-                  "positions": [
-                    1,
-                    1
-                  ]
-                },
-                {
-                  "sheet": "jachere",
-                  "crop": "jachere",
-                  "kind": "jachere",
-                  "sowing": null,
-                  "harvest": null,
-                  "positions": [
-                    2,
-                    2
-                  ]
-                },
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "couvert",
-                  "sowing": "2027-09-16",
-                  "harvest": "2028-05-08",
-                  "positions": null
-                },
-                {
-                  "sheet": "ble-automne",
-                  "crop": "ble-automne",
-                  "kind": "culture",
-                  "sowing": "2028-09-16",
-                  "harvest": "2029-07-19",
-                  "positions": [
-                    3,
-                    3
-                  ]
-                },
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "couvert",
-                  "sowing": "2029-09-16",
-                  "harvest": "2030-05-08",
-                  "positions": null
-                },
-                {
-                  "sheet": "sarrasin",
-                  "crop": "sarrasin",
-                  "kind": "culture",
-                  "sowing": "2030-06-16",
-                  "harvest": "2030-08-13",
-                  "positions": [
-                    4,
-                    4
-                  ]
-                }
-              ],
-              "gaps": [
-                {
-                  "previous": "ble-automne",
-                  "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
-                },
-                {
-                  "previous": "sarrasin",
-                  "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
-                }
-              ],
-              "seedsToBuy": [
-                "sarrasin"
-              ],
-              "warnings": [],
-              "water": {
-                "note": 0.78,
-                "worst": 0.78,
-                "subScores": {
-                  "A": 0.619,
-                  "B": 0.931,
-                  "C": 0.722,
-                  "D": 0.849
-                },
-                "demandMmPerYear": 347.21,
-                "shortfallMmPerYear": 13.78,
-                "irrigationMmPerYear": null,
-                "rainKeptPct": 72.19,
-                "waterAtSowingMm": 184.658,
-                "alerts": [],
-                "byModel": [
-                  {
-                    "model": "tendance NASA POWER",
-                    "note": 0.78
-                  }
-                ]
-              }
-            },
-            {
-              "score": 67.758,
-              "criteria": {
-                "rendement": 0.547,
-                "eau": 0.779,
-                "protection_sol": 0.778,
-                "ravageurs": 0.778
+                "ravageurs": 0.84
               },
               "label": "(seigle) → Jachère → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
               "sheets": [
@@ -4698,12 +4823,14 @@
                 {
                   "previous": "ble-automne",
                   "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
                 },
                 {
                   "previous": "sarrasin",
                   "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [
@@ -4711,25 +4838,161 @@
               ],
               "warnings": [],
               "water": {
-                "note": 0.779,
-                "worst": 0.779,
+                "note": 0.78,
+                "worst": 0.78,
                 "subScores": {
-                  "A": 0.619,
-                  "B": 0.932,
+                  "A": 0.62,
+                  "B": 0.933,
                   "C": 0.724,
-                  "D": 0.841
+                  "D": 0.842
                 },
-                "demandMmPerYear": 347.21,
-                "shortfallMmPerYear": 13.78,
+                "demandMmPerYear": 346.532,
+                "shortfallMmPerYear": 13.157,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 72.396,
-                "waterAtSowingMm": 183.012,
+                "rainKeptPct": 72.359,
+                "waterAtSowingMm": 183.264,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.779
+                    "note": 0.78
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.84,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2028 puis Blé d’automne 2030 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Au cycle suivant, Blé d’automne 2030 puis Blé d’automne 2032 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+                ]
+              }
+            },
+            {
+              "score": 67.942,
+              "criteria": {
+                "rendement": 0.547,
+                "eau": 0.781,
+                "protection_sol": 0.778,
+                "ravageurs": 0.812
+              },
+              "label": "Blé d’automne (+ seigle) → Jachère → Blé d’automne (+ seigle) → Sarrasin",
+              "sheets": [
+                "ble-automne",
+                "jachere",
+                "ble-automne",
+                "sarrasin"
+              ],
+              "steps": [
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
+                  "kind": "culture",
+                  "sowing": "2026-09-23",
+                  "harvest": "2027-07-19",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "jachere",
+                  "crop": "jachere",
+                  "kind": "jachere",
+                  "sowing": null,
+                  "harvest": null,
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2027-09-16",
+                  "harvest": "2028-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
+                  "kind": "culture",
+                  "sowing": "2028-09-16",
+                  "harvest": "2029-07-19",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "sarrasin",
+                  "crop": "sarrasin",
+                  "kind": "culture",
+                  "sowing": "2030-06-16",
+                  "harvest": "2030-08-13",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                }
+              ],
+              "gaps": [
+                {
+                  "previous": "ble-automne",
+                  "next": "sarrasin",
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
+                },
+                {
+                  "previous": "sarrasin",
+                  "next": "ble-automne",
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
+                }
+              ],
+              "seedsToBuy": [
+                "sarrasin"
+              ],
+              "warnings": [],
+              "water": {
+                "note": 0.781,
+                "worst": 0.781,
+                "subScores": {
+                  "A": 0.62,
+                  "B": 0.932,
+                  "C": 0.722,
+                  "D": 0.85
+                },
+                "demandMmPerYear": 346.532,
+                "shortfallMmPerYear": 13.157,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 72.153,
+                "waterAtSowingMm": 184.84,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.781
+                  }
+                ]
+              },
+              "pests": {
+                "score": 0.812,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2025 puis Blé d’automne 2027 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2027 puis Blé d’automne 2029 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
                 ]
               }
             }
@@ -4743,7 +5006,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 67.231,
+          "robustness": 67.094,
           "becomesInfeasibleLater": false
         },
         {
@@ -4868,14 +5131,14 @@
           },
           "risks": {
             "erosion": 0.714,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -4886,22 +5149,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.136,
+            "aridityIndex": 1.135,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.521,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.464,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 67.437,
+            "score": 67.3,
             "criteria": {
               "rendement": 0.5,
               "eau": 0.764,
               "protection_sol": 0.82,
-              "ravageurs": 0.833
+              "ravageurs": 0.809
             },
             "label": "Blé d’automne (+ seigle) → Sarrasin → Blé d’automne (+ seigle) → Sarrasin",
             "sheets": [
@@ -4976,12 +5239,14 @@
               {
                 "previous": "sarrasin",
                 "next": "ble-automne",
-                "message": "Sarrasin → Blé d’automne"
+                "message": "Sarrasin → Blé d’automne",
+                "assumedPct": 0.0
               },
               {
                 "previous": "ble-automne",
                 "next": "sarrasin",
-                "message": "Blé d’automne → Sarrasin"
+                "message": "Blé d’automne → Sarrasin",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
@@ -4992,14 +5257,14 @@
               "subScores": {
                 "A": 0.562,
                 "B": 0.948,
-                "C": 0.757,
-                "D": 0.79
+                "C": 0.756,
+                "D": 0.791
               },
-              "demandMmPerYear": 401.688,
-              "shortfallMmPerYear": 14.319,
+              "demandMmPerYear": 400.895,
+              "shortfallMmPerYear": 13.678,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 75.681,
-              "waterAtSowingMm": 171.882,
+              "rainKeptPct": 75.634,
+              "waterAtSowingMm": 172.038,
               "alerts": [],
               "byModel": [
                 {
@@ -5007,15 +5272,24 @@
                   "note": 0.764
                 }
               ]
+            },
+            "pests": {
+              "score": 0.809,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Blé d’automne 2029 puis Blé d’automne 2031 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Blé d’automne 2031 puis Blé d’automne 2033 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+              ]
             }
           },
           "reference": {
-            "score": 63.709,
+            "score": 62.682,
             "criteria": {
               "rendement": 0.644,
               "eau": 0.727,
               "protection_sol": 0.575,
-              "ravageurs": 0.833
+              "ravageurs": 0.639
             },
             "label": "Maïs (+ seigle) → Soya → Blé d’automne → Maïs",
             "sheets": [
@@ -5087,20 +5361,31 @@
               "subScores": {
                 "A": 0.441,
                 "B": 0.877,
-                "C": 0.802,
-                "D": 0.786
+                "C": 0.803,
+                "D": 0.787
               },
-              "demandMmPerYear": 511.37,
-              "shortfallMmPerYear": 37.425,
+              "demandMmPerYear": 510.535,
+              "shortfallMmPerYear": 37.514,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.247,
-              "waterAtSowingMm": 171.036,
+              "rainKeptPct": 80.253,
+              "waterAtSowingMm": 171.213,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
                   "note": 0.727
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.639,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Au cycle suivant, Maïs 2034 puis Maïs 2035 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2030 puis Maïs 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Soya 2029 puis Soya 2032 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -5128,12 +5413,12 @@
           ],
           "alternatives": [
             {
-              "score": 70.933,
+              "score": 70.946,
               "criteria": {
                 "rendement": 0.562,
                 "eau": 0.725,
                 "protection_sol": 0.852,
-                "ravageurs": 0.833
+                "ravageurs": 0.836
               },
               "label": "Blé d’automne (+ seigle) → Soya → Blé d’automne (+ seigle) → Sarrasin",
               "sheets": [
@@ -5208,12 +5493,14 @@
                 {
                   "previous": "sarrasin",
                   "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
                 },
                 {
                   "previous": "ble-automne",
                   "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
@@ -5225,13 +5512,13 @@
                   "A": 0.491,
                   "B": 0.918,
                   "C": 0.789,
-                  "D": 0.702
+                  "D": 0.703
                 },
-                "demandMmPerYear": 466.144,
-                "shortfallMmPerYear": 26.506,
+                "demandMmPerYear": 465.243,
+                "shortfallMmPerYear": 25.908,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 78.901,
-                "waterAtSowingMm": 152.694,
+                "rainKeptPct": 78.855,
+                "waterAtSowingMm": 152.919,
                 "alerts": [],
                 "byModel": [
                   {
@@ -5239,15 +5526,24 @@
                     "note": 0.725
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.836,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2029 puis Blé d’automne 2031 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2031 puis Blé d’automne 2033 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+                ]
               }
             },
             {
-              "score": 70.528,
+              "score": 70.496,
               "criteria": {
                 "rendement": 0.562,
                 "eau": 0.725,
                 "protection_sol": 0.842,
-                "ravageurs": 0.833
+                "ravageurs": 0.827
               },
               "label": "Blé d’automne (+ seigle) → Sarrasin → Blé d’automne (+ seigle) → Soya",
               "sheets": [
@@ -5322,12 +5618,14 @@
                 {
                   "previous": "sarrasin",
                   "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
                 },
                 {
                   "previous": "ble-automne",
                   "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
@@ -5339,19 +5637,28 @@
                   "A": 0.491,
                   "B": 0.918,
                   "C": 0.789,
-                  "D": 0.702
+                  "D": 0.703
                 },
-                "demandMmPerYear": 466.144,
-                "shortfallMmPerYear": 26.506,
+                "demandMmPerYear": 465.243,
+                "shortfallMmPerYear": 25.908,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 78.901,
-                "waterAtSowingMm": 152.694,
+                "rainKeptPct": 78.855,
+                "waterAtSowingMm": 152.919,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
                     "note": 0.725
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.827,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2029 puis Blé d’automne 2031 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2031 puis Blé d’automne 2033 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
                 ]
               }
             }
@@ -5626,12 +5933,12 @@
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 67.231,
+            "score": 67.094,
             "criteria": {
               "rendement": 0.5,
               "eau": 0.757,
               "protection_sol": 0.817,
-              "ravageurs": 0.833
+              "ravageurs": 0.809
             },
             "label": "Blé d’automne (+ seigle) → Sarrasin → Blé d’automne (+ seigle) → Sarrasin",
             "sheets": [
@@ -5706,54 +6013,65 @@
               {
                 "previous": "sarrasin",
                 "next": "ble-automne",
-                "message": "Sarrasin → Blé d’automne"
+                "message": "Sarrasin → Blé d’automne",
+                "assumedPct": 0.0
               },
               {
                 "previous": "ble-automne",
                 "next": "sarrasin",
-                "message": "Blé d’automne → Sarrasin"
+                "message": "Blé d’automne → Sarrasin",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
             "warnings": [],
             "water": {
               "note": 0.757,
-              "worst": 0.738,
+              "worst": 0.737,
               "subScores": {
-                "A": 0.563,
-                "B": 0.954,
-                "C": 0.75,
-                "D": 0.762
+                "A": 0.564,
+                "B": 0.953,
+                "C": 0.751,
+                "D": 0.758
               },
-              "demandMmPerYear": 404.014,
-              "shortfallMmPerYear": 12.758,
+              "demandMmPerYear": 402.962,
+              "shortfallMmPerYear": 13.137,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 75.022,
-              "waterAtSowingMm": 165.777,
+              "rainKeptPct": 75.104,
+              "waterAtSowingMm": 164.877,
               "alerts": [],
               "byModel": [
                 {
                   "model": "modèle A (fictif)",
-                  "note": 0.774
+                  "note": 0.773
                 },
                 {
                   "model": "modèle B (fictif)",
-                  "note": 0.761
+                  "note": 0.76
                 },
                 {
                   "model": "modèle C (fictif)",
-                  "note": 0.738
+                  "note": 0.737
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.809,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Blé d’automne 2033 puis Blé d’automne 2035 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Blé d’automne 2035 puis Blé d’automne 2037 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
               ]
             }
           },
           "reference": {
-            "score": 70.009,
+            "score": 69.048,
             "criteria": {
               "rendement": 0.637,
-              "eau": 0.713,
+              "eau": 0.712,
               "protection_sol": 0.748,
-              "ravageurs": 0.833
+              "ravageurs": 0.651
             },
             "label": "(seigle) → Soya → Blé d’automne → Maïs (+ seigle) → Soya",
             "sheets": [
@@ -5828,19 +6146,19 @@
             "seedsToBuy": [],
             "warnings": [],
             "water": {
-              "note": 0.713,
+              "note": 0.712,
               "worst": 0.696,
               "subScores": {
                 "A": 0.426,
-                "B": 0.877,
-                "C": 0.794,
-                "D": 0.755
+                "B": 0.876,
+                "C": 0.795,
+                "D": 0.753
               },
-              "demandMmPerYear": 531.309,
-              "shortfallMmPerYear": 43.382,
+              "demandMmPerYear": 530.176,
+              "shortfallMmPerYear": 44.08,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 79.401,
-              "waterAtSowingMm": 164.358,
+              "rainKeptPct": 79.457,
+              "waterAtSowingMm": 163.837,
               "alerts": [],
               "byModel": [
                 {
@@ -5855,6 +6173,17 @@
                   "model": "modèle C (fictif)",
                   "note": 0.696
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.651,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Au cycle suivant, Soya 2038 puis Soya 2039 : moisissure blanche, 0 ans sans hôte pour 5 conseillés, pression élevée.",
+                "Blé d’automne 2036 puis Maïs 2037 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Soya 2032 puis Soya 2035 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne.",
+                "Soya 2035 puis Soya 2038 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -5882,12 +6211,12 @@
           ],
           "alternatives": [
             {
-              "score": 70.664,
+              "score": 70.692,
               "criteria": {
                 "rendement": 0.562,
-                "eau": 0.719,
+                "eau": 0.718,
                 "protection_sol": 0.847,
-                "ravageurs": 0.833
+                "ravageurs": 0.84
               },
               "label": "Blé d’automne (+ seigle) → Soya → Blé d’automne (+ seigle) → Sarrasin",
               "sheets": [
@@ -5962,54 +6291,65 @@
                 {
                   "previous": "sarrasin",
                   "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
                 },
                 {
                   "previous": "ble-automne",
                   "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
               "warnings": [],
               "water": {
-                "note": 0.719,
+                "note": 0.718,
                 "worst": 0.7,
                 "subScores": {
-                  "A": 0.496,
+                  "A": 0.497,
                   "B": 0.921,
-                  "C": 0.781,
-                  "D": 0.677
+                  "C": 0.782,
+                  "D": 0.673
                 },
-                "demandMmPerYear": 466.09,
-                "shortfallMmPerYear": 25.797,
+                "demandMmPerYear": 464.96,
+                "shortfallMmPerYear": 26.39,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 78.125,
-                "waterAtSowingMm": 147.282,
+                "rainKeptPct": 78.199,
+                "waterAtSowingMm": 146.486,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "modèle A (fictif)",
-                    "note": 0.735
+                    "note": 0.734
                   },
                   {
                     "model": "modèle B (fictif)",
-                    "note": 0.722
+                    "note": 0.721
                   },
                   {
                     "model": "modèle C (fictif)",
                     "note": 0.7
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.84,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2033 puis Blé d’automne 2035 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2035 puis Blé d’automne 2037 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+                ]
               }
             },
             {
-              "score": 70.299,
+              "score": 70.265,
               "criteria": {
                 "rendement": 0.562,
-                "eau": 0.719,
+                "eau": 0.718,
                 "protection_sol": 0.838,
-                "ravageurs": 0.833
+                "ravageurs": 0.829
               },
               "label": "Blé d’automne (+ seigle) → Sarrasin → Blé d’automne (+ seigle) → Soya",
               "sheets": [
@@ -6084,44 +6424,55 @@
                 {
                   "previous": "sarrasin",
                   "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
                 },
                 {
                   "previous": "ble-automne",
                   "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
               "warnings": [],
               "water": {
-                "note": 0.719,
+                "note": 0.718,
                 "worst": 0.7,
                 "subScores": {
-                  "A": 0.496,
+                  "A": 0.497,
                   "B": 0.921,
-                  "C": 0.781,
-                  "D": 0.677
+                  "C": 0.782,
+                  "D": 0.673
                 },
-                "demandMmPerYear": 466.09,
-                "shortfallMmPerYear": 25.797,
+                "demandMmPerYear": 464.96,
+                "shortfallMmPerYear": 26.39,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 78.125,
-                "waterAtSowingMm": 147.282,
+                "rainKeptPct": 78.199,
+                "waterAtSowingMm": 146.486,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "modèle A (fictif)",
-                    "note": 0.735
+                    "note": 0.734
                   },
                   {
                     "model": "modèle B (fictif)",
-                    "note": 0.722
+                    "note": 0.721
                   },
                   {
                     "model": "modèle C (fictif)",
                     "note": 0.7
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.829,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2033 puis Blé d’automne 2035 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2035 puis Blé d’automne 2037 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
                 ]
               }
             }
@@ -6184,14 +6535,14 @@
         },
         "risksToday": {
           "erosion": 0.847,
-          "water": 0.011
+          "water": 0.0
         },
         "waterPressure": {
-          "pressure": 0.011,
-          "worst": 0.011,
+          "pressure": 0.0,
+          "worst": 0.0,
           "components": {
             "aridite": 0.0,
-            "pluie_ete": 0.032
+            "pluie_ete": 0.0
           },
           "missing": [
             "nappes",
@@ -6202,7 +6553,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.159,
+          "aridityIndex": 1.158,
           "aridityClass": "humide"
         }
       },
@@ -6329,14 +6680,14 @@
           },
           "risks": {
             "erosion": 0.847,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -6347,22 +6698,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.141,
+            "aridityIndex": 1.14,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.521,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.5,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 67.915,
+            "score": 67.846,
             "criteria": {
               "rendement": 0.5,
               "eau": 0.765,
               "protection_sol": 0.821,
-              "ravageurs": 0.833
+              "ravageurs": 0.821
             },
             "label": "(seigle) → Sarrasin → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
             "sheets": [
@@ -6437,12 +6788,14 @@
               {
                 "previous": "ble-automne",
                 "next": "sarrasin",
-                "message": "Blé d’automne → Sarrasin"
+                "message": "Blé d’automne → Sarrasin",
+                "assumedPct": 0.0
               },
               {
                 "previous": "sarrasin",
                 "next": "ble-automne",
-                "message": "Sarrasin → Blé d’automne"
+                "message": "Sarrasin → Blé d’automne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [
@@ -6453,16 +6806,16 @@
               "note": 0.765,
               "worst": 0.765,
               "subScores": {
-                "A": 0.559,
+                "A": 0.56,
                 "B": 0.949,
-                "C": 0.761,
-                "D": 0.791
+                "C": 0.76,
+                "D": 0.792
               },
-              "demandMmPerYear": 401.856,
-              "shortfallMmPerYear": 13.797,
+              "demandMmPerYear": 401.057,
+              "shortfallMmPerYear": 13.173,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 76.082,
-              "waterAtSowingMm": 172.175,
+              "rainKeptPct": 76.035,
+              "waterAtSowingMm": 172.314,
               "alerts": [],
               "byModel": [
                 {
@@ -6470,15 +6823,24 @@
                   "note": 0.765
                 }
               ]
+            },
+            "pests": {
+              "score": 0.821,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Blé d’automne 2026 puis Blé d’automne 2028 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Blé d’automne 2028 puis Blé d’automne 2030 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+              ]
             }
           },
           "reference": {
-            "score": 57.189,
+            "score": 56.235,
             "criteria": {
               "rendement": 0.644,
               "eau": 0.737,
               "protection_sol": 0.416,
-              "ravageurs": 0.833
+              "ravageurs": 0.65
             },
             "label": "Maïs → Soya → Blé d’automne → Maïs",
             "sheets": [
@@ -6554,17 +6916,27 @@
                 "C": 0.788,
                 "D": 0.805
               },
-              "demandMmPerYear": 481.714,
-              "shortfallMmPerYear": 35.273,
+              "demandMmPerYear": 480.927,
+              "shortfallMmPerYear": 35.474,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 78.801,
-              "waterAtSowingMm": 175.05,
+              "rainKeptPct": 78.832,
+              "waterAtSowingMm": 175.043,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
                   "note": 0.737
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.65,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Au cycle suivant, Maïs 2030 puis Maïs 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2029 puis Maïs 2030 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2026 puis Maïs 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
               ]
             }
           },
@@ -6592,124 +6964,12 @@
           ],
           "alternatives": [
             {
-              "score": 66.472,
-              "criteria": {
-                "rendement": 0.646,
-                "eau": 0.798,
-                "protection_sol": 0.603,
-                "ravageurs": 1.0
-              },
-              "label": "(seigle) → Jachère → Soya (+ seigle) → Jachère → Blé d’automne",
-              "sheets": [
-                "jachere",
-                "soya",
-                "jachere",
-                "ble-automne"
-              ],
-              "steps": [
-                {
-                  "sheet": "jachere",
-                  "crop": "jachere",
-                  "kind": "jachere",
-                  "sowing": null,
-                  "harvest": null,
-                  "positions": [
-                    1,
-                    1
-                  ]
-                },
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "couvert",
-                  "sowing": "2026-09-16",
-                  "harvest": "2027-05-08",
-                  "positions": null
-                },
-                {
-                  "sheet": "soya",
-                  "crop": "soya",
-                  "kind": "culture",
-                  "sowing": "2028-05-16",
-                  "harvest": "2028-08-29",
-                  "positions": [
-                    2,
-                    2
-                  ]
-                },
-                {
-                  "sheet": "jachere",
-                  "crop": "jachere",
-                  "kind": "jachere",
-                  "sowing": null,
-                  "harvest": null,
-                  "positions": [
-                    3,
-                    3
-                  ]
-                },
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "couvert",
-                  "sowing": "2028-09-16",
-                  "harvest": "2029-05-08",
-                  "positions": null
-                },
-                {
-                  "sheet": "ble-automne",
-                  "crop": "ble-automne",
-                  "kind": "culture",
-                  "sowing": "2029-09-16",
-                  "harvest": "2030-07-19",
-                  "positions": [
-                    4,
-                    4
-                  ]
-                }
-              ],
-              "gaps": [],
-              "seedsToBuy": [],
-              "warnings": [
-                {
-                  "disease": "moisissure-blanche",
-                  "previous": "pomme-de-terre",
-                  "next": "soya",
-                  "yearsWithout": 2,
-                  "advised": 5,
-                  "message": "Soya 2 an(s) après Pomme de terre : tous deux hôtes de la moisissure blanche (5 ans sans hôte conseillés si elle apparaît)."
-                }
-              ],
-              "water": {
-                "note": 0.798,
-                "worst": 0.798,
-                "subScores": {
-                  "A": 0.675,
-                  "B": 0.902,
-                  "C": 0.665,
-                  "D": 0.949
-                },
-                "demandMmPerYear": 296.328,
-                "shortfallMmPerYear": 17.129,
-                "irrigationMmPerYear": null,
-                "rainKeptPct": 66.497,
-                "waterAtSowingMm": 206.406,
-                "alerts": [],
-                "byModel": [
-                  {
-                    "model": "tendance NASA POWER",
-                    "note": 0.798
-                  }
-                ]
-              }
-            },
-            {
-              "score": 66.19,
+              "score": 66.353,
               "criteria": {
                 "rendement": 0.5,
                 "eau": 0.779,
                 "protection_sol": 0.782,
-                "ravageurs": 0.778
+                "ravageurs": 0.812
               },
               "label": "(seigle) → Sarrasin → Blé d’automne (+ seigle) → Jachère → Blé d’automne",
               "sheets": [
@@ -6784,12 +7044,14 @@
                 {
                   "previous": "ble-automne",
                   "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
                 },
                 {
                   "previous": "sarrasin",
                   "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [
@@ -6801,21 +7063,157 @@
                 "worst": 0.779,
                 "subScores": {
                   "A": 0.617,
-                  "B": 0.932,
-                  "C": 0.726,
-                  "D": 0.841
+                  "B": 0.933,
+                  "C": 0.725,
+                  "D": 0.842
                 },
-                "demandMmPerYear": 349.251,
-                "shortfallMmPerYear": 13.78,
+                "demandMmPerYear": 348.564,
+                "shortfallMmPerYear": 13.157,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 72.576,
-                "waterAtSowingMm": 183.012,
+                "rainKeptPct": 72.54,
+                "waterAtSowingMm": 183.264,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
                     "note": 0.779
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.812,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2026 puis Blé d’automne 2028 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2028 puis Blé d’automne 2030 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+                ]
+              }
+            },
+            {
+              "score": 66.353,
+              "criteria": {
+                "rendement": 0.5,
+                "eau": 0.779,
+                "protection_sol": 0.782,
+                "ravageurs": 0.812
+              },
+              "label": "(seigle) → Jachère → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
+              "sheets": [
+                "jachere",
+                "ble-automne",
+                "sarrasin",
+                "ble-automne"
+              ],
+              "steps": [
+                {
+                  "sheet": "jachere",
+                  "crop": "jachere",
+                  "kind": "jachere",
+                  "sowing": null,
+                  "harvest": null,
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2026-09-16",
+                  "harvest": "2027-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
+                  "kind": "culture",
+                  "sowing": "2027-09-16",
+                  "harvest": "2028-07-19",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "couvert",
+                  "sowing": "2028-09-16",
+                  "harvest": "2029-05-08",
+                  "positions": null
+                },
+                {
+                  "sheet": "sarrasin",
+                  "crop": "sarrasin",
+                  "kind": "culture",
+                  "sowing": "2029-06-16",
+                  "harvest": "2029-08-13",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "ble-automne",
+                  "crop": "ble-automne",
+                  "kind": "culture",
+                  "sowing": "2029-09-16",
+                  "harvest": "2030-07-19",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                }
+              ],
+              "gaps": [
+                {
+                  "previous": "ble-automne",
+                  "next": "sarrasin",
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
+                },
+                {
+                  "previous": "sarrasin",
+                  "next": "ble-automne",
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
+                }
+              ],
+              "seedsToBuy": [
+                "sarrasin"
+              ],
+              "warnings": [],
+              "water": {
+                "note": 0.779,
+                "worst": 0.779,
+                "subScores": {
+                  "A": 0.617,
+                  "B": 0.933,
+                  "C": 0.725,
+                  "D": 0.842
+                },
+                "demandMmPerYear": 348.564,
+                "shortfallMmPerYear": 13.157,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 72.54,
+                "waterAtSowingMm": 183.264,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.779
+                  }
+                ]
+              },
+              "pests": {
+                "score": 0.812,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2026 puis Blé d’automne 2028 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2028 puis Blé d’automne 2030 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
                 ]
               }
             }
@@ -6829,7 +7227,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 67.654,
+          "robustness": 67.52,
           "becomesInfeasibleLater": false
         },
         {
@@ -6954,14 +7352,14 @@
           },
           "risks": {
             "erosion": 0.847,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -6972,22 +7370,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.136,
+            "aridityIndex": 1.135,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.521,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.5,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 67.861,
+            "score": 67.73,
             "criteria": {
               "rendement": 0.5,
               "eau": 0.764,
               "protection_sol": 0.82,
-              "ravageurs": 0.833
+              "ravageurs": 0.809
             },
             "label": "(seigle) → Sarrasin → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
             "sheets": [
@@ -7062,12 +7460,14 @@
               {
                 "previous": "ble-automne",
                 "next": "sarrasin",
-                "message": "Blé d’automne → Sarrasin"
+                "message": "Blé d’automne → Sarrasin",
+                "assumedPct": 0.0
               },
               {
                 "previous": "sarrasin",
                 "next": "ble-automne",
-                "message": "Sarrasin → Blé d’automne"
+                "message": "Sarrasin → Blé d’automne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
@@ -7078,14 +7478,14 @@
               "subScores": {
                 "A": 0.562,
                 "B": 0.948,
-                "C": 0.757,
-                "D": 0.79
+                "C": 0.756,
+                "D": 0.791
               },
-              "demandMmPerYear": 401.688,
-              "shortfallMmPerYear": 14.319,
+              "demandMmPerYear": 400.895,
+              "shortfallMmPerYear": 13.678,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 75.681,
-              "waterAtSowingMm": 171.882,
+              "rainKeptPct": 75.634,
+              "waterAtSowingMm": 172.038,
               "alerts": [],
               "byModel": [
                 {
@@ -7093,15 +7493,24 @@
                   "note": 0.764
                 }
               ]
+            },
+            "pests": {
+              "score": 0.809,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Blé d’automne 2030 puis Blé d’automne 2032 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Blé d’automne 2032 puis Blé d’automne 2034 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+              ]
             }
           },
           "reference": {
-            "score": 70.459,
+            "score": 69.534,
             "criteria": {
               "rendement": 0.637,
               "eau": 0.717,
               "protection_sol": 0.755,
-              "ravageurs": 0.833
+              "ravageurs": 0.651
             },
             "label": "(seigle) → Soya → Blé d’automne → Maïs (+ seigle) → Soya",
             "sheets": [
@@ -7182,19 +7591,30 @@
                 "A": 0.416,
                 "B": 0.878,
                 "C": 0.806,
-                "D": 0.769
+                "D": 0.77
               },
-              "demandMmPerYear": 535.072,
-              "shortfallMmPerYear": 40.587,
+              "demandMmPerYear": 534.14,
+              "shortfallMmPerYear": 40.535,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.606,
-              "waterAtSowingMm": 167.212,
+              "rainKeptPct": 80.576,
+              "waterAtSowingMm": 167.588,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
                   "note": 0.717
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.651,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Au cycle suivant, Soya 2034 puis Soya 2035 : moisissure blanche, 0 ans sans hôte pour 5 conseillés, pression élevée.",
+                "Blé d’automne 2032 puis Maïs 2033 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Soya 2028 puis Soya 2031 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne.",
+                "Soya 2031 puis Soya 2034 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -7222,12 +7642,12 @@
           ],
           "alternatives": [
             {
-              "score": 72.408,
+              "score": 72.429,
               "criteria": {
                 "rendement": 0.588,
                 "eau": 0.725,
                 "protection_sol": 0.852,
-                "ravageurs": 0.833
+                "ravageurs": 0.837
               },
               "label": "(seigle) → Soya → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
               "sheets": [
@@ -7302,12 +7722,14 @@
                 {
                   "previous": "ble-automne",
                   "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
                 },
                 {
                   "previous": "sarrasin",
                   "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
@@ -7319,13 +7741,13 @@
                   "A": 0.491,
                   "B": 0.918,
                   "C": 0.789,
-                  "D": 0.702
+                  "D": 0.703
                 },
-                "demandMmPerYear": 466.144,
-                "shortfallMmPerYear": 26.506,
+                "demandMmPerYear": 465.243,
+                "shortfallMmPerYear": 25.908,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 78.901,
-                "waterAtSowingMm": 152.694,
+                "rainKeptPct": 78.855,
+                "waterAtSowingMm": 152.919,
                 "alerts": [],
                 "byModel": [
                   {
@@ -7333,15 +7755,24 @@
                     "note": 0.725
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.837,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2030 puis Blé d’automne 2032 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2032 puis Blé d’automne 2034 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+                ]
               }
             },
             {
-              "score": 71.531,
+              "score": 71.561,
               "criteria": {
                 "rendement": 0.609,
                 "eau": 0.729,
                 "protection_sol": 0.814,
-                "ravageurs": 0.778
+                "ravageurs": 0.783
               },
               "label": "(seigle) → Soya → Blé d’automne (+ seigle) → Jachère → Blé d’automne",
               "sheets": [
@@ -7420,21 +7851,30 @@
                 "worst": 0.729,
                 "subScores": {
                   "A": 0.547,
-                  "B": 0.89,
+                  "B": 0.891,
                   "C": 0.755,
-                  "D": 0.722
+                  "D": 0.724
                 },
-                "demandMmPerYear": 414.987,
-                "shortfallMmPerYear": 26.492,
+                "demandMmPerYear": 414.194,
+                "shortfallMmPerYear": 25.894,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 75.533,
-                "waterAtSowingMm": 157.147,
+                "rainKeptPct": 75.498,
+                "waterAtSowingMm": 157.508,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
                     "note": 0.729
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.783,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2030 puis Blé d’automne 2032 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2032 puis Blé d’automne 2034 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
                 ]
               }
             }
@@ -7709,12 +8149,12 @@
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 67.654,
+            "score": 67.52,
             "criteria": {
               "rendement": 0.5,
               "eau": 0.757,
               "protection_sol": 0.817,
-              "ravageurs": 0.833
+              "ravageurs": 0.809
             },
             "label": "(seigle) → Sarrasin → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
             "sheets": [
@@ -7789,54 +8229,65 @@
               {
                 "previous": "ble-automne",
                 "next": "sarrasin",
-                "message": "Blé d’automne → Sarrasin"
+                "message": "Blé d’automne → Sarrasin",
+                "assumedPct": 0.0
               },
               {
                 "previous": "sarrasin",
                 "next": "ble-automne",
-                "message": "Sarrasin → Blé d’automne"
+                "message": "Sarrasin → Blé d’automne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
             "warnings": [],
             "water": {
               "note": 0.757,
-              "worst": 0.738,
+              "worst": 0.737,
               "subScores": {
-                "A": 0.563,
-                "B": 0.954,
-                "C": 0.75,
-                "D": 0.762
+                "A": 0.564,
+                "B": 0.953,
+                "C": 0.751,
+                "D": 0.758
               },
-              "demandMmPerYear": 404.014,
-              "shortfallMmPerYear": 12.758,
+              "demandMmPerYear": 402.962,
+              "shortfallMmPerYear": 13.137,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 75.022,
-              "waterAtSowingMm": 165.777,
+              "rainKeptPct": 75.104,
+              "waterAtSowingMm": 164.877,
               "alerts": [],
               "byModel": [
                 {
                   "model": "modèle A (fictif)",
-                  "note": 0.774
+                  "note": 0.773
                 },
                 {
                   "model": "modèle B (fictif)",
-                  "note": 0.761
+                  "note": 0.76
                 },
                 {
                   "model": "modèle C (fictif)",
-                  "note": 0.738
+                  "note": 0.737
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.809,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Blé d’automne 2034 puis Blé d’automne 2036 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Blé d’automne 2036 puis Blé d’automne 2038 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
               ]
             }
           },
           "reference": {
-            "score": 69.442,
+            "score": 68.514,
             "criteria": {
               "rendement": 0.644,
               "eau": 0.695,
               "protection_sol": 0.73,
-              "ravageurs": 0.833
+              "ravageurs": 0.652
             },
             "label": "Blé d’automne → Maïs (+ seigle) → Soya → Blé d’automne",
             "sheets": [
@@ -7904,23 +8355,23 @@
             "warnings": [],
             "water": {
               "note": 0.695,
-              "worst": 0.678,
+              "worst": 0.677,
               "subScores": {
-                "A": 0.457,
+                "A": 0.458,
                 "B": 0.886,
-                "C": 0.807,
-                "D": 0.63
+                "C": 0.808,
+                "D": 0.627
               },
-              "demandMmPerYear": 501.853,
-              "shortfallMmPerYear": 36.517,
+              "demandMmPerYear": 500.84,
+              "shortfallMmPerYear": 37.198,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.717,
-              "waterAtSowingMm": 137.067,
+              "rainKeptPct": 80.774,
+              "waterAtSowingMm": 136.526,
               "alerts": [],
               "byModel": [
                 {
                   "model": "modèle A (fictif)",
-                  "note": 0.711
+                  "note": 0.71
                 },
                 {
                   "model": "modèle B (fictif)",
@@ -7928,8 +8379,18 @@
                 },
                 {
                   "model": "modèle C (fictif)",
-                  "note": 0.678
+                  "note": 0.677
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.652,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Au cycle suivant, Blé d’automne 2038 puis Blé d’automne 2039 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2035 puis Maïs 2036 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Soya 2034 puis Soya 2037 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -7957,12 +8418,12 @@
           ],
           "alternatives": [
             {
-              "score": 72.134,
+              "score": 72.162,
               "criteria": {
                 "rendement": 0.588,
-                "eau": 0.719,
+                "eau": 0.718,
                 "protection_sol": 0.847,
-                "ravageurs": 0.833
+                "ravageurs": 0.841
               },
               "label": "(seigle) → Soya → Blé d’automne (+ seigle) → Sarrasin → Blé d’automne",
               "sheets": [
@@ -8037,54 +8498,65 @@
                 {
                   "previous": "ble-automne",
                   "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
                 },
                 {
                   "previous": "sarrasin",
                   "next": "ble-automne",
-                  "message": "Sarrasin → Blé d’automne"
+                  "message": "Sarrasin → Blé d’automne",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
               "warnings": [],
               "water": {
-                "note": 0.719,
+                "note": 0.718,
                 "worst": 0.7,
                 "subScores": {
-                  "A": 0.496,
+                  "A": 0.497,
                   "B": 0.921,
-                  "C": 0.781,
-                  "D": 0.677
+                  "C": 0.782,
+                  "D": 0.673
                 },
-                "demandMmPerYear": 466.09,
-                "shortfallMmPerYear": 25.797,
+                "demandMmPerYear": 464.96,
+                "shortfallMmPerYear": 26.39,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 78.125,
-                "waterAtSowingMm": 147.282,
+                "rainKeptPct": 78.199,
+                "waterAtSowingMm": 146.486,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "modèle A (fictif)",
-                    "note": 0.735
+                    "note": 0.734
                   },
                   {
                     "model": "modèle B (fictif)",
-                    "note": 0.722
+                    "note": 0.721
                   },
                   {
                     "model": "modèle C (fictif)",
                     "note": 0.7
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.841,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2034 puis Blé d’automne 2036 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2036 puis Blé d’automne 2038 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
+                ]
               }
             },
             {
-              "score": 71.281,
+              "score": 71.324,
               "criteria": {
                 "rendement": 0.609,
-                "eau": 0.725,
+                "eau": 0.724,
                 "protection_sol": 0.809,
-                "ravageurs": 0.778
+                "ravageurs": 0.788
               },
               "label": "(seigle) → Soya → Blé d’automne (+ seigle) → Jachère → Blé d’automne",
               "sheets": [
@@ -8159,19 +8631,19 @@
               "seedsToBuy": [],
               "warnings": [],
               "water": {
-                "note": 0.725,
-                "worst": 0.708,
+                "note": 0.724,
+                "worst": 0.707,
                 "subScores": {
                   "A": 0.552,
-                  "B": 0.895,
-                  "C": 0.748,
-                  "D": 0.705
+                  "B": 0.894,
+                  "C": 0.749,
+                  "D": 0.701
                 },
-                "demandMmPerYear": 414.631,
-                "shortfallMmPerYear": 25.695,
+                "demandMmPerYear": 413.577,
+                "shortfallMmPerYear": 26.291,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 74.773,
-                "waterAtSowingMm": 153.281,
+                "rainKeptPct": 74.864,
+                "waterAtSowingMm": 152.565,
                 "alerts": [],
                 "byModel": [
                   {
@@ -8184,8 +8656,17 @@
                   },
                   {
                     "model": "modèle C (fictif)",
-                    "note": 0.708
+                    "note": 0.707
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.788,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Blé d’automne 2034 puis Blé d’automne 2036 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                  "Blé d’automne 2036 puis Blé d’automne 2038 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne."
                 ]
               }
             }

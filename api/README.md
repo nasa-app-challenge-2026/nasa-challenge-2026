@@ -48,8 +48,8 @@ Le premier plan d'un nouveau lieu lit toutes ses données réelles : la météo 
 | `GET /health`  | `{ "status": "ok", … }` : le serveur répond.                                                      |
 
 | `POST /rotations/rank` | `RankingInput` → `RotationRanking` : classe les rotations candidates de chaque section sur les quatre mesures. |
-| `POST /measures/protection-sol` | la même demande, classée sur la seule protection du sol (érosion et infiltration). **Calculée.** |
-| `POST /measures/rendement` · `/measures/eau` · `/measures/ravageurs` | la même demande, sur une seule mesure. **Routes prêtes, logique à écrire : elles répondent `501`.** |
+| `POST /measures/protection-sol` · `/measures/ravageurs` | la même demande, classée sur la seule protection du sol (érosion et infiltration) ou sur les seuls ravageurs. **Calculées.** |
+| `POST /measures/rendement` · `/measures/eau` | la même demande, sur une seule mesure. **Routes prêtes, logique à écrire : elles répondent `501`.** |
 | `GET /measures` | les quatre mesures, et lesquelles sont calculées. |
 | `GET /crops` | les cultures qu'une rotation peut contenir, avec leurs notes de protection du sol. |
 | `GET /data-sources` | les services de données, leur jeu de données, leur publication de référence et leur adresse. |
@@ -70,6 +70,7 @@ field_shift/
                      data_source_config.py  TOUTES les adresses des services, au même endroit
                      nasa_power.py          la météo quotidienne de la ferme (POST /plan)
                      field_shift_eau.py     L'ADAPTATEUR EAU : le seul fichier qui connaît water_use
+                     yield_precrops.py      valeur du précédent : le modèle régional de rendement
                                             (note_eau, pression_eau, WaterUseModel)
                      site_readers.py        un lecteur par service : SoilGrids, Open-Meteo, NASA POWER, MODIS
                      site_data.py           appelle en parallèle les services dont une section a besoin
@@ -82,7 +83,9 @@ field_shift/
     twins/           étapes 4 à 7 : jumeaux climatiques, sol, rotations observées, valeur du précédent
     diagnostic/      étape 8 : risques d'érosion et d'eau
     water/           l'interface du modèle d'eau que voit le planificateur (note d'une chaîne, pression)
-    delays/          délais de retour (contraintes dures, priorité ravageurs, vigilances)
+    pests/           la pression des ravageurs du sol : priorité ravageurs du plan et mesure du classement
+    yield_model/     le modèle régional de rendement (vigueur MODIS, cartes de cultures, CMIP6)
+    delays/          délais de retour (contraintes dures, vigilances)
     chain/           étape 9b : candidates, placement, couverts, note sur les 4 priorités, recherche en faisceau
     planning/        étape 10 : entrées du fermier, plan cycle par cycle, robustesse
     report/          les messages en français et le libellé des chaînes
@@ -155,13 +158,13 @@ python -m tests.helpers.example_plans
 | `rendement`      | rendement, en kg/ha              | route prête, logique à écrire |
 | `eau`            | demande en eau                   | route prête, logique à écrire |
 | `protection_sol` | érosion et infiltration de l'eau | **calculée**                  |
-| `ravageurs`      | ravageurs et maladies            | route prête, logique à écrire |
+| `ravageurs`      | ravageurs et maladies du sol     | **calculée** (`algorithm/pests`) |
 
 ```
 score d'une rotation = 100 × Σ poids(m) × note(m) / Σ poids(m)      sur les mesures m disponibles
 ```
 
-Une mesure pas encore calculée revient avec `available: false` et reste hors du score ; le poids des autres est remis à l'échelle. Tant que seule la protection du sol existe, le score est donc la note de protection du sol, quelles que soient les priorités.
+Une mesure pas encore calculée revient avec `available: false` et reste hors du score ; le poids des autres est remis à l'échelle. Tant que le rendement et l'eau ne sont pas écrits, le score ne compte donc que la protection du sol et les ravageurs.
 
 ### Une demande
 

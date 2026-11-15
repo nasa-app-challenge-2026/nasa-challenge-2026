@@ -507,6 +507,39 @@
         }
       ]
     },
+    "Pests": {
+      "description": "Ravageurs d'une chaîne (priorité ravageurs) : la pression des maladies, nématodes et insectes du sol que rencontrent ses cultures ; null quand le catalogue ne connaît aucune de ses cultures.",
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": ["score", "confidence", "cropsWithoutData", "sentences"],
+          "properties": {
+            "score": {
+              "$ref": "#/definitions/Ratio"
+            },
+            "confidence": {
+              "description": "Part des cultures de la chaîne que le catalogue connaît.",
+              "$ref": "#/definitions/Ratio"
+            },
+            "cropsWithoutData": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "sentences": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
     "Chain": {
       "anyOf": [
         {
@@ -523,7 +556,8 @@
             "gaps",
             "seedsToBuy",
             "warnings",
-            "water"
+            "water",
+            "pests"
           ],
           "properties": {
             "score": {
@@ -554,7 +588,7 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["previous", "next", "message"]
+                "required": ["previous", "next", "message", "assumedPct"]
               }
             },
             "seedsToBuy": {
@@ -572,6 +606,9 @@
             },
             "water": {
               "$ref": "#/definitions/Water"
+            },
+            "pests": {
+              "$ref": "#/definitions/Pests"
             }
           }
         }

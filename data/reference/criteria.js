@@ -6,7 +6,7 @@
 export const CRITERIA = {
   rendement: {
     label: 'Rendement',
-    text: 'Chaque culture aide-t-elle la suivante ? L’écart de rendement mesuré dans les champs jumeaux.',
+    text: 'Chaque culture aide-t-elle la suivante ? L’effet du précédent mesuré par satellite dans les champs de la région.',
     icon: 'M3 17l6-6 4 4 8-8M14 7h7v7',
   },
   eau: {
@@ -21,7 +21,7 @@ export const CRITERIA = {
   },
   ravageurs: {
     label: 'Ravageurs',
-    text: 'Laisser à chaque culture son délai de retour conseillé, pour casser le cycle des maladies.',
+    text: 'Éviter que les maladies, nématodes et insectes du sol s’accumulent : chaque culture trouve le moins de pression possible.',
     icon: 'M12 13a5 5 0 1 0 0 10 5 5 0 0 0 0-10ZM12 13V9M8 9h8M9 9 7 5M15 9l2-4M7 16H3M21 16h-4',
   },
 };

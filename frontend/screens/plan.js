@@ -3,7 +3,7 @@
  * of the algorithm): years and climate source, keep or change and the score on
  * 100, the score of his current rotation, the chain with its covers, the calendar,
  * the gaps, the seeds to buy, the warnings, the crops removed, the alerts on his
- * rotation, 2 alternatives, the robustness, the 4 priorities and the water.
+ * rotation, 2 alternatives, the robustness, the 4 priorities, the water and the pests.
  */
 import { html } from '../lib/html.js';
 import { CROPS, nameOf } from '../../data/reference/crops.js';
@@ -115,6 +115,50 @@ function waterCard(cycle) {
   </div>`;
 }
 
+/** The pests of the chosen chain (the team's pests model), beside the 4 priorities. */
+function pestsCard(cycle) {
+  const p = cycle.chosen?.pests;
+  if (!p) return '';
+  return html`<div class="card stack-sm">
+    <div class="row-between wrap">
+      <h2 class="h2">Les ravageurs de cette suite</h2>
+      <span class="muted small">note ravageurs : ${Math.round(p.score * 100)} sur 100</span>
+    </div>
+    ${
+      p.sentences.length
+        ? html`<ul class="stack-xs small">
+            ${p.sentences.map((s) => html`<li>${s}</li>`)}
+          </ul>`
+        : html`<span class="small"
+            >Aucune culture n’arrive sur une pression notable de maladies, de nématodes ou
+            d’insectes du sol.</span
+          >`
+    }
+    ${
+      p.cropsWithoutData.length
+        ? html`<span class="muted small"
+            >Aucune donnée pour :
+            ${p.cropsWithoutData.map((c) => nameOf(c).toLowerCase()).join(', ')} (comptées sans
+            risque).</span
+          >`
+        : ''
+    }
+    <span class="muted small"
+      >Pression des maladies, nématodes et insectes du sol, année après année : elle monte quand une
+      culture hôte pousse et baisse pendant les années sans hôte.</span
+    >
+  </div>`;
+}
+
+const PERCENT_TEXT = (v) => `${v > 0 ? '+' : ''}${String(v).replace('.', ',')} %`;
+
+/** What an unmeasured succession counts in the yield priority. */
+function gapRule(assumedPct) {
+  return assumedPct === 0
+    ? 'Compté neutre.'
+    : `Compté ${PERCENT_TEXT(assumedPct)}, comme une succession jamais observée dans la région.`;
+}
+
 function notices(cycle) {
   const c = cycle.chosen;
   return [
@@ -122,7 +166,7 @@ function notices(cycle) {
       ? [
           alertBox(
             'warn',
-            `Précédent inconnu (moins de 20 champs jumeaux) : ${c.gaps.map((g) => g.message).join(', ')}. Compté neutre.`,
+            `Précédent pas mesuré : ${c.gaps.map((g) => g.message).join(', ')}. ${gapRule(c.gaps[0].assumedPct)}`,
           ),
         ]
       : []),
@@ -219,7 +263,7 @@ export default {
             : ''
         }
         <div class="grow-1 stack-md">
-          ${waterCard(cycle)}${referenceCard(cycle)}${alternatives(cycle)}
+          ${waterCard(cycle)}${pestsCard(cycle)}${referenceCard(cycle)}${alternatives(cycle)}
         </div>
       </section>
       <div class="actions-bar">

@@ -10,8 +10,8 @@ What the client sends (`POST /rotations/rank`):
 
 What it gets back: for each section, the rotations ranked from the best to the worst, each with
 its score on 100 and the result of the four measures (`rendement`, `eau`, `protection_sol`,
-`ravageurs`). Only `protection_sol` is computed today: the others say `available: false` and are
-left out of the score.
+`ravageurs`). `protection_sol` and `ravageurs` are computed today: the others say
+`available: false` and are left out of the score.
 
 Like the rest of the contract, the fields are camelCase on the wire and invalid input is refused
 with a 422 that says which field is wrong.

@@ -31,7 +31,7 @@ export const SUGGESTED = {
     'Pourquoi une jachère ?',
     'Pourquoi du seigle entre deux cultures ?',
     'C’est quoi la robustesse ?',
-    'Que veut dire précédent inconnu ?',
+    'Que veut dire précédent pas mesuré ?',
   ],
   jumeaux: [
     'C’est quoi sigma ?',
@@ -95,17 +95,22 @@ export const INTENTS = [
     text: 'Avec une culture par an, l’appli sème un seigle dans chaque intervalle assez long entre une récolte et le semis suivant. Le sol n’est pas nu l’hiver : moins d’érosion, plus de matière organique.',
   },
   {
-    keys: ['precedent inconnu', 'inconnu', 'lacune'],
-    text: 'Un précédent inconnu veut dire que l’enchaînement a été vu chez les jumeaux, mais dans moins de 20 champs : on ne peut pas mesurer s’il aide la culture suivante. Il compte neutre dans la note, et l’appli le signale.',
+    keys: ['pas mesure', 'precedent inconnu', 'inconnu', 'lacune'],
+    text: 'Un précédent pas mesuré veut dire que l’enchaînement n’a pas été vu assez souvent dans les champs de la région (moins de 5 fois), ou qu’une des cultures manque aux cartes (foin, canola, sarrasin). Il compte comme une succession peu favorable, pour qu’une culture inconnue ne gagne pas parce qu’elle est inconnue, et l’appli le signale.',
   },
   {
     keys: ['delai', 'retour', 'revenir', 'trop tot'],
-    text: 'Le délai de retour, c’est le nombre d’années sans une culture avant de la remettre au même endroit, pour que ses maladies et ses insectes disparaissent du sol. Par exemple, au moins 2 ans sans soya. Le minimum est obligatoire ; le délai conseillé compte dans la priorité ravageurs.',
+    text: 'Le délai de retour, c’est le nombre d’années sans une culture avant de la remettre au même endroit, pour que ses maladies et ses insectes disparaissent du sol. Par exemple, au moins 2 ans sans soya. Le minimum est obligatoire. La priorité ravageurs va plus loin : elle suit la pression de chaque maladie, nématode ou insecte du sol, année après année.',
     sources: true,
   },
   {
     keys: ['annees precedentes', 'historique', 'precedentes'],
     text: 'Les délais de retour se comptent aussi avec ce qui a poussé avant. Si vous avez eu du soya en 2025, l’appli ne peut pas en remettre en 2027. Elle demande autant d’années que le plus long délai de retour des cultures possibles.',
+  },
+  {
+    keys: ['ravageur', 'nematode', 'insecte', 'pression'],
+    text: 'La priorité ravageurs suit, année après année, la pression de chaque maladie, nématode ou insecte du sol : elle monte quand une de ses cultures hôtes pousse et baisse pendant les années sans hôte. Chaque culture est pénalisée par la pression qu’elle trouve en arrivant. Une maladie que vous déclarez part d’une pression pleine.',
+    sources: true,
   },
   {
     keys: ['maladie', 'hernie'],

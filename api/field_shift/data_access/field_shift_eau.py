@@ -54,6 +54,7 @@ from water_use.humidite import secheresse_merra2
 from water_use.meteo import Meteo, lire_reponse_power, telecharger_power
 from water_use.nappes import nappes_usgs
 from water_use.notes import (
+    POIDS_PRESSION,
     evaluer_rotation,
     pression_sur_l_eau,
     secheresse_depuis_percentile,
@@ -286,6 +287,77 @@ def meteo_of_weather(
         altitude,
         source=source,
     )
+
+
+def with_spin_up_year(meteo: Meteo) -> Meteo:
+    """The weather with its first year played once more before it, on the dates of the year
+    before (29 February takes the 28th): the soil fills up on the climate of the cycle, and every
+    year of the cycle is scored. `meteo` starts on 1 January."""
+    first = int(meteo.annees[0])
+    start = date(first, 1, 1)
+    spin_up = [
+        date(first - 1, 1, 1) + timedelta(days=i)
+        for i in range((start - date(first - 1, 1, 1)).days)
+    ]
+    rows = np.array([(_shifted(day, SPIN_UP_YEARS) - start).days for day in spin_up])
+
+    def extended(values: np.ndarray | None) -> np.ndarray | None:
+        return None if values is None else np.concatenate((values[rows], values))
+
+    return Meteo(
+        np.concatenate((np.array(spin_up, dtype="datetime64[D]"), meteo.dates)),
+        extended(meteo.tmax),
+        extended(meteo.tmin),
+        extended(meteo.rh),
+        extended(meteo.u2),
+        extended(meteo.rs),
+        extended(meteo.pluie),
+        meteo.lat,
+        meteo.lon,
+        meteo.altitude,
+        source=meteo.source,
+        jours_bouches=meteo.jours_bouches,
+        humidite_racines=extended(meteo.humidite_racines),
+    )
+
+
+def summer_rain_trend(
+    lat: float, lon: float, observed: Meteo | None, farm_weather: DailyWeather | None
+) -> float | None:
+    """The summer rain component of the pressure (`pluie_ete`, 0 to 1) on the recent weather of
+    the farm (RECENT_WINDOW), from NASA POWER as measured, else from the weather of the plan.
+
+    It is a trend measured today, like the groundwater and the soil moisture: every cycle uses it.
+    Measured on the weather of a cycle, it would compare the two halves of 1985–2014 for the
+    cycles beyond 10 years (their weather is 1985–2014 changed by the climate models, the same
+    change every year), and the pressure would drop between the near and the far cycles without
+    the climate getting wetter.
+    """
+    if observed is not None:
+        recent = observed.sous_periode(RECENT_WINDOW.first, RECENT_WINDOW.last)
+    elif farm_weather is not None:
+        recent = meteo_of_weather(farm_weather.between(*RECENT_WINDOW), lat, lon)
+    else:
+        return None
+    if len(recent.dates) == 0:
+        return None
+    et0, _ = et0_meteo(recent)
+    return pression_eau(recent, et0, *RECENT_WINDOW)["composantes"].get("pluie_ete")
+
+
+def with_component(result: Mapping[str, Any], name: str, value: float) -> dict[str, Any]:
+    """A result of `pression_eau` with one component replaced, and the pressure weighted again
+    as `water_use.notes.pression_sur_l_eau` weighs it (POIDS_PRESSION over the components there
+    are)."""
+    components = {**result["composantes"], name: value}
+    total = sum(POIDS_PRESSION[k] for k in components)
+    pressure = sum(POIDS_PRESSION[k] * v for k, v in components.items()) / total
+    return {
+        **result,
+        "pression": round(pressure, 3),
+        "composantes": components,
+        "manquantes": [k for k in POIDS_PRESSION if k not in components],
+    }
 
 
 # --------------------------------------------------------------------------------------------------
@@ -546,9 +618,13 @@ class WaterUseCycle:
     """`water_use` on the weather of one cycle (the `CycleWater` of the planner).
 
     A chain gets one score per weather (one per climate model beyond the short term): the mean is
-    the criterion, the worst is kept beside it. Only complete chains are scored: a score is a
+    the criterion, the worst is kept beside it. Every year of a weather is scored; its first year,
+    played once before it, fills the soil. Only complete chains are scored: a score is a
     simulation of every day of about twenty years, too long for the thousands of partial chains
     the search builds. The scores are kept: the same chain is asked several times.
+
+    The pressure is computed on each weather, with the summer rain trend of today
+    (`summer_rain_trend`) when the model knows it.
     """
 
     def __init__(
@@ -561,12 +637,12 @@ class WaterUseCycle:
         self._model = model
         self._weathers = []
         for name, weather in weathers:
-            meteo = meteo_of_weather(weather, model.lat, model.lon, model.observed, name)
+            meteo = with_spin_up_year(
+                meteo_of_weather(weather, model.lat, model.lon, model.observed, name)
+            )
             et0, _ = et0_meteo(meteo)
             self._weathers.append(
-                _CycleWeather(
-                    name, meteo, et0, weather.first_year + SPIN_UP_YEARS, weather.last_year
-                )
+                _CycleWeather(name, meteo, et0, weather.first_year, weather.last_year)
             )
         self._scores: dict[tuple, WaterScore] = {}
         self.pressure = self._pressure()
@@ -576,6 +652,9 @@ class WaterUseCycle:
             pression_eau(w.meteo, w.et0, w.first_year, w.last_year, **self._model.pressure_inputs)
             for w in self._weathers
         ]
+        trend = self._model.summer_rain_trend
+        if trend is not None:
+            results = [with_component(result, "pluie_ete", trend) for result in results]
         components = sorted({name for result in results for name in result["composantes"]})
         return WaterPressure(
             pressure=fmean(result["pression"] for result in results),
@@ -650,6 +729,8 @@ class WaterUseModel:
                      (`pressure_inputs()`), the same for every cycle
     sources          where each of them comes from
     real             False when the soil is not the one of the place (examples, tests)
+    farm_weather     the NASA POWER weather of the plan (temperatures and rain): with `observed`,
+                     where the summer rain trend of today is read (`summer_rain_trend`)
     """
 
     def __init__(
@@ -661,11 +742,13 @@ class WaterUseModel:
         pressure_inputs: Mapping[str, float | None] | None = None,
         sources: Mapping[str, str] | None = None,
         real: bool = True,
+        farm_weather: DailyWeather | None = None,
     ) -> None:
         self.lat = lat
         self.lon = lon
         self.soil = soil
         self.observed = observed
+        self.summer_rain_trend = summer_rain_trend(lat, lon, observed, farm_weather)
         self.pressure_inputs = dict(pressure_inputs or {})
         self.sources = {"sol": soil.source, **(sources or {})}
         self.source = DataSource(
@@ -674,7 +757,13 @@ class WaterUseModel:
 
     @classmethod
     def with_soil_texture(
-        cls, lat: float, lon: float, sand_pct: float, clay_pct: float, organic_matter_pct: float
+        cls,
+        lat: float,
+        lon: float,
+        sand_pct: float,
+        clay_pct: float,
+        organic_matter_pct: float,
+        farm_weather: DailyWeather | None = None,
     ) -> WaterUseModel:
         """The model on a soil given by its texture instead of the soil of the place, and on no
         data base at all: for the example plans and the tests, which never use the network. It
@@ -685,7 +774,7 @@ class WaterUseModel:
             f"{organic_matter_pct:g} % matière organique)"
         )
         sources = {"et0": "Hargreaves, températures seules", "pente": "non lue : tables NRCS"}
-        return cls(lat, lon, soil, sources=sources, real=False)
+        return cls(lat, lon, soil, sources=sources, real=False, farm_weather=farm_weather)
 
     @classmethod
     def from_data_bases(
@@ -694,6 +783,7 @@ class WaterUseModel:
         lon: float,
         power_series: Mapping[str, Any] | None = None,
         soil_reader: SoilReader | None = None,
+        farm_weather: DailyWeather | None = None,
     ) -> WaterUseModel:
         """The model of a place, read from the real data bases.
 
@@ -721,7 +811,15 @@ class WaterUseModel:
         inputs, pressure_sources = pressure_inputs(
             lat, lon, observed, RECENT_WINDOW.first, RECENT_WINDOW.last
         )
-        return cls(lat, lon, soil, observed, inputs, {**sources, **pressure_sources})
+        return cls(
+            lat,
+            lon,
+            soil,
+            observed,
+            inputs,
+            {**sources, **pressure_sources},
+            farm_weather=farm_weather,
+        )
 
     def for_cycle(self, weathers: Sequence[NamedWeather]) -> WaterUseCycle:
         return WaterUseCycle(self, weathers)
@@ -735,6 +833,8 @@ def water_models(
     reader = soilgrids_soil_reader(soilgrids)
 
     def model(lat: float, lon: float, farm_weather: FarmWeather) -> WaterUseModel:
-        return WaterUseModel.from_data_bases(lat, lon, farm_weather.power_series, reader)
+        return WaterUseModel.from_data_bases(
+            lat, lon, farm_weather.power_series, reader, farm_weather.weather
+        )
 
     return model

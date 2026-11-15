@@ -31,16 +31,18 @@ from field_shift.data_access.field_shift_eau import (
     pression_eau,
     rotation_of_chain,
     water_use_code,
+    with_component,
+    with_spin_up_year,
 )
 from field_shift.reference.crops import CROP_SHEETS
 from field_shift.services.plan_service import PlanService
 from tests.helpers.demo_field_data import DemoFieldDataSource
-from tests.helpers.reference_place import ReferencePlaceData
 from tests.helpers.example_plans import (
     ExampleWeatherProvider,
     example_plan_service,
     example_water_model,
 )
+from tests.helpers.reference_place import ReferencePlaceData
 from tests.water_use.test_2b_chaine_complete import api_simulees  # noqa: F401  (a fixture)
 from water_use.demo import meteo_demo, sol_demo
 from water_use.et0 import et0_meteo
@@ -204,6 +206,16 @@ class TestPressionEau:
             < (alone["pression"])
         )
 
+    def test_replacing_a_component_weighs_the_pressure_as_water_use_does(self):
+        weather = demo_weather("sec")
+        et0, _ = et0_meteo(weather)
+        result = pression_eau(weather, et0, FIRST_YEAR, LAST_YEAR, nappes_percentile=30)
+        same = with_component(result, "pluie_ete", result["composantes"]["pluie_ete"])
+        assert same["pression"] == pytest.approx(result["pression"], abs=1e-3)
+        assert with_component(result, "pluie_ete", 1.0)["pression"] > result["pression"]
+        added = with_component(pression_eau(weather, et0, FIRST_YEAR, LAST_YEAR), "nappes", 0.5)
+        assert "nappes" not in added["manquantes"]
+
     def test_a_base_that_fails_is_left_out_and_named(self, monkeypatch):
         def broken(*args, **kwargs):
             raise ErreurDonnees("service en panne")
@@ -308,6 +320,16 @@ class TestWeatherOfACycle:
         meteo = meteo_of_weather(self.weather, *PLACE, meteo_demo("humide", 2005, 2010))
         assert np.isnan(meteo.rh).all()
 
+    def test_the_first_year_is_played_once_before_the_cycle_to_fill_the_soil(self):
+        tmax = np.concatenate((np.arange(365, dtype=float), np.full(365, 99.0)))  # 2005, 2006
+        weather = DailyWeather.from_series(2005, 2006, tmax, tmax - 10, np.ones(730))
+        meteo = with_spin_up_year(meteo_of_weather(weather, *PLACE))
+        assert str(meteo.dates[0]) == "2004-01-01" and len(meteo.dates) == 366 + 730
+        spin_up = meteo.tmax[:366]
+        assert spin_up[58] == spin_up[59] == 58.0  # 28 and 29 February 2004: 28 February 2005
+        assert spin_up[60] == 59.0  # 1 March 2004: 1 March 2005
+        assert np.array_equal(meteo.tmax[366:], tmax)
+
 
 def recent(climate: str, name: str) -> tuple[str, DailyWeather]:
     """A weather of the pipeline (temperatures and rain) made of the synthetic one."""
@@ -335,6 +357,28 @@ class TestWaterUseModel:
         pressure = self.model.for_cycle([wet, dry]).pressure
         assert pressure.worst > pressure.pressure > self.model.for_cycle([wet]).pressure.pressure
         assert pressure.aridity_class == "semi-aride"
+
+    def test_every_year_of_the_weather_of_a_cycle_is_scored(self):
+        name, weather = recent("humide", "NASA POWER")
+        direct = note_eau(
+            rotation_of_chain(SOYBEAN_WHEAT, START, START + 24),
+            with_spin_up_year(meteo_of_weather(weather, *PLACE)),
+            *PLACE,
+            False,
+            weather.first_year,
+            weather.last_year,
+            sol=self.model.soil,
+        )
+        assert self.score(self.model.for_cycle([(name, weather)])).note == direct["note"]
+
+    def test_the_summer_rain_trend_of_today_is_used_for_every_cycle(self):
+        name, today = recent("humide", "NASA POWER")
+        farm = WaterUseModel(*PLACE, sol_demo(), farm_weather=today)
+        assert farm.summer_rain_trend is not None
+        near = farm.for_cycle([(name, today)]).pressure
+        far = farm.for_cycle([recent("sec", "modèle sec")]).pressure  # another climate
+        assert near.components["pluie_ete"] == far.components["pluie_ete"] == farm.summer_rain_trend
+        assert far.components["aridite"] > near.components["aridite"]  # its own aridity
 
     def test_a_partial_chain_has_no_water_score_yet(self):
         cycle = self.model.for_cycle([recent("humide", "NASA POWER")])

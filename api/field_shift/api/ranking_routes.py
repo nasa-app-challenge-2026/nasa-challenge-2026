@@ -4,7 +4,7 @@
     POST /measures/protection-sol   one measure alone: erosion and infiltration      (computed)
     POST /measures/rendement        one measure alone: yield                        (501 for now)
     POST /measures/eau              one measure alone: water demand                 (501 for now)
-    POST /measures/ravageurs        one measure alone: pests and diseases           (501 for now)
+    POST /measures/ravageurs        one measure alone: pests and diseases           (computed)
     GET  /measures                  the four measures and which ones are computed
     GET  /crops                     the crops a rotation can contain
     GET  /data-sources              the addresses of the data sources the server runs with

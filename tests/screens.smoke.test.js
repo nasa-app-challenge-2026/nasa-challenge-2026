@@ -43,12 +43,14 @@ describe('the screens of the priorities and the plan', () => {
     for (const id of CRITERIA_IDS) expect(page).toContain(CRITERIA[id].label);
   });
 
-  it('the plan of a section shows the four priorities and the water of its chain', () => {
+  it('the plan of a section shows the four priorities, the water and the pests of its chain', () => {
     const state = stateWithPlan();
     const page = String(plan.render(state, { id: 'A' }, appOf(state)));
     expect(page).toContain('Les 4 priorités');
     for (const id of CRITERIA_IDS) expect(page).toContain(CRITERIA[id].label);
     expect(page).toContain('L’eau de cette suite');
+    expect(page).toContain('Les ravageurs de cette suite');
+    expect(page).toContain('moisissure blanche');
     expect(page).not.toContain('9 critères');
   });
 

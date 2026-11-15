@@ -4,9 +4,10 @@ The farmer ranks four priorities, the same four as the measures of the rotation 
 (`measures.py`): rendement, eau, protection_sol, ravageurs. The algorithm turns the ranking into
 weights (rank order centroid) and scores every chain on each of them, from 0 to 1.
 
-field_shift.py v5.1 scored five more criteria (fourrage, azote, matiere_org, marche, reserve) and
-called the soil criterion `erosion`. They are no longer ranked nor scored. The chain scorer still
-computes them when a profile asks for them (`V51_CRITERIA_IDS`): the reference tests compare the
+field_shift.py v5.1 scored five more criteria (fourrage, azote, matiere_org, marche, reserve),
+called the soil criterion `erosion`, and scored the pests with the return delays only. They are no
+longer ranked nor scored. The chain scorer still computes them when a profile asks for them
+(`V51_CRITERIA_IDS`, where the return delays are `delais_retour`): the reference tests compare the
 planner with field_shift.py v5.1, on its nine criteria.
 """
 
@@ -31,10 +32,13 @@ YIELD_CRITERION: Final = MEASURE_YIELD
 WATER_CRITERION: Final = MEASURE_WATER
 #: Soil protection: the share of the time the soil is covered by a living crop.
 SOIL_CRITERION: Final = MEASURE_SOIL_PROTECTION
-#: Pests: the return delays of the crops.
+#: Pests: the pressure of the soil diseases, nematodes and insects (`algorithm/pests`).
 PESTS_CRITERION: Final = MEASURE_PESTS
+#: The pests criterion of field_shift.py v5.1: the recommended return delays only.
+V51_PESTS_CRITERION: Final = "delais_retour"
 
-#: The nine criteria of field_shift.py v5.1, in its order (its `erosion` is `protection_sol`).
+#: The nine criteria of field_shift.py v5.1, in its order (its `erosion` is `protection_sol`, its
+#: `ravageurs` is `delais_retour`).
 V51_CRITERIA_IDS: Final[tuple[str, ...]] = (
     YIELD_CRITERION,
     WATER_CRITERION,
@@ -43,7 +47,7 @@ V51_CRITERIA_IDS: Final[tuple[str, ...]] = (
     SOIL_CRITERION,
     "matiere_org",
     "marche",
-    PESTS_CRITERION,
+    V51_PESTS_CRITERION,
     "reserve",
 )
 

@@ -92,14 +92,14 @@
         },
         "risksToday": {
           "erosion": 0.718,
-          "water": 0.011
+          "water": 0.0
         },
         "waterPressure": {
-          "pressure": 0.011,
-          "worst": 0.011,
+          "pressure": 0.0,
+          "worst": 0.0,
           "components": {
             "aridite": 0.0,
-            "pluie_ete": 0.032
+            "pluie_ete": 0.0
           },
           "missing": [
             "nappes",
@@ -110,7 +110,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.159,
+          "aridityIndex": 1.158,
           "aridityClass": "humide"
         }
       },
@@ -237,14 +237,14 @@
           },
           "risks": {
             "erosion": 0.718,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -255,22 +255,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.141,
+            "aridityIndex": 1.14,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.271,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.895,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 83.907,
+            "score": 83.249,
             "criteria": {
               "rendement": 0.65,
-              "eau": 0.741,
+              "eau": 0.742,
               "protection_sol": 0.913,
-              "ravageurs": 0.833
+              "ravageurs": 0.685
             },
             "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
             "sheets": [
@@ -379,35 +379,44 @@
             ],
             "warnings": [],
             "water": {
-              "note": 0.741,
-              "worst": 0.741,
+              "note": 0.742,
+              "worst": 0.742,
               "subScores": {
                 "A": 0.381,
-                "B": 0.886,
+                "B": 0.885,
                 "C": 0.808,
-                "D": 0.89
+                "D": 0.894
               },
-              "demandMmPerYear": 564.062,
-              "shortfallMmPerYear": 30.492,
+              "demandMmPerYear": 563.148,
+              "shortfallMmPerYear": 30.818,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.83,
-              "waterAtSowingMm": 193.731,
+              "rainKeptPct": 80.789,
+              "waterAtSowingMm": 194.565,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
-                  "note": 0.741
+                  "note": 0.742
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.685,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Maïs 2026 puis Orge 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Orge 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
               ]
             }
           },
           "reference": {
-            "score": 45.504,
+            "score": 45.358,
             "criteria": {
               "rendement": 0.694,
               "eau": 0.767,
               "protection_sol": 0.317,
-              "ravageurs": 0.667
+              "ravageurs": 0.643
             },
             "label": "Jachère → Soya → Jachère → Maïs → Jachère → Soya → Jachère → Maïs",
             "sheets": [
@@ -518,21 +527,30 @@
               "worst": 0.767,
               "subScores": {
                 "A": 0.471,
-                "B": 0.878,
+                "B": 0.877,
                 "C": 0.761,
                 "D": 0.957
               },
-              "demandMmPerYear": 481.396,
-              "shortfallMmPerYear": 38.757,
+              "demandMmPerYear": 480.635,
+              "shortfallMmPerYear": 39.41,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 76.07,
-              "waterAtSowingMm": 208.132,
+              "rainKeptPct": 76.113,
+              "waterAtSowingMm": 208.222,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
                   "note": 0.767
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.643,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Soya 2025 puis Soya 2027 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne.",
+                "Soya 2027 puis Soya 2029 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -600,12 +618,12 @@
           ],
           "alternatives": [
             {
-              "score": 82.176,
+              "score": 81.34,
               "criteria": {
                 "rendement": 0.6,
-                "eau": 0.749,
+                "eau": 0.75,
                 "protection_sol": 0.892,
-                "ravageurs": 0.95
+                "ravageurs": 0.762
               },
               "label": "Seigle (couvert) → Orge → Seigle (couvert) → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
               "sheets": [
@@ -712,7 +730,8 @@
                 {
                   "previous": "orge",
                   "next": "canola",
-                  "message": "Orge → Canola"
+                  "message": "Orge → Canola",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [
@@ -730,35 +749,44 @@
                 }
               ],
               "water": {
-                "note": 0.749,
-                "worst": 0.749,
+                "note": 0.75,
+                "worst": 0.75,
                 "subScores": {
                   "A": 0.411,
                   "B": 0.905,
-                  "C": 0.789,
-                  "D": 0.89
+                  "C": 0.788,
+                  "D": 0.894
                 },
-                "demandMmPerYear": 536.753,
-                "shortfallMmPerYear": 25.628,
+                "demandMmPerYear": 535.792,
+                "shortfallMmPerYear": 25.7,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 78.867,
-                "waterAtSowingMm": 193.731,
+                "rainKeptPct": 78.81,
+                "waterAtSowingMm": 194.565,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.749
+                    "note": 0.75
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.762,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Maïs 2026 puis Orge 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Soya 2030 puis Canola 2032 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
             },
             {
-              "score": 81.781,
+              "score": 81.181,
               "criteria": {
                 "rendement": 0.619,
-                "eau": 0.747,
+                "eau": 0.748,
                 "protection_sol": 0.9,
-                "ravageurs": 0.667
+                "ravageurs": 0.531
               },
               "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs",
               "sheets": [
@@ -867,25 +895,37 @@
               ],
               "warnings": [],
               "water": {
-                "note": 0.747,
-                "worst": 0.747,
+                "note": 0.748,
+                "worst": 0.748,
                 "subScores": {
                   "A": 0.407,
                   "B": 0.894,
                   "C": 0.796,
-                  "D": 0.89
+                  "D": 0.894
                 },
-                "demandMmPerYear": 541.025,
-                "shortfallMmPerYear": 24.123,
+                "demandMmPerYear": 540.116,
+                "shortfallMmPerYear": 24.349,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.627,
-                "waterAtSowingMm": 193.731,
+                "rainKeptPct": 79.583,
+                "waterAtSowingMm": 194.565,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.747
+                    "note": 0.748
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.531,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Maïs 2028 puis Orge 2029 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Maïs 2026 puis Orge 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2029 puis Maïs 2030 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             }
@@ -899,7 +939,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 83.907,
+          "robustness": 83.249,
           "becomesInfeasibleLater": false
         },
         {
@@ -1024,14 +1064,14 @@
           },
           "risks": {
             "erosion": 0.718,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -1042,22 +1082,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.136,
+            "aridityIndex": 1.135,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.271,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.895,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 84.903,
+            "score": 84.245,
             "criteria": {
               "rendement": 0.65,
               "eau": 0.739,
               "protection_sol": 0.929,
-              "ravageurs": 0.833
+              "ravageurs": 0.684
             },
             "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
             "sheets": [
@@ -1170,13 +1210,13 @@
                 "A": 0.376,
                 "B": 0.88,
                 "C": 0.809,
-                "D": 0.889
+                "D": 0.892
               },
-              "demandMmPerYear": 571.397,
-              "shortfallMmPerYear": 32.502,
+              "demandMmPerYear": 570.473,
+              "shortfallMmPerYear": 32.771,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.911,
-              "waterAtSowingMm": 193.499,
+              "rainKeptPct": 80.87,
+              "waterAtSowingMm": 194.174,
               "alerts": [],
               "byModel": [
                 {
@@ -1184,15 +1224,24 @@
                   "note": 0.739
                 }
               ]
+            },
+            "pests": {
+              "score": 0.684,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+              ]
             }
           },
           "reference": {
-            "score": 45.093,
+            "score": 44.947,
             "criteria": {
               "rendement": 0.694,
               "eau": 0.766,
               "protection_sol": 0.31,
-              "ravageurs": 0.667
+              "ravageurs": 0.643
             },
             "label": "Jachère → Soya → Jachère → Maïs → Jachère → Soya → Jachère → Maïs",
             "sheets": [
@@ -1303,21 +1352,30 @@
               "worst": 0.766,
               "subScores": {
                 "A": 0.478,
-                "B": 0.877,
-                "C": 0.754,
-                "D": 0.956
+                "B": 0.876,
+                "C": 0.755,
+                "D": 0.957
               },
-              "demandMmPerYear": 477.6,
-              "shortfallMmPerYear": 39.322,
+              "demandMmPerYear": 476.839,
+              "shortfallMmPerYear": 39.949,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 75.438,
-              "waterAtSowingMm": 208.085,
+              "rainKeptPct": 75.471,
+              "waterAtSowingMm": 208.175,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
                   "note": 0.766
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.643,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Soya 2029 puis Soya 2031 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne.",
+                "Soya 2031 puis Soya 2033 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -1385,12 +1443,12 @@
           ],
           "alternatives": [
             {
-              "score": 83.312,
+              "score": 82.474,
               "criteria": {
                 "rendement": 0.6,
-                "eau": 0.746,
+                "eau": 0.747,
                 "protection_sol": 0.91,
-                "ravageurs": 0.95
+                "ravageurs": 0.762
               },
               "label": "Seigle (couvert) → Orge → Seigle (couvert) → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
               "sheets": [
@@ -1497,7 +1555,8 @@
                 {
                   "previous": "orge",
                   "next": "canola",
-                  "message": "Orge → Canola"
+                  "message": "Orge → Canola",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
@@ -1512,35 +1571,44 @@
                 }
               ],
               "water": {
-                "note": 0.746,
-                "worst": 0.746,
+                "note": 0.747,
+                "worst": 0.747,
                 "subScores": {
                   "A": 0.404,
-                  "B": 0.901,
-                  "C": 0.792,
-                  "D": 0.889
+                  "B": 0.9,
+                  "C": 0.791,
+                  "D": 0.892
                 },
-                "demandMmPerYear": 546.058,
-                "shortfallMmPerYear": 27.124,
+                "demandMmPerYear": 545.087,
+                "shortfallMmPerYear": 27.156,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.194,
-                "waterAtSowingMm": 193.499,
+                "rainKeptPct": 79.139,
+                "waterAtSowingMm": 194.174,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.746
+                    "note": 0.747
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.762,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Soya 2034 puis Canola 2036 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
             },
             {
-              "score": 83.225,
+              "score": 82.305,
               "criteria": {
                 "rendement": 0.573,
                 "eau": 0.708,
                 "protection_sol": 0.922,
-                "ravageurs": 0.96
+                "ravageurs": 0.754
               },
               "label": "Seigle (couvert) → Orge → Seigle (couvert) → Canola → Blé d’automne → Sarrasin → Seigle (couvert) → Maïs",
               "sheets": [
@@ -1647,12 +1715,14 @@
                 {
                   "previous": "orge",
                   "next": "canola",
-                  "message": "Orge → Canola"
+                  "message": "Orge → Canola",
+                  "assumedPct": 0.0
                 },
                 {
                   "previous": "ble-automne",
                   "next": "sarrasin",
-                  "message": "Blé d’automne → Sarrasin"
+                  "message": "Blé d’automne → Sarrasin",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
@@ -1671,21 +1741,30 @@
                 "worst": 0.708,
                 "subScores": {
                   "A": 0.393,
-                  "B": 0.916,
-                  "C": 0.839,
-                  "D": 0.684
+                  "B": 0.917,
+                  "C": 0.838,
+                  "D": 0.685
                 },
-                "demandMmPerYear": 555.575,
-                "shortfallMmPerYear": 22.903,
+                "demandMmPerYear": 554.6,
+                "shortfallMmPerYear": 22.54,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 83.854,
-                "waterAtSowingMm": 148.758,
+                "rainKeptPct": 83.819,
+                "waterAtSowingMm": 148.948,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
                     "note": 0.708
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.754,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Blé d’automne 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             }
@@ -1743,14 +1822,14 @@
         },
         "risksToday": {
           "erosion": 0.557,
-          "water": 0.011
+          "water": 0.0
         },
         "waterPressure": {
-          "pressure": 0.011,
-          "worst": 0.011,
+          "pressure": 0.0,
+          "worst": 0.0,
           "components": {
             "aridite": 0.0,
-            "pluie_ete": 0.032
+            "pluie_ete": 0.0
           },
           "missing": [
             "nappes",
@@ -1761,7 +1840,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.159,
+          "aridityIndex": 1.158,
           "aridityClass": "humide"
         }
       },
@@ -1888,14 +1967,14 @@
           },
           "risks": {
             "erosion": 0.557,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -1906,33 +1985,33 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.14,
+            "aridityIndex": 1.138,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.271,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.811,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 84.984,
+            "score": 84.564,
             "criteria": {
               "rendement": 0.688,
-              "eau": 0.741,
+              "eau": 0.742,
               "protection_sol": 0.925,
-              "ravageurs": 0.833
+              "ravageurs": 0.742
             },
-            "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
+            "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs → Seigle (couvert) → Orge",
             "sheets": [
               "seigle-couvert",
               "mais",
               "seigle-couvert",
-              "orge",
+              "soya",
               "seigle-couvert",
               "mais",
               "seigle-couvert",
-              "soya"
+              "orge"
             ],
             "steps": [
               {
@@ -1969,11 +2048,11 @@
                 ]
               },
               {
-                "sheet": "orge",
-                "crop": "orge",
+                "sheet": "soya",
+                "crop": "soya",
                 "kind": "culture",
                 "sowing": "2029-05-16",
-                "harvest": "2029-08-08",
+                "harvest": "2029-08-28",
                 "positions": [
                   4,
                   4
@@ -2013,11 +2092,11 @@
                 ]
               },
               {
-                "sheet": "soya",
-                "crop": "soya",
+                "sheet": "orge",
+                "crop": "orge",
                 "kind": "culture",
                 "sowing": "2031-05-16",
-                "harvest": "2031-08-28",
+                "harvest": "2031-08-08",
                 "positions": [
                   8,
                   8
@@ -2030,35 +2109,44 @@
             ],
             "warnings": [],
             "water": {
-              "note": 0.741,
-              "worst": 0.741,
+              "note": 0.742,
+              "worst": 0.742,
               "subScores": {
-                "A": 0.382,
+                "A": 0.381,
                 "B": 0.885,
-                "C": 0.809,
-                "D": 0.89
+                "C": 0.808,
+                "D": 0.894
               },
-              "demandMmPerYear": 564.619,
-              "shortfallMmPerYear": 30.486,
+              "demandMmPerYear": 563.701,
+              "shortfallMmPerYear": 30.794,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.861,
-              "waterAtSowingMm": 193.664,
+              "rainKeptPct": 80.828,
+              "waterAtSowingMm": 194.501,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
-                  "note": 0.741
+                  "note": 0.742
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.742,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Au cycle suivant, Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
               ]
             }
           },
           "reference": {
-            "score": 57.357,
+            "score": 58.935,
             "criteria": {
               "rendement": 0.68,
               "eau": 0.762,
               "protection_sol": 0.505,
-              "ravageurs": 0.556
+              "ravageurs": 0.886
             },
             "label": "Jachère → Maïs → Jachère → Soya → Luzerne ×2 [4 pos.]",
             "sheets": [
@@ -2129,7 +2217,8 @@
               {
                 "previous": "soya",
                 "next": "luzerne",
-                "message": "Soya → Luzerne"
+                "message": "Soya → Luzerne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [
@@ -2143,13 +2232,13 @@
                 "A": 0.373,
                 "B": 0.874,
                 "C": 0.84,
-                "D": 0.962
+                "D": 0.963
               },
-              "demandMmPerYear": 572.161,
-              "shortfallMmPerYear": 49.705,
+              "demandMmPerYear": 571.198,
+              "shortfallMmPerYear": 49.883,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 83.983,
-              "waterAtSowingMm": 209.307,
+              "rainKeptPct": 84.036,
+              "waterAtSowingMm": 209.413,
               "alerts": [],
               "byModel": [
                 {
@@ -2157,6 +2246,12 @@
                   "note": 0.762
                 }
               ]
+            },
+            "pests": {
+              "score": 0.886,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": []
             }
           },
           "referenceAlerts": [
@@ -2183,23 +2278,23 @@
           ],
           "alternatives": [
             {
-              "score": 84.581,
+              "score": 84.473,
               "criteria": {
                 "rendement": 0.688,
-                "eau": 0.741,
+                "eau": 0.742,
                 "protection_sol": 0.925,
-                "ravageurs": 0.75
+                "ravageurs": 0.724
               },
-              "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs → Seigle (couvert) → Orge",
+              "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
               "sheets": [
                 "seigle-couvert",
                 "mais",
                 "seigle-couvert",
-                "soya",
+                "orge",
                 "seigle-couvert",
                 "mais",
                 "seigle-couvert",
-                "orge"
+                "soya"
               ],
               "steps": [
                 {
@@ -2236,11 +2331,11 @@
                   ]
                 },
                 {
-                  "sheet": "soya",
-                  "crop": "soya",
+                  "sheet": "orge",
+                  "crop": "orge",
                   "kind": "culture",
                   "sowing": "2029-05-16",
-                  "harvest": "2029-08-28",
+                  "harvest": "2029-08-08",
                   "positions": [
                     4,
                     4
@@ -2280,11 +2375,11 @@
                   ]
                 },
                 {
-                  "sheet": "orge",
-                  "crop": "orge",
+                  "sheet": "soya",
+                  "crop": "soya",
                   "kind": "culture",
                   "sowing": "2031-05-16",
-                  "harvest": "2031-08-08",
+                  "harvest": "2031-08-28",
                   "positions": [
                     8,
                     8
@@ -2297,35 +2392,44 @@
               ],
               "warnings": [],
               "water": {
-                "note": 0.741,
-                "worst": 0.741,
+                "note": 0.742,
+                "worst": 0.742,
                 "subScores": {
-                  "A": 0.382,
+                  "A": 0.381,
                   "B": 0.885,
-                  "C": 0.809,
-                  "D": 0.89
+                  "C": 0.808,
+                  "D": 0.894
                 },
-                "demandMmPerYear": 564.619,
-                "shortfallMmPerYear": 30.486,
+                "demandMmPerYear": 563.701,
+                "shortfallMmPerYear": 30.794,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 80.866,
-                "waterAtSowingMm": 193.664,
+                "rainKeptPct": 80.823,
+                "waterAtSowingMm": 194.501,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.741
+                    "note": 0.742
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.724,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Maïs 2028 puis Orge 2029 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2029 puis Maïs 2030 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             },
             {
-              "score": 83.332,
+              "score": 83.142,
               "criteria": {
                 "rendement": 0.637,
-                "eau": 0.749,
+                "eau": 0.75,
                 "protection_sol": 0.912,
-                "ravageurs": 0.867
+                "ravageurs": 0.823
               },
               "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Orge → Seigle (couvert) → Canola",
               "sheets": [
@@ -2432,7 +2536,8 @@
                 {
                   "previous": "orge",
                   "next": "canola",
-                  "message": "Orge → Canola"
+                  "message": "Orge → Canola",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [
@@ -2450,25 +2555,33 @@
                 }
               ],
               "water": {
-                "note": 0.749,
-                "worst": 0.749,
+                "note": 0.75,
+                "worst": 0.75,
                 "subScores": {
-                  "A": 0.407,
+                  "A": 0.408,
                   "B": 0.905,
-                  "C": 0.793,
-                  "D": 0.89
+                  "C": 0.792,
+                  "D": 0.894
                 },
-                "demandMmPerYear": 540.928,
-                "shortfallMmPerYear": 25.512,
+                "demandMmPerYear": 539.955,
+                "shortfallMmPerYear": 25.575,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.256,
-                "waterAtSowingMm": 193.664,
+                "rainKeptPct": 79.206,
+                "waterAtSowingMm": 194.501,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.749
+                    "note": 0.75
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.823,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Au cycle suivant, Soya 2033 puis Canola 2035 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
             }
@@ -2482,7 +2595,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 84.984,
+          "robustness": 84.019,
           "becomesInfeasibleLater": false
         },
         {
@@ -2607,14 +2720,14 @@
           },
           "risks": {
             "erosion": 0.557,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -2625,33 +2738,33 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.135,
+            "aridityIndex": 1.133,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.271,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.811,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 85.113,
+            "score": 84.019,
             "criteria": {
-              "rendement": 0.681,
+              "rendement": 0.662,
               "eau": 0.739,
               "protection_sol": 0.93,
-              "ravageurs": 0.833
+              "ravageurs": 0.684
             },
-            "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
+            "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs → Seigle (couvert) → Orge",
             "sheets": [
               "seigle-couvert",
               "mais",
               "seigle-couvert",
-              "orge",
+              "soya",
               "seigle-couvert",
               "mais",
               "seigle-couvert",
-              "soya"
+              "orge"
             ],
             "steps": [
               {
@@ -2688,11 +2801,11 @@
                 ]
               },
               {
-                "sheet": "orge",
-                "crop": "orge",
+                "sheet": "soya",
+                "crop": "soya",
                 "kind": "culture",
-                "sowing": "2033-05-15",
-                "harvest": "2033-08-08",
+                "sowing": "2033-05-16",
+                "harvest": "2033-08-28",
                 "positions": [
                   4,
                   4
@@ -2732,11 +2845,11 @@
                 ]
               },
               {
-                "sheet": "soya",
-                "crop": "soya",
+                "sheet": "orge",
+                "crop": "orge",
                 "kind": "culture",
-                "sowing": "2035-05-16",
-                "harvest": "2035-08-28",
+                "sowing": "2035-05-15",
+                "harvest": "2035-08-08",
                 "positions": [
                   8,
                   8
@@ -2753,13 +2866,13 @@
                 "A": 0.376,
                 "B": 0.88,
                 "C": 0.809,
-                "D": 0.889
+                "D": 0.892
               },
-              "demandMmPerYear": 572.087,
-              "shortfallMmPerYear": 32.54,
+              "demandMmPerYear": 571.161,
+              "shortfallMmPerYear": 32.811,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 80.91,
-              "waterAtSowingMm": 193.433,
+              "rainKeptPct": 80.873,
+              "waterAtSowingMm": 194.11,
               "alerts": [],
               "byModel": [
                 {
@@ -2767,15 +2880,24 @@
                   "note": 0.739
                 }
               ]
+            },
+            "pests": {
+              "score": 0.684,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Maïs 2034 puis Orge 2035 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+              ]
             }
           },
           "reference": {
-            "score": 57.528,
+            "score": 59.03,
             "criteria": {
               "rendement": 0.68,
               "eau": 0.761,
               "protection_sol": 0.508,
-              "ravageurs": 0.556
+              "ravageurs": 0.87
             },
             "label": "Jachère → Maïs → Jachère → Soya → Luzerne ×2 [4 pos.]",
             "sheets": [
@@ -2846,7 +2968,8 @@
               {
                 "previous": "soya",
                 "next": "luzerne",
-                "message": "Soya → Luzerne"
+                "message": "Soya → Luzerne",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
@@ -2860,11 +2983,11 @@
                 "C": 0.838,
                 "D": 0.962
               },
-              "demandMmPerYear": 573.519,
-              "shortfallMmPerYear": 51.035,
+              "demandMmPerYear": 572.548,
+              "shortfallMmPerYear": 51.215,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 83.767,
-              "waterAtSowingMm": 209.2,
+              "rainKeptPct": 83.814,
+              "waterAtSowingMm": 209.31,
               "alerts": [],
               "byModel": [
                 {
@@ -2872,6 +2995,12 @@
                   "note": 0.761
                 }
               ]
+            },
+            "pests": {
+              "score": 0.87,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": []
             }
           },
           "referenceAlerts": [
@@ -2898,154 +3027,19 @@
           ],
           "alternatives": [
             {
-              "score": 84.133,
+              "score": 83.089,
               "criteria": {
-                "rendement": 0.656,
+                "rendement": 0.662,
                 "eau": 0.739,
-                "protection_sol": 0.922,
-                "ravageurs": 0.833
+                "protection_sol": 0.916,
+                "ravageurs": 0.668
               },
-              "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
+              "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
               "sheets": [
-                "seigle-couvert",
-                "orge",
                 "seigle-couvert",
                 "mais",
                 "seigle-couvert",
-                "soya",
-                "seigle-couvert",
-                "mais"
-              ],
-              "steps": [
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "culture",
-                  "sowing": "2031-09-16",
-                  "harvest": "2032-05-08",
-                  "positions": [
-                    1,
-                    1
-                  ]
-                },
-                {
-                  "sheet": "orge",
-                  "crop": "orge",
-                  "kind": "culture",
-                  "sowing": "2032-05-15",
-                  "harvest": "2032-08-08",
-                  "positions": [
-                    2,
-                    2
-                  ]
-                },
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "culture",
-                  "sowing": "2032-09-16",
-                  "harvest": "2033-05-08",
-                  "positions": [
-                    3,
-                    3
-                  ]
-                },
-                {
-                  "sheet": "mais",
-                  "crop": "mais",
-                  "kind": "culture",
-                  "sowing": "2033-05-15",
-                  "harvest": "2033-09-15",
-                  "positions": [
-                    4,
-                    4
-                  ]
-                },
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "culture",
-                  "sowing": "2033-09-23",
-                  "harvest": "2034-05-08",
-                  "positions": [
-                    5,
-                    5
-                  ]
-                },
-                {
-                  "sheet": "soya",
-                  "crop": "soya",
-                  "kind": "culture",
-                  "sowing": "2034-05-16",
-                  "harvest": "2034-08-28",
-                  "positions": [
-                    6,
-                    6
-                  ]
-                },
-                {
-                  "sheet": "seigle-couvert",
-                  "crop": "seigle",
-                  "kind": "culture",
-                  "sowing": "2034-09-16",
-                  "harvest": "2035-05-08",
-                  "positions": [
-                    7,
-                    7
-                  ]
-                },
-                {
-                  "sheet": "mais",
-                  "crop": "mais",
-                  "kind": "culture",
-                  "sowing": "2035-05-15",
-                  "harvest": "2035-09-15",
-                  "positions": [
-                    8,
-                    8
-                  ]
-                }
-              ],
-              "gaps": [],
-              "seedsToBuy": [],
-              "warnings": [],
-              "water": {
-                "note": 0.739,
-                "worst": 0.739,
-                "subScores": {
-                  "A": 0.374,
-                  "B": 0.88,
-                  "C": 0.811,
-                  "D": 0.889
-                },
-                "demandMmPerYear": 574.138,
-                "shortfallMmPerYear": 32.54,
-                "irrigationMmPerYear": null,
-                "rainKeptPct": 81.135,
-                "waterAtSowingMm": 193.433,
-                "alerts": [],
-                "byModel": [
-                  {
-                    "model": "tendance NASA POWER",
-                    "note": 0.739
-                  }
-                ]
-              }
-            },
-            {
-              "score": 83.328,
-              "criteria": {
-                "rendement": 0.606,
-                "eau": 0.746,
-                "protection_sol": 0.916,
-                "ravageurs": 0.95
-              },
-              "label": "Seigle (couvert) → Orge → Seigle (couvert) → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
-              "sheets": [
-                "seigle-couvert",
                 "orge",
-                "seigle-couvert",
-                "canola",
                 "seigle-couvert",
                 "mais",
                 "seigle-couvert",
@@ -3064,11 +3058,11 @@
                   ]
                 },
                 {
-                  "sheet": "orge",
-                  "crop": "orge",
+                  "sheet": "mais",
+                  "crop": "mais",
                   "kind": "culture",
                   "sowing": "2032-05-15",
-                  "harvest": "2032-08-08",
+                  "harvest": "2032-09-15",
                   "positions": [
                     2,
                     2
@@ -3078,7 +3072,7 @@
                   "sheet": "seigle-couvert",
                   "crop": "seigle",
                   "kind": "culture",
-                  "sowing": "2032-09-16",
+                  "sowing": "2032-09-23",
                   "harvest": "2033-05-08",
                   "positions": [
                     3,
@@ -3086,11 +3080,11 @@
                   ]
                 },
                 {
-                  "sheet": "canola",
-                  "crop": "canola",
+                  "sheet": "orge",
+                  "crop": "orge",
                   "kind": "culture",
                   "sowing": "2033-05-15",
-                  "harvest": "2033-08-18",
+                  "harvest": "2033-08-08",
                   "positions": [
                     4,
                     4
@@ -3141,11 +3135,157 @@
                   ]
                 }
               ],
+              "gaps": [],
+              "seedsToBuy": [],
+              "warnings": [],
+              "water": {
+                "note": 0.739,
+                "worst": 0.739,
+                "subScores": {
+                  "A": 0.376,
+                  "B": 0.88,
+                  "C": 0.809,
+                  "D": 0.892
+                },
+                "demandMmPerYear": 571.161,
+                "shortfallMmPerYear": 32.811,
+                "irrigationMmPerYear": null,
+                "rainKeptPct": 80.873,
+                "waterAtSowingMm": 194.11,
+                "alerts": [],
+                "byModel": [
+                  {
+                    "model": "tendance NASA POWER",
+                    "note": 0.739
+                  }
+                ]
+              },
+              "pests": {
+                "score": 0.668,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Maïs 2032 puis Orge 2033 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+                ]
+              }
+            },
+            {
+              "score": 82.141,
+              "criteria": {
+                "rendement": 0.613,
+                "eau": 0.747,
+                "protection_sol": 0.909,
+                "ravageurs": 0.765
+              },
+              "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Orge → Seigle (couvert) → Canola",
+              "sheets": [
+                "seigle-couvert",
+                "mais",
+                "seigle-couvert",
+                "soya",
+                "seigle-couvert",
+                "orge",
+                "seigle-couvert",
+                "canola"
+              ],
+              "steps": [
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2031-09-16",
+                  "harvest": "2032-05-08",
+                  "positions": [
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "sheet": "mais",
+                  "crop": "mais",
+                  "kind": "culture",
+                  "sowing": "2032-05-15",
+                  "harvest": "2032-09-15",
+                  "positions": [
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2032-09-23",
+                  "harvest": "2033-05-08",
+                  "positions": [
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "sheet": "soya",
+                  "crop": "soya",
+                  "kind": "culture",
+                  "sowing": "2033-05-16",
+                  "harvest": "2033-08-28",
+                  "positions": [
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2033-09-16",
+                  "harvest": "2034-05-08",
+                  "positions": [
+                    5,
+                    5
+                  ]
+                },
+                {
+                  "sheet": "orge",
+                  "crop": "orge",
+                  "kind": "culture",
+                  "sowing": "2034-05-15",
+                  "harvest": "2034-08-08",
+                  "positions": [
+                    6,
+                    6
+                  ]
+                },
+                {
+                  "sheet": "seigle-couvert",
+                  "crop": "seigle",
+                  "kind": "culture",
+                  "sowing": "2034-09-16",
+                  "harvest": "2035-05-08",
+                  "positions": [
+                    7,
+                    7
+                  ]
+                },
+                {
+                  "sheet": "canola",
+                  "crop": "canola",
+                  "kind": "culture",
+                  "sowing": "2035-05-15",
+                  "harvest": "2035-08-18",
+                  "positions": [
+                    8,
+                    8
+                  ]
+                }
+              ],
               "gaps": [
                 {
                   "previous": "orge",
                   "next": "canola",
-                  "message": "Orge → Canola"
+                  "message": "Orge → Canola",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
@@ -3160,25 +3300,34 @@
                 }
               ],
               "water": {
-                "note": 0.746,
-                "worst": 0.746,
+                "note": 0.747,
+                "worst": 0.747,
                 "subScores": {
                   "A": 0.402,
                   "B": 0.901,
-                  "C": 0.793,
-                  "D": 0.889
+                  "C": 0.792,
+                  "D": 0.892
                 },
-                "demandMmPerYear": 547.918,
-                "shortfallMmPerYear": 27.058,
+                "demandMmPerYear": 546.936,
+                "shortfallMmPerYear": 27.092,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.295,
-                "waterAtSowingMm": 193.433,
+                "rainKeptPct": 79.246,
+                "waterAtSowingMm": 194.11,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.746
+                    "note": 0.747
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.765,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Soya 2037 puis Canola 2039 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
             }
@@ -3241,14 +3390,14 @@
         },
         "risksToday": {
           "erosion": 0.714,
-          "water": 0.011
+          "water": 0.0
         },
         "waterPressure": {
-          "pressure": 0.011,
-          "worst": 0.011,
+          "pressure": 0.0,
+          "worst": 0.0,
           "components": {
             "aridite": 0.0,
-            "pluie_ete": 0.032
+            "pluie_ete": 0.0
           },
           "missing": [
             "nappes",
@@ -3259,7 +3408,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.159,
+          "aridityIndex": 1.158,
           "aridityClass": "humide"
         }
       },
@@ -3386,14 +3535,14 @@
           },
           "risks": {
             "erosion": 0.714,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -3404,22 +3553,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.141,
+            "aridityIndex": 1.14,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.271,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.893,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 85.387,
+            "score": 84.764,
             "criteria": {
               "rendement": 0.681,
               "eau": 0.742,
               "protection_sol": 0.926,
-              "ravageurs": 0.833
+              "ravageurs": 0.692
             },
             "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
             "sheets": [
@@ -3532,15 +3681,15 @@
               "worst": 0.742,
               "subScores": {
                 "A": 0.378,
-                "B": 0.886,
-                "C": 0.812,
-                "D": 0.89
+                "B": 0.885,
+                "C": 0.811,
+                "D": 0.894
               },
-              "demandMmPerYear": 566.979,
-              "shortfallMmPerYear": 30.492,
+              "demandMmPerYear": 566.064,
+              "shortfallMmPerYear": 30.818,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 81.182,
-              "waterAtSowingMm": 193.731,
+              "rainKeptPct": 81.137,
+              "waterAtSowingMm": 194.565,
               "alerts": [],
               "byModel": [
                 {
@@ -3548,15 +3697,24 @@
                   "note": 0.742
                 }
               ]
+            },
+            "pests": {
+              "score": 0.692,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Maïs 2027 puis Orge 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Orge 2028 puis Maïs 2029 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+              ]
             }
           },
           "reference": {
-            "score": 61.078,
+            "score": 60.598,
             "criteria": {
               "rendement": 0.644,
               "eau": 0.713,
               "protection_sol": 0.574,
-              "ravageurs": 0.75
+              "ravageurs": 0.647
             },
             "label": "Blé d’automne → Jachère → Jachère → Maïs → Jachère → Soya → Blé d’automne → Jachère",
             "sheets": [
@@ -3669,19 +3827,30 @@
                 "A": 0.483,
                 "B": 0.895,
                 "C": 0.796,
-                "D": 0.679
+                "D": 0.678
               },
-              "demandMmPerYear": 471.459,
-              "shortfallMmPerYear": 33.17,
+              "demandMmPerYear": 470.614,
+              "shortfallMmPerYear": 32.872,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 79.568,
-              "waterAtSowingMm": 147.753,
+              "rainKeptPct": 79.575,
+              "waterAtSowingMm": 147.596,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
                   "note": 0.713
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.647,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Au cycle suivant, Blé d’automne 2030 puis Blé d’automne 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2025 puis Blé d’automne 2027 : fusariose de l’épi / gibbérelle, 1 an sans hôte pour 3 conseillés, pression moyenne.",
+                "Soya 2026 puis Soya 2029 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -3709,12 +3878,12 @@
           ],
           "alternatives": [
             {
-              "score": 85.231,
+              "score": 84.697,
               "criteria": {
                 "rendement": 0.656,
-                "eau": 0.741,
+                "eau": 0.742,
                 "protection_sol": 0.931,
-                "ravageurs": 0.833
+                "ravageurs": 0.712
               },
               "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
               "sheets": [
@@ -3823,35 +3992,46 @@
               ],
               "warnings": [],
               "water": {
-                "note": 0.741,
-                "worst": 0.741,
+                "note": 0.742,
+                "worst": 0.742,
                 "subScores": {
                   "A": 0.375,
-                  "B": 0.886,
-                  "C": 0.815,
-                  "D": 0.89
+                  "B": 0.885,
+                  "C": 0.814,
+                  "D": 0.894
                 },
-                "demandMmPerYear": 570.068,
-                "shortfallMmPerYear": 30.492,
+                "demandMmPerYear": 569.146,
+                "shortfallMmPerYear": 30.818,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 81.471,
-                "waterAtSowingMm": 193.731,
+                "rainKeptPct": 81.43,
+                "waterAtSowingMm": 194.565,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.741
+                    "note": 0.742
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.712,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Au cycle suivant, Maïs 2030 puis Orge 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2027 puis Maïs 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Soya 2026 puis Soya 2029 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
             },
             {
-              "score": 83.643,
+              "score": 82.908,
               "criteria": {
                 "rendement": 0.606,
-                "eau": 0.749,
+                "eau": 0.75,
                 "protection_sol": 0.913,
-                "ravageurs": 0.95
+                "ravageurs": 0.785
               },
               "label": "Seigle (couvert) → Orge → Seigle (couvert) → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
               "sheets": [
@@ -3958,7 +4138,8 @@
                 {
                   "previous": "orge",
                   "next": "canola",
-                  "message": "Orge → Canola"
+                  "message": "Orge → Canola",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [
@@ -3976,25 +4157,33 @@
                 }
               ],
               "water": {
-                "note": 0.749,
-                "worst": 0.749,
+                "note": 0.75,
+                "worst": 0.75,
                 "subScores": {
                   "A": 0.405,
                   "B": 0.905,
                   "C": 0.795,
-                  "D": 0.89
+                  "D": 0.894
                 },
-                "demandMmPerYear": 542.758,
-                "shortfallMmPerYear": 25.628,
+                "demandMmPerYear": 541.79,
+                "shortfallMmPerYear": 25.7,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.511,
-                "waterAtSowingMm": 193.731,
+                "rainKeptPct": 79.454,
+                "waterAtSowingMm": 194.565,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.749
+                    "note": 0.75
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.785,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Au cycle suivant, Soya 2030 puis Canola 2032 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
             }
@@ -4008,7 +4197,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 85.387,
+          "robustness": 84.764,
           "becomesInfeasibleLater": false
         },
         {
@@ -4133,14 +4322,14 @@
           },
           "risks": {
             "erosion": 0.714,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -4151,22 +4340,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.136,
+            "aridityIndex": 1.135,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.271,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.893,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 85.66,
+            "score": 85.001,
             "criteria": {
               "rendement": 0.681,
               "eau": 0.739,
               "protection_sol": 0.931,
-              "ravageurs": 0.833
+              "ravageurs": 0.684
             },
             "label": "Seigle (couvert) → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
             "sheets": [
@@ -4279,13 +4468,13 @@
                 "A": 0.375,
                 "B": 0.88,
                 "C": 0.81,
-                "D": 0.889
+                "D": 0.892
               },
-              "demandMmPerYear": 572.449,
-              "shortfallMmPerYear": 32.502,
+              "demandMmPerYear": 571.527,
+              "shortfallMmPerYear": 32.771,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 81.007,
-              "waterAtSowingMm": 193.499,
+              "rainKeptPct": 80.967,
+              "waterAtSowingMm": 194.174,
               "alerts": [],
               "byModel": [
                 {
@@ -4293,15 +4482,24 @@
                   "note": 0.739
                 }
               ]
+            },
+            "pests": {
+              "score": 0.684,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Maïs 2031 puis Orge 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Orge 2032 puis Maïs 2033 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+              ]
             }
           },
           "reference": {
-            "score": 51.33,
+            "score": 50.419,
             "criteria": {
               "rendement": 0.644,
               "eau": 0.736,
               "protection_sol": 0.414,
-              "ravageurs": 0.833
+              "ravageurs": 0.639
             },
             "label": "Jachère → Maïs → Jachère → Soya → Blé d’automne → Jachère → Jachère → Maïs",
             "sheets": [
@@ -4416,17 +4614,28 @@
                 "C": 0.783,
                 "D": 0.804
               },
-              "demandMmPerYear": 479.204,
-              "shortfallMmPerYear": 35.989,
+              "demandMmPerYear": 478.419,
+              "shortfallMmPerYear": 36.164,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 78.279,
-              "waterAtSowingMm": 174.923,
+              "rainKeptPct": 78.304,
+              "waterAtSowingMm": 174.903,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
                   "note": 0.736
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.639,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Au cycle suivant, Maïs 2034 puis Maïs 2035 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2030 puis Maïs 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Soya 2029 puis Soya 2032 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -4454,12 +4663,12 @@
           ],
           "alternatives": [
             {
-              "score": 84.699,
+              "score": 84.157,
               "criteria": {
                 "rendement": 0.656,
                 "eau": 0.739,
                 "protection_sol": 0.924,
-                "ravageurs": 0.833
+                "ravageurs": 0.71
               },
               "label": "Seigle (couvert) → Orge → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Seigle (couvert) → Maïs",
               "sheets": [
@@ -4572,13 +4781,13 @@
                   "A": 0.373,
                   "B": 0.88,
                   "C": 0.812,
-                  "D": 0.889
+                  "D": 0.892
                 },
-                "demandMmPerYear": 574.498,
-                "shortfallMmPerYear": 32.502,
+                "demandMmPerYear": 573.566,
+                "shortfallMmPerYear": 32.771,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 81.233,
-                "waterAtSowingMm": 193.499,
+                "rainKeptPct": 81.193,
+                "waterAtSowingMm": 194.174,
                 "alerts": [],
                 "byModel": [
                   {
@@ -4586,15 +4795,26 @@
                     "note": 0.739
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.71,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Au cycle suivant, Maïs 2034 puis Orge 2035 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Au cycle suivant, Orge 2035 puis Maïs 2036 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Orge 2031 puis Maïs 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Soya 2030 puis Soya 2033 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
+                ]
               }
             },
             {
-              "score": 83.901,
+              "score": 83.162,
               "criteria": {
                 "rendement": 0.606,
-                "eau": 0.746,
+                "eau": 0.747,
                 "protection_sol": 0.917,
-                "ravageurs": 0.95
+                "ravageurs": 0.784
               },
               "label": "Seigle (couvert) → Orge → Seigle (couvert) → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya",
               "sheets": [
@@ -4701,7 +4921,8 @@
                 {
                   "previous": "orge",
                   "next": "canola",
-                  "message": "Orge → Canola"
+                  "message": "Orge → Canola",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
@@ -4716,25 +4937,33 @@
                 }
               ],
               "water": {
-                "note": 0.746,
-                "worst": 0.746,
+                "note": 0.747,
+                "worst": 0.747,
                 "subScores": {
                   "A": 0.4,
-                  "B": 0.901,
-                  "C": 0.795,
-                  "D": 0.889
+                  "B": 0.9,
+                  "C": 0.794,
+                  "D": 0.892
                 },
-                "demandMmPerYear": 549.159,
-                "shortfallMmPerYear": 27.124,
+                "demandMmPerYear": 548.181,
+                "shortfallMmPerYear": 27.156,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 79.471,
-                "waterAtSowingMm": 193.499,
+                "rainKeptPct": 79.42,
+                "waterAtSowingMm": 194.174,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.746
+                    "note": 0.747
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.784,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Au cycle suivant, Soya 2034 puis Canola 2036 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
                 ]
               }
             }
@@ -4797,14 +5026,14 @@
         },
         "risksToday": {
           "erosion": 0.847,
-          "water": 0.011
+          "water": 0.0
         },
         "waterPressure": {
-          "pressure": 0.011,
-          "worst": 0.011,
+          "pressure": 0.0,
+          "worst": 0.0,
           "components": {
             "aridite": 0.0,
-            "pluie_ete": 0.032
+            "pluie_ete": 0.0
           },
           "missing": [
             "nappes",
@@ -4815,7 +5044,7 @@
             "et0": "Hargreaves, températures seules",
             "pente": "non lue : tables NRCS"
           },
-          "aridityIndex": 1.159,
+          "aridityIndex": 1.158,
           "aridityClass": "humide"
         }
       },
@@ -4942,14 +5171,14 @@
           },
           "risks": {
             "erosion": 0.847,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -4960,22 +5189,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.143,
+            "aridityIndex": 1.141,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.271,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.962,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 83.093,
+            "score": 82.414,
             "criteria": {
               "rendement": 0.594,
               "eau": 0.723,
               "protection_sol": 0.907,
-              "ravageurs": 0.95
+              "ravageurs": 0.789
             },
             "label": "Seigle (couvert) [2 pos.] → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Blé d’automne",
             "sheets": [
@@ -5070,7 +5299,8 @@
               {
                 "previous": "ble-automne",
                 "next": "canola",
-                "message": "Blé d’automne → Canola"
+                "message": "Blé d’automne → Canola",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [
@@ -5108,14 +5338,14 @@
               "subScores": {
                 "A": 0.412,
                 "B": 0.907,
-                "C": 0.819,
-                "D": 0.754
+                "C": 0.818,
+                "D": 0.756
               },
-              "demandMmPerYear": 535.911,
-              "shortfallMmPerYear": 26.792,
+              "demandMmPerYear": 534.901,
+              "shortfallMmPerYear": 26.612,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 81.856,
-              "waterAtSowingMm": 163.998,
+              "rainKeptPct": 81.819,
+              "waterAtSowingMm": 164.55,
               "alerts": [],
               "byModel": [
                 {
@@ -5123,15 +5353,23 @@
                   "note": 0.723
                 }
               ]
+            },
+            "pests": {
+              "score": 0.789,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Au cycle suivant, Soya 2029 puis Canola 2031 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
+              ]
             }
           },
           "reference": {
-            "score": 49.262,
+            "score": 48.312,
             "criteria": {
               "rendement": 0.68,
               "eau": 0.741,
               "protection_sol": 0.369,
-              "ravageurs": 1.0
+              "ravageurs": 0.787
             },
             "label": "Jachère → Jachère → Maïs → Jachère → Soya → Blé d’automne → Jachère → Jachère",
             "sheets": [
@@ -5255,11 +5493,11 @@
                 "C": 0.709,
                 "D": 0.753
               },
-              "demandMmPerYear": 356.62,
-              "shortfallMmPerYear": 26.073,
+              "demandMmPerYear": 355.99,
+              "shortfallMmPerYear": 26.089,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 70.892,
-              "waterAtSowingMm": 163.934,
+              "rainKeptPct": 70.922,
+              "waterAtSowingMm": 163.901,
               "alerts": [],
               "byModel": [
                 {
@@ -5267,17 +5505,25 @@
                   "note": 0.741
                 }
               ]
+            },
+            "pests": {
+              "score": 0.787,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Blé d’automne 2026 puis Maïs 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
+              ]
             }
           },
           "referenceAlerts": [],
           "alternatives": [
             {
-              "score": 83.093,
+              "score": 82.414,
               "criteria": {
                 "rendement": 0.594,
                 "eau": 0.723,
                 "protection_sol": 0.907,
-                "ravageurs": 0.95
+                "ravageurs": 0.789
               },
               "label": "Jachère → Seigle (couvert) → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Blé d’automne",
               "sheets": [
@@ -5384,7 +5630,8 @@
                 {
                   "previous": "ble-automne",
                   "next": "canola",
-                  "message": "Blé d’automne → Canola"
+                  "message": "Blé d’automne → Canola",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [
@@ -5422,14 +5669,14 @@
                 "subScores": {
                   "A": 0.412,
                   "B": 0.907,
-                  "C": 0.819,
-                  "D": 0.754
+                  "C": 0.818,
+                  "D": 0.756
                 },
-                "demandMmPerYear": 535.911,
-                "shortfallMmPerYear": 26.792,
+                "demandMmPerYear": 534.901,
+                "shortfallMmPerYear": 26.612,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 81.856,
-                "waterAtSowingMm": 163.998,
+                "rainKeptPct": 81.819,
+                "waterAtSowingMm": 164.55,
                 "alerts": [],
                 "byModel": [
                   {
@@ -5437,15 +5684,23 @@
                     "note": 0.723
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.789,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Au cycle suivant, Soya 2029 puis Canola 2031 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
+                ]
               }
             },
             {
-              "score": 82.964,
+              "score": 81.883,
               "criteria": {
                 "rendement": 0.625,
-                "eau": 0.734,
+                "eau": 0.735,
                 "protection_sol": 0.894,
-                "ravageurs": 0.95
+                "ravageurs": 0.697
               },
               "label": "Seigle (couvert) [2 pos.] → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Canola → Blé d’automne",
               "sheets": [
@@ -5540,7 +5795,8 @@
                 {
                   "previous": "orge",
                   "next": "canola",
-                  "message": "Orge → Canola"
+                  "message": "Orge → Canola",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [
@@ -5566,25 +5822,34 @@
                 }
               ],
               "water": {
-                "note": 0.734,
-                "worst": 0.734,
+                "note": 0.735,
+                "worst": 0.735,
                 "subScores": {
                   "A": 0.437,
                   "B": 0.916,
-                  "C": 0.807,
-                  "D": 0.778
+                  "C": 0.806,
+                  "D": 0.78
                 },
-                "demandMmPerYear": 512.893,
-                "shortfallMmPerYear": 20.459,
+                "demandMmPerYear": 511.888,
+                "shortfallMmPerYear": 20.179,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 80.653,
-                "waterAtSowingMm": 169.203,
+                "rainKeptPct": 80.613,
+                "waterAtSowingMm": 169.609,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.734
+                    "note": 0.735
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.697,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Maïs 2027 puis Orge 2028 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Blé d’automne 2026 puis Maïs 2027 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             }
@@ -5598,7 +5863,7 @@
               "message": "Luzerne ×3 demande 2 an(s) sans luzerne entre deux peuplements ; un cycle de 4 ans n’en laisse que 1. Il faudrait un cycle d’au moins 5 ans."
             }
           ],
-          "robustness": 83.093,
+          "robustness": 82.38,
           "becomesInfeasibleLater": false
         },
         {
@@ -5723,14 +5988,14 @@
           },
           "risks": {
             "erosion": 0.847,
-            "water": 0.011
+            "water": 0.0
           },
           "waterPressure": {
-            "pressure": 0.011,
-            "worst": 0.011,
+            "pressure": 0.0,
+            "worst": 0.0,
             "components": {
               "aridite": 0.0,
-              "pluie_ete": 0.032
+              "pluie_ete": 0.0
             },
             "missing": [
               "nappes",
@@ -5741,22 +6006,22 @@
               "et0": "Hargreaves, températures seules",
               "pente": "non lue : tables NRCS"
             },
-            "aridityIndex": 1.138,
+            "aridityIndex": 1.136,
             "aridityClass": "humide"
           },
           "weights": {
             "rendement": 0.271,
-            "eau": 0.147,
+            "eau": 0.146,
             "protection_sol": 0.962,
             "ravageurs": 0.062
           },
           "chosen": {
-            "score": 83.168,
+            "score": 82.38,
             "criteria": {
               "rendement": 0.594,
               "eau": 0.721,
               "protection_sol": 0.908,
-              "ravageurs": 0.95
+              "ravageurs": 0.764
             },
             "label": "Seigle (couvert) [2 pos.] → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Blé d’automne",
             "sheets": [
@@ -5851,7 +6116,8 @@
               {
                 "previous": "ble-automne",
                 "next": "canola",
-                "message": "Blé d’automne → Canola"
+                "message": "Blé d’automne → Canola",
+                "assumedPct": 0.0
               }
             ],
             "seedsToBuy": [],
@@ -5872,13 +6138,13 @@
                 "A": 0.411,
                 "B": 0.904,
                 "C": 0.816,
-                "D": 0.752
+                "D": 0.755
               },
-              "demandMmPerYear": 539.218,
-              "shortfallMmPerYear": 27.793,
+              "demandMmPerYear": 538.205,
+              "shortfallMmPerYear": 27.588,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 81.606,
-              "waterAtSowingMm": 163.603,
+              "rainKeptPct": 81.568,
+              "waterAtSowingMm": 164.168,
               "alerts": [],
               "byModel": [
                 {
@@ -5886,15 +6152,23 @@
                   "note": 0.721
                 }
               ]
+            },
+            "pests": {
+              "score": 0.764,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Soya 2029 puis Canola 2031 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
+              ]
             }
           },
           "reference": {
-            "score": 50.938,
+            "score": 50.07,
             "criteria": {
               "rendement": 0.644,
               "eau": 0.736,
               "protection_sol": 0.416,
-              "ravageurs": 0.833
+              "ravageurs": 0.639
             },
             "label": "Maïs → Jachère → Soya → Blé d’automne → Jachère → Jachère → Maïs → Jachère",
             "sheets": [
@@ -6005,21 +6279,32 @@
               "worst": 0.736,
               "subScores": {
                 "A": 0.475,
-                "B": 0.883,
-                "C": 0.784,
+                "B": 0.882,
+                "C": 0.785,
                 "D": 0.804
               },
-              "demandMmPerYear": 479.948,
-              "shortfallMmPerYear": 35.784,
+              "demandMmPerYear": 479.146,
+              "shortfallMmPerYear": 35.965,
               "irrigationMmPerYear": null,
-              "rainKeptPct": 78.423,
-              "waterAtSowingMm": 174.961,
+              "rainKeptPct": 78.455,
+              "waterAtSowingMm": 174.941,
               "alerts": [],
               "byModel": [
                 {
                   "model": "tendance NASA POWER",
                   "note": 0.736
                 }
+              ]
+            },
+            "pests": {
+              "score": 0.639,
+              "confidence": 1.0,
+              "cropsWithoutData": [],
+              "sentences": [
+                "Au cycle suivant, Maïs 2033 puis Maïs 2034 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2029 puis Maïs 2030 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Blé d’automne 2032 puis Maïs 2033 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                "Soya 2028 puis Soya 2031 : moisissure blanche, 2 ans sans hôte pour 5 conseillés, pression moyenne."
               ]
             }
           },
@@ -6047,12 +6332,12 @@
           ],
           "alternatives": [
             {
-              "score": 83.168,
+              "score": 82.38,
               "criteria": {
                 "rendement": 0.594,
                 "eau": 0.721,
                 "protection_sol": 0.908,
-                "ravageurs": 0.95
+                "ravageurs": 0.764
               },
               "label": "Jachère → Seigle (couvert) → Canola → Seigle (couvert) → Maïs → Seigle (couvert) → Soya → Blé d’automne",
               "sheets": [
@@ -6159,7 +6444,8 @@
                 {
                   "previous": "ble-automne",
                   "next": "canola",
-                  "message": "Blé d’automne → Canola"
+                  "message": "Blé d’automne → Canola",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
@@ -6180,13 +6466,13 @@
                   "A": 0.411,
                   "B": 0.904,
                   "C": 0.816,
-                  "D": 0.752
+                  "D": 0.755
                 },
-                "demandMmPerYear": 539.218,
-                "shortfallMmPerYear": 27.793,
+                "demandMmPerYear": 538.205,
+                "shortfallMmPerYear": 27.588,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 81.606,
-                "waterAtSowingMm": 163.603,
+                "rainKeptPct": 81.568,
+                "waterAtSowingMm": 164.168,
                 "alerts": [],
                 "byModel": [
                   {
@@ -6194,15 +6480,23 @@
                     "note": 0.721
                   }
                 ]
+              },
+              "pests": {
+                "score": 0.764,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Soya 2029 puis Canola 2031 : moisissure blanche, 1 an sans hôte pour 5 conseillés, pression moyenne."
+                ]
               }
             },
             {
-              "score": 83.039,
+              "score": 81.919,
               "criteria": {
                 "rendement": 0.625,
-                "eau": 0.732,
+                "eau": 0.733,
                 "protection_sol": 0.896,
-                "ravageurs": 0.95
+                "ravageurs": 0.688
               },
               "label": "Seigle (couvert) [2 pos.] → Maïs → Seigle (couvert) → Orge → Seigle (couvert) → Canola → Blé d’automne",
               "sheets": [
@@ -6297,7 +6591,8 @@
                 {
                   "previous": "orge",
                   "next": "canola",
-                  "message": "Orge → Canola"
+                  "message": "Orge → Canola",
+                  "assumedPct": 0.0
                 }
               ],
               "seedsToBuy": [],
@@ -6312,25 +6607,34 @@
                 }
               ],
               "water": {
-                "note": 0.732,
-                "worst": 0.732,
+                "note": 0.733,
+                "worst": 0.733,
                 "subScores": {
                   "A": 0.437,
-                  "B": 0.913,
+                  "B": 0.914,
                   "C": 0.803,
-                  "D": 0.775
+                  "D": 0.777
                 },
-                "demandMmPerYear": 515.12,
-                "shortfallMmPerYear": 21.122,
+                "demandMmPerYear": 514.116,
+                "shortfallMmPerYear": 20.819,
                 "irrigationMmPerYear": null,
-                "rainKeptPct": 80.327,
-                "waterAtSowingMm": 168.697,
+                "rainKeptPct": 80.288,
+                "waterAtSowingMm": 169.113,
                 "alerts": [],
                 "byModel": [
                   {
                     "model": "tendance NASA POWER",
-                    "note": 0.732
+                    "note": 0.733
                   }
+                ]
+              },
+              "pests": {
+                "score": 0.688,
+                "confidence": 1.0,
+                "cropsWithoutData": [],
+                "sentences": [
+                  "Maïs 2031 puis Orge 2032 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée.",
+                  "Blé d’automne 2030 puis Maïs 2031 : fusariose de l’épi / gibbérelle, 0 ans sans hôte pour 3 conseillés, pression élevée."
                 ]
               }
             }

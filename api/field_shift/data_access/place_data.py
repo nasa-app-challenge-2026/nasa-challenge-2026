@@ -5,6 +5,8 @@
                      (power_grid.py)
     twin crops       AAFC Annual Crop Inventory and USDA Cropland Data Layer, soils of SoilGrids
                      (twin_crops.py)
+    precrop values   the regional yield model of the team, MODIS NDVI and crop maps of the region
+                     of the farm (yield_precrops.py)
 
 Nothing is read before it is needed: the grid when the place is first planned (then kept on disk),
 the projections when a cycle ends more than 10 years ahead, the crop maps of a cell when it is a
@@ -41,6 +43,12 @@ from field_shift.data_access.power_projection import (
 )
 from field_shift.data_access.soilgrids import SoilGridsClient
 from field_shift.data_access.twin_crops import TwinCropMaps
+from field_shift.data_access.yield_precrops import (
+    PairMatrixReader,
+    read_precrop_values,
+    regional_pair_matrix,
+    with_regional_precrops,
+)
 
 #: The soil of a twin cell only sharpens step 5: SoilGrids is tried once, 45 s at most.
 TWIN_SOIL_TIMEOUT_S: Final = 45.0
@@ -61,8 +69,7 @@ PLACE_SOURCES: Final = (
         TWIN_CROPS_KEY,
         True,
         "Cultures des champs jumeaux : Inventaire annuel des cultures (AAC) au Canada, USDA "
-        "Cropland Data Layer aux États-Unis ; sol des jumeaux : SoilGrids 2.0. Valeur du "
-        "précédent (verdure NASA HLS) : pas encore calculée, laissée inconnue",
+        "Cropland Data Layer aux États-Unis ; sol des jumeaux : SoilGrids 2.0",
     ),
 )
 
@@ -70,7 +77,13 @@ PLACE_SOURCES: Final = (
 class RemotePlaceData:
     """The real steps 3 to 7 of any place."""
 
-    def __init__(self, config: DataSourceConfig, cache: DataCache | None = None) -> None:
+    def __init__(
+        self,
+        config: DataSourceConfig,
+        cache: DataCache | None = None,
+        pair_matrix: PairMatrixReader = regional_pair_matrix,
+    ) -> None:
+        self._pair_matrix = pair_matrix
         cache = cache or DataCache.default()
         self._projection = PowerProjectionClient(url=config.power_projection_url, cache=cache)
         self._grid = PowerGridClient(url=config[POWER_REGIONAL].url, cache=cache)
@@ -83,11 +96,12 @@ class RemotePlaceData:
         self._crops = TwinCropMaps(config[AAFC_CROPS], config[USDA_CDL], twin_soils, cache=cache)
 
     def place_sources(self, lat: float, lon: float, farm_weather: DailyWeather) -> PlaceSources:
+        precrops = read_precrop_values(lat, lon, self._pair_matrix)
         return PlaceSources(
             models=projected_scenarios(self._projection, lat, lon),
             models_label=MODELS_LABEL,
             grid=self._grid.cells(lat, lon),
             cultivation=self._crops.cultivated,
-            evidence_for=self._crops.evidence_for,
-            sources=PLACE_SOURCES,
+            evidence_for=with_regional_precrops(self._crops.evidence_for, precrops),
+            sources=(*PLACE_SOURCES, precrops.source),
         )

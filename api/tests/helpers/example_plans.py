@@ -50,7 +50,8 @@ def example_water_model(
     lat: float, lon: float, farm_weather: FarmWeather | None = None
 ) -> WaterUseModel:
     """The water model on a fixed loam, whatever the place: no data base is read."""
-    return WaterUseModel.with_soil_texture(lat, lon, *EXAMPLE_SOIL_TEXTURE)
+    weather = None if farm_weather is None else farm_weather.weather
+    return WaterUseModel.with_soil_texture(lat, lon, *EXAMPLE_SOIL_TEXTURE, farm_weather=weather)
 
 
 def example_plan_service() -> PlanService:

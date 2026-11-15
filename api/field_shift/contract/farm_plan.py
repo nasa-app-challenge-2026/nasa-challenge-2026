@@ -94,6 +94,20 @@ class WaterOut(CamelModel):
     by_model: list[ModelNoteOut]
 
 
+class PestsOut(CamelModel):
+    """The pests of a chain (criterion `ravageurs`): the pressure of the soil diseases, nematodes
+    and insects its crops meet."""
+
+    score: float = Field(description="0 to 1, 1 = the least pressure.")
+    confidence: float = Field(
+        description="Share of the crops of the chain the catalogue knows an organism for."
+    )
+    crops_without_data: list[str] = Field(
+        description="Crops the catalogue knows nothing about: counted without risk."
+    )
+    sentences: list[str] = Field(description="The most exposed crops, for the farmer.")
+
+
 class SoilOut(CamelModel):
     clay_pct: float
     sand_pct: float
@@ -155,9 +169,15 @@ class StepOut(CamelModel):
 
 
 class GapOut(CamelModel):
+    """A succession whose precrop value is not measured."""
+
     previous: str
     next: str
     message: str
+    assumed_pct: float = Field(
+        description="What it counts in the yield criterion: 0 (neutral), or the penalty of the "
+        "regional yield model for a pair it never saw."
+    )
 
 
 class SharedDiseaseOut(CamelModel):
@@ -179,6 +199,7 @@ class ChainOut(CamelModel):
     seeds_to_buy: list[str]
     warnings: list[SharedDiseaseOut]
     water: WaterOut | None
+    pests: PestsOut | None
 
 
 class AlertReasonOut(CamelModel):

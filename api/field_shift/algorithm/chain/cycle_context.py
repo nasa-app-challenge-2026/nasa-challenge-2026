@@ -18,6 +18,7 @@ from field_shift.algorithm.delays.return_delay_catalog import (
     ReturnDelayCatalog,
 )
 from field_shift.algorithm.delays.return_delay_checker import ReturnDelayChecker
+from field_shift.algorithm.pests.pest_criterion import PestCriterion
 from field_shift.algorithm.planning.time_settings import TimeSettings
 from field_shift.algorithm.twins.twin_evidence import TwinEvidence
 from field_shift.algorithm.water.water_model import CycleWater
@@ -73,6 +74,11 @@ class CycleContext:
     def entry_crop_id(self) -> str | None:
         """The crop (not the sheet) in place before the cycle."""
         return SHEETS[self.entry_sheet_id].crop_id if self.entry_sheet_id else None
+
+    @cached_property
+    def pests(self) -> PestCriterion:
+        """The pests criterion of the field: its history, its cycle, its declared diseases."""
+        return PestCriterion(self.delays)
 
     @cached_property
     def delays(self) -> ReturnDelayChecker:

@@ -265,6 +265,8 @@ Un plan par section, **dans le même ordre et avec le même `id`** que l'entrée
 Règles :
 
 - **`settings.priorities` et `weights`** : le classement dont les poids (rank order centroid) ont été calculés, et ces poids. L'écran des priorités affiche la part de chaque priorité seulement quand `settings.priorities` est le classement en cours : le front ne recalcule aucun poids.
+- **`water` et `pests` d'une chaîne** : la note eau de `water_use` (sous-notes, demande, manque, irrigation, pluie gardée, une note par modèle climatique) et les ravageurs du modèle `algorithm/pests` (note, part des cultures connues du catalogue, cultures sans donnée, phrases pour le fermier). `null` quand ils ne sont pas connus.
+- **`gaps`** : les successions dont la valeur du précédent n'est pas mesurée ; `assumedPct` dit ce qu'elles comptent dans la priorité rendement (0 sans le modèle régional de rendement, sa pénalité de paire jamais observée avec lui).
 - **Notes** : de 0 à 100 (décimales gardées, les écrans arrondissent). **Priorités** (`criteria`) : les 4, de 0 à 1, `null` = inconnu (laissé de côté dans la moyenne).
 - **`decision`** : `garder`, `changer`, ou `aucune` quand aucune chaîne ne respecte les contraintes ; dans ce cas `chosen` vaut `null` et les cycles suivants ne sont pas renvoyés.
 - **`steps`** : les cultures de la chaîne et les couverts (`kind: "couvert"`, sans position) dans l'ordre du calendrier ; dates ISO ; positions comptées à partir de 1. Une jachère n'a ni semis ni récolte.
