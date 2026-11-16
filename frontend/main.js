@@ -26,7 +26,7 @@ import './styles/hub.css';
 import { beforeRotationRender } from './ui/rotationDialog.js';
 import { setLanguage, translateText, t } from '../data/i18n/index.js';
 
-import { createEngine } from '../backend/index.js';
+import { createEngine, wakeEngine } from '../backend/index.js';
 import { createApp } from '../application/app.js';
 import { parseHash } from './router.js';
 import { SCREENS } from './screens/index.js';
@@ -40,6 +40,7 @@ import { html } from './lib/html.js';
 document.body.insertAdjacentHTML('afterbegin', TEXTURE_DEFS);
 const root = document.getElementById('app');
 const app = createApp({ engine: createEngine() });
+wakeEngine();
 
 const currentScreen = () => SCREENS[app.state.ui.route.name];
 const PREVIEW_ACTIONS = new Set([
