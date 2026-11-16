@@ -22,6 +22,7 @@ import './styles/base.css';
 import './styles/components.css';
 import './styles/screens.css';
 import './styles/interactions.css';
+import './styles/hub.css';
 import { beforeRotationRender } from './ui/rotationDialog.js';
 import { setLanguage, translateText, t } from '../data/i18n/index.js';
 
@@ -41,10 +42,30 @@ const root = document.getElementById('app');
 const app = createApp({ engine: createEngine() });
 
 const currentScreen = () => SCREENS[app.state.ui.route.name];
+const PREVIEW_ACTIONS = new Set([
+  'exit-demo',
+  'toggle-language',
+  'set-year',
+  'set-cycle',
+  'set-option',
+  'select-section',
+  'open-section',
+  'open-rotation',
+  'open-settings',
+  'reorder-dashboard',
+  'reset-dashboard',
+  'rota-toggle',
+  'rota-ask',
+  'rota-send',
+  'rota-explain',
+  'rota-mvp',
+  'settings-tab',
+  'filter-sources',
+  'toggle-source',
+]);
 
-function defaultRoute(s) {
-  if (!s.user) return '#/connexion';
-  return s.onboarded ? '#/tableau' : '#/type-de-ferme';
+function defaultRoute() {
+  return '#/accueil';
 }
 
 /**
@@ -56,6 +77,7 @@ function defaultRoute(s) {
 const ONBOARDING = ['type-de-ferme', 'localisation', 'tracer', 'cultures', 'temps', 'priorites'];
 let lastRouteName = null;
 let pendingNav = null; // 'forward' | 'back' | 'fade' | null
+let planStarted = false;
 
 function navDirection(from, to) {
   const a = ONBOARDING.indexOf(from);
@@ -68,7 +90,8 @@ function onRoute() {
   const s = app.state;
   const route = parseHash(location.hash);
   if (!route.name) return location.replace(defaultRoute(s));
-  if (!s.user && route.name !== 'connexion') return location.replace('#/connexion');
+  if (!s.user && !['connexion', 'accueil'].includes(route.name))
+    return location.replace('#/connexion');
   if (route.params.id && !app.section(route.params.id)) return location.replace('#/tableau');
 
   if (lastRouteName && lastRouteName !== route.name) {
@@ -87,6 +110,10 @@ function onRoute() {
   document.title = `${translateText(screen.title)} · Field Shift`;
   window.scrollTo(0, 0);
   screen.onEnter?.(app, route.params);
+  if (route.name !== 'accueil' && !planStarted) {
+    planStarted = true;
+    app.refreshPlan();
+  }
 }
 
 let scheduled = false;
@@ -169,7 +196,23 @@ function draw() {
   // Rota is on every screen: with its launcher where the screen names its questions
   // (`rota: 'plan'`), else only once a « Demander à Rota » button has opened it.
   const body = screen.render(s, s.ui.route.params, app);
-  root.innerHTML = String(html`${body}${rota(s, screen.rota, { launcher: !!screen.rota })}`);
+  const preview = s.ui.demo
+    ? html`<aside class="demo-banner" role="status">
+        <strong>Mode aperçu · données fictives</strong
+        ><span>Explorez les écrans. Les modifications et les calculs sont désactivés.</span
+        ><button class="btn btn--secondary btn--sm" data-action="exit-demo">
+          Revenir à ma ferme
+        </button>
+      </aside>`
+    : '';
+  root.innerHTML = String(
+    html`${preview}${body}${rota(s, screen.rota, { launcher: !!screen.rota })}`,
+  );
+  if (s.ui.demo)
+    root.querySelectorAll('button, input, select, textarea').forEach((el) => {
+      const action = el.dataset.action ?? el.dataset.change ?? el.dataset.input;
+      if (action ? !PREVIEW_ACTIONS.has(action) : !el.closest('.rota')) el.disabled = true;
+    });
 
   const list = document.getElementById('rota-list');
   if (list) list.scrollTop = list.scrollHeight;
@@ -181,6 +224,7 @@ function draw() {
 }
 
 function run(name, el, event) {
+  if (app.state.ui.demo && !PREVIEW_ACTIONS.has(name)) return;
   const fn = currentScreen()?.actions?.[name] ?? globalActions[name];
   if (!fn) {
     console.warn(`[field-shift] action inconnue : ${name}`);
@@ -217,5 +261,4 @@ initDragSort(root, {
 });
 app.store.subscribe(schedule);
 onRoute();
-app.refreshPlan();
 render();

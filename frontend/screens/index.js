@@ -5,6 +5,7 @@
  * jumeaux, sources.
  */
 import connexion from './connexion.js';
+import accueil from './accueil.js';
 import typeFerme from './typeFerme.js';
 import localisation from './localisation.js';
 import tracer from './tracer.js';
@@ -20,6 +21,7 @@ import sources from './sources.js';
 import compte from './compte.js';
 
 export const SCREENS = {
+  accueil,
   connexion,
   'type-de-ferme': typeFerme,
   localisation,

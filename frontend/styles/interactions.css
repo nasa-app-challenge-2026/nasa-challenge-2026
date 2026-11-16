@@ -1,4 +1,18 @@
 /* Dashboard affordances and rotation dialog use the shared design tokens. */
+.demo-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4) var(--s-6);
+  background: var(--c-warn-soft);
+  color: var(--c-warn-text);
+  border-bottom: 1px solid var(--c-border);
+}
+.demo-banner span {
+  flex: 1;
+  min-width: 200px;
+}
 .language-toggle {
   display: inline-flex;
   align-items: center;

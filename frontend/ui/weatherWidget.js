@@ -30,6 +30,11 @@ const mm = (n) =>
   typeof n === 'number' ? `${formatNumber(n, { maximumFractionDigits: 1 })} mm` : '—';
 
 export function weatherWidget(state) {
+  if (state.ui.demo)
+    return html`<section class="card">
+      <h2 class="h2">Météo à la ferme</h2>
+      <p>Données fictives · 18 °C · ciel dégagé</p>
+    </section>`;
   const w = state.weather;
   const head = html`<div class="row-between">
     <h2 class="h2">Météo à la ferme</h2>

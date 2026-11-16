@@ -1,5 +1,22 @@
 /** English and French display catalogue. Source phrases also serve as stable legacy keys. */
 export const messages = {
+  'Mode aperçu · données fictives': {
+    en: 'Preview mode · sample data',
+    fr: 'Mode aperçu · données fictives',
+  },
+  'Explorez les écrans. Les modifications et les calculs sont désactivés.': {
+    en: 'Explore the screens. Editing and calculations are disabled.',
+    fr: 'Explorez les écrans. Les modifications et les calculs sont désactivés.',
+  },
+  'Revenir à ma ferme': { en: 'Return to my farm', fr: 'Revenir à ma ferme' },
+  'Explorer avec des données d’exemple': {
+    en: 'Explore with sample data',
+    fr: 'Explorer avec des données d’exemple',
+  },
+  'Données fictives · 18 °C · ciel dégagé': {
+    en: 'Sample data · 18 °C · clear sky',
+    fr: 'Données fictives · 18 °C · ciel dégagé',
+  },
   rien: { en: 'none', fr: 'rien' },
   'Montérégie, QC · ville': { en: 'Montérégie, QC · city', fr: 'Montérégie, QC · ville' },
   'Aucune culture vendue récoltée dans la période : B vaut 1 par défaut.': {

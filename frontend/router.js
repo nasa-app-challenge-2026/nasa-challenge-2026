@@ -1,5 +1,6 @@
 /** Hash router: #/tableau, #/section/A/rotation, … (works on GitHub Pages without server config). */
 const SIMPLE = [
+  'accueil',
   'connexion',
   'type-de-ferme',
   'localisation',

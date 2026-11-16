@@ -135,6 +135,9 @@ export function loading(text = 'Calcul en cours', extra = '') {
       >${text}<span class="loader__dots" aria-hidden="true"><i></i><i></i><i></i></span
     ></span>
     ${extra}
+    <button type="button" class="btn btn--secondary" data-action="enter-demo">
+      Explorer avec des données d’exemple
+    </button>
   </div>`;
 }
 
@@ -150,6 +153,9 @@ export function errorBox(message, retryAction = 'retry-plan') {
     <span aria-hidden="true">⚠</span><span>${message}</span
     ><button type="button" class="btn btn--sm btn--secondary" data-action="${retryAction}">
       Réessayer
+    </button>
+    <button type="button" class="btn btn--sm btn--secondary" data-action="enter-demo">
+      Explorer avec des données d’exemple
     </button>
   </div>`;
 }

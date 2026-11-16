@@ -27,6 +27,8 @@ function say(app, question, reply, literal = false) {
 const ask = (app, question, literal = false) => say(app, question, answer(question), literal);
 
 export const globalActions = {
+  'enter-demo': (app) => app.enterDemo(),
+  'exit-demo': (app) => app.exitDemo(),
   'toggle-language': (app) =>
     app.update((s) => {
       s.prefs.language = s.prefs.language === 'fr' ? 'en' : 'fr';

@@ -33,7 +33,15 @@ export function planStatus(state) {
   const plan = state.plan;
   const parts = [];
   if (plan.status === 'incomplete') parts.push(alertBox('warn', plan.error));
-  if (plan.status === 'refreshing') parts.push(busyDots('Mise à jour du plan'));
+  if (plan.status === 'refreshing')
+    parts.push(
+      html`${busyDots('Mise à jour du plan')}<button
+          class="btn btn--secondary btn--sm"
+          data-action="enter-demo"
+        >
+          Explorer avec des données d’exemple
+        </button>`,
+    );
   const sources = plan.data?.meta?.sources;
   if (sources) {
     const fake = Object.values(sources).filter((s) => !s.real);

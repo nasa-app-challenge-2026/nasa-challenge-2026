@@ -13,6 +13,8 @@
  *     priority moved up, then down) shows its plan without asking the server again.
  */
 import { createStore } from './state/store.js';
+import { DEMO_FARM } from '../data/reference/demoFarm.js';
+import demoPlan from '../data/reference/demoPlan.json';
 import { initialState, persisted } from './state/initialState.js';
 import { coordsLabel, sameCoord } from './rules/geo.js';
 import { sectionInputProblems } from './rules/sectionInputs.js';
@@ -31,7 +33,10 @@ const planKey = (farm) => JSON.stringify(farm);
 
 export function createApp({ engine, storage = globalThis.localStorage }) {
   const store = createStore(initialState(engine.name, loadSaved(storage)));
-  store.subscribe((s) => save(storage, persisted(s)));
+  store.subscribe((s) => {
+    if (!s.ui.demo) save(storage, persisted(s));
+  });
+  let realSnapshot = null;
 
   let timer = null;
   let seq = 0;
@@ -57,6 +62,37 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
       return store.get();
     },
     update: (fn) => store.update(fn),
+    enterDemo() {
+      if (store.get().ui.demo) return;
+      clearTimeout(timer);
+      seq++;
+      realSnapshot = structuredClone(store.get());
+      store.update((s) => {
+        s.ui.demo = true;
+        s.ui.route = { name: 'tableau', params: {} };
+        s.farm = structuredClone(DEMO_FARM);
+        s.plan = { status: 'ready', data: structuredClone(demoPlan), error: null };
+        s.weather = { status: 'idle', data: null, error: null, key: null };
+        s.ui.year = null;
+        s.ui.cycle = 1;
+        s.ui.selectedSection = 'A';
+      });
+      app.go('#/tableau');
+    },
+    exitDemo() {
+      if (!realSnapshot) return;
+      const language = store.get().prefs.language;
+      store.update((s) => {
+        Object.assign(s, realSnapshot);
+        s.ui.demo = false;
+        s.ui.route = { name: 'tableau', params: {} };
+        s.prefs.language = language;
+      });
+      realSnapshot = null;
+      app.go('#/tableau');
+      app.refreshPlan();
+      app.loadWeather();
+    },
     go(path) {
       if (location.hash !== path) location.hash = path;
     },
@@ -70,6 +106,7 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
 
     /** Change the farm, then plan again (debounced). */
     updateFarm(fn) {
+      if (store.get().ui.demo) return;
       store.update((s) => fn(s.farm, s));
       app.refreshPlan();
     },
@@ -83,12 +120,14 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
     },
 
     refreshPlan() {
+      if (store.get().ui.demo) return;
       clearTimeout(timer);
       timer = setTimeout(plan, PLAN_DEBOUNCE_MS);
     },
 
     /** Weather at the farm (Open-Meteo), cached 30 min per location. */
     async loadWeather({ force = false } = {}) {
+      if (store.get().ui.demo) return;
       const { lat, lon } = store.get().farm.farm.location ?? {};
       if (typeof lat !== 'number' || typeof lon !== 'number') return;
       const key = weatherKey(lat, lon);
@@ -106,11 +145,12 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
       try {
         const data = await fetchWeather(lat, lon);
         store.update((s) => {
-          if (s.weather.key === key) s.weather = { status: 'ready', data, error: null, key };
+          if (!s.ui.demo && s.weather.key === key)
+            s.weather = { status: 'ready', data, error: null, key };
         });
       } catch (err) {
         store.update((s) => {
-          if (s.weather.key === key)
+          if (!s.ui.demo && s.weather.key === key)
             s.weather = { status: 'error', data: null, error: err.message, key };
         });
       }
@@ -156,6 +196,7 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
 
   /** Ask the engine for the plan of every section (latest request wins). */
   async function plan() {
+    if (store.get().ui.demo) return;
     const farm = store.get().farm;
     const problems = farm.sections.flatMap((s) =>
       sectionInputProblems(s).map((p) => `Section ${s.id} : ${p}`),
@@ -181,8 +222,8 @@ export function createApp({ engine, storage = globalThis.localStorage }) {
     });
     try {
       const data = await engine.planFarm(farm);
-      keepPlan(key, data);
       if (mine !== seq) return;
+      keepPlan(key, data);
       store.update((s) => {
         s.plan = { status: 'ready', data, error: null };
       });
