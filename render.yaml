@@ -1,0 +1,23 @@
+# Render Blueprint: the algorithm server (api/) on Render's free plan.
+# Render → New → Blueprint → pick this repository and the branch.
+services:
+  - type: web
+    name: field-shift-api
+    runtime: python
+    plan: free
+    rootDir: api
+    buildCommand: pip install .
+    startCommand: python -m uvicorn field_shift.api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      # The free instance has 512 MB: each worker process is another ~165 MB copy of the
+      # server, so plan the sections one after the other in the server process.
+      - key: FIELD_SHIFT_WORKERS
+        value: "0"
+      # The origin of the GitHub Pages site (no path).
+      - key: FIELD_SHIFT_CORS_ORIGINS
+        value: https://nasa-app-challenge-2026.github.io
+      # Optional, add them in the Render dashboard: EARTHDATA_USERNAME and EARTHDATA_PASSWORD
+      # turn on SMAP and ECOSTRESS (else MERRA-2 is used for the soil).
