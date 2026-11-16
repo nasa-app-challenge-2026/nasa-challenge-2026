@@ -28,9 +28,6 @@ dev = [
 [tool.setuptools.packages.find]
 include = ["field_shift*", "water_use*"]
 
-[tool.setuptools.package-data]
-field_shift = ["**/*.json"]
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
