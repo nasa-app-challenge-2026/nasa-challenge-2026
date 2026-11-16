@@ -13,3 +13,12 @@ const DEV_SERVER_URL = 'http://localhost:8000';
 export function createEngine(env = import.meta.env) {
   return createRemoteEngine({ baseUrl: env.VITE_ALGO_URL || (env.DEV ? DEV_SERVER_URL : '') });
 }
+
+/**
+ * Wakes a hosted server that sleeps when idle (free hosting): one GET /health when the page
+ * opens, so it is awake by the time the farmer asks for a plan. Errors are ignored.
+ */
+export function wakeEngine(env = import.meta.env) {
+  if (!env.VITE_ALGO_URL) return;
+  fetch(`${env.VITE_ALGO_URL}/health`).catch(() => {});
+}
