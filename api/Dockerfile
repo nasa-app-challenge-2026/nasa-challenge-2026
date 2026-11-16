@@ -16,11 +16,7 @@ WORKDIR /app
 
 # The dependencies first: they stay in the build cache while the code changes.
 COPY pyproject.toml README.md ./
-RUN python - <<'EOF'
-import subprocess, sys, tomllib
-deps = tomllib.load(open("pyproject.toml", "rb"))["project"]["dependencies"]
-subprocess.check_call([sys.executable, "-m", "pip", "install", *deps])
-EOF
+RUN python -c "import subprocess, sys, tomllib; deps = tomllib.load(open('pyproject.toml', 'rb'))['project']['dependencies']; subprocess.check_call([sys.executable, '-m', 'pip', 'install', *deps])"
 
 COPY field_shift ./field_shift
 COPY water_use ./water_use
