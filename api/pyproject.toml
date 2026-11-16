@@ -28,6 +28,10 @@ dev = [
 [tool.setuptools.packages.find]
 include = ["field_shift*", "water_use*"]
 
+# Data files read at run time: without this, `pip install .` (as on a host) leaves them out.
+[tool.setuptools.package-data]
+"field_shift.algorithm.yield_model" = ["settings.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
