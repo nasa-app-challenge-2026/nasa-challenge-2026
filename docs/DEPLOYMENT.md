@@ -7,6 +7,22 @@ Le routeur utilise `#/…`, donc aucune réécriture SPA n'est nécessaire.
 Les deux services se déploient depuis la branche **`nourdeploy`**, pas depuis `main`
 (qui n'a pas ces fichiers de déploiement).
 
+## Adresses en service (16 novembre 2026)
+
+| Rôle             | Adresse                                  |
+| ---------------- | ---------------------------------------- |
+| Site (Vercel)    | https://fieldshift-beta.vercel.app       |
+| Serveur (Render) | https://fieldshift-api-ae2v.onrender.com |
+
+Attention : `fieldshift-api.onrender.com` (sans suffixe) appartient à un autre compte
+Render. Il répond `200` sur `/health` mais ce n'est pas notre serveur : le nôtre répond
+`"algorithm":"field_shift v5.1"`. Toujours vérifier cette réponse avant de reporter une
+adresse dans `VITE_ALGO_URL`.
+
+Le site est publié depuis un dossier local avec la CLI (`npx vercel deploy --prod`), pas
+depuis GitHub : un push ne le met pas à jour. Pour changer l'adresse du serveur :
+`vercel env update VITE_ALGO_URL production`, puis `vercel deploy --prod`.
+
 ## 1. API sur Render
 
 Importer le dépôt dans un Blueprint Render (branche `nourdeploy`, celle que vise
