@@ -12,6 +12,7 @@
 import { CRITERIA, CRITERIA_IDS } from './criteria.js';
 import { FIELD_MEASURES, WATER_COMPONENTS } from './fieldMeasures.js';
 import { RESERVE_MODES } from './planning.js';
+import { t } from '../i18n/index.js';
 
 /** Suggested questions, per screen (`general`: the screens of the first visit). */
 export const SUGGESTED = {
@@ -302,6 +303,31 @@ export const normalize = (s) =>
 
 const reply = ({ text, sources }) => ({ text, sources: !!sources });
 
+const ENGLISH_INTENTS = {
+  jumeau: ['twin', 'analogue'],
+  sigma: ['sigma', 'similarity'],
+  'plus au sud': ['south'],
+  modele: ['model', '10 years', 'cmip6'],
+  2011: ['2011', '2024', 'compare'],
+  choisit: ['choose', 'chooses', 'chosen', 'build', 'select'],
+  garder: ['keep', 'change'],
+  robustesse: ['robustness'],
+  jachere: ['fallow', 'rest', 'empty'],
+  seigle: ['rye', 'cover crop', 'cover'],
+  'pas mesure': ['unmeasured', 'unknown pre-crop', 'gap'],
+  delai: ['return period', 'too soon'],
+  'annees precedentes': ['previous years', 'history'],
+  ravageur: ['pest', 'nematode', 'insect', 'pressure'],
+  maladie: ['disease', 'clubroot'],
+  'rotation actuelle': ['current rotation', 'reference'],
+  erosion: ['erosion', 'soil protection'],
+  'risque d eau': ['water', 'drought'],
+  '3d': ['3d', 'view', 'pie chart', 'dashboard'],
+  donnee: ['data', 'source', 'nasa', 'satellite'],
+  priorite: ['priority', 'priorities', 'weight', 'criterion'],
+  bonjour: ['hello', 'hi'],
+};
+
 /** What a « Demander à Rota » button shows: the question and its answer, or null. */
 export function explain(topicId) {
   const topic = TOPICS[topicId];
@@ -314,12 +340,15 @@ export function explain(topicId) {
  */
 export function answer(question) {
   const q = normalize(question).trim();
-  const topic = Object.values(TOPICS).find((t) => normalize(t.q).trim() === q);
+  const topic = Object.values(TOPICS).find(
+    (topic) => normalize(topic.q).trim() === q || normalize(t(topic.q)).trim() === q,
+  );
   if (topic) return reply(topic);
   let best = null;
   let score = 0;
   for (const intent of INTENTS) {
-    const hits = intent.keys.filter((k) => q.includes(normalize(k))).length;
+    const keys = [...intent.keys, ...(ENGLISH_INTENTS[intent.keys[0]] ?? [])];
+    const hits = keys.filter((k) => q.includes(normalize(k))).length;
     if (hits > score) {
       score = hits;
       best = intent;

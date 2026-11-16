@@ -11,6 +11,8 @@
  *     sown after winter wheat…): the algorithm builds its chains from sheets.
  */
 
+import { translateText } from '../i18n/index.js';
+
 /** `texture` = id of the SVG field pattern (frontend/ui/textures.js). */
 export const CROPS = {
   mais: { id: 'mais', name: 'Maïs', color: '#F2C14E', texture: 'mais' },
@@ -167,7 +169,7 @@ export const SOLD_SHEET_IDS = CROP_SHEETS.filter((s) => s.role === ROLE.SOLD).ma
 
 /** Display helpers that work for a sheet id as well as a crop id. */
 export const cropOf = (id) => CROPS[SHEETS[id]?.cropId ?? id] ?? null;
-export const nameOf = (id) => SHEETS[id]?.name ?? CROPS[id]?.name ?? id ?? '—';
+export const nameOf = (id) => translateText(SHEETS[id]?.name ?? CROPS[id]?.name ?? id ?? '—');
 export const colorOf = (id) => cropOf(id)?.color ?? '#E5E9E0';
 export const textureOf = (id) => cropOf(id)?.texture ?? 'sol';
 export const symbolOf = (id) => SYMBOLS[cropOf(id)?.id] ?? DEFAULT_SYMBOL;

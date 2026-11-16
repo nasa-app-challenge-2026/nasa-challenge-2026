@@ -5,6 +5,7 @@
  * plan (FarmPlan.sections[].field). Rota explains each of them.
  */
 import { html } from '../lib/html.js';
+import { formatNumber } from '../../data/i18n/index.js';
 import { nameOf } from '../../data/reference/crops.js';
 import {
   FIELD_MEASURES,
@@ -23,9 +24,8 @@ const PERCENT = 100;
 /** From this risk (in %), the bar turns to the warning colour. */
 const HIGH_RISK_PCT = 50;
 /** Values of the data services come with all their decimals: one is enough to read them. */
-const ONE_DECIMAL = 10;
 const DECIMAL_COMMA = (v) =>
-  String(typeof v === 'number' ? Math.round(v * ONE_DECIMAL) / ONE_DECIMAL : v).replace('.', ',');
+  typeof v === 'number' ? formatNumber(v, { maximumFractionDigits: 1 }) : String(v);
 
 function riskCard(key, value) {
   const pct = Math.round(value * PERCENT);
@@ -141,8 +141,8 @@ export default {
           ${map ?? html`<div class="pad muted small">Section non tracée. <a href="#/tracer">Tracer cette section</a></div>`}
           <div class="pad">
             <strong
-              >Section ${id} · ${section.areaHa} ha · ${crop ? nameOf(crop).toLowerCase() : 'rien'}
-              en ${year}</strong
+              >Section ${id} · ${formatNumber(section.areaHa)} ha ·
+              ${crop ? nameOf(crop).toLowerCase() : 'rien'} en ${year}</strong
             >
           </div>
         </div>

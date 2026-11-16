@@ -4,7 +4,9 @@
  * four priorities, the water and the pests of the rotation shown.
  */
 import { readFileSync, readdirSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { setLanguage } from '../data/i18n/index.js';
+beforeEach(() => setLanguage('fr'));
 import { initialState } from '../application/state/initialState.js';
 import {
   REFERENCE_OPTION,
@@ -50,15 +52,17 @@ describe('three rotations are proposed for every cycle', () => {
         expect(proposedRotations(cycle).length, `${section.id} cycle ${cycle.index}`).toBe(3);
   });
 
-  it('the plan screen shows them side by side, each with its wheel and its four priorities', () => {
+  it('shows three recommendations and the current rotation with inert detail templates', () => {
     const page = render(plan, stateWithPlan(), { id: 'A' });
     expect(page).toContain('3 rotations proposées');
     for (const title of ['Rotation 1', 'Rotation 2', 'Rotation 3']) expect(page).toContain(title);
-    expect(count(page, /class="rot-card /g)).toBe(3);
-    expect(count(page, /class="wheel"/g)).toBe(3);
+    expect(count(page, /class="rot-card /g)).toBe(4);
+    expect(count(page, /class="wheel"/g)).toBe(4);
+    expect(count(page, /<template>/g)).toBe(4);
+    expect(count(page, /data-action="open-rotation"/g)).toBe(4);
     expect(count(page, /★ Recommandée/g)).toBe(1);
-    for (const id of CRITERIA_IDS) expect(page).toContain(CRITERIA[id].short);
-    expect(page).toContain('Votre rotation actuelle');
+    for (const id of CRITERIA_IDS) expect(page).toContain(CRITERIA[id].label);
+    expect(page).toContain('Rotation actuelle');
   });
 
   it('the wheel has one slice per crop, in the order of the chain', () => {
@@ -72,6 +76,24 @@ describe('three rotations are proposed for every cycle', () => {
 });
 
 describe('the rotation shown in detail', () => {
+  it('handles fewer proposals, a reference-only cycle and an empty plan', () => {
+    const state = stateWithPlan();
+    const cycle = state.plan.data.sections[0].cycles[0];
+    cycle.alternatives = [];
+    expect(count(render(plan, state, { id: 'A' }), /data-action="open-rotation"/g)).toBe(2);
+    cycle.chosen = null;
+    expect(count(render(plan, state, { id: 'A' }), /data-action="open-rotation"/g)).toBe(1);
+    state.plan.data.sections[0].cycles = [];
+    expect(render(plan, state, { id: 'A' })).toContain('Aucune rotation');
+  });
+  it('offers a useful next step when section information is incomplete', () => {
+    const state = initialState('remote');
+    state.plan.status = 'incomplete';
+    state.plan.error = 'Indiquez le mois de récolte de la culture en place.';
+    const page = render(plan, state, { id: 'A' });
+    expect(page).toContain('Compléter les informations');
+    expect(page).not.toContain('class="loader"');
+  });
   it('is the recommended one at first: its crops, its four priorities, its water, its pests', () => {
     const page = render(plan, stateWithPlan(), { id: 'A' });
     expect(page).toMatch(/Rotation 1 · \d+ sur 100/);
@@ -83,12 +105,12 @@ describe('the rotation shown in detail', () => {
     expect(page).not.toContain('9 critères');
   });
 
-  it('changes when the farmer touches another rotation, or his current one', () => {
+  it('includes each rotation’s own detail in its template, including the reference', () => {
     const state = stateWithPlan();
     state.ui.option = 1;
     expect(render(plan, state, { id: 'A' })).toMatch(/Rotation 2 · \d+ sur 100/);
     state.ui.option = REFERENCE_OPTION;
-    expect(render(plan, state, { id: 'A' })).toMatch(/Votre rotation actuelle · \d+ sur 100/);
+    expect(render(plan, state, { id: 'A' })).toMatch(/Rotation actuelle · \d+ sur 100/);
   });
 
   it('falls back on what the cycle has', () => {
@@ -127,7 +149,7 @@ describe('the other screens', () => {
     const state = stateWithPlan();
     const page = render(tableau, state);
     expect(count(page, /class="rot-strip /g)).toBe(state.farm.sections.length);
-    expect(page).toContain('Voir les rotations');
+    expect(page).toContain('Consulter la rotation');
   });
 
   it('the dashboard puts the weather on top, then the 3D farm (with its pie) left of the sections', () => {

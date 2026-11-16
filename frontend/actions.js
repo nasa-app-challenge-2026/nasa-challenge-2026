@@ -8,12 +8,12 @@ import { OUT_OF_MVP, answer, explain } from '../data/reference/rotaAnswers.js';
 const ROTA_TYPING_MS = 600;
 
 /** Rota opens, shows the question and, a moment later, its answer. */
-function say(app, question, reply) {
+function say(app, question, reply, literal = false) {
   const q = String(question ?? '').trim();
   if (!q || app.state.ui.rota.typing) return;
   app.update((s) => {
     s.ui.rota.open = true;
-    s.ui.rota.msgs.push({ from: 'me', text: q });
+    s.ui.rota.msgs.push({ from: 'me', text: q, literal });
     s.ui.rota.typing = true;
   });
   setTimeout(() => {
@@ -24,9 +24,13 @@ function say(app, question, reply) {
   }, ROTA_TYPING_MS);
 }
 
-const ask = (app, question) => say(app, question, answer(question));
+const ask = (app, question, literal = false) => say(app, question, answer(question), literal);
 
 export const globalActions = {
+  'toggle-language': (app) =>
+    app.update((s) => {
+      s.prefs.language = s.prefs.language === 'fr' ? 'en' : 'fr';
+    }),
   'rota-toggle': (app) =>
     app.update((s) => {
       s.ui.rota.open = !s.ui.rota.open;
@@ -34,7 +38,7 @@ export const globalActions = {
   'rota-ask': (app, el) => ask(app, el.dataset.q),
   'rota-send': (app, form) => {
     const input = form.querySelector('input[name="q"]');
-    ask(app, input?.value);
+    ask(app, input?.value, true);
     if (input) input.value = '';
   },
   /** A « Demander à Rota » button: data-topic is a key of TOPICS. */

@@ -1,37 +1,25 @@
 /**
- * 10 · Plan par cycle. Owner: Justin. For each cycle (step 10 of the algorithm), the rotations
- * the algorithm proposes, side by side: the one it recommends and its two best alternatives,
- * each as a wheel with its crops and its four priorities, and the farmer's current rotation to
- * compare. Touching one shows its detail: the crops with their dates, the four priorities, the
- * water, the pests and what to know (seeds to buy, successions not measured, alerts).
+ * 10 · Plan par cycle. Three proposed rotations and the current rotation share a card grid.
+ * Each front shows its title, wheel and score. Its inert template becomes the back of an
+ * accessible animated dialog: crop calendar, priorities, water, pests, seeds and alerts.
  *
  * The screen explains nothing itself: the « Demander à Rota » buttons do.
  */
-import { html, plural } from '../lib/html.js';
+import { html, plural, fmt } from '../lib/html.js';
+import { openRotationDialog, closeRotationDialog } from '../ui/rotationDialog.js';
 import { CROPS, nameOf } from '../../data/reference/crops.js';
-import {
-  REFERENCE_OPTION,
-  proposedRotations,
-  shownRotation,
-} from '../../application/rules/planView.js';
+import { REFERENCE_OPTION, proposedRotations } from '../../application/rules/planView.js';
 import { sectionLayout, pageTitle } from '../ui/layout.js';
 import { alertBox, errorBox, loading } from '../ui/widgets.js';
 import { askRota, askRotaIcon } from '../ui/rota.js';
 import {
   criteriaBars,
-  criteriaMini,
   cycleTabs,
   decisionPill,
   planStatus,
   selectedCycle,
 } from '../ui/planWidgets.js';
-import {
-  rotationLegend,
-  rotationStrip,
-  rotationText,
-  rotationTimeline,
-  rotationWheel,
-} from '../ui/rotationViews.js';
+import { rotationText, rotationTimeline, rotationWheel } from '../ui/rotationViews.js';
 
 const PERCENT = 100;
 /** Sentences of the pests model shown for a rotation (the most exposed crops first). */
@@ -42,54 +30,30 @@ const NO_ROTATION =
   'Aucune rotation ne respecte toutes les contraintes pour ce cycle. Essayez un cycle plus long ou plus de semences.';
 
 const score = (chain) => Math.round(chain.score);
-const mmPerYear = (v) => `${Math.round(v)} mm par an`;
+const mmPerYear = (v) => `${fmt(v)} mm par an`;
 
-const optionTitle = (id) => (id === REFERENCE ? 'Votre rotation actuelle' : `Rotation ${id + 1}`);
+const optionTitle = (id) => (id === REFERENCE ? 'Rotation actuelle' : `Rotation ${id + 1}`);
 
-/** One proposed rotation: its wheel, its crops, its four priorities. */
-function rotationCard(chain, id, { cycle, selected, frequencyMonths, positions }) {
-  return html`<article class="rot-card ${selected ? 'is-selected' : ''}">
+/** Comparable fronts; each detail template stays inert until the dialog opens. */
+function rotationCard(chain, id, { cycle, frequencyMonths, positions }) {
+  const reference = id === REFERENCE;
+  return html`<article class="rot-card ${reference ? 'rot-card--reference' : ''}">
     <button
       type="button"
       class="rot-card__hit"
-      data-action="set-option"
-      data-option="${id}"
-      aria-pressed="${String(selected)}"
-      aria-label="${optionTitle(id)} : ${rotationText(chain)}"
+      id="rotation-${id}"
+      data-action="open-rotation"
+      data-title="${optionTitle(id)}"
+      aria-haspopup="dialog"
+      aria-label="${optionTitle(id)} : ${rotationText(chain)} · ${score(chain)} sur 100"
     ></button>
     <header class="rot-card__head">
       <strong>${optionTitle(id)}</strong>
       ${id === 0 ? html`<span class="pill pill--ok">★ Recommandée</span>` : ''}
+      ${reference ? html`<span class="pill">En place avant ce cycle</span>` : ''}
     </header>
     <div class="rot-card__wheel">${rotationWheel(chain, { positions })}</div>
-    ${rotationLegend(chain, cycle, frequencyMonths)} ${criteriaMini(chain, cycle.weights)}
-  </article>`;
-}
-
-/** The farmer's current rotation, to compare with the proposals. */
-function referenceRow(cycle, { selected, frequencyMonths }) {
-  const reference = cycle.reference;
-  if (!reference) return '';
-  const delta = cycle.chosen ? score(cycle.chosen) - score(reference) : null;
-  const alerts = cycle.referenceAlerts.length;
-  return html`<article class="rot-ref ${selected ? 'is-selected' : ''}">
-    <button
-      type="button"
-      class="rot-card__hit"
-      data-action="set-option"
-      data-option="${REFERENCE}"
-      aria-pressed="${String(selected)}"
-      aria-label="${optionTitle(REFERENCE)} : ${rotationText(reference)}"
-    ></button>
-    <span class="stack-0 rot-ref__title">
-      <strong>${optionTitle(REFERENCE)}</strong>
-      <span class="muted small"
-        >${score(reference)} sur
-        100${delta === null ? '' : ` · rotation 1 : ${delta >= 0 ? '+' : ''}${delta}`}</span
-      >
-    </span>
-    ${rotationStrip(reference, cycle, frequencyMonths)}
-    ${alerts ? html`<span class="pill pill--warn">⚠ ${plural(alerts, 'alerte', 'alertes')}</span>` : ''}
+    <template>${rotationDetail(cycle, chain, id, frequencyMonths)}</template>
   </article>`;
 }
 
@@ -173,7 +137,7 @@ function notices(cycle, chain, id) {
 /** The rotation the farmer touched, in detail. */
 function rotationDetail(cycle, chain, id, frequencyMonths) {
   const isReference = id === REFERENCE;
-  return html`<section class="card stack-md" aria-live="polite">
+  return html`<section class="rotation-detail stack-md">
     <div class="row-between wrap">
       <h2 class="h2">${optionTitle(id)} · ${score(chain)} sur 100</h2>
       ${askRota('calendrier')}
@@ -223,44 +187,53 @@ export default {
       const wait =
         state.plan.status === 'error'
           ? errorBox(state.plan.error)
-          : loading('Rota prépare votre plan', askRota('chargement'));
+          : state.plan.status === 'incomplete'
+            ? html`<a class="btn btn--primary" href="#/section/${id}/parcelle"
+                >Compléter les informations de la section</a
+              >`
+            : loading('Rota prépare votre plan', askRota('chargement'));
       return sectionLayout(state, section, 'plan', html`${head}${planStatus(state)}${wait}`);
     }
     const cycle = selectedCycle(plan, state);
+    if (!cycle)
+      return sectionLayout(state, section, 'plan', html`${head}${alertBox('warn', NO_ROTATION)}`);
     const frequencyMonths = state.plan.data.settings.frequencyMonths;
     const positions = state.plan.data.settings.positionsPerCycle;
-    const proposals = proposedRotations(cycle);
-    const shown = shownRotation(cycle, state.ui.option);
+    const proposals = proposedRotations(cycle).slice(0, 3);
+
     const body = html`${head} ${planStatus(state)} ${cycleTabs(plan, cycle.index)}
     ${
-      shown
+      proposals.length || cycle.reference
         ? html`<section class="stack-md">
-              <div class="row-between wrap">
-                <h2 class="h2 h2--lg">
-                  ${plural(proposals.length, 'rotation proposée', 'rotations proposées')}
-                </h2>
-                ${askRota('trois-rotations')}
-              </div>
-              <div class="row-wrap gap-sm align-center">
-                ${decisionPill(cycle.decision)}${askRotaIcon('garder-changer')}
-                ${robustnessChip(cycle)}
-              </div>
-              ${proposals.length ? '' : alertBox('bad', NO_ROTATION)} ${cycleNotices(cycle)}
-              <div class="rot-cards">
-                ${proposals.map((chain, i) =>
-                  rotationCard(chain, i, {
-                    cycle,
-                    selected: shown.id === i,
-                    frequencyMonths,
-                    positions,
-                  }),
-                )}
-              </div>
-              ${referenceRow(cycle, { selected: shown.id === REFERENCE, frequencyMonths })}
-            </section>
-            ${rotationDetail(cycle, shown.chain, shown.id, frequencyMonths)}`
+            <div class="row-between wrap">
+              <h2 class="h2 h2--lg">
+                ${plural(proposals.length, 'rotation proposée', 'rotations proposées')}
+              </h2>
+              ${askRota('trois-rotations')}
+            </div>
+            <div class="row-wrap gap-sm align-center">
+              ${decisionPill(cycle.decision)}${askRotaIcon('garder-changer')}
+              ${robustnessChip(cycle)}
+            </div>
+            ${proposals.length ? '' : alertBox('bad', NO_ROTATION)} ${cycleNotices(cycle)}
+            <p class="muted small">
+              Choisissez une carte pour explorer son calendrier et ses priorités.
+            </p>
+            <div class="rot-cards">
+              ${proposals.map((chain, i) =>
+                rotationCard(chain, i, {
+                  cycle,
+                  frequencyMonths,
+                  positions,
+                }),
+              )}
+              ${cycle.reference ? rotationCard(cycle.reference, REFERENCE, { cycle, frequencyMonths, positions }) : ''}
+            </div>
+          </section>`
         : html`${alertBox('bad', NO_ROTATION)} ${cycleNotices(cycle)}`
     }`;
     return sectionLayout(state, section, 'plan', body);
   },
+  unmount: closeRotationDialog,
+  actions: { 'open-rotation': (_app, trigger) => openRotationDialog(trigger) },
 };

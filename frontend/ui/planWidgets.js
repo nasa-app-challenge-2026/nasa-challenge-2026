@@ -4,7 +4,7 @@
  */
 import { html } from '../lib/html.js';
 import { CRITERIA, CRITERIA_IDS } from '../../data/reference/criteria.js';
-import { MONTH_NAMES } from '../../data/reference/calendar.js';
+import { formatDate, t } from '../../data/i18n/index.js';
 import { alertBox, busyDots } from './widgets.js';
 
 const PERCENT = 100;
@@ -23,7 +23,10 @@ export function decisionPill(decision) {
 }
 
 /** "~23 avr." from { month, day }. */
-export const dayLabel = (d) => (d ? `~${d.day} ${MONTH_NAMES[d.month - 1]}` : 'aucun');
+export const dayLabel = (d) =>
+  d
+    ? `~${formatDate(new Date(Date.UTC(2000, d.month - 1, d.day)), { month: 'short', day: 'numeric' })}`
+    : t('aucun');
 
 /** Inputs missing, plan refreshing, data that are examples. */
 export function planStatus(state) {

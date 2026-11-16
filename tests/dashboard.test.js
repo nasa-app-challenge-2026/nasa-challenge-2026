@@ -2,7 +2,9 @@
  * The dashboard: the order of the section cards, the pie chart of the crops of the year, and the
  * geometry of the 3D farm (where the sections stand, where their plants are sown).
  */
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { setLanguage } from '../data/i18n/index.js';
+beforeEach(() => setLanguage('fr'));
 import {
   dashboardOrder,
   defaultOrder,

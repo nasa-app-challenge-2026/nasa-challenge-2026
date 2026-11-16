@@ -4,13 +4,12 @@
  */
 import { html } from '../lib/html.js';
 import { icon } from './icons.js';
+import { formatDate, formatNumber, t } from '../../data/i18n/index.js';
 
-const DAYS = ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'];
 /** "2026-11-12" → "jeu." (the first day is "Auj."). */
 export function dayLabel(date, i) {
-  if (i === 0) return 'Auj.';
-  const [y, m, d] = date.split('-').map(Number);
-  return DAYS[new Date(y, m - 1, d).getDay()];
+  if (i === 0) return t('Auj.');
+  return formatDate(date, { weekday: 'short' });
 }
 
 const W_ICONS = {
@@ -27,7 +26,8 @@ const W_ICONS = {
 };
 
 const deg = (n) => (typeof n === 'number' ? `${Math.round(n)}°` : '—');
-const mm = (n) => (typeof n === 'number' ? `${Math.round(n * 10) / 10} mm` : '—');
+const mm = (n) =>
+  typeof n === 'number' ? `${formatNumber(n, { maximumFractionDigits: 1 })} mm` : '—';
 
 export function weatherWidget(state) {
   const w = state.weather;

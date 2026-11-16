@@ -7,11 +7,12 @@
  *   one card per section on the right: the crop of the year, the rotation of its cycle, keep or
  *   change and the score
  *
- * Touching a section (its card, or the section in 3D) selects it. The farmer can reorder the
- * cards by dragging them (or with the keyboard); the order is a per-browser preference
- * (prefs.dashboard).
+ * A section card opens its rotation; hovering or focusing highlights it in 3D. Touching the
+ * section in the scene selects it. Handles reorder cards independently, by pointer or keyboard;
+ * the order is a per-browser preference (prefs.dashboard).
  */
-import { html, plural } from '../lib/html.js';
+import { html, plural, verbatim } from '../lib/html.js';
+import { formatNumber } from '../../data/i18n/index.js';
 import { colorOf, nameOf, textureOf } from '../../data/reference/crops.js';
 import { cropOfYear, cycleOfYear, farmMix, planYears } from '../../application/rules/planView.js';
 import { getSeeds } from '../../application/rules/seeds.js';
@@ -19,7 +20,7 @@ import { blockLabel, dashboardOrder, isDefaultOrder, sectionOf } from '../lib/da
 import { appHeader, pageTitle } from '../ui/layout.js';
 import { icon, ICONS } from '../ui/icons.js';
 import { isoFarm } from '../ui/isoFarm.js';
-import { closeFarm3d, farm3dSlot, showFarm3d } from '../ui/farm3d/index.js';
+import { closeFarm3d, farm3dSlot, showFarm3d, highlightFarm3d } from '../ui/farm3d/index.js';
 import { pieChart } from '../ui/pieChart.js';
 import { fieldSwatch } from '../ui/textures.js';
 import { errorBox, loading } from '../ui/widgets.js';
@@ -79,14 +80,16 @@ function sectionCard(state, section, sectionPlan, { year, frequency }) {
     cycleOfYear(sectionPlan, year) ?? sectionPlan?.cycles.find((c) => c.years[0] > year) ?? null;
   const alerts = cycle?.referenceAlerts.length ?? 0;
   const score = cycle?.chosen ? Math.round(cycle.chosen.score) : null;
-  return html`<article class="widget ${selected ? 'is-selected' : ''}">
+  return html`<article
+    data-section-card="${section.id}"
+    class="widget ${selected ? 'is-selected' : ''}"
+  >
     <button
       type="button"
       class="widget__hit"
-      data-action="select-section"
+      data-action="open-section"
       data-id="${section.id}"
-      aria-pressed="${String(selected)}"
-      aria-label="Section ${section.id}"
+      aria-label="Consulter la rotation de la section ${section.id}"
     ></button>
     <header class="widget__head">
       <span
@@ -97,7 +100,7 @@ function sectionCard(state, section, sectionPlan, { year, frequency }) {
       <span class="stack-0 grow">
         <strong>Section ${section.id}</strong>
         <span class="muted small"
-          >${section.areaHa} ha${cycle ? ` · ${cycle.years.join('–')}` : ''}</span
+          >${formatNumber(section.areaHa)} ha${cycle ? ` · ${cycle.years.join('–')}` : ''}</span
         >
       </span>
       ${scoreRing(score, !sectionPlan)}
@@ -115,7 +118,7 @@ function sectionCard(state, section, sectionPlan, { year, frequency }) {
     ${alerts ? html`<span class="widget__flag">⚠ Rotation actuelle : ${plural(alerts, 'délai de retour non respecté', 'délais de retour non respectés')}</span>` : ''}
     <footer class="widget__foot">
       ${cycle ? decisionPill(cycle.decision) : html`<span></span>`}
-      <a class="widget__link" href="#/section/${section.id}/plan">Voir les rotations →</a>
+      <span class="widget__link" aria-hidden="true">Consulter la rotation →</span>
     </footer>
   </article>`;
 }
@@ -144,7 +147,7 @@ function cropMix(state, year) {
   const hectares = Object.entries(farmMix(state.farm, state.plan.data, year));
   if (!hectares.length) return '';
   const slices = hectares.map(([crop, ha]) => ({
-    label: `${nameOf(crop)} ${ha} ha`,
+    label: `${nameOf(crop)} ${formatNumber(ha)} ha`,
     value: ha,
     color: colorOf(crop),
   }));
@@ -155,7 +158,7 @@ function cropMix(state, year) {
         ([crop, ha]) =>
           html`<li>
             <span class="dot" style="background: ${colorOf(crop)}"></span>${nameOf(crop)}
-            <strong>${ha} ha</strong>
+            <strong>${formatNumber(ha)} ha</strong>
           </li>`,
       )}
     </ul>
@@ -163,6 +166,11 @@ function cropMix(state, year) {
 }
 
 function farm3dCard(state, { sections, selected, cropOf, year }) {
+  if (!selected)
+    return html`<section class="card stack-md">
+      <h2 class="h2">Ajoutez votre première section</h2>
+      <a class="btn btn--primary" href="#/tracer">Tracer ma ferme</a>
+    </section>`;
   const crop = cropOf(selected.id);
   const flatView = () =>
     isoFarm({ sections, cropOf, selectedId: selected.id, boundary: state.farm.farm.boundary });
@@ -176,16 +184,13 @@ function farm3dCard(state, { sections, selected, cropOf, year }) {
       <span class="row gap-sm">
         <span class="section-badge is-dark">${selected.id}</span>
         <span class="stack-0">
-          <strong>Section ${selected.id} · ${selected.areaHa} ha</strong>
+          <strong>Section ${selected.id} · ${formatNumber(selected.areaHa)} ha</strong>
           <span class="muted small">${crop ? nameOf(crop) : '—'} en ${year}</span>
         </span>
       </span>
       <span class="row-wrap gap-sm">
-        <a class="btn btn--secondary btn--sm" href="#/section/${selected.id}/parcelle"
-          >Ma parcelle</a
-        >
         <a class="btn btn--primary btn--sm" href="#/section/${selected.id}/plan"
-          >Voir les rotations →</a
+          >Consulter la rotation →</a
         >
       </span>
     </div>
@@ -242,7 +247,8 @@ export default {
       <main class="page stack-md" id="main">
         ${pageTitle(
           'Ma ferme',
-          `${farm.farm.name} · ${total} ha · ${plural(sections.length, 'section', 'sections')}`,
+          html`${verbatim(farm.farm.name)} · ${formatNumber(total)} ha ·
+          ${plural(sections.length, 'section', 'sections')}`,
           html`<div class="row-wrap gap-sm align-center">
             <button
               type="button"
@@ -297,6 +303,15 @@ export default {
   mount(app) {
     const state = app.state;
     const { sections, cropOf, selected } = dashboardView(state, app);
+    if (!selected) return;
+    document.querySelectorAll('[data-section-card]').forEach((card) => {
+      const highlight = () => highlightFarm3d(card.dataset.sectionCard);
+      const reset = () => highlightFarm3d(null);
+      card.addEventListener('pointerenter', highlight);
+      card.addEventListener('pointerleave', reset);
+      card.addEventListener('focusin', highlight);
+      card.addEventListener('focusout', reset);
+    });
     const crops = Object.fromEntries(
       sections.map((s) => {
         const crop = cropOf(s.id);
@@ -315,6 +330,7 @@ export default {
   },
   unmount: () => closeFarm3d(),
   actions: {
+    'open-section': (app, el) => app.go(`#/section/${el.dataset.id}/plan`),
     'retry-weather': (app) => app.loadWeather({ force: true }),
     'reorder-dashboard': (app, _list, { ids, moved }) =>
       app.update((s) => {

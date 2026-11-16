@@ -5,6 +5,7 @@
  * the twins grow (steps 5 to 7).
  */
 import { html } from '../lib/html.js';
+import { formatNumber, getLanguage, t } from '../../data/i18n/index.js';
 import { CROPS } from '../../data/reference/crops.js';
 import { sectionLayout, pageTitle } from '../ui/layout.js';
 import { errorBox, loading } from '../ui/widgets.js';
@@ -13,7 +14,6 @@ import { cycleTabs, dayLabel, planStatus, selectedCycle } from '../ui/planWidget
 import { destroyMap, ensureMap, L, mapSlot } from '../ui/leafletMap.js';
 
 const KEY = 'jumeaux';
-const ONE_DECIMAL = 10;
 /** Colours of the arrows, one per climate source (colour-blind safe). */
 const SOURCE_COLORS = ['#0072B2', '#D55E00', '#009E73', '#CC79A7', '#E69F00'];
 const FARM_COLOR = '#FFD27A';
@@ -23,10 +23,10 @@ const MAP_PADDING_PX = 30;
 let layer = null;
 let drawnKey = null;
 
-const fmt1 = (v) => String(Math.round(v * ONE_DECIMAL) / ONE_DECIMAL).replace('.', ',');
+const fmt1 = (v) => formatNumber(v, { maximumFractionDigits: 1 });
 /** Sigma rounds to 0 for very close twins: say "< 0,1" rather than "0". */
 const SMALLEST_SIGMA_SHOWN = 0.05;
-const fmtSigma = (v) => (v < SMALLEST_SIGMA_SHOWN ? '< 0,1' : fmt1(v));
+const fmtSigma = (v) => (v < SMALLEST_SIGMA_SHOWN ? `< ${fmt1(0.1)}` : fmt1(v));
 
 function climateCard(cycle) {
   const c = cycle.climate;
@@ -119,9 +119,9 @@ function drawTwins(map, farm, cycle) {
     fillColor: FARM_COLOR,
     fillOpacity: 1,
   })
-    .bindTooltip('Votre ferme')
+    .bindTooltip(t('Votre ferme'))
     .addTo(layer);
-  map.fitBounds(points, { padding: [MAP_PADDING_PX, MAP_PADDING_PX] });
+  map.fitBounds(points, { padding: [MAP_PADDING_PX, MAP_PADDING_PX], animate: false });
 }
 
 export default {
@@ -154,7 +154,7 @@ export default {
     if (!plan || !farm) return;
     const cycle = selectedCycle(plan, app.state);
     const { map } = ensureMap(KEY, { center: [farm.lat, farm.lon], zoom: 6 });
-    const key = `${id}:${cycle.index}:${app.state.plan.data.meta.generatedAt}`;
+    const key = `${id}:${cycle.index}:${app.state.plan.data.meta.generatedAt}:${getLanguage()}`;
     if (key !== drawnKey) {
       drawnKey = key;
       drawTwins(map, farm, cycle);

@@ -21,6 +21,9 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/components.css';
 import './styles/screens.css';
+import './styles/interactions.css';
+import { beforeRotationRender } from './ui/rotationDialog.js';
+import { setLanguage, translateText, t } from '../data/i18n/index.js';
 
 import { createEngine } from '../backend/index.js';
 import { createApp } from '../application/app.js';
@@ -81,7 +84,7 @@ function onRoute() {
     // Rota answered on the screen we leave: the next one starts without the panel over it.
     if (leavesScreen) d.ui.rota.open = false;
   });
-  document.title = `${screen.title} · Field Shift`;
+  document.title = `${translateText(screen.title)} · Field Shift`;
   window.scrollTo(0, 0);
   screen.onEnter?.(app, route.params);
 }
@@ -145,14 +148,21 @@ function render() {
 
 function draw() {
   const s = app.state;
+  setLanguage(s.prefs.language);
+  document.documentElement.lang = s.prefs.language;
+  document.querySelector('.skip-link').textContent = t('skip.content');
   const screen = currentScreen();
   if (!screen) return;
+  document.title = `${translateText(screen.title)} · Field Shift`;
 
   const name = s.ui.route.name;
   const sameScreen = mounted === name;
   if (mounted && !sameScreen) SCREENS[mounted]?.unmount?.(app);
   mounted = name;
 
+  beforeRotationRender(
+    `${s.ui.route.name}/${s.ui.route.params.id}/${s.ui.cycle}/${s.prefs.language}/${s.plan.data?.meta?.generatedAt}`,
+  );
   const typed = snapshotInputs();
   const refocus = document.activeElement?.closest?.('[data-refocus][id]')?.id;
   const layout = sameScreen ? captureLayout(root) : null;

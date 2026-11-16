@@ -9,6 +9,7 @@
  * the 3D view (tableau) and the section map (champ) draw later.
  */
 import { html, plural } from '../lib/html.js';
+import { formatNumber } from '../../data/i18n/index.js';
 import { onboardingHeader } from '../ui/layout.js';
 import { icon, ICONS } from '../ui/icons.js';
 import { askRota } from '../ui/rota.js';
@@ -198,7 +199,7 @@ export default {
                   ><span class="muted small"
                     >${
                       farmDone
-                        ? `${boundary.length} coins · ${roundHa(areaHa(boundary))} ha`
+                        ? `${boundary.length} coins · ${formatNumber(roundHa(areaHa(boundary)))} ha`
                         : boundary.length
                           ? `${plural(boundary.length, 'coin posé', 'coins posés')} · continuez`
                           : 'Pas encore tracé'
@@ -222,7 +223,10 @@ export default {
             <div class="row-between">
               <span class="eyebrow">2 · Sections</span>${
                 farmDone
-                  ? html`<strong>${traced.length}/${sections.length} tracées · ${total} ha</strong>`
+                  ? html`<strong
+                      >${traced.length}/${sections.length} tracées · ${formatNumber(total)}
+                      ha</strong
+                    >`
                   : ''
               }
             </div>
@@ -243,7 +247,7 @@ export default {
                           ><span class="stack-0"
                             ><strong>Section ${s.id}</strong
                             ><span class="muted small"
-                              >${done ? `${s.areaHa} ha` : 'À tracer'}</span
+                              >${done ? `${formatNumber(s.areaHa)} ha` : 'À tracer'}</span
                             ></span
                           >
                         </button>
@@ -296,7 +300,7 @@ export default {
     if (created) {
       const b = shapesBounds(s.farm);
       // maxZoom: a lone corner has an empty box, which would zoom in all the way.
-      if (b) map.fitBounds(b, { padding: [60, 60], maxZoom: 17 });
+      if (b) map.fitBounds(b, { padding: [60, 60], maxZoom: 17, animate: false });
       editor = createPolygonEditor(map, {
         onChange: (id, pts) => setPoints(app, id, pts),
         onFinish: (id, pts) => finish(app, id, pts),
@@ -315,7 +319,7 @@ export default {
           id: sec.id,
           points: sec.polygon ?? [],
           color: SECTION_COLOR,
-          label: isClosed(sec.polygon) ? `${sec.id} · ${sec.areaHa} ha` : null,
+          label: isClosed(sec.polygon) ? `${sec.id} · ${formatNumber(sec.areaHa)} ha` : null,
         })),
       ],
       activeId: s.ui.draw.target,

@@ -66,6 +66,17 @@ function makeGhost(item, rect) {
 }
 
 export function initDragSort(root, { onCommit, onEnd }) {
+  let suppressClickUntil = 0;
+  root.addEventListener(
+    'click',
+    (event) => {
+      if (performance.now() < suppressClickUntil || event.target.closest('[data-drag-handle]')) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    },
+    true,
+  );
   const start = (d) => {
     d.started = true;
     d.rect = d.item.getBoundingClientRect();
@@ -121,6 +132,7 @@ export function initDragSort(root, { onCommit, onEnd }) {
       active = null;
       return;
     }
+    suppressClickUntil = performance.now() + 400;
     if (!commit)
       flip(d.list, () =>
         d.original.forEach((id) =>

@@ -8,9 +8,30 @@
  */
 import L from 'leaflet';
 import { html } from '../lib/html.js';
+import { getLanguage, t } from '../../data/i18n/index.js';
 
 const hosts = new Map();
 const maps = new Map();
+const controls = new Map();
+
+function localizeControls(key) {
+  const data = controls.get(key);
+  if (!data || data.language === getLanguage()) return;
+  data.widgets.forEach((widget) => widget.remove());
+  data.widgets = [
+    L.control
+      .layers(
+        { Satellite: data.satellite, [t('Carte')]: data.plan },
+        { [t('Noms de lieux')]: data.names },
+        { position: 'topright' },
+      )
+      .addTo(data.map),
+    L.control
+      .zoom({ position: 'topright', zoomInTitle: t('Zoomer'), zoomOutTitle: t('Dézoomer') })
+      .addTo(data.map),
+  ];
+  data.language = getLanguage();
+}
 
 export const mapSlot = (key, label = 'Carte') =>
   html`<div
@@ -44,7 +65,10 @@ export const getMap = (key) => maps.get(key) ?? null;
 /** Create (once) a map with the satellite / plan base layers. */
 export function ensureMap(key, { center, zoom = 14 }) {
   const existing = maps.get(key);
-  if (existing) return { map: existing, created: false };
+  if (existing) {
+    localizeControls(key);
+    return { map: existing, created: false };
+  }
 
   const map = L.map(host(key), {
     center,
@@ -67,16 +91,8 @@ export function ensureMap(key, { center, zoom = 14 }) {
   );
   satellite.addTo(map);
   names.addTo(map);
-  L.control
-    .layers(
-      { Satellite: satellite, Plan: plan },
-      { 'Noms de lieux': names },
-      { position: 'topright' },
-    )
-    .addTo(map);
-  L.control
-    .zoom({ position: 'topright', zoomInTitle: 'Zoomer', zoomOutTitle: 'Dézoomer' })
-    .addTo(map);
+  controls.set(key, { map, satellite, plan, names, widgets: [], language: null });
+  localizeControls(key);
   L.control.attribution({ position: 'bottomleft', prefix: false }).addTo(map);
   maps.set(key, map);
   return { map, created: true };
@@ -86,6 +102,7 @@ export function destroyMap(key) {
   maps.get(key)?.remove();
   maps.delete(key);
   hosts.delete(key);
+  controls.delete(key);
 }
 
 /** The orange pin of the mock-ups, as a Leaflet icon. */

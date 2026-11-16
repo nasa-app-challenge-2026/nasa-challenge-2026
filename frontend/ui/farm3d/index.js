@@ -46,6 +46,7 @@ export function showFarm3d(view, onSelect) {
   if (unavailable || loading) return undefined;
   loading = import('./farmScene.js')
     .then(({ FarmScene }) => {
+      if (!latest || !currentSlot()) return;
       scene = new FarmScene({
         onSelect: (id) => latest.onSelect(id),
         reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -67,4 +68,9 @@ export function closeFarm3d() {
   scene?.dispose();
   scene = null;
   latest = null;
+}
+
+/** Uses existing mesh animation, without rebuilding the scene or application state. */
+export function highlightFarm3d(id) {
+  if (scene && latest) scene.update({ ...latest.view, selectedId: id ?? latest.view.selectedId });
 }

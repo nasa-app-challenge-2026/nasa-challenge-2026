@@ -3,7 +3,7 @@
  * screens put where an explanation would be. State lives in state.ui.rota; the answers are in
  * data/reference/rotaAnswers.js.
  */
-import { html } from '../lib/html.js';
+import { html, verbatim } from '../lib/html.js';
 import { SUGGESTED } from '../../data/reference/rotaAnswers.js';
 import { icon, ICONS } from './icons.js';
 
@@ -77,7 +77,7 @@ export function rota(state, ctx, { launcher = true } = {}) {
                 (m) =>
                   html`<div class="rota__row rota__row--${m.from}">
                     <div class="rota__bubble">
-                      ${m.text}${m.sources ? html`<a class="rota__src" href="#/sources">Voir les sources →</a>` : ''}
+                      ${m.literal ? verbatim(m.text) : m.text}${m.sources ? html`<a class="rota__src" href="#/sources">Voir les sources →</a>` : ''}
                     </div>
                   </div>`,
               )}

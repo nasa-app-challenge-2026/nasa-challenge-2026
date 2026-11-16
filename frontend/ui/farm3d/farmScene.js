@@ -12,6 +12,7 @@
  *   scene.dispose();
  */
 import * as THREE from 'three';
+import { translateText } from '../../../data/i18n/index.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { lookOf } from './cropLooks.js';
 import { SCENE_SIZE, farmLayout, sowingPoints } from './geometry.js';
@@ -264,7 +265,7 @@ export class FarmScene {
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.canvas = this.renderer.domElement;
     this.canvas.setAttribute('role', 'img');
-    this.canvas.setAttribute('aria-label', 'Vue 3D de la ferme');
+    this.canvas.setAttribute('aria-label', '3D farm view');
     this.element.append(this.canvas, this.labels);
 
     this.scene = new THREE.Scene();
@@ -355,6 +356,7 @@ export class FarmScene {
    * selectedId  the section that rises
    */
   update({ sections, boundary, crops, selectedId }) {
+    this.canvas.setAttribute('aria-label', translateText('Vue 3D de la ferme'));
     const layoutKey = JSON.stringify([boundary, sections.map((s) => [s.id, s.polygon])]);
     const rebuilt = layoutKey !== this.layoutKey;
     if (rebuilt) {

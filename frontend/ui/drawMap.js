@@ -15,6 +15,7 @@
  * `sync` is idempotent: call it after every render with the current state.
  */
 import { L } from './leafletMap.js';
+import { t, translateText } from '../../data/i18n/index.js';
 
 const FILL_ON = 0.35;
 const FILL_OFF = 0.12;
@@ -153,7 +154,7 @@ export function createPolygonEditor(map, { onChange, onFinish }) {
           interactive: false,
         })
           .setLatLng(layer.getBounds().getCenter())
-          .setContent(shape.label)
+          .setContent(translateText(shape.label))
           .addTo(shapesLayer);
       }
 
@@ -171,7 +172,7 @@ export function createPolygonEditor(map, { onChange, onFinish }) {
           className: `vtx ${first ? 'vtx--first' : ''}`,
           iconSize: first ? [20, 20] : [14, 14],
         }),
-        title: first ? 'Cliquer pour fermer le tracé' : 'Glisser pour déplacer ce coin',
+        title: t(first ? 'Cliquer pour fermer le tracé' : 'Glisser pour déplacer ce coin'),
       });
       marker.on('drag', (e) => {
         const ll = e.target.getLatLng();

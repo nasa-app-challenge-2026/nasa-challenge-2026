@@ -1,3 +1,4 @@
+import { languageButton } from '../ui/layout.js';
 /** 1 · Connexion et création de compte. Owner: Loïc. */
 import { html } from '../lib/html.js';
 import { logo } from '../ui/widgets.js';
@@ -51,6 +52,7 @@ export default {
       </section>
       <main class="auth__panel" id="main">
         <div class="auth__box">
+          ${languageButton()}
           <div class="segmented" role="tablist" aria-label="Connexion ou inscription">
             <button
               type="button"

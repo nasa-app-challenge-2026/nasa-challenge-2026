@@ -1,5 +1,6 @@
 /** 13 · Compte et réglages. Owner: Loïc. */
-import { html } from '../lib/html.js';
+import { html, verbatim } from '../lib/html.js';
+import { formatNumber } from '../../data/i18n/index.js';
 import { nameOf } from '../../data/reference/crops.js';
 import { appHeader } from '../ui/layout.js';
 import { askRota } from '../ui/rota.js';
@@ -81,8 +82,8 @@ function panel(state) {
         <div class="stack-xs">
           <h2 class="h2 h2--lg">Ma ferme</h2>
           <p class="muted small">
-            ${farm.farm.name} · ${farm.farm.location?.label ?? ''} ·
-            ${farm.sections.reduce((a, s) => a + s.areaHa, 0)} ha
+            ${verbatim(farm.farm.name)} · ${verbatim(farm.farm.location?.label ?? '')} ·
+            ${formatNumber(farm.sections.reduce((a, s) => a + s.areaHa, 0))} ha
           </p>
         </div>
         <div class="stack-xs">
@@ -91,7 +92,7 @@ function panel(state) {
               html`<div class="list-row">
                 <span class="section-badge">${s.id}</span
                 ><span class="stack-0 grow"
-                  ><strong>Section ${s.id} · ${s.areaHa} ha</strong
+                  ><strong>Section ${s.id} · ${formatNumber(s.areaHa)} ha</strong
                   ><span class="muted small"
                     >${(s.currentRotation ?? []).map(nameOf).join(' → ') || 'Pas de rotation actuelle'}</span
                   ></span

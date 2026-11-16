@@ -5,6 +5,7 @@
  * later on the section screen (Ma parcelle).
  */
 import { html } from '../lib/html.js';
+import { formatNumber } from '../../data/i18n/index.js';
 import { onboardingHeader } from '../ui/layout.js';
 import { inPlaceEditor, seedActions, seedBank } from '../ui/seedsEditor.js';
 import { sectionInputProblems } from '../../application/rules/sectionInputs.js';
@@ -27,7 +28,7 @@ export default {
               <div class="step-head">
                 <span class="section-badge">${s.id}</span>
                 <h2 class="h2" id="sec-${s.id}">Section ${s.id}</h2>
-                <span class="muted small">${s.areaHa} ha</span>
+                <span class="muted small">${formatNumber(s.areaHa)} ha</span>
               </div>
               ${inPlaceEditor(s)} ${sectionInputProblems(s).map((p) => alertBox('warn', p))}
             </section>`,

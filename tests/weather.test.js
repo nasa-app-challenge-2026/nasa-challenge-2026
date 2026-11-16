@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { setLanguage } from '../data/i18n/index.js';
+beforeEach(() => setLanguage('fr'));
 import { describeWmo, normalize, weatherKey } from '../data/access/weather.js';
 import { dayLabel } from '../frontend/ui/weatherWidget.js';
 

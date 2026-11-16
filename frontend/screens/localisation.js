@@ -4,7 +4,8 @@
  * an address or use the browser's position. Address lookups (Nominatim) go
  * through the application: app.searchPlaces and app.setFarmLocation.
  */
-import { html } from '../lib/html.js';
+import { html, verbatim } from '../lib/html.js';
+import { t } from '../../data/i18n/index.js';
 import { DEMO_PLACES } from '../../data/reference/catalog.js';
 import { coordsLabel, sameCoord } from '../../application/rules/geo.js';
 import { onboardingHeader } from '../ui/layout.js';
@@ -80,8 +81,10 @@ export default {
                     data-label="${[pl.label, pl.detail].filter(Boolean).join(', ')}"
                   >
                     ${icon(ICONS.pin, { size: 18, color: '#2E6B3B' })}<span class="stack-0"
-                      ><strong>${pl.label}</strong
-                      ><span class="muted small">${pl.detail}</span></span
+                      ><strong>${verbatim(pl.label)}</strong
+                      ><span class="muted small"
+                        >${verbatim(geo.results ? pl.detail : t(pl.detail))}</span
+                      ></span
                     >
                   </button>`,
               )}
@@ -123,7 +126,7 @@ export default {
         draggable: true,
         autoPan: true,
         icon: pinIcon,
-        title: 'Votre ferme (glisser pour déplacer)',
+        title: t('Votre ferme (glisser pour déplacer)'),
       }).addTo(map);
       marker.bindTooltip(loc.label, {
         permanent: true,
@@ -144,6 +147,7 @@ export default {
       marker.setLatLng([loc.lat, loc.lon]);
     }
     marker.setTooltipContent(loc.label);
+    marker.getElement()?.setAttribute('title', t('Votre ferme (glisser pour déplacer)'));
   },
 
   unmount() {

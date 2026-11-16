@@ -102,7 +102,7 @@ export default {
         ${soilTestEditor(section)}
       </section>
       <div class="actions-bar">
-        <a class="btn btn--primary" href="#/section/${id}/plan">Voir les rotations →</a>
+        <a class="btn btn--primary" href="#/section/${id}/plan">Consulter la rotation →</a>
       </div>`;
     return sectionLayout(state, section, 'parcelle', body);
   },

@@ -3,6 +3,7 @@
  * policy: at most one request per second, which a human typing addresses
  * respects. Results are { label, detail, lat, lon }.
  */
+import { getLanguage } from '../i18n/index.js';
 const BASE = 'https://nominatim.openstreetmap.org';
 
 function split(displayName) {
@@ -18,7 +19,7 @@ export async function geocode(query, { signal } = {}) {
   url.searchParams.set('format', 'jsonv2');
   url.searchParams.set('q', query);
   url.searchParams.set('limit', '5');
-  url.searchParams.set('accept-language', 'fr');
+  url.searchParams.set('accept-language', getLanguage());
   const res = await fetch(url, { signal, headers: { Accept: 'application/json' } });
   if (!res.ok) throw new Error(`Recherche d’adresse indisponible (${res.status})`);
   const rows = await res.json();
@@ -37,7 +38,7 @@ export async function reverseGeocode(lat, lon, { signal } = {}) {
     url.searchParams.set('lat', String(lat));
     url.searchParams.set('lon', String(lon));
     url.searchParams.set('zoom', '16');
-    url.searchParams.set('accept-language', 'fr');
+    url.searchParams.set('accept-language', getLanguage());
     const res = await fetch(url, { signal, headers: { Accept: 'application/json' } });
     if (!res.ok) return null;
     const r = await res.json();

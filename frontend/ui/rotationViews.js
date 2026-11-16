@@ -13,7 +13,7 @@
  */
 import { html } from '../lib/html.js';
 import { CROPS, colorOf, nameOf, symbolOf } from '../../data/reference/crops.js';
-import { MONTH_NAMES } from '../../data/reference/calendar.js';
+import { formatDate, t } from '../../data/i18n/index.js';
 import { positionYear } from '../../application/rules/planView.js';
 import { fieldStrip } from './textures.js';
 
@@ -64,7 +64,7 @@ export const rotationText = (chain) =>
   chain.steps
     .filter((s) => !isCover(s))
     .map((s) => nameOf(s.sheet))
-    .join(', puis ');
+    .join(t('rotation.then'));
 
 /**
  * The wheel of a rotation.
@@ -147,8 +147,7 @@ function stepYears(step, cycle, frequencyMonths) {
 /** "mai 2028" from "2028-05-12". */
 function monthOf(iso) {
   if (!iso) return '—';
-  const [year, month] = iso.split('-').map(Number);
-  return `${MONTH_NAMES[month - 1]} ${year}`;
+  return formatDate(iso, { month: 'short', year: 'numeric' });
 }
 
 /**

@@ -19,7 +19,11 @@ export function initialState(engineName, saved) {
     onboarded: saved?.onboarded ?? false,
     farm: saved?.farm ? migrateFarm(saved.farm) : structuredClone(DEMO_FARM),
     /** Per-browser display preferences. dashboard = order of the dashboard blocks (null = default). */
-    prefs: { dashboard: null, ...(saved?.prefs ?? {}) },
+    prefs: {
+      dashboard: null,
+      ...(saved?.prefs ?? {}),
+      language: saved?.prefs?.language === 'fr' ? 'fr' : 'en',
+    },
     plan: { status: 'idle', data: null, error: null },
     weather: { status: 'idle', data: null, error: null, key: null },
     ui: {

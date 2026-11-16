@@ -3,6 +3,23 @@ import { html } from '../lib/html.js';
 import { colorOf, nameOf } from '../../data/reference/crops.js';
 import { icon, ICONS } from './icons.js';
 import { demoBadge, logo } from './widgets.js';
+import { getLanguage, t, formatNumber } from '../../data/i18n/index.js';
+
+export function languageButton() {
+  return html`<button
+    type="button"
+    class="language-toggle"
+    id="language-toggle"
+    data-refocus
+    data-action="toggle-language"
+    aria-label="${t('language.switch')}"
+    title="${t('language.switch')}"
+  >
+    <span lang="en" class="${getLanguage() === 'en' ? 'is-current' : ''}">EN</span>
+    <span aria-hidden="true">⇄</span
+    ><span lang="fr" class="${getLanguage() === 'fr' ? 'is-current' : ''}">FR</span>
+  </button>`;
+}
 
 export function isDemo(state) {
   return state.plan.data?.meta?.demo ?? false;
@@ -24,7 +41,7 @@ export function appHeader(state, active) {
       )}
     </nav>
     <div class="app-header__end">
-      ${demoBadge(isDemo(state))}
+      ${languageButton()} ${demoBadge(isDemo(state))}
       <a class="avatar" href="#/compte" aria-label="Mon compte"
         >${icon(ICONS.user, { size: 20 })}</a
       >
@@ -56,7 +73,7 @@ export function onboardingHeader(step) {
         </li>`;
       })}
     </ol>
-    <a class="link-quiet" href="#/connexion">Enregistrer et quitter</a>
+    ${languageButton()}<a class="link-quiet" href="#/connexion">Enregistrer et quitter</a>
   </header>`;
 }
 
@@ -85,7 +102,9 @@ export function sectionLayout(state, section, tab, body) {
               >${section.id}</span
             ><span class="stack-xs"
               ><strong>Section ${section.id}</strong
-              ><span class="muted small">${section.areaHa} ha · ${inPlaceText(section)}</span></span
+              ><span class="muted small"
+                >${formatNumber(section.areaHa)} ha · ${inPlaceText(section)}</span
+              ></span
             >
           </div>
           <div class="mini-cycle">

@@ -1,0 +1,266 @@
+/* Dashboard affordances and rotation dialog use the shared design tokens. */
+.language-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--tap);
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--radius);
+  background: var(--c-surface);
+  color: var(--c-text-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.language-toggle .is-current {
+  color: var(--c-brand-dark);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.auth__box > .language-toggle {
+  align-self: flex-end;
+  margin-bottom: var(--s-4);
+}
+.widget {
+  transition:
+    border-color 160ms,
+    box-shadow 160ms;
+}
+.widget:hover,
+.widget:focus-within {
+  border-color: var(--c-brand);
+  box-shadow: var(--shadow-1);
+}
+.widget__hit,
+.rot-card__hit {
+  z-index: 2;
+}
+.widget__link {
+  pointer-events: none;
+}
+.widget__hit:focus-visible,
+.rot-card__hit:focus-visible,
+.language-toggle:focus-visible {
+  outline: 3px solid var(--c-good);
+  outline-offset: 4px;
+}
+.dash-block > .drag-handle {
+  z-index: 4;
+}
+.year-tick {
+  min-height: var(--tap);
+}
+.segmented--inline {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.segmented--inline button {
+  white-space: nowrap;
+}
+.rot-cards {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-4);
+}
+.rot-card {
+  min-width: 0;
+  padding: var(--s-5) var(--s-3);
+}
+.rot-card__head {
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 72px;
+  justify-content: flex-start;
+}
+.rot-card__head .pill {
+  font-size: var(--fs-xs);
+  white-space: normal;
+}
+.rot-card__wheel .wheel {
+  max-width: 100%;
+  height: auto;
+}
+.rot-card--reference {
+  background: var(--c-surface-2);
+  border-style: dashed;
+}
+.rot-card.is-open {
+  visibility: hidden;
+}
+.rotation-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--c-text);
+  overflow: hidden;
+}
+.rotation-dialog::backdrop {
+  background: rgb(16 32 20 / 62%);
+}
+.rotation-dialog__shell {
+  position: absolute;
+  left: max(16px, calc((100% - 960px) / 2));
+  top: 5dvh;
+  width: min(960px, calc(100% - 32px));
+  height: 90dvh;
+  transform-origin: top left;
+  perspective: 1600px;
+}
+.rotation-dialog__turn {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(180deg);
+}
+.rotation-dialog__front,
+.rotation-dialog__back {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  backface-visibility: hidden;
+  background: var(--c-surface);
+  box-shadow: var(--shadow-2);
+}
+.rotation-dialog__front {
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.rotation-dialog__front .rot-card {
+  border: 0;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+.rotation-dialog__front .wheel {
+  width: 55%;
+}
+.rotation-dialog__back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+}
+.rotation-dialog__close {
+  position: absolute;
+  right: var(--s-3);
+  top: var(--s-3);
+  z-index: 2;
+  width: var(--tap);
+  height: var(--tap);
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  background: var(--c-surface-2);
+  color: var(--c-text);
+  font-size: 28px;
+  cursor: pointer;
+}
+.rotation-dialog__scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--s-8);
+  scrollbar-gutter: stable;
+}
+#rotation-dialog-title {
+  padding-right: 48px;
+  margin-bottom: var(--s-6);
+  font-size: 24px;
+}
+.rotation-detail > .row-between:first-child .h2 {
+  font-size: var(--fs-body);
+}
+.rotation-dialog__answer:not(:empty) {
+  margin-top: var(--s-6);
+  padding: var(--s-4);
+  border-radius: var(--radius);
+  background: var(--c-brand-soft);
+}
+.rotation-dialog__answer p {
+  margin-block: var(--s-2);
+  line-height: 1.6;
+}
+.rotation-dialog .rot-line {
+  flex-wrap: wrap;
+}
+.rotation-dialog .rot-line__step {
+  min-width: 140px;
+}
+@media (max-width: 1150px) {
+  .rot-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .app-header {
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+  .app-header__end {
+    margin-left: auto;
+  }
+  .main-nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+  .section-aside {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .section-nav {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  .section-nav a {
+    width: auto;
+    flex: none;
+    white-space: nowrap;
+  }
+  .rot-cards {
+    gap: var(--s-2);
+  }
+  .rot-card__head {
+    font-size: var(--fs-body);
+    min-height: 80px;
+  }
+  .rot-card {
+    padding: var(--s-3) var(--s-2);
+  }
+  .rotation-dialog__shell {
+    left: 8px;
+    top: 8px;
+    width: calc(100% - 16px);
+    height: calc(100dvh - 16px);
+  }
+  .rotation-dialog__scroll {
+    padding: var(--s-5) var(--s-4);
+  }
+  .rotation-dialog .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .farm3d__selected {
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .widget,
+  .rot-card {
+    transition: none;
+  }
+  .rot-card:hover {
+    transform: none;
+  }
+  .rotation-dialog__front {
+    display: none;
+  }
+}
