@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "vercel-build": "node scripts/build-vercel.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "test:rendement": "node --test algo-rendement/regression.mjs",

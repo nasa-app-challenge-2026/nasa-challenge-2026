@@ -1,8 +1,8 @@
 name: Deploy to GitHub Pages
 
+# Manual only: the site is published on Vercel and the server on Render (docs/DEPLOYMENT.md).
+# To use GitHub Pages instead: Settings > Pages > Source: GitHub Actions, then run this workflow.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
