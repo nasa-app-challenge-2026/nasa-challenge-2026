@@ -77,6 +77,8 @@ Le pipeline est décrit dans le document _Field Shift — pipeline v5.1_ et sa r
 
 ## Mettre en ligne
 
+**Tout est dans [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)** : le front sur Vercel (ou tout hébergeur de site statique, [`vercel.json`](vercel.json)), le serveur dans un conteneur Docker ([`api/Dockerfile`](api/Dockerfile), blueprint Render [`render.yaml`](render.yaml)).
+
 Le workflow [`deploy.yml`](.github/workflows/deploy.yml) publie le front sur GitHub Pages à chaque push sur `main`. Une fois : **Settings → Pages → Source : GitHub Actions**. **L'algorithme ne tourne pas dans le navigateur : il faut héberger le serveur** (`api/`) quelque part, en HTTPS, et donner son adresse au front : variable `VITE_ALGO_URL` dans **Settings → Secrets and variables → Actions → Variables**. Sans elle, le site s'ouvre mais ne peut pas calculer de plan. Le serveur doit aussi autoriser l'adresse du site (`FIELD_SHIFT_CORS_ORIGINS`) : voir [`api/README.md`](api/README.md#héberger-le-serveur) et [`docs/ALGO_CONTRACT.md`](docs/ALGO_CONTRACT.md).
 
 ## Documentation

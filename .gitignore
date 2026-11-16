@@ -36,3 +36,6 @@ algo-rendement/.cache/
 
 # Cache satellite local algo-rendement
 algo-rendement/.cache/
+
+# Jetons de déploiement (Vercel, Render) : jamais dans git
+.env.deploy

@@ -1,0 +1,7 @@
+# Vercel serves the front end only (a static Vite build). Its `api/` folder would otherwise be
+# read as Vercel serverless functions: the Python server is deployed on its own (api/Dockerfile,
+# docs/DEPLOIEMENT.md).
+api/
+algo-rendement/.cache/
+docs/screenshots/
+video.mp4

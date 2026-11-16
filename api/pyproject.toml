@@ -28,6 +28,10 @@ dev = [
 [tool.setuptools.packages.find]
 include = ["field_shift*", "water_use*"]
 
+[tool.setuptools.package-data]
+# Read at import by the yield model: an installed server (Docker, `pip install .`) needs it.
+"field_shift.algorithm.yield_model" = ["settings.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [

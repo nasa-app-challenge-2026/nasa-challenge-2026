@@ -1,0 +1,26 @@
+# Render blueprint (https://render.com/docs/blueprint-spec): the algorithm server from
+# api/Dockerfile. New > Blueprint, then this repository. See docs/DEPLOIEMENT.md.
+services:
+  - type: web
+    name: field-shift-api
+    runtime: docker
+    rootDir: api
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      # The address of the front end (Vercel, GitHub Pages…), separated by commas.
+      - key: FIELD_SHIFT_CORS_ORIGINS
+        sync: false
+      # Optional: the preview deployments of Vercel, e.g. https://field-shift-[a-z0-9-]+[.]vercel[.]app
+      - key: FIELD_SHIFT_CORS_ORIGIN_REGEX
+        sync: false
+      # Processes that plan the sections of a farm at the same time (faster plans). Measured on
+      # 2026-11-15: the server takes ~380 MB, each worker ~220 MB more. 0 on a 512 MB instance,
+      # 1 from 1 GB, 3 from 2 GB.
+      - key: FIELD_SHIFT_WORKERS
+        value: '0'
+      # Optional: a free NASA Earthdata account for SMAP and ECOSTRESS (else MERRA-2).
+      - key: EARTHDATA_USERNAME
+        sync: false
+      - key: EARTHDATA_PASSWORD
+        sync: false

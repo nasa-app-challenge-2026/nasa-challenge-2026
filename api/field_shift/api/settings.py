@@ -1,6 +1,10 @@
 """Settings of the server, read from environment variables.
 
 FIELD_SHIFT_CORS_ORIGINS   web origins allowed to call the server, separated by commas
+FIELD_SHIFT_CORS_ORIGIN_REGEX
+                           a regular expression of more origins allowed, for the preview
+                           deployments of a host whose address changes at every deployment
+                           (Vercel: https://field-shift-[a-z0-9-]+[.]vercel[.]app)
 FIELD_SHIFT_WORKERS        worker processes that plan the sections of a farm at the same time
                            (`services/parallel_plan_service.py`); 0 = one section after the other
 
@@ -20,6 +24,7 @@ from field_shift.data_access.data_source_config import DataSourceConfig
 from field_shift.services.parallel_plan_service import workers_from_environment
 
 CORS_ENV: Final = "FIELD_SHIFT_CORS_ORIGINS"
+CORS_REGEX_ENV: Final = "FIELD_SHIFT_CORS_ORIGIN_REGEX"
 #: The development servers of the front end (Vite dev and Vite preview).
 DEFAULT_CORS_ORIGINS: Final = (
     "http://localhost:5173",
@@ -32,6 +37,8 @@ DEFAULT_CORS_ORIGINS: Final = (
 @dataclass(frozen=True)
 class Settings:
     cors_origins: tuple[str, ...] = DEFAULT_CORS_ORIGINS
+    #: More origins allowed, as a regular expression (None: only `cors_origins`).
+    cors_origin_regex: str | None = None
     #: Addresses of the data services (the defaults of the code unless read from the environment).
     data_sources: DataSourceConfig = field(default_factory=DataSourceConfig)
     #: Worker processes of the plan (0: the tests and `Settings()` plan in one process).
@@ -43,6 +50,7 @@ class Settings:
         origins = tuple(o.strip() for o in env.get(CORS_ENV, "").split(",") if o.strip())
         return cls(
             cors_origins=origins or DEFAULT_CORS_ORIGINS,
+            cors_origin_regex=env.get(CORS_REGEX_ENV, "").strip() or None,
             data_sources=DataSourceConfig.load(env),
             workers=workers_from_environment(env),
         )

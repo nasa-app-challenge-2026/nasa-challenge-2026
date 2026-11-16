@@ -34,6 +34,7 @@ Le premier plan d'un nouveau lieu lit toutes ses données réelles : la météo 
 | Variable                   | Valeur                                                                                                                  | Par défaut                                                          |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | `FIELD_SHIFT_CORS_ORIGINS` | adresses des sites autorisés à appeler le serveur, séparées par des virgules (ex. `https://equipe.github.io`)           | les serveurs de développement du front (`localhost:5173` et `4173`) |
+| `FIELD_SHIFT_CORS_ORIGIN_REGEX` | motif (expression régulière) d'autres adresses autorisées : les prévisualisations de Vercel, ex. `https://field-shift-[a-z0-9-]+[.]vercel[.]app` | aucun |
 | `FIELD_SHIFT_DATA_SOURCES` | chemin du fichier JSON des adresses des services de données (voir [Sources de données](#sources-de-données))           | `data_sources.json` s'il existe dans le dossier de lancement        |
 | `FIELD_SHIFT_CACHE_DIR`    | dossier où le serveur garde les réponses des services de données (une requête n'est faite qu'une fois, même après un redémarrage ; un échec n'est jamais gardé) | `api/.cache_field_shift/` (exclu de git)                           |
 | `FIELD_SHIFT_URL_<SOURCE>` | adresse d'un service de données ; l'emporte sur le fichier                                                              | voir `GET /data-sources`                                            |
@@ -255,6 +256,8 @@ Les **notes de protection du sol des cultures** (`reference/soil_protection.py`)
 Pour changer une adresse (un miroir, un proxy) ou ajouter des en-têtes (un jeton), sans toucher au code : copier `data_sources.example.json` en `data_sources.json` dans `api/` (ignoré par git, car il peut contenir des jetons), ou définir `FIELD_SHIFT_URL_<CLÉ>` (par exemple `FIELD_SHIFT_URL_SOILGRIDS`), qui l'emporte sur le fichier. Un service ne peut pas être coupé : une adresse vide est refusée au démarrage.
 
 ## Héberger le serveur
+
+Le plus simple : l'image Docker de [`Dockerfile`](Dockerfile), sur n'importe quel hébergeur de conteneurs. Pas à pas, variables et mémoire nécessaire : [`docs/DEPLOIEMENT.md`](../docs/DEPLOIEMENT.md). Sans Docker :
 
 Le front publié sur GitHub Pages appelle le serveur depuis le navigateur de chaque visiteur : le serveur doit donc être en ligne, joignable en HTTPS, et autoriser l'adresse du site :
 

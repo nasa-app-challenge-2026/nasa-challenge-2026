@@ -1,0 +1,18 @@
+# Only the server goes in the image: no tests, caches, local settings or secrets.
+tests/
+exemples/
+**/__pycache__/
+**/*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+build/
+.cache_field_shift/
+.cache_donnees/
+resultats/
+data_sources.json
+.env
+Dockerfile
+.dockerignore

@@ -176,6 +176,25 @@ class TestCors:
         assert settings.cors_origins == ("https://equipe.github.io", "https://autre.org")
         assert Settings.from_environment({}).cors_origins == DEFAULT_CORS_ORIGINS
 
+    def test_the_preview_deployments_of_a_host_are_allowed_by_a_pattern(self, plan_service):
+        # Vercel gives every preview deployment its own address: one pattern allows them all.
+        settings = Settings.from_environment(
+            {
+                "FIELD_SHIFT_CORS_ORIGINS": "https://field-shift.vercel.app",
+                "FIELD_SHIFT_CORS_ORIGIN_REGEX": r"https://field-shift-[a-z0-9-]+\.vercel\.app",
+            }
+        )
+        client = TestClient(create_app(settings, plan_service))
+
+        def allowed(origin):
+            answer = client.get("/health", headers={"Origin": origin})
+            return answer.headers.get("access-control-allow-origin") == origin
+
+        assert allowed("https://field-shift.vercel.app")
+        assert allowed("https://field-shift-git-ui-yanis-equipe.vercel.app")
+        assert not allowed("https://autre-site.vercel.app")
+        assert Settings.from_environment({}).cors_origin_regex is None
+
     def test_the_old_demo_mode_does_not_exist_any_more(self):
         assert not hasattr(Settings.from_environment({"FIELD_SHIFT_WEATHER": "demo"}), "weather")
 
