@@ -57,11 +57,33 @@ def grid_box(lat: float, lon: float) -> tuple[float, float, float, float]:
     return lat_min, lat_max, centre_lon - HALF_SPAN_DEG, centre_lon + HALF_SPAN_DEG
 
 
-def _filled(values: list[Any]) -> np.ndarray:
-    """Missing days take the value of the day before (the first one: the next known day)."""
-    array = np.array(
-        [float(v) if isinstance(v, int | float) and v > FILL_VALUE else np.nan for v in values]
+def _dates(year: int) -> list[str]:
+    """The days of a year as NASA POWER names them (YYYYMMDD)."""
+    return [
+        str(day).replace("-", "")
+        for day in np.arange(
+            np.datetime64(f"{year}-01-01"),
+            np.datetime64(f"{year + 1}-01-01"),
+            dtype="datetime64[D]",
+        )
+    ]
+
+
+def _day_values(days: dict[str, Any], dates: list[str]) -> np.ndarray:
+    """The values of a year in the order of its days, NaN where a day is missing or filled.
+
+    Kept as one array per cell and per request instead of the answer's dict: the 42 answers
+    of a box hold ~5 million days, ~500 MB as Python dicts and ~40 MB as arrays."""
+    return np.array(
+        [
+            float(v) if isinstance(v, int | float) and v > FILL_VALUE else np.nan
+            for v in (days.get(day, FILL_VALUE) for day in dates)
+        ]
     )
+
+
+def _filled(array: np.ndarray) -> np.ndarray:
+    """Missing days (NaN) take the value of the day before (the first one: the next known day)."""
     known = np.flatnonzero(np.isfinite(array))
     if not known.size:
         raise GridUnavailableError("NASA POWER : une case de la grille n’a aucune valeur")
@@ -103,7 +125,9 @@ class PowerGridClient:
             for cell in stored["cells"]
         ]
 
-    def _request(self, box: tuple[float, float, float, float], name: str, year: int) -> dict:
+    def _request(
+        self, box: tuple[float, float, float, float], name: str, year: int
+    ) -> dict[tuple[float, float], np.ndarray]:
         lat_min, lat_max, lon_min, lon_max = box
         params = {
             "parameters": name,
@@ -122,11 +146,12 @@ class PowerGridClient:
                 response = self._http.get(self._url, params=params)
                 response.raise_for_status()
                 features = response.json()["features"]
+                dates = _dates(year)
                 return {
                     (
                         round(f["geometry"]["coordinates"][1], COORDINATE_DECIMALS),
                         round(f["geometry"]["coordinates"][0], COORDINATE_DECIMALS),
-                    ): f["properties"]["parameter"][name]
+                    ): _day_values(f["properties"]["parameter"][name], dates)
                     for f in features
                 }
             except httpx.HTTPStatusError as error:
@@ -149,25 +174,11 @@ class PowerGridClient:
         points = sorted(set.intersection(*(set(answer) for answer in answers)))
         if not points:
             raise GridUnavailableError("NASA POWER : la grille autour de la ferme est vide")
-        dates = {
-            year: [
-                str(day).replace("-", "")
-                for day in np.arange(
-                    np.datetime64(f"{year}-01-01"),
-                    np.datetime64(f"{year + 1}-01-01"),
-                    dtype="datetime64[D]",
-                )
-            ]
-            for year in years
-        }
         cells = []
         for point in points:
             columns = {}
             for name in PARAMETERS:
-                values: list[Any] = []
-                for year in years:
-                    days = by_job[(name, year)][point]
-                    values.extend(days.get(day, FILL_VALUE) for day in dates[year])
+                values = np.concatenate([by_job[(name, year)][point] for year in years])
                 columns[name] = _filled(values)
             weather = DailyWeather.from_series(
                 self._period.first,
